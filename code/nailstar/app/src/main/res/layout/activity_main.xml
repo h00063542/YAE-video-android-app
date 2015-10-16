@@ -1,12 +1,75 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="com.yilos.nailstar.main.MainActivity">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
 
-    <TextView android:text="@string/hello_world" android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    <FrameLayout
+        android:id="@+id/tabcontent"
+        android:layout_width="fill_parent"
+        android:layout_height="0.0dip"
+        android:layout_weight="1.0" />
 
-</RelativeLayout>
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/tab_background">
+
+        <RadioGroup
+            android:id="@+id/main_tab_group"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:gravity="bottom"
+            android:orientation="horizontal"
+            >
+
+            <RadioButton
+                android:id="@+id/main_tab_index"
+                style="@style/MMTabButton"
+                android:layout_weight="1.0"
+                android:drawableTop="@drawable/main_tab_index_menus"
+                android:textColor="@drawable/main_tab_text_color"
+                android:checked="true"
+                android:text="首页" />
+
+            <RadioButton
+                android:id="@+id/main_tab_requirelession"
+                style="@style/MMTabButton"
+                android:layout_weight="1.0"
+                android:drawableTop="@drawable/main_tab_requirelession_menus"
+                android:textColor="@drawable/main_tab_text_color"
+                android:text="求教程" />
+
+            <RadioButton
+                android:id="@+id/main_tab_circle"
+                style="@style/MMTabButton"
+                android:layout_weight="1.0"
+                android:drawableTop="@drawable/main_tab_circle_menus"
+                android:textColor="@drawable/main_tab_text_color"
+                android:text="圈子" />
+
+            <RadioButton
+                android:id="@+id/main_tab_aboutme"
+                style="@style/MMTabButton"
+                android:layout_weight="1.0"
+                android:drawableTop="@drawable/main_tab_aboutme_menus"
+                android:textColor="@drawable/main_tab_text_color"
+                android:text="我的" />
+        </RadioGroup>
+
+        <TextView
+            android:id="@+id/main_tab_new_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|top"
+            android:layout_marginLeft="60dip"
+            android:layout_marginTop="1dip"
+            android:gravity="center"
+            android:text="1"
+            android:textColor="@color/white"
+            android:textSize="10sp"
+            android:visibility="gone" />
+    </LinearLayout>
+</LinearLayout>
