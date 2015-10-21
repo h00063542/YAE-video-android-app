@@ -3,8 +3,19 @@
     android:layout_height="match_parent"
     tools:context="com.yilos.nailstar.requirelession.RequireLessionFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView android:layout_width="match_parent" android:layout_height="match_parent"
-        android:text="求教程" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="138dp"
+        android:layout_gravity="center_horizontal|top">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="交作业"
+            android:id="@+id/hand_in_homework_btn"
+            android:layout_gravity="right" />
+    </LinearLayout>
 
 </FrameLayout>

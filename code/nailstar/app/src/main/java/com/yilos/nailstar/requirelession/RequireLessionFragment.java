@@ -1,14 +1,27 @@
 package com.yilos.nailstar.requirelession;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.yilos.nailstar.R;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -19,6 +32,10 @@ import com.yilos.nailstar.R;
  * create an instance of this fragment.
  */
 public class RequireLessionFragment extends Fragment {
+
+    public static final int REQUEST_CAMERA = 1;
+    public static final int SELECT_FILE = 2;
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -65,7 +82,78 @@ public class RequireLessionFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_require_lession, container, false);
+        View view = inflater.inflate(R.layout.fragment_require_lession, container, false);
+        initView(view);
+        return view;
+    }
+
+    private void initView(View view) {
+        Button button = (Button) view.findViewById(R.id.hand_in_homework_btn);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                takeImage();
+            }
+        });
+    }
+
+    private void takeImage() {
+
+        final CharSequence[] items = { "Take Photo", "Choose from Library", "Cancel" };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+//        builder.setTitle("Add Photo!");
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int item) {
+                if (items[item].equals("Take Photo")) {
+                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    startActivityForResult(intent, REQUEST_CAMERA);
+                } else if (items[item].equals("Choose from Library")) {
+                    Intent intent = new Intent();
+                    intent.setType("image/*");
+                    intent.setAction(Intent.ACTION_GET_CONTENT);
+                    startActivityForResult(
+                            Intent.createChooser(intent, "Select File"),
+                            SELECT_FILE);
+                } else if (items[item].equals("Cancel")) {
+                    dialog.dismiss();
+                }
+            }
+        });
+
+        builder.show();
+
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+            super.onActivityResult(requestCode, resultCode, data);
+            if (resultCode == Activity.RESULT_OK) {
+                if (requestCode == REQUEST_CAMERA) {
+                    Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
+                    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                    thumbnail.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+
+                    File destination = new File(Environment.getExternalStorageDirectory(),
+                            System.currentTimeMillis() + ".jpg");
+
+                    FileOutputStream fo;
+                    try {
+                        destination.createNewFile();
+                        fo = new FileOutputStream(destination);
+                        fo.write(bytes.toByteArray());
+                        fo.close();
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                } else if (requestCode == SELECT_FILE) {
+
+                }
+        }
     }
 
     // TODO: Rename method, update argument and hook method into UI event
