@@ -1,16 +1,17 @@
 package com.yilos.nailstar.splash;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
+//import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.yilos.nailstar.R;
 import com.yilos.nailstar.main.MainActivity;
 
-public class SplashActivity extends AppCompatActivity {
+public class SplashActivity extends Activity {
 
     private final int SPLASH_DISPLAY_LENGHT = 2000; //延迟
 
