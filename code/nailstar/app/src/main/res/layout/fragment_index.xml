@@ -1,10 +1,44 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.yilos.nailstar.index.view.IndexFragment"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/fragment_index" tools:context="com.yilos.nailstar.index.IndexFragment">
+    android:id="@+id/fragment_index"
+    android:orientation="vertical">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView android:layout_width="match_parent" android:layout_height="match_parent"
-        android:text="index" />
+    <com.yilos.widget.pullrefresh.PullRefreshLayout
+        android:id="@+id/fragment_home_ptr_frame"
+        xmlns:cube_ptr="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        cube_ptr:ptr_duration_to_close="200"
+        cube_ptr:ptr_duration_to_close_header="200"
+        cube_ptr:ptr_keep_header_when_refresh="true"
+        cube_ptr:ptr_pull_to_fresh="false"
+        cube_ptr:ptr_ratio_of_header_height_to_refresh="1.2"
+        cube_ptr:ptr_resistance="1.7">
 
-</FrameLayout>
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            tools:context="com.yilos.nailstar.index.view.IndexFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/fragment_index_content"
+            android:orientation="vertical"
+            android:weightSum="1">
+
+            <!--<com.bigkoo.convenientbanner.ConvenientBanner-->
+                <!--android:id="@+id/convenientBanner"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="200dp"/>-->
+
+            <com.yilos.widget.banner.Banner
+                android:layout_width="match_parent"
+                android:layout_height="168dp"
+                android:id="@+id/convenientBanner"
+                android:clickable="true"
+                android:layout_gravity="center_horizontal" />
+        </LinearLayout>
+    </com.yilos.widget.pullrefresh.PullRefreshLayout>
+</LinearLayout>
