@@ -1,4 +1,4 @@
-package com.yilos.nailstar;
+package com.yilos.widget;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

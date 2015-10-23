@@ -8,26 +8,26 @@ import java.net.ConnectException;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.HttpVersion;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.conn.ClientConnectionManager;
-import org.apache.http.conn.ConnectTimeoutException;
-import org.apache.http.conn.params.ConnManagerParams;
-import org.apache.http.conn.scheme.PlainSocketFactory;
-import org.apache.http.conn.scheme.Scheme;
-import org.apache.http.conn.scheme.SchemeRegistry;
-import org.apache.http.conn.ssl.SSLSocketFactory;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
-import org.apache.http.params.HttpProtocolParams;
-import org.apache.http.protocol.HTTP;
+//import org.apache.http.HttpResponse;
+//import org.apache.http.HttpStatus;
+//import org.apache.http.HttpVersion;
+//import org.apache.http.client.ClientProtocolException;
+//import org.apache.http.client.HttpClient;
+//import org.apache.http.client.methods.HttpGet;
+//import org.apache.http.conn.ClientConnectionManager;
+//import org.apache.http.conn.ConnectTimeoutException;
+//import org.apache.http.conn.params.ConnManagerParams;
+//import org.apache.http.conn.scheme.PlainSocketFactory;
+//import org.apache.http.conn.scheme.Scheme;
+//import org.apache.http.conn.scheme.SchemeRegistry;
+//import org.apache.http.conn.ssl.SSLSocketFactory;
+//import org.apache.http.impl.client.DefaultHttpClient;
+//import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
+//import org.apache.http.params.BasicHttpParams;
+//import org.apache.http.params.HttpConnectionParams;
+//import org.apache.http.params.HttpParams;
+//import org.apache.http.params.HttpProtocolParams;
+//import org.apache.http.protocol.HTTP;
 
 import com.sina.sinavideo.coreplayer.util.LogS;
 import com.sina.sinavideo.sdk.data.VDResolutionData;
@@ -45,7 +45,7 @@ import android.os.AsyncTask;
 public class M3u8ContentParser {
 
 	private static final String TAG = "M3u8ContentParser";
-	private static HttpClient sHttpClient;
+//	private static HttpClient sHttpClient;
 	private M3u8AsyncTask mTask = null;
 
 	private static final int CONNETED_TIMEOUT = 5;
@@ -55,9 +55,9 @@ public class M3u8ContentParser {
 			Context ctt) {
 		mListener = listener;
 		mListener.updateVideoID(_vid);
-		if (sHttpClient == null) {
-			sHttpClient = createHttpClient();
-		}
+//		if (sHttpClient == null) {
+//			sHttpClient = createHttpClient();
+//		}
 	}
 
 	private M3u8ParserListener mListener;
@@ -214,91 +214,91 @@ public class M3u8ContentParser {
 		}
 
 		private VDResolutionData retryConnect() {
-			int retryTimes = 0;
-			for (int i = 0; i < RETRY_TIMES; i++) {
-				LogS.d(TAG, "Retry time " + (i + 1));
-
-				HttpGet request = null;
-				try {
-					LogS.d(TAG, "parse url " + mUrl);
-
-					request = new HttpGet(mUrl);
-					request.setHeader("Accept-Encoding", "gzip, deflate");
-					request.setHeader("Accept-Language", "zh-cn");
-					request.setHeader("Accept", "*/*");
-					HttpResponse response = sHttpClient.execute(request);
-					int statusCode = response.getStatusLine().getStatusCode();
-					LogS.w(TAG, "M3u8Content retryConnect statusCode = "
-							+ statusCode);
-					if (statusCode == HttpStatus.SC_OK) {
-						if (response.getEntity() != null) {
-							LogS.d(TAG, "status OK, read file");
-							return parse(response.getEntity().getContent());
-						} else {
-							LogS.e(TAG, "parse error");
-							return null; // 提示错误
-						}
-					} else {
-						mListener.onError(ERROR_PARSE);
-						LogS.e(TAG, "parse error");
-						return null; // 提示错误
-					}
-				} catch (ClientProtocolException e) {
-					LogS.e(TAG, "ClientProtocolException " + e);
-					e.printStackTrace();
-				} catch (ConnectTimeoutException e) {
-					// 如果是timeout，那么重试RETRY_TIMES次，失败了，就代表挂了。
-					LogS.e(TAG, "ConnectTimeoutException " + e);
-					e.printStackTrace();
-					retryTimes++;
-				} catch (ConnectException e) {
-					LogS.e(TAG, "ConnectException " + e);
-					e.printStackTrace();
-				} catch (SocketTimeoutException e) {
-					LogS.e(TAG, "SocketTimeoutException " + e);
-					e.printStackTrace();
-				} catch (SocketException e) {
-					LogS.e(TAG, "SocketException " + e);
-					e.printStackTrace();
-				} catch (IOException e) {
-					LogS.e(TAG, "IOException " + e);
-					e.printStackTrace();
-					return null; // 出错了就返回错误，不继续连接
-				} finally {
-				}
-			}
-
-			if (retryTimes >= 5) {
-				mListener.onError(ERROR_PARSE);
-				LogS.e(TAG, "parse error");
-				return null; // 提示错误
-			}
+//			int retryTimes = 0;
+//			for (int i = 0; i < RETRY_TIMES; i++) {
+//				LogS.d(TAG, "Retry time " + (i + 1));
+//
+//				HttpGet request = null;
+//				try {
+//					LogS.d(TAG, "parse url " + mUrl);
+//
+//					request = new HttpGet(mUrl);
+//					request.setHeader("Accept-Encoding", "gzip, deflate");
+//					request.setHeader("Accept-Language", "zh-cn");
+//					request.setHeader("Accept", "*/*");
+//					HttpResponse response = sHttpClient.execute(request);
+//					int statusCode = response.getStatusLine().getStatusCode();
+//					LogS.w(TAG, "M3u8Content retryConnect statusCode = "
+//							+ statusCode);
+//					if (statusCode == HttpStatus.SC_OK) {
+//						if (response.getEntity() != null) {
+//							LogS.d(TAG, "status OK, read file");
+//							return parse(response.getEntity().getContent());
+//						} else {
+//							LogS.e(TAG, "parse error");
+//							return null; // 提示错误
+//						}
+//					} else {
+//						mListener.onError(ERROR_PARSE);
+//						LogS.e(TAG, "parse error");
+//						return null; // 提示错误
+//					}
+//				} catch (ClientProtocolException e) {
+//					LogS.e(TAG, "ClientProtocolException " + e);
+//					e.printStackTrace();
+//				} catch (ConnectTimeoutException e) {
+//					// 如果是timeout，那么重试RETRY_TIMES次，失败了，就代表挂了。
+//					LogS.e(TAG, "ConnectTimeoutException " + e);
+//					e.printStackTrace();
+//					retryTimes++;
+//				} catch (ConnectException e) {
+//					LogS.e(TAG, "ConnectException " + e);
+//					e.printStackTrace();
+//				} catch (SocketTimeoutException e) {
+//					LogS.e(TAG, "SocketTimeoutException " + e);
+//					e.printStackTrace();
+//				} catch (SocketException e) {
+//					LogS.e(TAG, "SocketException " + e);
+//					e.printStackTrace();
+//				} catch (IOException e) {
+//					LogS.e(TAG, "IOException " + e);
+//					e.printStackTrace();
+//					return null; // 出错了就返回错误，不继续连接
+//				} finally {
+//				}
+//			}
+//
+//			if (retryTimes >= 5) {
+//				mListener.onError(ERROR_PARSE);
+//				LogS.e(TAG, "parse error");
+//				return null; // 提示错误
+//			}
 
 			return new VDResolutionData(); // 返回原地址
 		}
 
 	}
 
-	private DefaultHttpClient createHttpClient() {
-		HttpParams params = new BasicHttpParams();
-		HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
-		HttpProtocolParams.setContentCharset(params,
-				HTTP.DEFAULT_CONTENT_CHARSET);
-		HttpProtocolParams.setUseExpectContinue(params, true);
-		HttpConnectionParams.setConnectionTimeout(params,
-				CONNETED_TIMEOUT * 1000);
-		HttpConnectionParams.setSoTimeout(params, CONNETED_TIMEOUT * 1000);
-		HttpConnectionParams.setSocketBufferSize(params, 8192);
-		ConnManagerParams.setMaxTotalConnections(params, 4);
-		SchemeRegistry schReg = new SchemeRegistry();
-		schReg.register(new Scheme("http", PlainSocketFactory
-				.getSocketFactory(), 80));
-		schReg.register(new Scheme("https",
-				SSLSocketFactory.getSocketFactory(), 443));
-
-		ClientConnectionManager connMgr = new ThreadSafeClientConnManager(
-				params, schReg);
-
-		return new DefaultHttpClient(connMgr, params);
-	}
+//	private DefaultHttpClient createHttpClient() {
+//		HttpParams params = new BasicHttpParams();
+//		HttpProtocolParams.setVersion(params, HttpVersion.HTTP_1_1);
+//		HttpProtocolParams.setContentCharset(params,
+//				HTTP.DEFAULT_CONTENT_CHARSET);
+//		HttpProtocolParams.setUseExpectContinue(params, true);
+//		HttpConnectionParams.setConnectionTimeout(params,
+//				CONNETED_TIMEOUT * 1000);
+//		HttpConnectionParams.setSoTimeout(params, CONNETED_TIMEOUT * 1000);
+//		HttpConnectionParams.setSocketBufferSize(params, 8192);
+//		ConnManagerParams.setMaxTotalConnections(params, 4);
+//		SchemeRegistry schReg = new SchemeRegistry();
+//		schReg.register(new Scheme("http", PlainSocketFactory
+//				.getSocketFactory(), 80));
+//		schReg.register(new Scheme("https",
+//				SSLSocketFactory.getSocketFactory(), 443));
+//
+//		ClientConnectionManager connMgr = new ThreadSafeClientConnManager(
+//				params, schReg);
+//
+//		return new DefaultHttpClient(connMgr, params);
+//	}
 }

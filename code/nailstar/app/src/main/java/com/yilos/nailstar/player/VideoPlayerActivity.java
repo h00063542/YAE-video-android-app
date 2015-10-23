@@ -189,19 +189,20 @@ public class VideoPlayerActivity extends Activity implements
      */
     private void showOrHideImageTextDetail() {
         int visibility = mLayoutVideoDetailContent.getVisibility();
-        RotateAnimation rotateAnimation = null;
         // 显示图文分解
         if (View.GONE == visibility) {
             mLayoutVideoDetailContent.setVisibility(View.VISIBLE);
-            rotateAnimation = new RotateAnimation(0, 180, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-
+            RotateAnimation rotateAnimation = new RotateAnimation(0, 180, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+            rotateAnimation.setDuration(400);
+            rotateAnimation.setFillAfter(true);
+            mIvMoreVideosIcon.startAnimation(rotateAnimation);
         } else {// 隐藏图文分解
             mLayoutVideoDetailContent.setVisibility(View.GONE);
-            rotateAnimation = new RotateAnimation(180, 360, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+            RotateAnimation rotateAnimation = new RotateAnimation(180, 360, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+            rotateAnimation.setDuration(400);
+            rotateAnimation.setFillAfter(true);
+            mIvMoreVideosIcon.startAnimation(rotateAnimation);
         }
-        rotateAnimation.setDuration(400);
-        rotateAnimation.setFillAfter(true);
-        mIvMoreVideosIcon.startAnimation(rotateAnimation);
 
 
 //        mIvMoreVideosIcon.setDrawingCacheEnabled(true);
@@ -376,58 +377,4 @@ public class VideoPlayerActivity extends Activity implements
 
         return output;
     }
-}
-
-class AsyncImageLoader {
-
-    private HashMap<String, SoftReference<Drawable>> imageCache;
-
-    public AsyncImageLoader() {
-        imageCache = new HashMap<String, SoftReference<Drawable>>();
-    }
-
-    public Drawable loadDrawable(final String imageUrl, final ImageCallback imageCallback) {
-        if (imageCache.containsKey(imageUrl)) {
-            SoftReference<Drawable> softReference = imageCache.get(imageUrl);
-            Drawable drawable = softReference.get();
-            if (drawable != null) {
-                return drawable;
-            }
-        }
-        final Handler handler = new Handler() {
-            public void handleMessage(Message message) {
-                imageCallback.imageLoaded((Drawable) message.obj, imageUrl);
-            }
-        };
-        new Thread() {
-            @Override
-            public void run() {
-                Drawable drawable = loadImageFromUrl(imageUrl);
-                imageCache.put(imageUrl, new SoftReference<Drawable>(drawable));
-                Message message = handler.obtainMessage(0, drawable);
-                handler.sendMessage(message);
-            }
-        }.start();
-        return null;
-    }
-
-    public static Drawable loadImageFromUrl(String url) {
-        URL m;
-        InputStream i = null;
-        try {
-            m = new URL(url);
-            i = (InputStream) m.getContent();
-        } catch (MalformedURLException e1) {
-            e1.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        Drawable d = Drawable.createFromStream(i, "src");
-        return d;
-    }
-
-    public interface ImageCallback {
-        public void imageLoaded(Drawable imageDrawable, String imageUrl);
-    }
-
 }
