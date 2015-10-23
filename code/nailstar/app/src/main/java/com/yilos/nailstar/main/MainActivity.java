@@ -13,9 +13,9 @@ import android.widget.TextView;
 import com.yilos.nailstar.R;
 import com.yilos.nailstar.aboutme.AboutMeFragment;
 import com.yilos.nailstar.circle.CircleFragment;
+import com.yilos.nailstar.requirelession.view.RequireLessionFragment;
 import com.yilos.nailstar.index.view.IndexFragment;
 import com.yilos.nailstar.player.VideoPlayerActivity;
-import com.yilos.nailstar.requirelession.RequireLessionFragment;
 
 public class MainActivity extends Activity {
     private FragmentManager fragmentManager;
