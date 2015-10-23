@@ -3,4 +3,8 @@
     <color name="white">#FFFFFF</color>
     <color name="tab_font_orange_color">#FF0000</color>
     <color name="tab_background">#999999</color>
+
+    <!-- about me -->
+    <color name="tab_background_gray">#ecf0f1</color>
+    <color name="underline">#ecf0f1</color>
 </resources>
