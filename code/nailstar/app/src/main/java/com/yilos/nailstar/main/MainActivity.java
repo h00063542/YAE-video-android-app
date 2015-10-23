@@ -13,7 +13,7 @@ import com.yilos.nailstar.R;
 import com.yilos.nailstar.aboutme.AboutMeFragment;
 import com.yilos.nailstar.circle.CircleFragment;
 import com.yilos.nailstar.index.IndexFragment;
-import com.yilos.nailstar.requirelession.RequireLessionFragment;
+import com.yilos.nailstar.requirelession.view.RequireLessionFragment;
 
 public class MainActivity extends Activity {
     private FragmentManager fragmentManager;

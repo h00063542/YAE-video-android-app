@@ -1,4 +1,4 @@
-package com.yilos.nailstar.requirelession;
+package com.yilos.nailstar.requirelession.view;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -17,11 +17,7 @@ import android.widget.Button;
 
 import com.yilos.nailstar.R;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -35,6 +31,9 @@ public class RequireLessionFragment extends Fragment {
 
     public static final int REQUEST_CAMERA = 1;
     public static final int SELECT_FILE = 2;
+    public static final int CROP_IMAGE = 3;
+
+    public static final String YILOS_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/yilos";
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -46,6 +45,10 @@ public class RequireLessionFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+
+    private File tempImage = new File(YILOS_PATH + "/temp.jpg");
+
+    private File cropImage = null;
 
     /**
      * Use this factory method to create a new instance of
@@ -102,21 +105,26 @@ public class RequireLessionFragment extends Fragment {
         final CharSequence[] items = { "Take Photo", "Choose from Library", "Cancel" };
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-//        builder.setTitle("Add Photo!");
         builder.setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int item) {
-                if (items[item].equals("Take Photo")) {
+                if (0 == item) {
+                    File yilosDir = new File(YILOS_PATH);
+                    if (!yilosDir.exists()) {
+                        yilosDir.mkdirs();
+                    }
+                    Uri imageUri = Uri.fromFile(tempImage);
                     Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
                     startActivityForResult(intent, REQUEST_CAMERA);
-                } else if (items[item].equals("Choose from Library")) {
+                } else if (1 == item) {
                     Intent intent = new Intent();
                     intent.setType("image/*");
                     intent.setAction(Intent.ACTION_GET_CONTENT);
                     startActivityForResult(
                             Intent.createChooser(intent, "Select File"),
                             SELECT_FILE);
-                } else if (items[item].equals("Cancel")) {
+                } else if (2 == item) {
                     dialog.dismiss();
                 }
             }
@@ -128,32 +136,53 @@ public class RequireLessionFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
             super.onActivityResult(requestCode, resultCode, data);
+
             if (resultCode == Activity.RESULT_OK) {
+
                 if (requestCode == REQUEST_CAMERA) {
-                    Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
-                    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-                    thumbnail.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
 
-                    File destination = new File(Environment.getExternalStorageDirectory(),
-                            System.currentTimeMillis() + ".jpg");
-
-                    FileOutputStream fo;
-                    try {
-                        destination.createNewFile();
-                        fo = new FileOutputStream(destination);
-                        fo.write(bytes.toByteArray());
-                        fo.close();
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                    File yilosDir = new File(YILOS_PATH);
+                    if (!yilosDir.exists()) {
+                        yilosDir.mkdirs();
                     }
+
+                    cropImage = new File(YILOS_PATH + "/" + System.currentTimeMillis() + ".jpg");
+                    Uri cropImageUri = Uri.fromFile(cropImage);
+                    cropImageUri(Uri.fromFile(tempImage), cropImageUri, 400, 400);
 
                 } else if (requestCode == SELECT_FILE) {
 
+                    File yilosDir = new File(YILOS_PATH);
+                    if (!yilosDir.exists()) {
+                        yilosDir.mkdirs();
+                    }
+
+                    cropImage = new File(YILOS_PATH + "/" + System.currentTimeMillis() + ".jpg");
+                    Uri cropImageUri = Uri.fromFile(cropImage);
+                    cropImageUri(data.getData(), cropImageUri, 400, 400);
+
+                } else if (requestCode == CROP_IMAGE) {
+
                 }
         }
+    }
+
+    private void cropImageUri(Uri src, Uri desc, int outputX, int outputY){
+        Intent intent = new Intent("com.android.camera.action.CROP");
+        intent.setDataAndType(src, "image/*");
+        intent.putExtra("crop", "true");
+        intent.putExtra("aspectX", 1);
+        intent.putExtra("aspectY", 1);
+        intent.putExtra("outputX", outputX);
+        intent.putExtra("outputY", outputY);
+        intent.putExtra("scale", true);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, desc);
+        intent.putExtra("return-data", false);
+        intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
+        intent.putExtra("noFaceDetection", true); // no face detection
+        startActivityForResult(intent, CROP_IMAGE);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
