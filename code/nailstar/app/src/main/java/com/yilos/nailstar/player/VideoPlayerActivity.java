@@ -41,6 +41,7 @@ import com.yilos.nailstar.player.entity.VideoImageTextInfoEntity;
 import com.yilos.nailstar.player.entity.VideoInfoEntity;
 import com.yilos.nailstar.player.presenter.VideoPlayerPresenter;
 import com.yilos.nailstar.player.view.IVideoPlayerView;
+import com.yilos.widget.view.ImageCacheView;
 
 import org.json.JSONException;
 
@@ -76,6 +77,7 @@ public class VideoPlayerActivity extends Activity implements
     private ImageView mIvMoreVideosIcon;
 
     private LinearLayout mLayoutShowImageTextContent;
+    private ViewGroup mLayoutShowImageTextContentParent;
 
     private String mVideoId;
 
@@ -93,11 +95,11 @@ public class VideoPlayerActivity extends Activity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_player);
         init();
-        try {
-            mVideoPlayerPresenter.playerVideo(mVideoId);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            mVideoPlayerPresenter.playerVideo(mVideoId);
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
     }
 
 
@@ -105,16 +107,17 @@ public class VideoPlayerActivity extends Activity implements
         mBtnVideoPlayerBack = (Button) findViewById(R.id.btn_video_player_back);
         mBtnVideoShare = (Button) findViewById(R.id.btn_video_share);
         mTvVideoName = (TextView) findViewById(R.id.tv_video_name);
-        mVDVideoView = (VDVideoView) findViewById(R.id.video_player);
-        // 手动这是播放窗口父类，横屏的时候，会用这个做为容器使用，如果不设置，那么默认直接跳转到DecorView
-        mVDVideoView.setVDVideoViewContainer((ViewGroup) mVDVideoView
-                .getParent());
+//        mVDVideoView = (VDVideoView) findViewById(R.id.video_player);
+//        // 手动这是播放窗口父类，横屏的时候，会用这个做为容器使用，如果不设置，那么默认直接跳转到DecorView
+//        mVDVideoView.setVDVideoViewContainer((ViewGroup) mVDVideoView
+//                .getParent());
         mIvVideoAuthorPhoto = (ImageView) findViewById(R.id.iv_video_author_photo);
         mTvVideoAuthorName = (TextView) findViewById(R.id.tv_video_author_name);
         mTvVideoPlayingTimes = (TextView) findViewById(R.id.tv_video_playing_times);
         mIvMoreVideosIcon = (ImageView) findViewById(R.id.iv_more_videos_icon);
 
         mLayoutShowImageTextContent = (LinearLayout) findViewById(R.id.layout_show_image_text_content);
+        mLayoutShowImageTextContentParent = (ViewGroup) mLayoutShowImageTextContent.getParent();
         // 获取视频Id，名称，url地址
         mVideoId = getIntent().getStringExtra("");
 
@@ -140,7 +143,7 @@ public class VideoPlayerActivity extends Activity implements
         });
 
 
-        mLayoutShowImageTextContent.setOnClickListener(new View.OnClickListener() {
+        mLayoutShowImageTextContentParent.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -165,9 +168,9 @@ public class VideoPlayerActivity extends Activity implements
                     MarginLayoutParams layoutParams = new MarginLayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
                     layoutParams.setMargins(10, 10, 10, 10);
                     for (int i = 0; i < pictures.size(); i++) {
-                        ImageView imageView = new ImageView(VideoPlayerActivity.this);
+                        ImageCacheView imageView = new ImageCacheView(VideoPlayerActivity.this);
                         imageView.setLayoutParams(layoutParams);
-                        imageView.setImageURI(Uri.parse(pictures.get(i).toString()));
+                        imageView.setImageSrc(pictures.get(i).toString());
                         mLayoutVideoDetailContent.addView(imageView);
 
                         TextView textView = new TextView(VideoPlayerActivity.this);
@@ -188,16 +191,16 @@ public class VideoPlayerActivity extends Activity implements
      * 显示或隐藏图文分解详情
      */
     private void showOrHideImageTextDetail() {
-        int visibility = mLayoutVideoDetailContent.getVisibility();
+        int visibility = mLayoutShowImageTextContentParent.getVisibility();
         // 显示图文分解
         if (View.GONE == visibility) {
-            mLayoutVideoDetailContent.setVisibility(View.VISIBLE);
+            mLayoutShowImageTextContentParent.setVisibility(View.VISIBLE);
             RotateAnimation rotateAnimation = new RotateAnimation(0, 180, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
             rotateAnimation.setDuration(400);
             rotateAnimation.setFillAfter(true);
             mIvMoreVideosIcon.startAnimation(rotateAnimation);
         } else {// 隐藏图文分解
-            mLayoutVideoDetailContent.setVisibility(View.GONE);
+            mLayoutShowImageTextContentParent.setVisibility(View.GONE);
             RotateAnimation rotateAnimation = new RotateAnimation(180, 360, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
             rotateAnimation.setDuration(400);
             rotateAnimation.setFillAfter(true);
@@ -224,21 +227,21 @@ public class VideoPlayerActivity extends Activity implements
     protected void onResume() {
         // TODO Auto-generated method stub
         super.onResume();
-        mVDVideoView.onResume();
+//        mVDVideoView.onResume();
     }
 
     @Override
     protected void onPause() {
         // TODO Auto-generated method stub
         super.onPause();
-        mVDVideoView.onPause();
+//        mVDVideoView.onPause();
     }
 
     @Override
     protected void onStop() {
         // TODO Auto-generated method stub
         super.onStop();
-        mVDVideoView.onStop();
+//        mVDVideoView.onStop();
     }
 
     @Override
