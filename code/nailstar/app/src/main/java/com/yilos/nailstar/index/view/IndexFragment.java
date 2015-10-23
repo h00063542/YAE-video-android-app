@@ -11,7 +11,8 @@ import com.yilos.nailstar.R;
 import com.yilos.nailstar.framework.entity.NailStarApplicationContext;
 import com.yilos.nailstar.index.entity.IndexContent;
 import com.yilos.nailstar.index.entity.Poster;
-import com.yilos.nailstar.index.model.IndexServiceImpl;
+import com.yilos.nailstar.index.presenter.IndexPresenter;
+import com.yilos.nailstar.util.CollectionUtil;
 import com.yilos.widget.banner.Banner;
 import com.yilos.widget.pullrefresh.PullRefreshLayout;
 import com.yilos.widget.view.ImageCacheView;
@@ -29,13 +30,13 @@ import in.srain.cube.views.ptr.PtrHandler;
  * to handle interaction events.
  * create an instance of this fragment.
  */
-public class IndexFragment extends Fragment {
+public class IndexFragment extends Fragment implements IIndexView {
     /**
      * 轮播图
      */
-    private Banner convenientBanner;
+    private Banner banner;
 
-    private IndexContent indexContent;
+    private IndexPresenter indexPresenter;
 
     public IndexFragment() {
         // Required empty public constructor
@@ -44,6 +45,7 @@ public class IndexFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        indexPresenter = IndexPresenter.getInstance(this);
     }
 
     @Override
@@ -51,14 +53,18 @@ public class IndexFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_index, container, false);
+        initViews(view);
 
         if(NailStarApplicationContext.getInstance().getIndexContent() != null){
-            indexContent = NailStarApplicationContext.getInstance().getIndexContent();
-        } else {
-            indexContent = new IndexServiceImpl().getIndexContent();
-        }
+            // 闪屏出现时已经加载了数据
+            IndexContent indexContent = NailStarApplicationContext.getInstance().getIndexContent();
+            NailStarApplicationContext.getInstance().setIndexContent(null);
+            indexPresenter.setIndexContentCache(indexContent);
 
-        initViews(view);
+            init(indexContent);
+        } else {
+            init(null);
+        }
 
         return view;
     }
@@ -66,33 +72,14 @@ public class IndexFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        //convenientBanner.startFlipping();
     }
 
-    private void initViews(View view){
-        convenientBanner = (Banner) view.findViewById(R.id.convenientBanner);
-        final List<ImageCacheView> views = new ArrayList<>(8);
-        for(Poster poster : indexContent.getPosters()){
-            ImageCacheView imageCacheView = new ImageCacheView(getActivity().getApplicationContext());
-            imageCacheView.setImageSrc(poster.getPicUrl());
-            views.add(imageCacheView);
-        }
-
-        convenientBanner.setViews(new Banner.ViewCreator<Poster>(){
-
-            @Override
-            public View createView(Context context, int position, Poster data) {
-//                ImageCacheView imageCacheView = new ImageCacheView(context);
-//                imageCacheView.setImageSrc(data.getPicUrl());
-                ImageCacheView imageCacheView = views.get(position);
-
-                return imageCacheView;
-            }
-        }, indexContent.getPosters());
+    private void initViews(View view) {
+        banner = (Banner) view.findViewById(R.id.convenientBanner);
 
         // 初始化下拉刷新功能
         final PullRefreshLayout pullRefreshLayout = (PullRefreshLayout) view.findViewById(R.id.fragment_home_ptr_frame);
-        pullRefreshLayout.setDurationToCloseHeader(1500);
+        pullRefreshLayout.setDurationToCloseHeader(1000);
         pullRefreshLayout.setPtrHandler(new PtrHandler() {
             @Override
             public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
@@ -104,11 +91,52 @@ public class IndexFragment extends Fragment {
                 pullRefreshLayout.postDelayed(new Runnable() {
                     @Override
                     public void run() {
+                        indexPresenter.refreshIndexContent(false);
                         pullRefreshLayout.refreshComplete();
                     }
-                }, 1500);
+                }, 50);
             }
         });
     }
 
+    private void init(IndexContent indexContent){
+        if(indexContent != null && indexContent.getPosters() != null) {
+            initPosters(indexContent.getPosters());
+        } else {
+            indexPresenter.refreshPosters(true);
+        }
+
+
+    }
+
+    @Override
+    public void initPosters(List<Poster> posters) {
+
+        final List<ImageCacheView> views = new ArrayList<>(8);
+
+        if(!CollectionUtil.isEmpty(posters)){
+            for(Poster poster : posters){
+                ImageCacheView imageCacheView = new ImageCacheView(getActivity().getApplicationContext());
+                imageCacheView.setImageSrc(poster.getPicUrl());
+                views.add(imageCacheView);
+            }
+        }
+
+        banner.setViews(new Banner.ViewCreator<Poster>() {
+
+            @Override
+            public View createView(Context context, int position, Poster data) {
+                ImageCacheView imageCacheView = views.get(position);
+
+                return imageCacheView;
+            }
+        }, posters);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        indexPresenter.saveIndexContentCache();
+    }
 }
