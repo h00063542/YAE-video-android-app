@@ -3,7 +3,14 @@ package com.yilos.nailstar.player;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Matrix;
+import android.graphics.Paint;
+import android.graphics.Rect;
+import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -13,78 +20,103 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.ViewGroup.MarginLayoutParams;
+import android.view.animation.Animation;
+import android.view.animation.RotateAnimation;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sina.sinavideo.sdk.VDVideoExtListeners;
 import com.sina.sinavideo.sdk.VDVideoView;
+import com.sina.sinavideo.sdk.VDVideoViewController;
 import com.sina.sinavideo.sdk.data.VDVideoInfo;
 import com.sina.sinavideo.sdk.data.VDVideoListInfo;
 import com.sina.sinavideo.sdk.utils.VDVideoFullModeController;
 import com.yilos.nailstar.R;
 import com.yilos.nailstar.main.MainActivity;
+import com.yilos.nailstar.player.entity.VideoEntity;
+import com.yilos.nailstar.player.entity.VideoImageTextInfoEntity;
+import com.yilos.nailstar.player.entity.VideoInfoEntity;
+import com.yilos.nailstar.player.presenter.VideoPlayerPresenter;
+import com.yilos.nailstar.player.view.IVideoPlayerView;
 
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.SoftReference;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class VideoPlayerActivity extends Activity implements
+        IVideoPlayerView,
         VDVideoExtListeners.OnVDVideoFrameADListener,
         VDVideoExtListeners.OnVDVideoInsertADListener,
         VDVideoExtListeners.OnVDVideoPlaylistListener {
     private static final String TAG = "VideoPlayerActivity";
 
+    private VideoPlayerPresenter mVideoPlayerPresenter = new VideoPlayerPresenter(this);
+
     // 视频播放控件
     private VDVideoView mVDVideoView;
     // 播放的视频列表
     private VDVideoListInfo mVDVideoListInfo;
-    // 记录上次播放的视频
-    private static int mVideoIndex = 0;
-    // 记录上次播放视频的位置
-    private static long mVideoPosition = 0;
 
 
     private Button mBtnVideoPlayerBack;
     private Button mBtnVideoShare;
     private TextView mTvVideoName;
+    private ImageView mIvVideoAuthorPhoto;
+    private TextView mTvVideoAuthorName;
+    private TextView mTvVideoPlayingTimes;
+    private ImageView mIvMoreVideosIcon;
 
     private LinearLayout mLayoutShowImageTextContent;
 
     private String mVideoId;
-    private String mVideoName;
-    private String mVideoUrl;
+
 
     // 图文分解
     private LinearLayout mLayoutVideoDetailContent;
+
+    private VideoInfoEntity mVideoInfoEntity;
+    private VideoEntity mVideoEntity;
+
+    private VideoImageTextInfoEntity mVideoImageTextInfoEntity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_player);
         init();
+        try {
+            mVideoPlayerPresenter.playerVideo(mVideoId);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
 
     private void init() {
-        mVDVideoView = (VDVideoView) findViewById(R.id.video_player);
         mBtnVideoPlayerBack = (Button) findViewById(R.id.btn_video_player_back);
         mBtnVideoShare = (Button) findViewById(R.id.btn_video_share);
         mTvVideoName = (TextView) findViewById(R.id.tv_video_name);
+        mVDVideoView = (VDVideoView) findViewById(R.id.video_player);
+        // 手动这是播放窗口父类，横屏的时候，会用这个做为容器使用，如果不设置，那么默认直接跳转到DecorView
+        mVDVideoView.setVDVideoViewContainer((ViewGroup) mVDVideoView
+                .getParent());
+        mIvVideoAuthorPhoto = (ImageView) findViewById(R.id.iv_video_author_photo);
+        mTvVideoAuthorName = (TextView) findViewById(R.id.tv_video_author_name);
+        mTvVideoPlayingTimes = (TextView) findViewById(R.id.tv_video_playing_times);
+        mIvMoreVideosIcon = (ImageView) findViewById(R.id.iv_more_videos_icon);
 
         mLayoutShowImageTextContent = (LinearLayout) findViewById(R.id.layout_show_image_text_content);
         // 获取视频Id，名称，url地址
         mVideoId = getIntent().getStringExtra("");
-        mVideoName = getIntent().getStringExtra("");
-        mVideoUrl = getIntent().getStringExtra("");
 
         mLayoutVideoDetailContent = (LinearLayout) findViewById(R.id.layout_video_detail_content);
         mBtnVideoPlayerBack.setOnClickListener(new View.OnClickListener() {
@@ -116,71 +148,38 @@ public class VideoPlayerActivity extends Activity implements
             }
         });
 
-        // 初始化视频播放器
-        initVideoPlayer();
         // 初始化图文分解
         initImageTextDetail();
     }
 
-    private void initVideoPlayer() {
-        // 手动这是播放窗口父类，横屏的时候，会用这个做为容器使用，如果不设置，那么默认直接跳转到DecorView
-        mVDVideoView.setVDVideoViewContainer((ViewGroup) mVDVideoView
-                .getParent());
-        mVDVideoListInfo = new VDVideoListInfo();
-        VDVideoInfo info = new VDVideoInfo();
-        // TODO 调用后台接口，获取信息和评论信息
-        info.mTitle = "测试视频";
-        info.mPlayUrl = "http://v.yilos.com/d364fc2cf2caadf0fd81463fe912daf7.mp4";
-        mVDVideoListInfo.addVideoInfo(info);
-        mVDVideoView.open(this, mVDVideoListInfo);
-        mVDVideoView.play(0);
-    }
 
     private void initImageTextDetail() {
-
-        String data = "{\"code\":0,\"result\":{\"id\":\"9d923cb0-76d0-11e5-976b-35813a43b6ad\",\"pictures\":[\"http://pic.yilos.com/51131fb2d9fde17361e23774b895a5ac\",\"http://pic.yilos.com/9ac3a65b4395cf9ad0b26aa992523611\",\"http://pic.yilos.com/653915fce88403bef6222de7ad6a72f8\",\"http://pic.yilos.com/1151e381c42c86a6ff86aa26113f655f\",\"http://pic.yilos.com/d260f778a82242d2fa47e30397aa9722\",\"http://pic.yilos.com/42ee7dc6d2e3ff70506faf397a1e6090\",\"http://pic.yilos.com/565cf047d4e8092c1cc969e81eabbf7f\",\"http://pic.yilos.com/88e832ca5df1810c5308a01806dee4e1\",\"http://pic.yilos.com/e631e13d5117d3aa6dc18f829945788c\",\"http://pic.yilos.com/bf117d92cc6b3eb6615a1d81f6b11e80\",\"http://pic.yilos.com/701e5a742529c7b9c8b987dce9a54554\",\"http://pic.yilos.com/a6285fbca2972384583478d3bc4f2962\",\"http://pic.yilos.com/26f6d71bb90c8e98bf26423f450b6f93\",\"http://pic.yilos.com/9fee7e85f9eaf125bb5575a9530c3b56\",\"http://pic.yilos.com/6472164f9b17a1b24079950c7e5b4a31\",\"http://pic.yilos.com/cb43c690d592c321e59a4d439b58b430\",\"http://pic.yilos.com/c04a241e68ac5be7ab0289b679d0ffe8\",\"http://pic.yilos.com/890971326abdd79f82540e1eae922626\",\"http://pic.yilos.com/926cf5efcb458f8b7fac04166ff80afb\",\"http://pic.yilos.com/6032d3b5e5cff25adf304778669be1ca\",\"http://pic.yilos.com/2ff82a21a23121158bfaa8270d6dbb91\"],\"articles\":[\"\",\"1 整甲均匀涂抹两遍乳白色做底色 分别照灯\",\"2 整甲涂抹底胶\",\"3 取适量咖啡色横向在甲面涂抹不规则宽线条\",\"4 取适量深红色横向在甲面涂抹不规则宽线条\",\"5 取适量乳白色横向在甲面涂抹不规则宽线条\",\"取适量乳白色横向在甲面涂抹不规则宽线条\",\"6 用干净的小毛笔将颜色做横向勾绘 照灯\",\"用干净的小毛笔将颜色做横向勾绘 照灯\",\"用干净的小毛笔将颜色做横向勾绘 照灯\",\"7 整甲涂抹底胶\",\"8 取少量黑色横向在甲面涂抹不规则线条\",\"9 取少量白色横向在甲面涂抹不规则线条\",\"10 用干净的小毛笔将颜色做横向勾绘 照灯\",\"用干净的小毛笔将颜色做横向勾绘 照灯\",\"11 整甲涂抹底胶\",\"12 取少量白色彩绘胶在甲面横向涂抹不规则线条 照灯\",\"13 整甲均匀涂抹封层 照灯\",\"14 用清洁液清洁表面浮胶\",\"15 完成 展示\",\"16款式与应用\"]}}";
-        JSONArray pictures = null;
-        JSONArray articles = null;
         try {
-            JSONObject jsonResult = new JSONObject(data).getJSONObject("result");
-            pictures = jsonResult.getJSONArray("pictures");
-            articles = jsonResult.getJSONArray("articles");
-            if (null == pictures || null == articles) {
-                // TODO 提示没有图文分解
-                return;
-            } else if (pictures.length() != articles.length()) {
-                // TODO 提示接口返回图文分解错误
-                return;
-            }
+            mVideoPlayerPresenter.getVideoImageTextInfo("", new Handler() {
+                @Override
+                public void handleMessage(Message msg) {
+                    super.handleMessage(msg);
+                    mVideoImageTextInfoEntity = (VideoImageTextInfoEntity) msg.obj;
+                    ArrayList pictures = mVideoImageTextInfoEntity.getPictures();
+                    ArrayList articles = mVideoImageTextInfoEntity.getArticles();
+                    MarginLayoutParams layoutParams = new MarginLayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+                    layoutParams.setMargins(10, 10, 10, 10);
+                    for (int i = 0; i < pictures.size(); i++) {
+                        ImageView imageView = new ImageView(VideoPlayerActivity.this);
+                        imageView.setLayoutParams(layoutParams);
+                        imageView.setImageURI(Uri.parse(pictures.get(i).toString()));
+                        mLayoutVideoDetailContent.addView(imageView);
+
+                        TextView textView = new TextView(VideoPlayerActivity.this);
+                        textView.setLayoutParams(layoutParams);
+                        textView.setText(articles.get(i).toString());
+                        mLayoutVideoDetailContent.addView(textView);
+
+                    }
+                }
+            });
         } catch (JSONException e) {
             e.printStackTrace();
-            // TODO 提示没有图文分解
-            return;
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-            // TODO 提示没有图文分解
-            return;
-        }
-
-        MarginLayoutParams layoutParams = new MarginLayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-        layoutParams.setMargins(10, 10, 10, 10);
-        for (int i = 0; i < pictures.length(); i++) {
-            try {
-//                ImageView imageView = new ImageView(this);
-//                imageView.setLayoutParams(layoutParams);
-//                imageView.setImageURI(Uri.parse(pictures.getString(i)));
-//                mLayoutVideoDetailContent.addView(imageView);
-
-                TextView textView = new TextView(this);
-                textView.setLayoutParams(layoutParams);
-                textView.setText(articles.getString(i));
-                mLayoutVideoDetailContent.addView(textView);
-            } catch (JSONException e) {
-                e.printStackTrace();
-                // TODO 提示解析图文分解失败
-                return;
-            }
-
         }
 
     }
@@ -190,12 +189,25 @@ public class VideoPlayerActivity extends Activity implements
      */
     private void showOrHideImageTextDetail() {
         int visibility = mLayoutVideoDetailContent.getVisibility();
+        RotateAnimation rotateAnimation = null;
         // 显示图文分解
         if (View.GONE == visibility) {
             mLayoutVideoDetailContent.setVisibility(View.VISIBLE);
+            rotateAnimation = new RotateAnimation(0, 180, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+
         } else {// 隐藏图文分解
             mLayoutVideoDetailContent.setVisibility(View.GONE);
+            rotateAnimation = new RotateAnimation(180, 360, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
         }
+        rotateAnimation.setDuration(400);
+        rotateAnimation.setFillAfter(true);
+        mIvMoreVideosIcon.startAnimation(rotateAnimation);
+
+
+//        mIvMoreVideosIcon.setDrawingCacheEnabled(true);
+//        Bitmap bitmap = Bitmap.createBitmap(mIvMoreVideosIcon.getDrawingCache());
+//        mIvMoreVideosIcon.setDrawingCacheEnabled(false);
+//        mIvMoreVideosIcon.setImageBitmap(toTurn(bitmap));
     }
 
     @Override
@@ -226,6 +238,13 @@ public class VideoPlayerActivity extends Activity implements
         // TODO Auto-generated method stub
         super.onStop();
         mVDVideoView.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(VDVideoViewController
+                .getInstance(VideoPlayerActivity.this).mReciever);
     }
 
     @Override
@@ -281,6 +300,82 @@ public class VideoPlayerActivity extends Activity implements
         Toast.makeText(this, "开始换图", Toast.LENGTH_LONG).show();
     }
 
+    @Override
+    public String getVideoId() {
+        return mVideoId;
+    }
+
+    @Override
+    public void playVideo(VideoInfoEntity videoInfoEntity) {
+        showVideoInfo2Page(videoInfoEntity);
+        mVDVideoListInfo = new VDVideoListInfo();
+        VDVideoInfo info = new VDVideoInfo();
+        mVideoEntity = videoInfoEntity.getVideos().get(0);
+        info.mTitle = videoInfoEntity.getTitle();
+        info.mPlayUrl = mVideoEntity.getOssUrl();
+        mVDVideoListInfo.addVideoInfo(info);
+        mVDVideoView.open(VideoPlayerActivity.this, mVDVideoListInfo);
+        mVDVideoView.play(0);
+    }
+
+    @Override
+    public void showImageTextDetail() {
+        showOrHideImageTextDetail();
+    }
+
+    @Override
+    public void hideImageTextDetail() {
+        showOrHideImageTextDetail();
+    }
+
+    // 将视频信息显示在界面上
+    private void showVideoInfo2Page(VideoInfoEntity videoInfoEntity) {
+        mTvVideoName.setText(videoInfoEntity.getTitle());
+        mTvVideoAuthorName.setText(videoInfoEntity.getAuthor());
+        mTvVideoPlayingTimes.setText(String.valueOf(videoInfoEntity.getVideos().get(0).getPlayTimes()));
+    }
+
+    // 图片翻转180度
+    public Bitmap toTurn(Bitmap bitmap) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(180); /*翻转180度*/
+        int width = bitmap.getWidth();
+        int height = bitmap.getHeight();
+        Bitmap img = Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, true);
+        return img;
+    }
+
+    /**
+     * 圆角处理
+     * 实际上是在原图片上画了一个圆角遮罩。对于paint.setXfermode(new PorterDuffXfermode(Mode.SRC_IN));
+     * 方法我刚看到也是一知半解Mode.SRC_IN参数是个画图模式，该类型是指只显 示两层图案的交集部分，且交集部位只显示上层图像。
+     * 实际就是先画了一个圆角矩形的过滤框，于是形状有了，再将框中的内容填充为图片
+     *
+     * @param bitmap
+     * @param roundPx
+     * @return
+     */
+    public static Bitmap getRoundedCornerBitmap(Bitmap bitmap, float roundPx) {
+
+        Bitmap output = Bitmap.createBitmap(bitmap.getWidth(),
+                bitmap.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(output);
+
+        final int color = 0xff424242;
+        final Paint paint = new Paint();
+        final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
+        final RectF rectF = new RectF(rect);
+
+        paint.setAntiAlias(true);
+        canvas.drawARGB(0, 0, 0, 0);
+        paint.setColor(color);
+        canvas.drawRoundRect(rectF, roundPx, roundPx, paint);
+
+        paint.setXfermode(new android.graphics.PorterDuffXfermode(android.graphics.PorterDuff.Mode.SRC_IN));
+        canvas.drawBitmap(bitmap, rect, rect, paint);
+
+        return output;
+    }
 }
 
 class AsyncImageLoader {
