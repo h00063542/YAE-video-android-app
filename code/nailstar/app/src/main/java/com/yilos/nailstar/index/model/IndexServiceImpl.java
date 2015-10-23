@@ -27,23 +27,10 @@ import java.util.List;
  * Created by yangdan on 15/10/16.
  */
 public class IndexServiceImpl implements IndexService{
-    /**
-     * 首页内容缓存
-     */
-    private IndexContent indexContent = readIndexContent();
 
     @Override
-    public IndexContent getIndexContent(){
-        try {
-            IndexContent indexContent = getIndexContentFromNet();
-            return indexContent;
-        } catch (NetworkDisconnectException e) {
-//            e.printStackTrace();
-        } catch (JSONParseException e) {
-//            e.printStackTrace();
-        }
-
-        return indexContent;
+    public IndexContent getIndexContentFromCache() {
+        return readIndexContent();
     }
 
     @Override
@@ -53,69 +40,12 @@ public class IndexServiceImpl implements IndexService{
         }
 
         final IndexContent indexContent = new IndexContent();
-        indexContent.setPosters(getIndexPosterFromNet());
-        indexContent.setCategories(getCategoryFromNet());
+        indexContent.setPosters(getIndexPostersFromNet());
+        indexContent.setCategories(getIndexCategoriesFromNet());
         indexContent.setHotestTopics(getHotestTopicFromNet());
         indexContent.setLatestTopics(getLatestTopicFromNet());
 
         return indexContent;
-    }
-
-    @Override
-    public List<Poster> getIndexPosters(){
-        try {
-            List<Poster> posters = getIndexPosterFromNet();
-            return posters;
-        } catch (NetworkDisconnectException e) {
-            //e.printStackTrace();
-        } catch (JSONParseException e) {
-            //e.printStackTrace();
-        }
-
-        return indexContent.getPosters();
-    }
-
-    @Override
-    public List<Topic> getLatestTopic(){
-        try {
-            List<Topic> topics = getLatestTopicFromNet();
-            return topics;
-        } catch (NetworkDisconnectException e) {
-            //e.printStackTrace();
-        } catch (JSONParseException e) {
-            //e.printStackTrace();
-        }
-
-        return indexContent.getLatestTopics();
-    }
-
-    @Override
-    public List<Topic> getHotestTopic(){
-        try {
-            List<Topic> topics = getHotestTopicFromNet();
-            return topics;
-        } catch (NetworkDisconnectException e) {
-            //e.printStackTrace();
-        } catch (JSONParseException e) {
-            //e.printStackTrace();
-        }
-
-        return indexContent.getHotestTopics();
-    }
-
-    @Override
-    public List<Category> getIndexCategories(){
-        try {
-            List<Category> categories = getCategoryFromNet();
-
-            return categories;
-        } catch (NetworkDisconnectException e) {
-//            e.printStackTrace();
-        } catch (JSONParseException e) {
-//            e.printStackTrace();
-        }
-
-        return indexContent.getCategories();
     }
 
     /**
@@ -124,7 +54,8 @@ public class IndexServiceImpl implements IndexService{
      * @throws NetworkDisconnectException
      * @throws JSONParseException
      */
-    private List<Poster> getIndexPosterFromNet() throws NetworkDisconnectException, JSONParseException{
+    @Override
+    public List<Poster> getIndexPostersFromNet() throws NetworkDisconnectException, JSONParseException{
         String posterStrResult = null;
         try {
             posterStrResult = HttpClient.getJson("/vapi/nailstar/posters");
@@ -160,7 +91,8 @@ public class IndexServiceImpl implements IndexService{
         }
     }
 
-    private List<Topic> getLatestTopicFromNet() throws NetworkDisconnectException, JSONParseException{
+    @Override
+    public List<Topic> getLatestTopicFromNet() throws NetworkDisconnectException, JSONParseException{
         String latestTopicStringResult = null;
         try {
             latestTopicStringResult = HttpClient.getJson("/vapi/nailstar/latestTopic");
@@ -197,7 +129,8 @@ public class IndexServiceImpl implements IndexService{
         }
     }
 
-    private List<Topic> getHotestTopicFromNet() throws NetworkDisconnectException, JSONParseException{
+    @Override
+    public List<Topic> getHotestTopicFromNet() throws NetworkDisconnectException, JSONParseException{
         String hotestTopicStrResult = null;
         try {
             hotestTopicStrResult = HttpClient.getJson("/vapi/nailstar/hotestTopic");
@@ -234,7 +167,8 @@ public class IndexServiceImpl implements IndexService{
         }
     }
 
-    private List<Category> getCategoryFromNet() throws NetworkDisconnectException, JSONParseException{
+    @Override
+    public List<Category> getIndexCategoriesFromNet() throws NetworkDisconnectException, JSONParseException{
         String categoryStrResult = null;
         try {
             categoryStrResult = HttpClient.getJson("/vapi/nailstar/categories");
@@ -306,7 +240,8 @@ public class IndexServiceImpl implements IndexService{
     /**
      * 将首页对象输出到文件
      */
-    public synchronized void saveIndexContent() {
+    @Override
+    public synchronized void saveIndexContent(IndexContent indexContent) {
         File cacheDir = NailStarApplicationContext.getInstance().getExternalCacheDir();
         File indexFile = new File(cacheDir, "indexContent.out");
 

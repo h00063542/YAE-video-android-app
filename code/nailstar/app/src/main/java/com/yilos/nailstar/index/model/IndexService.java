@@ -19,10 +19,11 @@ public interface IndexService {
     IndexContent getIndexContentFromNet() throws NetworkDisconnectException, JSONParseException;
 
     /**
-     * 获取首页内容
-     * @return 首页信息
+     * 从本地缓存中读取首页内容
+     * 如果缓存中没有，则返回空
+     * @return
      */
-    IndexContent getIndexContent();
+    IndexContent getIndexContentFromCache();
 
     /**
      * 获取首页轮播图列表
@@ -30,7 +31,7 @@ public interface IndexService {
      * @throws NetworkDisconnectException
      * @throws JSONParseException
      */
-    List<Poster> getIndexPosters();
+    List<Poster> getIndexPostersFromNet() throws NetworkDisconnectException, JSONParseException;
 
     /**
      * 获取首页最新视频列表
@@ -38,7 +39,7 @@ public interface IndexService {
      * @throws NetworkDisconnectException
      * @throws JSONParseException
      */
-    List<Topic> getLatestTopic();
+    List<Topic> getLatestTopicFromNet() throws NetworkDisconnectException, JSONParseException;
 
     /**
      * 获取首页最热主题列表
@@ -46,7 +47,7 @@ public interface IndexService {
      * @throws NetworkDisconnectException
      * @throws JSONParseException
      */
-    List<Topic> getHotestTopic();
+    List<Topic> getHotestTopicFromNet() throws NetworkDisconnectException, JSONParseException;
 
     /**
      * 获取首页主题分类列表
@@ -54,7 +55,11 @@ public interface IndexService {
      * @throws NetworkDisconnectException
      * @throws JSONParseException
      */
-    List<Category> getIndexCategories();
+    List<Category> getIndexCategoriesFromNet() throws NetworkDisconnectException, JSONParseException;
 
-    void saveIndexContent();
+    /**
+     * 将首页内容保存到本地缓存中
+     * @param indexContent
+     */
+    void saveIndexContent(IndexContent indexContent);
 }

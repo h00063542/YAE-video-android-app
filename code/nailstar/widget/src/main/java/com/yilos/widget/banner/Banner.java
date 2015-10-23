@@ -22,6 +22,8 @@ public class Banner<T> extends CViewPager{
 
     private boolean playing = false;
 
+    private boolean pause = false;
+
     public Banner(Context context) {
         super(context);
     }
@@ -34,7 +36,7 @@ public class Banner<T> extends CViewPager{
     }
 
     public Banner<T> setViews(final ViewCreator creator, final List<T> data){
-        viewCount = data.size();
+        viewCount = data == null ? 0 : data.size();
         setAdapter(new PagerAdapter() {
             @Override
             public Object instantiateItem(ViewGroup container, final int position) {
@@ -42,6 +44,7 @@ public class Banner<T> extends CViewPager{
                 if (view.getParent() != null) {
                     container.removeView(view);
                 }
+                //view.setClickable(true);
                 container.addView(view, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
                 return view;
             }
@@ -61,9 +64,9 @@ public class Banner<T> extends CViewPager{
             }
 
             private int getRealPosition(int position) {
-                position = position % data.size();
+                position = position % viewCount;
                 if (position < 0) {
-                    position += data.size();
+                    position += viewCount;
                 }
 
                 return position;
@@ -71,28 +74,37 @@ public class Banner<T> extends CViewPager{
         });
 
         setCurrentItem(1314000 * viewCount);
-        startPlay();
+        play();
 
         return this;
     }
 
-    public Banner<T> startPlay() {
+    public Banner<T> play() {
+        if(playing) {
+            return this;
+        }
+
         playing = true;
-        postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (playing) {
-                    setCurrentItem(getCurrentItem() + 1);
-                    startPlay();
-                }
-            }
-        }, interval);
+        delayPlay();
+        pause = false;
+        return this;
+    }
+
+    public Banner<T> stop() {
+        playing = false;
+        pause = true;
 
         return this;
     }
 
-    public Banner<T> stopPlay() {
-        playing = false;
+    public Banner<T> resume() {
+        pause = false;
+
+        return this;
+    }
+
+    public Banner<T> pause() {
+        pause = true;
 
         return this;
     }
@@ -108,11 +120,14 @@ public class Banner<T> extends CViewPager{
 
         switch (action & MotionEventCompat.ACTION_MASK) {
             case MotionEvent.ACTION_DOWN: {
-                stopPlay();
+                pause();
                 break;
             }
+            case MotionEvent.ACTION_MOVE:
+                pause();
+                break;
             case MotionEvent.ACTION_UP:
-                startPlay();
+                resume();
                 break;
             default:
                 break;
@@ -123,5 +138,24 @@ public class Banner<T> extends CViewPager{
 
     public interface ViewCreator<T> {
         View createView(Context context, int position, T data);
+    }
+
+    private void delayPlay(){
+        postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if(playing) {
+                    if(!pause) {
+                        playNext();
+                    }
+
+                    delayPlay();
+                }
+            }
+        }, interval);
+    }
+
+    private void playNext() {
+        setCurrentItem(getCurrentItem() + 1);
     }
 }
