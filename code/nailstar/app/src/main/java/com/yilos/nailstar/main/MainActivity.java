@@ -3,6 +3,7 @@ package com.yilos.nailstar.main;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,6 +14,7 @@ import com.yilos.nailstar.R;
 import com.yilos.nailstar.aboutme.AboutMeFragment;
 import com.yilos.nailstar.circle.CircleFragment;
 import com.yilos.nailstar.index.view.IndexFragment;
+import com.yilos.nailstar.player.VideoPlayerActivity;
 import com.yilos.nailstar.requirelession.RequireLessionFragment;
 
 public class MainActivity extends Activity {
@@ -24,6 +26,7 @@ public class MainActivity extends Activity {
     private RequireLessionFragment requireLessionFragment;
     private AboutMeFragment aboutMeFragment;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,11 +35,11 @@ public class MainActivity extends Activity {
         initViews();
         setTabSelection(0);
 
-        RadioGroup radioGroup = (RadioGroup)findViewById(R.id.main_tab_group);
+        RadioGroup radioGroup = (RadioGroup) findViewById(R.id.main_tab_group);
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                switch (checkedId){
+                switch (checkedId) {
                     case R.id.main_tab_index:
                         setTabSelection(0);
                         break;
@@ -54,6 +57,10 @@ public class MainActivity extends Activity {
                 }
             }
         });
+
+        Intent intent = new Intent(MainActivity.this, VideoPlayerActivity.class);
+        startActivity(intent);
+        MainActivity.this.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
 
     @Override
@@ -80,7 +87,7 @@ public class MainActivity extends Activity {
 
     private void initViews() {
         //indexFragment = findViewById(R.id.fragment_index);
-        mainTabNewMessage = (TextView)findViewById(R.id.main_tab_new_message);
+        mainTabNewMessage = (TextView) findViewById(R.id.main_tab_new_message);
 
         fragmentManager = getFragmentManager();
     }
@@ -88,8 +95,7 @@ public class MainActivity extends Activity {
     /**
      * 根据传入的index参数来设置选中的tab页。
      *
-     * @param index
-     *            每个tab页对应的下标。0表示消息，1表示联系人，2表示动态，3表示设置。
+     * @param index 每个tab页对应的下标。0表示消息，1表示联系人，2表示动态，3表示设置。
      */
     private void setTabSelection(int index) {
         // 开启一个Fragment事务
@@ -146,8 +152,7 @@ public class MainActivity extends Activity {
     /**
      * 将所有的Fragment都置为隐藏状态。
      *
-     * @param transaction
-     *            用于对Fragment执行操作的事务
+     * @param transaction 用于对Fragment执行操作的事务
      */
     private void hideFragments(FragmentTransaction transaction) {
         if (indexFragment != null) {

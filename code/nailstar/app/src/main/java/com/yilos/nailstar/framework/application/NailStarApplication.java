@@ -12,6 +12,8 @@ import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
 import com.nostra13.universalimageloader.utils.StorageUtils;
+import com.sina.sinavideo.sdk.utils.VDApplication;
+import com.sina.sinavideo.sdk.utils.VDResolutionManager;
 import com.yilos.nailstar.R;
 import com.yilos.nailstar.framework.entity.NailStarApplicationContext;
 import com.yilos.nailstar.framework.exception.JSONParseException;
@@ -31,9 +33,10 @@ public class NailStarApplication extends android.app.Application {
 
     /**
      * 返回应用实例
+     *
      * @return
      */
-    public static NailStarApplication getApplication(){
+    public static NailStarApplication getApplication() {
         return application;
     }
 
@@ -74,6 +77,9 @@ public class NailStarApplication extends android.app.Application {
 
         ImageLoader imageLoader = ImageLoader.getInstance();
         imageLoader.init(config);
+
+        // 播放器初始化，要在app启动前进行初始化，才能解压出相应的解码器
+        initVideoPlayer();
     }
 
     public void preloadIndexContent() {
@@ -84,5 +90,11 @@ public class NailStarApplication extends android.app.Application {
         } catch (JSONParseException e) {
             //e.printStackTrace();
         }
+    }
+
+    private void initVideoPlayer() {
+        VDApplication.getInstance().initPlayer(this);
+        VDResolutionManager.getInstance(this).init(
+                VDResolutionManager.RESOLUTION_SOLUTION_NONE);
     }
 }
