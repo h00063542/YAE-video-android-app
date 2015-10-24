@@ -58,8 +58,8 @@ public class MainActivity extends Activity {
             }
         });
 
-        Intent intent = new Intent(MainActivity.this, VideoPlayerActivity.class);
-        startActivity(intent);
+        //Intent intent = new Intent(MainActivity.this, VideoPlayerActivity.class);
+        //startActivity(intent);
         MainActivity.this.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
 

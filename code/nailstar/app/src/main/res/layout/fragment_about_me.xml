@@ -23,7 +23,7 @@
                 android:layout_height="@dimen/about_me_left_back"
                 android:layout_centerVertical="true"
                 android:src="@mipmap/ic_about_me_left_back"
-                android:layout_marginLeft="@dimen/about_me_border_padding"/>
+                android:padding="@dimen/about_me_border_padding"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -65,23 +65,35 @@
                         android:text="@string/about_me_identity"/>
                     <TextView
                         android:layout_marginLeft="@dimen/about_me_other_padding"
-                        android:padding="@dimen/about_me_level_padding"
+                        android:paddingLeft="@dimen/about_me_level_padding"
+                        android:paddingRight="@dimen/about_me_level_padding"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/about_me_level"
+                        android:textColor="@color/white"
                         android:background="@color/tab_font_orange_color"/>
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
 
         <!-- 横线 -->
+        <RelativeLayout
+            android:id="@+id/about_me_gray_line"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/about_me_text_gray_line"
+            android:layout_below="@id/about_me_my_info">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/grey_line"/>
+        </RelativeLayout>
 
         <!-- 数量数 -->
         <LinearLayout
             android:orientation="horizontal"
             android:background="@color/white"
             android:id="@+id/about_me_number_count"
-            android:layout_below="@id/about_me_my_info"
+            android:layout_below="@id/about_me_gray_line"
             android:layout_width="match_parent"
             android:layout_height="@dimen/about_me_number_count_height">
             <!-- 关注 -->
@@ -104,7 +116,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="1dp"
+                android:layout_width="@dimen/about_me_text_gray_line"
                 android:layout_height="match_parent">
                 <TextView
                     android:layout_width="match_parent"
@@ -133,7 +145,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="1dp"
+                android:layout_width="@dimen/about_me_text_gray_line"
                 android:layout_height="match_parent">
                 <TextView
                     android:layout_width="match_parent"
@@ -185,8 +197,11 @@
 
                         <!-- 消息 -->
                         <RelativeLayout
+                            android:id="@+id/about_me_message_group"
                             android:layout_width="fill_parent"
                             android:orientation="horizontal"
+                            android:background="@drawable/selector"
+                            android:clickable="true"
                             android:layout_height="@dimen/about_me_list_item_height">
                             <ImageView
                                 android:id="@+id/about_me_message"
@@ -201,13 +216,16 @@
                                 android:layout_marginLeft="@dimen/about_me_border_padding"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/about_me_message"
-                                android:id="@+id/textView6" />
+                                android:text="@string/about_me_message"/>
                             <TextView
+                                android:id="@+id/about_me_message_count"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/about_me_message_count"
+                                android:textColor="@color/white"
+                                android:background="@drawable/about_me_red_point_number"
                                 android:layout_marginRight="@dimen/about_me_message_count_border_padding"
+                                android:gravity="center"
                                 android:layout_centerVertical="true"
                                 android:layout_alignParentRight="true"/>
                             <ImageView
@@ -219,13 +237,15 @@
                                 android:layout_marginRight="@dimen/about_me_border_padding"/>
                             <TextView
                                 android:layout_width="match_parent"
-                                android:layout_height="@dimen/about_me_text_underline"
+                                android:layout_height="@dimen/about_me_text_gray_line"
                                 android:layout_alignParentBottom="true"
                                 android:background="@color/grey_line" />
                         </RelativeLayout>
 
                         <!-- 个人资料 -->
                         <RelativeLayout
+                            android:background="@drawable/selector"
+                            android:clickable="true"
                             android:layout_width="fill_parent"
                             android:orientation="horizontal"
                             android:layout_height="@dimen/about_me_list_item_height">
@@ -252,13 +272,17 @@
                                 android:layout_marginRight="@dimen/about_me_border_padding"/>
                             <TextView
                                 android:layout_width="match_parent"
-                                android:layout_height="@dimen/about_me_text_underline"
+                                android:layout_height="@dimen/about_me_text_gray_line"
                                 android:layout_alignParentBottom="true"
-                                android:background="@color/grey_line" />
+                                android:background="@color/grey_line"
+                                android:layout_marginLeft="@dimen/about_me_border_padding"
+                                android:layout_marginRight="@dimen/about_me_border_padding"/>
                         </RelativeLayout>
 
                         <!-- 收藏 -->
                         <RelativeLayout
+                            android:background="@drawable/selector"
+                            android:clickable="true"
                             android:id="@+id/list_item_group"
                             android:layout_width="fill_parent"
                             android:orientation="horizontal"
@@ -286,13 +310,17 @@
                                 android:layout_marginRight="@dimen/about_me_border_padding"/>
                             <TextView
                                 android:layout_width="match_parent"
-                                android:layout_height="@dimen/about_me_text_underline"
+                                android:layout_height="@dimen/about_me_text_gray_line"
                                 android:layout_alignParentBottom="true"
-                                android:background="@color/grey_line" />
+                                android:background="@color/grey_line"
+                                android:layout_marginLeft="@dimen/about_me_border_padding"
+                                android:layout_marginRight="@dimen/about_me_border_padding"/>
                         </RelativeLayout>
 
                         <!-- 已下载 -->
                         <RelativeLayout
+                            android:background="@drawable/selector"
+                            android:clickable="true"
                             android:layout_width="fill_parent"
                             android:orientation="horizontal"
                             android:layout_height="@dimen/about_me_list_item_height">
@@ -319,13 +347,17 @@
                                 android:layout_marginRight="@dimen/about_me_border_padding"/>
                             <TextView
                                 android:layout_width="match_parent"
-                                android:layout_height="@dimen/about_me_text_underline"
+                                android:layout_height="@dimen/about_me_text_gray_line"
                                 android:layout_alignParentBottom="true"
-                                android:background="@color/grey_line" />
+                                android:background="@color/grey_line"
+                                android:layout_marginLeft="@dimen/about_me_border_padding"
+                                android:layout_marginRight="@dimen/about_me_border_padding"/>
                         </RelativeLayout>
 
                         <!-- 我的求教程 -->
                         <RelativeLayout
+                            android:background="@drawable/selector"
+                            android:clickable="true"
                             android:layout_width="fill_parent"
                             android:orientation="horizontal"
                             android:layout_height="@dimen/about_me_list_item_height">
@@ -352,13 +384,12 @@
                                 android:layout_marginRight="@dimen/about_me_border_padding"/>
                             <TextView
                                 android:layout_width="match_parent"
-                                android:layout_height="@dimen/about_me_text_underline"
+                                android:layout_height="@dimen/about_me_text_gray_line"
                                 android:layout_alignParentBottom="true"
                                 android:background="@color/grey_line" />
                         </RelativeLayout>
                     </LinearLayout>
 
-                    <!--android:layout_below="@id/about_me_my_list_item"-->
                     <LinearLayout
                         android:background="@color/white"
                         android:id="@+id/about_me_my_middle_list_item"
@@ -369,6 +400,8 @@
 
                         <!-- 给我们提意见 -->
                         <RelativeLayout
+                            android:background="@drawable/selector"
+                            android:clickable="true"
                             android:layout_width="fill_parent"
                             android:orientation="horizontal"
                             android:layout_height="@dimen/about_me_list_item_height">
@@ -395,13 +428,17 @@
                                 android:layout_marginRight="@dimen/about_me_border_padding"/>
                             <TextView
                                 android:layout_width="match_parent"
-                                android:layout_height="@dimen/about_me_text_underline"
+                                android:layout_height="@dimen/about_me_text_gray_line"
                                 android:layout_alignParentBottom="true"
-                                android:background="@color/grey_line" />
+                                android:background="@color/grey_line"
+                                android:layout_marginLeft="@dimen/about_me_border_padding"
+                                android:layout_marginRight="@dimen/about_me_border_padding"/>
                         </RelativeLayout>
 
                         <!-- 分享美甲大咖给朋友 -->
                         <RelativeLayout
+                            android:background="@drawable/selector"
+                            android:clickable="true"
                             android:layout_width="fill_parent"
                             android:orientation="horizontal"
                             android:layout_height="@dimen/about_me_list_item_height">
@@ -428,13 +465,12 @@
                                 android:layout_marginRight="@dimen/about_me_border_padding"/>
                             <TextView
                                 android:layout_width="match_parent"
-                                android:layout_height="@dimen/about_me_text_underline"
+                                android:layout_height="@dimen/about_me_text_gray_line"
                                 android:layout_alignParentBottom="true"
                                 android:background="@color/grey_line" />
                         </RelativeLayout>
                     </LinearLayout>
 
-                    <!--android:layout_below="@id/about_me_my_middle_list_item"-->
                     <LinearLayout
                         android:background="@color/white"
                         android:id="@+id/about_me_my_last_list_item"
@@ -445,6 +481,8 @@
 
                         <!-- 设置 -->
                         <RelativeLayout
+                            android:background="@drawable/selector"
+                            android:clickable="true"
                             android:layout_width="fill_parent"
                             android:orientation="horizontal"
                             android:layout_height="@dimen/about_me_list_item_height">
@@ -471,7 +509,7 @@
                                 android:layout_marginRight="@dimen/about_me_border_padding"/>
                             <TextView
                                 android:layout_width="match_parent"
-                                android:layout_height="@dimen/about_me_text_underline"
+                                android:layout_height="@dimen/about_me_text_gray_line"
                                 android:layout_alignParentBottom="true"
                                 android:background="@color/grey_line" />
                         </RelativeLayout>
