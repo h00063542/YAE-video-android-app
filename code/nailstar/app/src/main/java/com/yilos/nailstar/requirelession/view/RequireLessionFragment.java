@@ -91,13 +91,13 @@ public class RequireLessionFragment extends Fragment {
     }
 
     private void initView(View view) {
-        Button button = (Button) view.findViewById(R.id.hand_in_homework_btn);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                takeImage();
-            }
-        });
+//        Button button = (Button) view.findViewById(R.id.hand_in_homework_btn);
+//        button.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                takeImage();
+//            }
+//        });
     }
 
     private void takeImage() {
