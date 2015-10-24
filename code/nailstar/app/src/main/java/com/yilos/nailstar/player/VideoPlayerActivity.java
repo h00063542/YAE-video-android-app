@@ -9,8 +9,6 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -45,13 +43,7 @@ import com.yilos.widget.view.ImageCacheView;
 
 import org.json.JSONException;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.lang.ref.SoftReference;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class VideoPlayerActivity extends Activity implements
         IVideoPlayerView,
@@ -77,7 +69,8 @@ public class VideoPlayerActivity extends Activity implements
     private ImageView mIvMoreVideosIcon;
 
     private LinearLayout mLayoutShowImageTextContent;
-    private ViewGroup mLayoutShowImageTextContentParent;
+
+    private ViewGroup mLayoutVideoDetailContentParent;
 
     private String mVideoId;
 
@@ -117,11 +110,12 @@ public class VideoPlayerActivity extends Activity implements
         mIvMoreVideosIcon = (ImageView) findViewById(R.id.iv_more_videos_icon);
 
         mLayoutShowImageTextContent = (LinearLayout) findViewById(R.id.layout_show_image_text_content);
-        mLayoutShowImageTextContentParent = (ViewGroup) mLayoutShowImageTextContent.getParent();
         // 获取视频Id，名称，url地址
         mVideoId = getIntent().getStringExtra("");
 
         mLayoutVideoDetailContent = (LinearLayout) findViewById(R.id.layout_video_detail_content);
+        mLayoutVideoDetailContentParent = (ViewGroup) mLayoutVideoDetailContent.getParent();
+
         mBtnVideoPlayerBack.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -143,7 +137,7 @@ public class VideoPlayerActivity extends Activity implements
         });
 
 
-        mLayoutShowImageTextContentParent.setOnClickListener(new View.OnClickListener() {
+        mLayoutShowImageTextContent.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -165,16 +159,20 @@ public class VideoPlayerActivity extends Activity implements
                     mVideoImageTextInfoEntity = (VideoImageTextInfoEntity) msg.obj;
                     ArrayList pictures = mVideoImageTextInfoEntity.getPictures();
                     ArrayList articles = mVideoImageTextInfoEntity.getArticles();
-                    MarginLayoutParams layoutParams = new MarginLayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-                    layoutParams.setMargins(10, 10, 10, 10);
+
+                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                    lp.setMargins(0, 10, 0, 10);
+
+//                    MarginLayoutParams layoutParams = new MarginLayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+//                    layoutParams.setMargins(0, 10, 0, 10);
                     for (int i = 0; i < pictures.size(); i++) {
                         ImageCacheView imageView = new ImageCacheView(VideoPlayerActivity.this);
-                        imageView.setLayoutParams(layoutParams);
+                        imageView.setLayoutParams(lp);
                         imageView.setImageSrc(pictures.get(i).toString());
                         mLayoutVideoDetailContent.addView(imageView);
 
                         TextView textView = new TextView(VideoPlayerActivity.this);
-                        textView.setLayoutParams(layoutParams);
+                        textView.setLayoutParams(lp);
                         textView.setText(articles.get(i).toString());
                         mLayoutVideoDetailContent.addView(textView);
 
@@ -184,23 +182,22 @@ public class VideoPlayerActivity extends Activity implements
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
     }
 
     /**
      * 显示或隐藏图文分解详情
      */
     private void showOrHideImageTextDetail() {
-        int visibility = mLayoutShowImageTextContentParent.getVisibility();
+        int visibility = mLayoutVideoDetailContentParent.getVisibility();
         // 显示图文分解
         if (View.GONE == visibility) {
-            mLayoutShowImageTextContentParent.setVisibility(View.VISIBLE);
+            mLayoutVideoDetailContentParent.setVisibility(View.VISIBLE);
             RotateAnimation rotateAnimation = new RotateAnimation(0, 180, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
             rotateAnimation.setDuration(400);
             rotateAnimation.setFillAfter(true);
             mIvMoreVideosIcon.startAnimation(rotateAnimation);
         } else {// 隐藏图文分解
-            mLayoutShowImageTextContentParent.setVisibility(View.GONE);
+            mLayoutVideoDetailContentParent.setVisibility(View.GONE);
             RotateAnimation rotateAnimation = new RotateAnimation(180, 360, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
             rotateAnimation.setDuration(400);
             rotateAnimation.setFillAfter(true);
