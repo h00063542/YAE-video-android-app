@@ -1,5 +1,6 @@
 package com.yilos.nailstar.player.view;
 
+import com.yilos.nailstar.player.entity.VideoImageTextInfoEntity;
 import com.yilos.nailstar.player.entity.VideoInfoEntity;
 
 /**
@@ -7,13 +8,8 @@ import com.yilos.nailstar.player.entity.VideoInfoEntity;
  */
 public interface IVideoPlayerView {
 
-    String getVideoId();
-
     void playVideo(VideoInfoEntity videoInfoEntity);
 
-    void showImageTextDetail();
-
-    void hideImageTextDetail();
-
+    void initVideoImageTextInfo(VideoImageTextInfoEntity videoImageTextInfoEntity);
 
 }
