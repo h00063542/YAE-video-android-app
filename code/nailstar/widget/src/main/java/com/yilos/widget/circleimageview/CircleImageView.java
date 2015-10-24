@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.hdodenhof.circleimageview;
+package com.yilos.widget.circleimageview;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -35,6 +35,7 @@ import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.util.AttributeSet;
 import android.widget.ImageView;
+import com.yilos.widget.R;
 
 public class CircleImageView extends ImageView {
 

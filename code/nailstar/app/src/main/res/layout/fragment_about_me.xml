@@ -41,7 +41,7 @@
         android:layout_width="match_parent"
         android:gravity="center_vertical"
         android:layout_height="@dimen/about_me_my_info_height">
-        <de.hdodenhof.circleimageview.CircleImageView
+        <com.yilos.widget.circleimageview.CircleImageView
             android:id="@+id/profile_image"
             android:layout_width="@dimen/about_me_my_info_image"
             android:layout_height="@dimen/about_me_my_info_image"
@@ -80,15 +80,15 @@
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/about_me_text_underline"
-                android:layout_alignParentBottom="true"
-                android:background="@color/tab_font_orange_color" />
-        </RelativeLayout>
+        <!--<RelativeLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content">-->
+            <!--<TextView-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="@dimen/about_me_text_underline"-->
+                <!--android:layout_alignParentBottom="true"-->
+                <!--android:background="@color/tab_font_orange_color" />-->
+        <!--</RelativeLayout>-->
     <!-- 数量数 -->
     <LinearLayout
         android:background="@color/white"
