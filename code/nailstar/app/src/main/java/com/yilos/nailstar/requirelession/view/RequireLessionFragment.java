@@ -10,12 +10,15 @@ import android.os.Bundle;
 import android.app.Fragment;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.yilos.nailstar.R;
+import com.yilos.nailstar.takeImage.TakeImage;
+import com.yilos.nailstar.takeImage.TakeImageCallback;
 
 import java.io.File;
 
@@ -29,12 +32,6 @@ import java.io.File;
  */
 public class RequireLessionFragment extends Fragment {
 
-    public static final int REQUEST_CAMERA = 1;
-    public static final int SELECT_FILE = 2;
-    public static final int CROP_IMAGE = 3;
-
-    public static final String YILOS_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/yilos";
-
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -46,9 +43,8 @@ public class RequireLessionFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    private File tempImage = new File(YILOS_PATH + "/temp.jpg");
-
-    private File cropImage = null;
+    private static final String YILOS_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/yilos";
+    private TakeImage takeImage;
 
     /**
      * Use this factory method to create a new instance of
@@ -91,98 +87,25 @@ public class RequireLessionFragment extends Fragment {
     }
 
     private void initView(View view) {
+        takeImage = new TakeImage.Builder().context(this).uri(YILOS_PATH).callback(new TakeImageCallback() {
+            @Override
+            public void callback(Uri uri) {
+                Log.d(RequireLessionFragment.class.getName(), "callback " + uri);
+            }
+        }).build();
         Button button = (Button) view.findViewById(R.id.hand_in_homework_btn);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                takeImage();
+                takeImage.initTakeImage();
             }
         });
-    }
-
-    private void takeImage() {
-
-        final CharSequence[] items = { "Take Photo", "Choose from Library", "Cancel" };
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setItems(items, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int item) {
-                if (0 == item) {
-                    File yilosDir = new File(YILOS_PATH);
-                    if (!yilosDir.exists()) {
-                        yilosDir.mkdirs();
-                    }
-                    Uri imageUri = Uri.fromFile(tempImage);
-                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-                    startActivityForResult(intent, REQUEST_CAMERA);
-                } else if (1 == item) {
-                    Intent intent = new Intent();
-                    intent.setType("image/*");
-                    intent.setAction(Intent.ACTION_GET_CONTENT);
-                    startActivityForResult(
-                            Intent.createChooser(intent, "Select File"),
-                            SELECT_FILE);
-                } else if (2 == item) {
-                    dialog.dismiss();
-                }
-            }
-        });
-
-        builder.show();
-
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-            super.onActivityResult(requestCode, resultCode, data);
-
-            if (resultCode == Activity.RESULT_OK) {
-
-                if (requestCode == REQUEST_CAMERA) {
-
-                    File yilosDir = new File(YILOS_PATH);
-                    if (!yilosDir.exists()) {
-                        yilosDir.mkdirs();
-                    }
-
-                    cropImage = new File(YILOS_PATH + "/" + System.currentTimeMillis() + ".jpg");
-                    Uri cropImageUri = Uri.fromFile(cropImage);
-                    cropImageUri(Uri.fromFile(tempImage), cropImageUri, 400, 400);
-
-                } else if (requestCode == SELECT_FILE) {
-
-                    File yilosDir = new File(YILOS_PATH);
-                    if (!yilosDir.exists()) {
-                        yilosDir.mkdirs();
-                    }
-
-                    cropImage = new File(YILOS_PATH + "/" + System.currentTimeMillis() + ".jpg");
-                    Uri cropImageUri = Uri.fromFile(cropImage);
-                    cropImageUri(data.getData(), cropImageUri, 400, 400);
-
-                } else if (requestCode == CROP_IMAGE) {
-
-                }
-        }
-    }
-
-    private void cropImageUri(Uri src, Uri desc, int outputX, int outputY){
-        Intent intent = new Intent("com.android.camera.action.CROP");
-        intent.setDataAndType(src, "image/*");
-        intent.putExtra("crop", "true");
-        intent.putExtra("aspectX", 1);
-        intent.putExtra("aspectY", 1);
-        intent.putExtra("outputX", outputX);
-        intent.putExtra("outputY", outputY);
-        intent.putExtra("scale", true);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, desc);
-        intent.putExtra("return-data", false);
-        intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
-        intent.putExtra("noFaceDetection", true); // no face detection
-        startActivityForResult(intent, CROP_IMAGE);
+        super.onActivityResult(requestCode, resultCode, data);
+        takeImage.onActivityResult(requestCode, resultCode, data);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
