@@ -101,7 +101,6 @@ public class IndexServiceImpl implements IndexService{
         } catch (Exception e){
             throw new NetworkDisconnectException("读取最新视频列表失败", e);
         }
-
         try{
             JSONObject jsonResultObject = new JSONObject(latestTopicStringResult);
             if(jsonResultObject.getInt("code") != 0){
