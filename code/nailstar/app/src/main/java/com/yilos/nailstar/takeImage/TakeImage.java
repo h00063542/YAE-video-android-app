@@ -107,6 +107,10 @@ public class TakeImage {
 
         private void initEmptyField() {
 
+            if (context == null) {
+                throw new IllegalArgumentException("context is null");
+            }
+
             if (context instanceof Activity) {
                 activity = (Activity)context;
             }
@@ -114,8 +118,8 @@ public class TakeImage {
                 activity = ((Fragment)context).getActivity();
             }
 
-            if (activity == null) {
-                throw new IllegalArgumentException("activity is null");
+            if (uri == null) {
+                throw new IllegalArgumentException("uri is null");
             }
 
             if (new File(uri.getPath()).isFile()){
