@@ -21,6 +21,7 @@ public class TakeImage {
     private int requestSelectFile;
     private int requestCropImage;
 
+    private Object context;
     private Activity activity;
     private TakeImageCallback callback;
     private Uri uri;
@@ -117,7 +118,7 @@ public class TakeImage {
                 throw new IllegalArgumentException("activity is null");
             }
 
-            if (!(new File(uri.getPath()).isDirectory())){
+            if (new File(uri.getPath()).isFile()){
                 throw new IllegalArgumentException("uri is not directory");
             }
 
@@ -136,6 +137,7 @@ public class TakeImage {
         requestCamera = builder.requestCode;
         requestSelectFile =  builder.requestCode + 1;
         requestCropImage = builder.requestCode + 2;
+        context = builder.context;
         activity = builder.activity;
         callback = builder.callback;
         uri = builder.uri;
@@ -164,14 +166,24 @@ public class TakeImage {
                     Uri imageUri = Uri.fromFile(tempImage);
                     Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                     intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-                    activity.startActivityForResult(intent, requestCamera);
-
+                    if (context instanceof Activity) {
+                        ((Activity)context).startActivityForResult(intent, requestCamera);
+                    }
+                    if (context instanceof Fragment) {
+                        ((Fragment)context).startActivityForResult(intent, requestCamera);
+                    }
                 } else if (1 == item) {
                     Intent intent = new Intent();
                     intent.setType("image/*");
                     intent.setAction(Intent.ACTION_GET_CONTENT);
-                    activity.startActivityForResult(Intent.createChooser(intent, "Select File"),
-                            requestSelectFile);
+                    if (context instanceof Activity) {
+                        ((Activity)context).startActivityForResult(Intent.createChooser(intent, "Select File"),
+                                requestSelectFile);
+                    }
+                    if (context instanceof Fragment) {
+                        ((Fragment)context).startActivityForResult(Intent.createChooser(intent, "Select File"),
+                                requestSelectFile);
+                    }
 
                 } else if (2 == item) {
                     dialog.dismiss();
@@ -204,6 +216,9 @@ public class TakeImage {
 
     private void generateFileUri() {
         File resultFile = new File(uri.getPath() + "/" + System.currentTimeMillis() + ".jpg");
+        if (!resultFile.getParentFile().exists()) {
+            resultFile.getParentFile().mkdirs();
+        }
         resultUri = Uri.fromFile(resultFile);
     }
 
@@ -220,6 +235,11 @@ public class TakeImage {
         intent.putExtra("return-data", false);
         intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
         intent.putExtra("noFaceDetection", true); // no face detection
-        activity.startActivityForResult(intent, requestCropImage);
+        if (context instanceof Activity) {
+            ((Activity)context).startActivityForResult(intent, requestCropImage);
+        }
+        if (context instanceof Fragment) {
+            ((Fragment)context).startActivityForResult(intent, requestCropImage);
+        }
     }
 }
