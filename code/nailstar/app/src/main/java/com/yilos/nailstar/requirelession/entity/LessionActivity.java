@@ -25,12 +25,12 @@ public class LessionActivity implements Serializable {
     /**
      * 上期已录制视频
      */
-    private VideoLession previousLession;
+    private VideoLession previous;
 
     /**
      * 本期投票榜首
      */
-    private CandidateLession currentTop;
+    private CandidateLession current;
 
     public int getStage() {
         return stage;
@@ -56,19 +56,19 @@ public class LessionActivity implements Serializable {
         this.no = no;
     }
 
-    public VideoLession getPreviousLession() {
-        return previousLession;
+    public VideoLession getPrevious() {
+        return previous;
     }
 
-    public void setPreviousLession(VideoLession previousLession) {
-        this.previousLession = previousLession;
+    public void setPrevious(VideoLession previous) {
+        this.previous = previous;
     }
 
-    public CandidateLession getCurrentTop() {
-        return currentTop;
+    public CandidateLession getCurrent() {
+        return current;
     }
 
-    public void setCurrentTop(CandidateLession currentTop) {
-        this.currentTop = currentTop;
+    public void setCurrent(CandidateLession current) {
+        this.current = current;
     }
 }

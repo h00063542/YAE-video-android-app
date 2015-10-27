@@ -23,6 +23,11 @@ public class VideoLession implements Serializable {
     private String  title;
 
     /**
+     * 期数
+     */
+    private int no;
+
+    /**
      * 已录制教程的老师名称
      */
     private String  authorName;
@@ -54,6 +59,14 @@ public class VideoLession implements Serializable {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public int getNo() {
+        return no;
+    }
+
+    public void setNo(int no) {
+        this.no = no;
     }
 
     public String getAuthorName() {
