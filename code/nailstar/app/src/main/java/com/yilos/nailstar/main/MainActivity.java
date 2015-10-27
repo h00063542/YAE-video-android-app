@@ -33,7 +33,7 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         initViews();
-        setTabSelection(0);
+        setTabSelection(3);
 
         RadioGroup radioGroup = (RadioGroup) findViewById(R.id.main_tab_group);
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -58,9 +58,9 @@ public class MainActivity extends Activity {
             }
         });
 
-//        Intent intent = new Intent(MainActivity.this, VideoPlayerActivity.class);
-//        startActivity(intent);
-//        MainActivity.this.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        //Intent intent = new Intent(MainActivity.this, VideoPlayerActivity.class);
+        //startActivity(intent);
+        MainActivity.this.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
 
     @Override
