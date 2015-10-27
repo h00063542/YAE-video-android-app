@@ -52,7 +52,7 @@ public class HttpClient {
     public static String post(String url, String json) throws IOException {
         RequestBody body = RequestBody.create(JSON, json);
         Request request = new Request.Builder()
-                .url(url)
+                .url(serviceBaseUrl + url)
                 .post(body)
                 .build();
         Response response = okHttpClient.newCall(request).execute();
@@ -71,7 +71,7 @@ public class HttpClient {
      */
     public static String post(String url, RequestBody formBody) throws IOException {
         Request request = new Request.Builder()
-                .url(url)
+                .url(serviceBaseUrl + url)
                 .post(formBody)
                 .build();
         Response response = okHttpClient.newCall(request).execute();
