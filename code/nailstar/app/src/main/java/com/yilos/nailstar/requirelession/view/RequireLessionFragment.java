@@ -17,10 +17,15 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.yilos.nailstar.R;
+import com.yilos.nailstar.requirelession.Presenter.LessionPresenter;
+import com.yilos.nailstar.requirelession.model.LessionServiceImpl;
 import com.yilos.nailstar.takeImage.TakeImage;
 import com.yilos.nailstar.takeImage.TakeImageCallback;
 
+import org.json.JSONException;
+
 import java.io.File;
+import java.io.IOException;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -30,12 +35,14 @@ import java.io.File;
  * Use the {@link RequireLessionFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class RequireLessionFragment extends Fragment {
+public class RequireLessionFragment extends Fragment implements LessionView {
 
     private OnFragmentInteractionListener mListener;
 
     private static final String YILOS_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/yilos";
     private TakeImage takeImage;
+
+    private LessionPresenter lessionPresenter = new LessionPresenter(this);
 
     /**
      * Use this factory method to create a new instance of
@@ -78,6 +85,21 @@ public class RequireLessionFragment extends Fragment {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        LessionServiceImpl lessionServiceImpl = new LessionServiceImpl();
+                        try {
+                            lessionServiceImpl.queryHistoryLessionList(1);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }).start();
+
                 takeImage.initTakeImage();
             }
         });
