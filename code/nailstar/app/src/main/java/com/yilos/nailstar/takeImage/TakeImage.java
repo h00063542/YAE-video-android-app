@@ -45,61 +45,120 @@ public class TakeImage {
         private int outputX = 400;
         private int outputY = 400;
 
+        /**
+         * 传入requestCode
+         * @param requestCode,会占用连续3个requestCode,请注意不要与其他requestCode重复
+         * @return
+         */
         public Builder requestCode(int requestCode) {
             this.requestCode = requestCode;
             return this;
         };
 
+        /**
+         * 传入当前页面的context
+         * @param object
+         * @return
+         */
         public Builder context(Activity object) {
             this.context = object;
             return this;
         }
 
+        /**
+         * 传入当前页面的context
+         * @param object
+         * @return
+         */
         public Builder context(Fragment object) {
             this.context = object;
             return this;
         }
 
+        /**
+         * 传入回调方法
+         * @param callback
+         * @return
+         */
         public Builder callback(TakeImageCallback callback) {
             this.callback = callback;
             return this;
         }
 
+        /**
+         * 最终图片的保存地址
+         * @param uri
+         * @return
+         */
         public Builder uri(Uri uri) {
             this.uri = uri;
             return this;
         }
 
+        /**
+         * 最终图片的保存地址
+         * @param uri
+         * @return
+         */
         public Builder uri(File uri) {
             this.uri = Uri.fromFile(uri);
             return this;
         }
 
+        /**
+         * 最终图片的保存地址
+         * @param uri
+         * @return
+         */
         public Builder uri(String uri) {
             this.uri = Uri.fromFile(new File(uri));
             return this;
         }
 
+        /**
+         * 裁剪框的长宽比
+         * @param aspectX
+         * @return
+         */
         public Builder aspectX(int aspectX) {
             this.aspectX = aspectX;
             return this;
         }
 
+        /**
+         * 裁剪框的长宽比
+         * @param aspectY
+         * @return
+         */
         public Builder aspectY(int aspectY) {
             this.aspectY = aspectY;
             return this;
         }
 
+        /**
+         * 最终图片的宽度
+         * @param outputX
+         * @return
+         */
         public Builder outputX(int outputX) {
             this.outputX = outputX;
             return this;
         }
 
+        /**
+         * 最终图片的长度
+         * @param outputY
+         * @return
+         */
         public Builder outputY(int outputY) {
             this.outputY = outputY;
             return this;
         }
 
+        /**
+         * 根据builder生成TakeImage
+         * @return
+         */
         public TakeImage build() {
             initEmptyField();
             return new TakeImage(this);
@@ -155,6 +214,9 @@ public class TakeImage {
 
     private File tempImage = new File(YILOS_PATH + "/temp.jpg");
 
+    /**
+     * 弹出对话框以供选择拍照或者从图库中选图
+     */
     public void initTakeImage() {
         final CharSequence[] items = { "Take Photo", "Choose from Library", "Cancel" };
 
@@ -198,6 +260,12 @@ public class TakeImage {
         builder.show();
     }
 
+    /**
+     * activity的回调方法，在activity或者fragment的onActivityResult中调用
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if (resultCode == Activity.RESULT_OK) {
