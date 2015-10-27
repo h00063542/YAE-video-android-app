@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+
+    <ImageView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/videos_1" />
+
+    <LinearLayout
+        android:id="@+id/layout_topics_comments"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/bottom_border"
+        android:orientation="vertical"
+        android:paddingBottom="20dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tv_topics_comment_author"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="手机用户8050" />
+
+            <TextView
+                android:id="@+id/tv_topics_comment_create_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginLeft="10dp"
+                android:text="10点28分" />
+
+            <TextView
+                android:id="@+id/tv_topics_comment_home_work"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@id/tv_topics_comment_create_date"
+                android:text="#交作业#"
+                android:visibility="visible" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/tv_topics_comment_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="设计的开发建设的开发就爱上" />
+
+
+        <LinearLayout
+            android:id="@+id/layout_topics_comment_content_reply"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/topics_comment_reply_background_color"
+            android:orientation="vertical">
+
+
+            <TextView
+                android:id="@+id/tv_topics_comment_content_reply"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:text="王红老师 回复 手机用户8050 : 圣诞节疯是打发斯蒂芬狂睡觉都发了"
+                android:textColor="@color/user_at_color" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

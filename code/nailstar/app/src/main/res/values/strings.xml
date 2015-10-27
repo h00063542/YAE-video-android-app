@@ -14,7 +14,7 @@
     <string name="video_player_times">次播放</string>
     <string name="video_image_text_detail">图文分解</string>
     <string name="hide_video_image_text_detail">收起图文</string>
-    <string name="download_video_image_text_to_local">下载图文到本地</string>
+    <string name="download_video_image_text_detail">下载图文到本地</string>
     <string name="more_videos">更多视频</string>
     <string name="download">下载</string>
     <string name="collection">收藏</string>

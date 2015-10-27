@@ -5,7 +5,7 @@ import java.util.ArrayList;
 /**
  * Created by yilos on 2015-10-22.
  */
-public class VideoImageTextInfoEntity {
+public class TopicsImageTextInfo {
     private String id;
     private ArrayList articles;
     private ArrayList pictures;
