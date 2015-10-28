@@ -12,6 +12,27 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
+    <!-- about me -->
+    <string name="about_me_my">我的</string>
+    <string name="about_me_name">莉莉</string>
+    <string name="about_me_identity">初级美甲师</string>
+    <string name="about_me_level">lv8</string>
+    <string name="about_me_attention">关注</string>
+    <string name="about_me_attention_count">191</string>
+    <string name="about_me_fans">粉丝</string>
+    <string name="about_me_fans_count">23070</string>
+    <string name="about_me_ka_bi">咖币</string>
+    <string name="about_me_ka_bi_count">120</string>
+    <string name="about_me_message">消息</string>
+    <string name="about_me_message_count">5</string>
+    <string name="about_me_person_info">个人资料</string>
+    <string name="about_me_collect">收藏</string>
+    <string name="about_me_downloaded">已下载</string>
+    <string name="about_me_my_require_lesson">我的求教程</string>
+    <string name="about_me_give_us_advice">给我们提意见</string>
+    <string name="about_me_share">分享美甲大咖给朋友</string>
+    <string name="about_me_setting">设置</string>
+
     <!--sina vedio view sdk-->
     <string name="vitamio_init_decoders">Initializing decoders…</string>
     <string name="vitamio_videoview_error_title">Cannot play video</string>

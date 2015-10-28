@@ -66,15 +66,15 @@
             <!--android:text="视频播放区域" />-->
 
             <!--视频播放组件-->
-            <!--<com.sina.sinavideo.sdk.VDVideoView-->
-            <!--android:id="@+id/video_player"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="240dp"-->
-            <!--android:layout_alignParentTop="true"-->
-            <!--android:background="#000000"-->
-            <!--app:layerAttrs="@array/video_layers">-->
+            <com.sina.sinavideo.sdk.VDVideoView
+                android:id="@+id/video_player"
+                android:layout_width="match_parent"
+                android:layout_height="240dp"
+                android:layout_alignParentTop="true"
+                android:background="#000000"
+                app:layerAttrs="@array/video_layers">
 
-            <!--</com.sina.sinavideo.sdk.VDVideoView>-->
+            </com.sina.sinavideo.sdk.VDVideoView>
 
             <!--图文分解头-->
             <LinearLayout
@@ -205,7 +205,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:visibility="visible">
+                android:visibility="gone">
 
                 <!--分割线-->
                 <TextView
@@ -216,7 +216,11 @@
                 <LinearLayout
                     android:id="@+id/layout_video_detail_content"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"
                     android:orientation="vertical">
 
                 </LinearLayout>
@@ -240,6 +244,7 @@
                         android:layout_alignParentEnd="true"
                         android:layout_alignParentRight="true"
                         android:layout_centerInParent="true"
+                        android:layout_marginRight="10dp"
                         android:text="下载图文到本地" />
                 </RelativeLayout>
 
