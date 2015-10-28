@@ -7,6 +7,7 @@ import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -15,6 +16,10 @@ import com.yilos.nailstar.aboutme.entity.Message;
 import com.yilos.nailstar.aboutme.presenter.MessagePresenter;
 import com.yilos.nailstar.framework.exception.JSONParseException;
 import com.yilos.nailstar.framework.exception.NetworkDisconnectException;
+import com.yilos.widget.titlebar.TitleBar;
+
+import java.util.logging.Handler;
+import java.util.logging.LogRecord;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -25,6 +30,11 @@ import com.yilos.nailstar.framework.exception.NetworkDisconnectException;
  * create an instance of this fragment.
  */
 public class AboutMeFragment extends Fragment implements IAboutMeView{
+
+    @Override
+    public void initMessageCount(Message message) {
+        int count = 1;
+    }
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -38,9 +48,7 @@ public class AboutMeFragment extends Fragment implements IAboutMeView{
 
     RelativeLayout relativeLayout;
     TextView textView;
-    Message message =new Message();
-    MessagePresenter messagePresenter = new MessagePresenter();
-
+    TitleBar titleBar;
 
     /**
      * Use this factory method to create a new instance of
@@ -81,22 +89,28 @@ public class AboutMeFragment extends Fragment implements IAboutMeView{
         initViews(view);
         return view;
     }
+    private Handler handler = new Handler() {
+        @Override
+        public void close() {
 
-    @Override
-    public void initMessageCount(final Message message) {
-        relativeLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                textView.setText(String.valueOf(message.getCount()));
-            }
-        });
-    }
+        }
 
+        @Override
+        public void flush() {
+
+        }
+
+        @Override
+        public void publish(LogRecord record) {
+
+        }
+    };
     private void initViews(View view){
         relativeLayout = (RelativeLayout)view.findViewById(R.id.about_me_message_group);
         textView = (TextView)view.findViewById(R.id.about_me_message_count);
-        //initMessageCount(message);
-        messagePresenter.getMessage();
+        titleBar = (TitleBar)view.findViewById(R.id.about_me_header_nav);
+        titleBar.notShowSureButton();
+
     }
 
     // TODO: Rename method, update argument and hook method into UI event
