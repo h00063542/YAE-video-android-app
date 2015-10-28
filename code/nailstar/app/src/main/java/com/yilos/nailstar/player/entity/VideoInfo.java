@@ -3,17 +3,17 @@ package com.yilos.nailstar.player.entity;
 /**
  * Created by yilos on 2015-10-22.
  */
-public class VideoEntity {
+public class VideoInfo {
 
     private String videoId;
     private int playTimes;
     private String ccUrl;
     private String ossUrl;
 
-    public VideoEntity() {
+    public VideoInfo() {
     }
 
-    public VideoEntity(String videoId, int playTimes, String ccUrl, String ossUrl) {
+    public VideoInfo(String videoId, int playTimes, String ccUrl, String ossUrl) {
         this.videoId = videoId;
         this.playTimes = playTimes;
         this.ccUrl = ccUrl;

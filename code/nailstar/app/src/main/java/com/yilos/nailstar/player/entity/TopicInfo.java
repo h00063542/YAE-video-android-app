@@ -5,7 +5,7 @@ import java.util.ArrayList;
 /**
  * Created by yilos on 2015-10-22.
  */
-public class VideoInfoEntity {
+public class TopicInfo {
     // 视频Id
     private String id;
     // 视频title
@@ -15,7 +15,7 @@ public class VideoInfoEntity {
     private String thumbUrl;
     private long createDate;
     private ArrayList tags;
-    private ArrayList<VideoEntity> videos;
+    private ArrayList<VideoInfo> videos;
     private String authorId;
     private String author;
 
@@ -75,11 +75,11 @@ public class VideoInfoEntity {
         this.tags = tags;
     }
 
-    public ArrayList<VideoEntity> getVideos() {
+    public ArrayList<VideoInfo> getVideos() {
         return videos;
     }
 
-    public void setVideos(ArrayList<VideoEntity> videos) {
+    public void setVideos(ArrayList<VideoInfo> videos) {
         this.videos = videos;
     }
 
