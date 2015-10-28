@@ -10,7 +10,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.yilos.nailstar.R;
-import com.yilos.nailstar.aboutme.AboutMeFragment;
+import com.yilos.nailstar.aboutme.view.AboutMeFragment;
 import com.yilos.nailstar.circle.CircleFragment;
 import com.yilos.nailstar.index.view.IndexFragment;
 import com.yilos.nailstar.requirelession.view.RequireLessionFragment;
