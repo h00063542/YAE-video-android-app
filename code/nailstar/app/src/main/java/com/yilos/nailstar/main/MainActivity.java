@@ -12,8 +12,8 @@ import android.widget.TextView;
 import com.yilos.nailstar.R;
 import com.yilos.nailstar.aboutme.view.AboutMeFragment;
 import com.yilos.nailstar.circle.CircleFragment;
-import com.yilos.nailstar.requirelession.view.RequireLessionFragment;
 import com.yilos.nailstar.index.view.IndexFragment;
+import com.yilos.nailstar.requirelession.view.RequireLessionFragment;
 
 public class MainActivity extends Activity {
     private FragmentManager fragmentManager;
@@ -31,7 +31,7 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         initViews();
-        setTabSelection(3);
+        setTabSelection(0);
 
         RadioGroup radioGroup = (RadioGroup) findViewById(R.id.main_tab_group);
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -55,10 +55,6 @@ public class MainActivity extends Activity {
                 }
             }
         });
-
-        //Intent intent = new Intent(MainActivity.this, VideoPlayerActivity.class);
-        //startActivity(intent);
-        MainActivity.this.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
 
     @Override
