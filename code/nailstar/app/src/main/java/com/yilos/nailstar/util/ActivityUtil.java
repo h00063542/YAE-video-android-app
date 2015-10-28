@@ -3,7 +3,6 @@ package com.yilos.nailstar.util;
 import android.app.Activity;
 import android.content.Intent;
 
-import com.yilos.nailstar.R;
 import com.yilos.nailstar.player.VideoPlayerActivity;
 
 /**
@@ -15,7 +14,7 @@ public class ActivityUtil {
         Intent intent = new Intent(activity, VideoPlayerActivity.class);
         intent.putExtra(Constants.TOPICID, topicId);
         activity.startActivity(intent);
-        activity.finish();
-        activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+//        activity.finish();
+//        activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
 }
