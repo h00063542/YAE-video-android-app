@@ -1,15 +1,18 @@
 package com.yilos.nailstar.aboutme.presenter;
 
+import android.view.View;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import com.yilos.nailstar.R;
 import com.yilos.nailstar.aboutme.entity.Message;
 import com.yilos.nailstar.aboutme.model.AboutMeServiceImpl;
 import com.yilos.nailstar.aboutme.model.AboutMeService;
 import com.yilos.nailstar.framework.exception.JSONParseException;
 import com.yilos.nailstar.framework.exception.NetworkDisconnectException;
-import com.yilos.nailstar.index.entity.Poster;
 import com.yilos.nailstar.util.TaskManager;
+import com.yilos.nailstar.aboutme.view.AboutMeFragment;
 
-import java.io.IOException;
-import java.util.List;
 
 /**
  * Created by sisilai on 15/10/24.
@@ -17,8 +20,9 @@ import java.util.List;
 public class MessagePresenter {
     public AboutMeService aboutMeService = new AboutMeServiceImpl();
     Message message = new Message();
+    AboutMeFragment aboutMeFragment = new AboutMeFragment();
 
-    public Message getMessage() throws NetworkDisconnectException, JSONParseException {
+    public void getMessage(){
 //        try {
 //            message = aboutMeService.getMessageContext();
 //        } catch (NetworkDisconnectException e) {
@@ -41,8 +45,16 @@ public class MessagePresenter {
                 return message;
             }
         };
-        new TaskManager().next(loadMessageCount).start();
-        return message;
+
+        TaskManager.UITask<Message> messageUITask = new TaskManager.UITask<Message>() {
+            @Override
+            public Message doWork(Message data) {
+                aboutMeFragment.initMessageCount(data);
+                return data;
+            }
+        };
+
+        new TaskManager().next(loadMessageCount).next(messageUITask).start();
     }
 
 }

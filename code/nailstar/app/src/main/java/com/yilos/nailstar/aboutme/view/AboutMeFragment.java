@@ -24,7 +24,7 @@ import com.yilos.nailstar.framework.exception.NetworkDisconnectException;
  * Use the {@link AboutMeFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class AboutMeFragment extends Fragment {
+public class AboutMeFragment extends Fragment implements IAboutMeView{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -35,6 +35,12 @@ public class AboutMeFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+
+    RelativeLayout relativeLayout;
+    TextView textView;
+    Message message =new Message();
+    MessagePresenter messagePresenter = new MessagePresenter();
+
 
     /**
      * Use this factory method to create a new instance of
@@ -76,29 +82,21 @@ public class AboutMeFragment extends Fragment {
         return view;
     }
 
-    private int getMessageCount(){
-        MessagePresenter messagePresenter = new MessagePresenter();
-        Message message = new Message();
-        try {
-            message = messagePresenter.getMessage();
-        } catch (NetworkDisconnectException e) {
-            //throw new NetworkDisconnectException("",e);
-        } catch (JSONParseException e) {
-            //throw new JSONParseException("",e);
-        }
-        return message.getCount();
-    }
-
-    private void initViews(View view){
-        RelativeLayout relativeLayout = (RelativeLayout)view.findViewById(R.id.about_me_message_group);
-        final TextView textView = (TextView)view.findViewById(R.id.about_me_message_count);
-
+    @Override
+    public void initMessageCount(final Message message) {
         relativeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                textView.setText(String.valueOf(getMessageCount()));
+                textView.setText(String.valueOf(message.getCount()));
             }
         });
+    }
+
+    private void initViews(View view){
+        relativeLayout = (RelativeLayout)view.findViewById(R.id.about_me_message_group);
+        textView = (TextView)view.findViewById(R.id.about_me_message_count);
+        //initMessageCount(message);
+        messagePresenter.getMessage();
     }
 
     // TODO: Rename method, update argument and hook method into UI event
