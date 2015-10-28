@@ -60,7 +60,7 @@
             android:id="@+id/layout_topics_comment_content_reply"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/topics_comment_reply_background_color"
+            android:background="@color/topic_comment_reply_background_color"
             android:orientation="vertical">
 
 

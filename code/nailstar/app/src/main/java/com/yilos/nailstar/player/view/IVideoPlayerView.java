@@ -1,8 +1,8 @@
 package com.yilos.nailstar.player.view;
 
-import com.yilos.nailstar.player.entity.TopicsCommentInfo;
-import com.yilos.nailstar.player.entity.TopicsImageTextInfo;
-import com.yilos.nailstar.player.entity.TopicsInfo;
+import com.yilos.nailstar.player.entity.TopicCommentInfo;
+import com.yilos.nailstar.player.entity.TopicImageTextInfo;
+import com.yilos.nailstar.player.entity.TopicInfo;
 
 import java.util.ArrayList;
 
@@ -11,10 +11,10 @@ import java.util.ArrayList;
  */
 public interface IVideoPlayerView {
 
-    void playVideo(TopicsInfo videoInfoEntity);
+    void playVideo(TopicInfo topicInfo);
 
-    void initVideoImageTextInfo(TopicsImageTextInfo videoImageTextInfoEntity);
+    void initVideoImageTextInfo(TopicImageTextInfo topicImageTextInfo);
 
-    void initTopicsCommentsInfo(ArrayList<TopicsCommentInfo> topicsComments);
+    void initTopicCommentsInfo(ArrayList<TopicCommentInfo> topicComments);
 
 }

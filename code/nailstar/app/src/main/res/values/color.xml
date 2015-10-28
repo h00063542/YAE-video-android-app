@@ -5,6 +5,9 @@
     <color name="tab_font_orange_color">#FF0000</color>
     <color name="tab_background">#999999</color>
 
+    <!-- about me -->
+    <color name="tab_background_gray">#ecf0f1</color>
+    <color name="grey_line">#ecf0f1</color>
 
     <color name="grey">#9B9B9B</color>
     <color name="green">#78a22f</color>
@@ -25,11 +28,9 @@
     <color name="pulltorefresh_progress_bar_color">#3FA3F8</color>
 
     <color name="line_color">#ebeeef</color>
-    <color name="topics_comment_reply_background_color">#ebeeef</color>
+    <color name="topic_comment_reply_background_color">#ebeeef</color>
     <color name="submited_result_color">#e85b2f</color>
     <color name="author_tag_color">#e1dede</color>
 
     <color name="user_at_color">#693012</color>
-
-
 </resources>

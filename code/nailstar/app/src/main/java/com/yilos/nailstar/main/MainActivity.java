@@ -3,7 +3,6 @@ package com.yilos.nailstar.main;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,9 +12,9 @@ import android.widget.TextView;
 import com.yilos.nailstar.R;
 import com.yilos.nailstar.aboutme.AboutMeFragment;
 import com.yilos.nailstar.circle.CircleFragment;
-import com.yilos.nailstar.requirelession.view.RequireLessionFragment;
 import com.yilos.nailstar.index.view.IndexFragment;
-import com.yilos.nailstar.player.VideoPlayerActivity;
+import com.yilos.nailstar.requirelession.view.RequireLessionFragment;
+import com.yilos.nailstar.util.ActivityUtil;
 
 public class MainActivity extends Activity {
     private FragmentManager fragmentManager;
@@ -57,10 +56,7 @@ public class MainActivity extends Activity {
                 }
             }
         });
-
-        Intent intent = new Intent(MainActivity.this, VideoPlayerActivity.class);
-        startActivity(intent);
-        MainActivity.this.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        ActivityUtil.toVideoPlayerPage(this, "");
     }
 
     @Override

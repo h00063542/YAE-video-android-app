@@ -5,7 +5,7 @@ import java.util.ArrayList;
 /**
  * Created by yilos on 2015-10-22.
  */
-public class TopicsInfo {
+public class TopicInfo {
     // 视频Id
     private String id;
     // 视频title

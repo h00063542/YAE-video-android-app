@@ -3,7 +3,7 @@ package com.yilos.nailstar.player.entity;
 /**
  * Created by yilos on 2015-10-27.
  */
-public class TopicsCommentAtInfo {
+public class TopicCommentAtInfo {
     private String userId;
     private String nickName;
 

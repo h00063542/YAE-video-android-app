@@ -37,12 +37,12 @@ import com.sina.sinavideo.sdk.utils.VDVideoFullModeController;
 import com.yilos.nailstar.R;
 import com.yilos.nailstar.framework.view.BaseActivity;
 import com.yilos.nailstar.main.MainActivity;
-import com.yilos.nailstar.player.entity.TopicsCommentInfo;
-import com.yilos.nailstar.player.entity.TopicsCommentReplyInfo;
-import com.yilos.nailstar.player.entity.TopicsImageTextInfo;
-import com.yilos.nailstar.player.entity.TopicsInfo;
+import com.yilos.nailstar.player.entity.TopicCommentInfo;
+import com.yilos.nailstar.player.entity.TopicCommentReplyInfo;
+import com.yilos.nailstar.player.entity.TopicImageTextInfo;
+import com.yilos.nailstar.player.entity.TopicInfo;
 import com.yilos.nailstar.player.entity.VideoInfo;
-import com.yilos.nailstar.player.presenter.TopicsPresenter;
+import com.yilos.nailstar.player.presenter.TopicPresenter;
 import com.yilos.nailstar.player.view.IVideoPlayerView;
 import com.yilos.widget.view.ImageCacheView;
 
@@ -101,10 +101,10 @@ public class VideoPlayerActivity extends BaseActivity implements
 //    private TextView mTvVideoCommentText;
     private TextView mTvVideoSubmittedResult;
 
-    private String mTopicsId;
+    private String mTopicId;
 
 
-    private TopicsPresenter mVideoPlayerPresenter;
+    private TopicPresenter mVideoPlayerPresenter;
 
 
     @Override
@@ -112,9 +112,9 @@ public class VideoPlayerActivity extends BaseActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_player);
         init();
-        mVideoPlayerPresenter.playerVideo(mTopicsId);
-        mVideoPlayerPresenter.initTopicsImageTextInfo(mTopicsId);
-        mVideoPlayerPresenter.initTopicsComments(mTopicsId, 1);
+        mVideoPlayerPresenter.playerVideo(mTopicId);
+        mVideoPlayerPresenter.initTopicImageTextInfo(mTopicId);
+        mVideoPlayerPresenter.initTopicComments(mTopicId, 1);
     }
 
     public static int dip2px(Context context, float dpValue) {
@@ -152,7 +152,7 @@ public class VideoPlayerActivity extends BaseActivity implements
         mTvHideVideoImageTextDetail = (TextView) findViewById(R.id.tv_hide_video_image_text_detail);
         mTvDownloadVideoImageTextDetail = (TextView) findViewById(R.id.tv_download_video_image_text_detail);
         // 获取视频Id，名称，url地址
-        mTopicsId = getIntent().getStringExtra("");
+        mTopicId = getIntent().getStringExtra("");
 
         mLayoutVideoDetailContent = (LinearLayout) findViewById(R.id.layout_video_detail_content);
         mLayoutVideoDetailContentParent = (ViewGroup) mLayoutVideoDetailContent.getParent();
@@ -365,7 +365,7 @@ public class VideoPlayerActivity extends BaseActivity implements
         });
 
 
-        mVideoPlayerPresenter = TopicsPresenter.getInstance(this);
+        mVideoPlayerPresenter = TopicPresenter.getInstance(this);
 
 
     }
@@ -415,30 +415,30 @@ public class VideoPlayerActivity extends BaseActivity implements
 
 
     @Override
-    public void playVideo(TopicsInfo videoInfoEntity) {
+    public void playVideo(TopicInfo topicInfo) {
         //TODO 提示获取视频信息失败
-        if (null == videoInfoEntity) {
+        if (null == topicInfo) {
             return;
         }
 
-        showVideoInfo2Page(videoInfoEntity);
+        showVideoInfo2Page(topicInfo);
         VDVideoListInfo mVDVideoListInfo = new VDVideoListInfo();
         VDVideoInfo info = new VDVideoInfo();
-        VideoInfo mVideoEntity = videoInfoEntity.getVideos().get(0);
-        info.mTitle = videoInfoEntity.getTitle();
+        VideoInfo mVideoEntity = topicInfo.getVideos().get(0);
+        info.mTitle = topicInfo.getTitle();
         info.mPlayUrl = mVideoEntity.getOssUrl();
         mVDVideoListInfo.addVideoInfo(info);
         mVDVideoView.open(VideoPlayerActivity.this, mVDVideoListInfo);
     }
 
     @Override
-    public void initVideoImageTextInfo(TopicsImageTextInfo videoImageTextInfoEntity) {
+    public void initVideoImageTextInfo(TopicImageTextInfo topicImageTextInfo) {
         //TODO 提示获取视频图文信息失败
-        if (null == videoImageTextInfoEntity) {
+        if (null == topicImageTextInfo) {
             return;
         }
-        ArrayList pictures = videoImageTextInfoEntity.getPictures();
-        ArrayList articles = videoImageTextInfoEntity.getArticles();
+        ArrayList pictures = topicImageTextInfo.getPictures();
+        ArrayList articles = topicImageTextInfo.getArticles();
 
         LinearLayout.LayoutParams lpMarginTopBottom = new LinearLayout.LayoutParams
                 (LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -475,13 +475,13 @@ public class VideoPlayerActivity extends BaseActivity implements
     }
 
     @Override
-    public void initTopicsCommentsInfo(ArrayList<TopicsCommentInfo> topicsComments) {
+    public void initTopicCommentsInfo(ArrayList<TopicCommentInfo> topicComments) {
         //TODO 提示获取主题失败
-        if (null == topicsComments) {
+        if (null == topicComments) {
             return;
         }
-        for (int i = 0; i < topicsComments.size(); i++) {
-            TopicsCommentInfo commentInfo = topicsComments.get(i);
+        for (int i = 0; i < topicComments.size(); i++) {
+            TopicCommentInfo commentInfo = topicComments.get(i);
 
             LinearLayout linearLayout = new LinearLayout(this);
             LinearLayout.LayoutParams layoutLp = new LinearLayout.LayoutParams(
@@ -511,15 +511,15 @@ public class VideoPlayerActivity extends BaseActivity implements
 
 
             // 设置评论内容布局
-            LinearLayout layoutTopicsComments = new LinearLayout(this);
-            LinearLayout.LayoutParams layoutTopicsCommentsLp = new LinearLayout.LayoutParams(
+            LinearLayout layoutTopicComments = new LinearLayout(this);
+            LinearLayout.LayoutParams layoutTopicCommentsLp = new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            layoutTopicsComments.setOrientation(LinearLayout.VERTICAL);
-            layoutTopicsComments.setLayoutParams(layoutTopicsCommentsLp);
-            if (i != topicsComments.size() - 1) {
-                layoutTopicsComments.setBackgroundResource(R.drawable.bottom_border);
+            layoutTopicComments.setOrientation(LinearLayout.VERTICAL);
+            layoutTopicComments.setLayoutParams(layoutTopicCommentsLp);
+            if (i != topicComments.size() - 1) {
+                layoutTopicComments.setBackgroundResource(R.drawable.bottom_border);
             }
-            layoutTopicsComments.setPadding(0, 0, 0, dp_20);
+            layoutTopicComments.setPadding(0, 0, 0, dp_20);
 
             // 评论人、评论时间布局
             RelativeLayout relativeLayout = new RelativeLayout(this);
@@ -529,13 +529,13 @@ public class VideoPlayerActivity extends BaseActivity implements
             relativeLayout.setPadding(0, 0, dp_10, 0);
 
             // 评论人名称
-            TextView tvTopicsCommentAuthor = new TextView(this);
-            RelativeLayout.LayoutParams tvTopicsCommentAuthorLp = new RelativeLayout.LayoutParams(
+            TextView tvTopicCommentAuthor = new TextView(this);
+            RelativeLayout.LayoutParams tvTopicCommentAuthorLp = new RelativeLayout.LayoutParams(
                     ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            tvTopicsCommentAuthorLp.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-            tvTopicsCommentAuthor.setLayoutParams(tvTopicsCommentAuthorLp);
-            tvTopicsCommentAuthor.setText(commentInfo.getAuthor());
-            relativeLayout.addView(tvTopicsCommentAuthor);
+            tvTopicCommentAuthorLp.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+            tvTopicCommentAuthor.setLayoutParams(tvTopicCommentAuthorLp);
+            tvTopicCommentAuthor.setText(commentInfo.getAuthor());
+            relativeLayout.addView(tvTopicCommentAuthor);
 
 
             // 设置是否显示#交作业#
@@ -544,76 +544,76 @@ public class VideoPlayerActivity extends BaseActivity implements
 //            tempLayoutLp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
 //            tempLayout.setLayoutParams(tempLayoutLp);
             if (commentInfo.getIsHomework() == 1) {
-                TextView tvTopicsCommentHomeWork = new TextView(this);
-                RelativeLayout.LayoutParams tvTopicsCommentHomeWorkLp = new RelativeLayout.LayoutParams(
+                TextView tvTopicCommentHomeWork = new TextView(this);
+                RelativeLayout.LayoutParams tvTopicCommentHomeWorkLp = new RelativeLayout.LayoutParams(
                         ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                tvTopicsCommentHomeWorkLp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-                tvTopicsCommentHomeWork.setLayoutParams(tvTopicsCommentHomeWorkLp);
-                tvTopicsCommentHomeWork.setText("#交作业#");
-                relativeLayout.addView(tvTopicsCommentHomeWork);
+                tvTopicCommentHomeWorkLp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+                tvTopicCommentHomeWork.setLayoutParams(tvTopicCommentHomeWorkLp);
+                tvTopicCommentHomeWork.setText("#交作业#");
+                relativeLayout.addView(tvTopicCommentHomeWork);
             }
 
             // 设置评论时间
-            TextView tvTopicsCommentCreateDate = new TextView(this);
-            RelativeLayout.LayoutParams tvTopicsCommentCreateDateLp = new RelativeLayout.LayoutParams(
+            TextView tvTopicCommentCreateDate = new TextView(this);
+            RelativeLayout.LayoutParams tvTopicCommentCreateDateLp = new RelativeLayout.LayoutParams(
                     ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            tvTopicsCommentCreateDateLp.setMargins(dp_10, 0, 0, 0);
-            tvTopicsCommentCreateDateLp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-            tvTopicsCommentCreateDate.setLayoutParams(tvTopicsCommentCreateDateLp);
+            tvTopicCommentCreateDateLp.setMargins(dp_10, 0, 0, 0);
+            tvTopicCommentCreateDateLp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+            tvTopicCommentCreateDate.setLayoutParams(tvTopicCommentCreateDateLp);
             Date createDate = new Date(commentInfo.getCreateDate());
-            tvTopicsCommentCreateDate.setText(createDate.getHours() + "点" + createDate.getMinutes() + "分");
-            relativeLayout.addView(tvTopicsCommentCreateDate);
+            tvTopicCommentCreateDate.setText(createDate.getHours() + "点" + createDate.getMinutes() + "分");
+            relativeLayout.addView(tvTopicCommentCreateDate);
 //            relativeLayout.addView(tempLayout);
 
 
-            layoutTopicsComments.addView(relativeLayout);
+            layoutTopicComments.addView(relativeLayout);
 
 
             // 设置评论内容
-            TextView tvTopicsCommentContent = new TextView(this);
-            LinearLayout.LayoutParams tvTopicsCommentContentLp = new LinearLayout.LayoutParams(
+            TextView tvTopicCommentContent = new TextView(this);
+            LinearLayout.LayoutParams tvTopicCommentContentLp = new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            tvTopicsCommentContent.setLayoutParams(tvTopicsCommentContentLp);
-            tvTopicsCommentContent.setText(commentInfo.getContent());
-            layoutTopicsComments.addView(tvTopicsCommentContent);
+            tvTopicCommentContent.setLayoutParams(tvTopicCommentContentLp);
+            tvTopicCommentContent.setText(commentInfo.getContent());
+            layoutTopicComments.addView(tvTopicCommentContent);
 
             // 设置评论回复内容
-            for (TopicsCommentReplyInfo topicsCommentReplyInfo : commentInfo.getReplies()) {
-                LinearLayout.LayoutParams layoutTopicsCommentReplyLp = new LinearLayout.LayoutParams(
+            for (TopicCommentReplyInfo topicCommentReplyInfo : commentInfo.getReplies()) {
+                LinearLayout.LayoutParams layoutTopicCommentReplyLp = new LinearLayout.LayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                layoutTopicsCommentReplyLp.setMargins(0, 0, dp_10, dp_5);
-                LinearLayout layoutTopicsCommentContentReply = new LinearLayout(this);
-                layoutTopicsCommentContentReply.setTag(R.id.topics_comments_id, commentInfo.getId());
-                layoutTopicsCommentContentReply.setTag(R.id.topics_comments_reply_id, topicsCommentReplyInfo.getId());
-                layoutTopicsCommentContentReply.setTag(R.id.topics_comments_reply_info, topicsCommentReplyInfo);
-                layoutTopicsCommentContentReply.setLayoutParams(layoutTopicsCommentReplyLp);
-                layoutTopicsCommentContentReply.setBackgroundColor(
-                        getResources().getColor(R.color.topics_comment_reply_background_color));
+                layoutTopicCommentReplyLp.setMargins(0, 0, dp_10, dp_5);
+                LinearLayout layoutTopicCommentContentReply = new LinearLayout(this);
+                layoutTopicCommentContentReply.setTag(R.id.topic_comments_id, commentInfo.getId());
+                layoutTopicCommentContentReply.setTag(R.id.topic_comments_reply_id, topicCommentReplyInfo.getId());
+                layoutTopicCommentContentReply.setTag(R.id.topic_comments_reply_info, topicCommentReplyInfo);
+                layoutTopicCommentContentReply.setLayoutParams(layoutTopicCommentReplyLp);
+                layoutTopicCommentContentReply.setBackgroundColor(
+                        getResources().getColor(R.color.topic_comment_reply_background_color));
 
 
                 LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                TextView tvTopicsCommentContentReply = new TextView(this);
+                TextView tvTopicCommentContentReply = new TextView(this);
                 lp.setMargins(0, 0, dp_10, 0);
 
-                tvTopicsCommentContentReply.setText(Html.fromHtml("<font color=\"#693012\">"
-                        + topicsCommentReplyInfo.getAuthor() + "</font> 回复 "
-                        + topicsCommentReplyInfo.getAt().getNickName() + ": " + topicsCommentReplyInfo.getContent()));
-                tvTopicsCommentContentReply.setLineSpacing(dp_2, 1);
-                tvTopicsCommentContentReply.setPadding(dp_2, dp_2, dp_2, dp_2);
+                tvTopicCommentContentReply.setText(Html.fromHtml("<font color=\"#693012\">"
+                        + topicCommentReplyInfo.getAuthor() + "</font> 回复 "
+                        + topicCommentReplyInfo.getAt().getNickName() + ": " + topicCommentReplyInfo.getContent()));
+                tvTopicCommentContentReply.setLineSpacing(dp_2, 1);
+                tvTopicCommentContentReply.setPadding(dp_2, dp_2, dp_2, dp_2);
 
-                layoutTopicsCommentContentReply.addView(tvTopicsCommentContentReply);
+                layoutTopicCommentContentReply.addView(tvTopicCommentContentReply);
 
-                layoutTopicsCommentContentReply.setOnClickListener(new View.OnClickListener() {
+                layoutTopicCommentContentReply.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
                     }
                 });
-                layoutTopicsComments.addView(layoutTopicsCommentContentReply);
+                layoutTopicComments.addView(layoutTopicCommentContentReply);
             }
 
-            linearLayout.addView(layoutTopicsComments);
+            linearLayout.addView(layoutTopicComments);
 
             // 将评论和回复内容添加的界面
             mLayoutVideoComments.addView(linearLayout);
@@ -622,7 +622,7 @@ public class VideoPlayerActivity extends BaseActivity implements
 
     // 将视频信息显示在界面上
 
-    private void showVideoInfo2Page(TopicsInfo videoInfoEntity) {
+    private void showVideoInfo2Page(TopicInfo videoInfoEntity) {
         // 视频名称
         mTvVideoName.setText(videoInfoEntity.getTitle());
         // 作者照片

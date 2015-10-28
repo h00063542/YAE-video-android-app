@@ -1,11 +1,11 @@
 package com.yilos.nailstar.player.presenter;
 
 import com.yilos.nailstar.framework.exception.NetworkDisconnectException;
-import com.yilos.nailstar.player.entity.TopicsCommentInfo;
-import com.yilos.nailstar.player.entity.TopicsImageTextInfo;
-import com.yilos.nailstar.player.entity.TopicsInfo;
-import com.yilos.nailstar.player.model.ITopicsService;
-import com.yilos.nailstar.player.model.TopicsServiceImpl;
+import com.yilos.nailstar.player.entity.TopicCommentInfo;
+import com.yilos.nailstar.player.entity.TopicImageTextInfo;
+import com.yilos.nailstar.player.entity.TopicInfo;
+import com.yilos.nailstar.player.model.ITopicService;
+import com.yilos.nailstar.player.model.TopicServiceImpl;
 import com.yilos.nailstar.player.view.IVideoPlayerView;
 import com.yilos.nailstar.util.TaskManager;
 
@@ -18,23 +18,23 @@ import java.util.ArrayList;
 /**
  * Created by yilos on 2015-10-22.
  */
-public class TopicsPresenter {
-    private static TopicsPresenter topicsPresenter = new TopicsPresenter();
+public class TopicPresenter {
+    private static TopicPresenter topicPresenter = new TopicPresenter();
 
     private IVideoPlayerView videoPlayerView;
-    private ITopicsService topicsService = new TopicsServiceImpl();
+    private ITopicService topicsService = new TopicServiceImpl();
 
-    public static TopicsPresenter getInstance(IVideoPlayerView videoPlayerView) {
-        topicsPresenter.videoPlayerView = videoPlayerView;
-        return topicsPresenter;
+    public static TopicPresenter getInstance(IVideoPlayerView videoPlayerView) {
+        topicPresenter.videoPlayerView = videoPlayerView;
+        return topicPresenter;
     }
 
-    public void playerVideo(final String topicsId) {
-        TaskManager.Task loadVideoInfo = new TaskManager.BackgroundTask() {
+    public void playerVideo(final String topicId) {
+        TaskManager.Task loadTopicInfo = new TaskManager.BackgroundTask() {
             @Override
             public Object doWork(Object data) {
                 try {
-                    return topicsService.getTopicsInfo(topicsId);
+                    return topicsService.getTopicInfo(topicId);
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (JSONException e) {
@@ -46,27 +46,27 @@ public class TopicsPresenter {
             }
         };
 
-        TaskManager.UITask<TopicsInfo> updateUi = new TaskManager.UITask<TopicsInfo>() {
+        TaskManager.UITask<TopicInfo> updateUi = new TaskManager.UITask<TopicInfo>() {
             @Override
-            public Object doWork(TopicsInfo videoInfoEntity) {
-                videoPlayerView.playVideo(videoInfoEntity);
+            public Object doWork(TopicInfo topicInfo) {
+                videoPlayerView.playVideo(topicInfo);
 
                 return null;
             }
         };
 
         new TaskManager()
-                .next(loadVideoInfo)
+                .next(loadTopicInfo)
                 .next(updateUi)
                 .start();
     }
 
-    public void initTopicsImageTextInfo(final String topicsId) {
-        TaskManager.Task loadVideoImageTextInfo = new TaskManager.BackgroundTask() {
+    public void initTopicImageTextInfo(final String topicId) {
+        TaskManager.Task loadTopicImageTextInfo = new TaskManager.BackgroundTask() {
             @Override
             public Object doWork(Object data) {
                 try {
-                    return topicsService.getTopicsImageTextInfo(topicsId);
+                    return topicsService.getTopicImageTextInfo(topicId);
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (JSONException e) {
@@ -78,27 +78,27 @@ public class TopicsPresenter {
             }
         };
 
-        TaskManager.UITask<TopicsImageTextInfo> updateUi = new TaskManager.UITask<TopicsImageTextInfo>() {
+        TaskManager.UITask<TopicImageTextInfo> updateUi = new TaskManager.UITask<TopicImageTextInfo>() {
             @Override
-            public Object doWork(TopicsImageTextInfo videoImageTextInfoEntity) {
+            public Object doWork(TopicImageTextInfo videoImageTextInfoEntity) {
                 videoPlayerView.initVideoImageTextInfo(videoImageTextInfoEntity);
                 return null;
             }
         };
 
         new TaskManager()
-                .next(loadVideoImageTextInfo)
+                .next(loadTopicImageTextInfo)
                 .next(updateUi)
                 .start();
 
     }
 
-    public void initTopicsComments(final String topicsId, final int page) {
-        TaskManager.Task loadTopicsComments = new TaskManager.BackgroundTask() {
+    public void initTopicComments(final String topicId, final int page) {
+        TaskManager.Task loadTopicComments = new TaskManager.BackgroundTask() {
             @Override
             public Object doWork(Object data) {
                 try {
-                    return topicsService.getTopicsComments(topicsId, page);
+                    return topicsService.getTopicComments(topicId, page);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 } catch (NetworkDisconnectException e) {
@@ -108,16 +108,16 @@ public class TopicsPresenter {
             }
         };
 
-        TaskManager.UITask<ArrayList<TopicsCommentInfo>> updateUi = new TaskManager.UITask<ArrayList<TopicsCommentInfo>>() {
+        TaskManager.UITask<ArrayList<TopicCommentInfo>> updateUi = new TaskManager.UITask<ArrayList<TopicCommentInfo>>() {
             @Override
-            public Object doWork(ArrayList<TopicsCommentInfo> topicsComments) {
-                videoPlayerView.initTopicsCommentsInfo(topicsComments);
+            public Object doWork(ArrayList<TopicCommentInfo> topicComments) {
+                videoPlayerView.initTopicCommentsInfo(topicComments);
                 return null;
             }
         };
 
         new TaskManager()
-                .next(loadTopicsComments)
+                .next(loadTopicComments)
                 .next(updateUi)
                 .start();
     }

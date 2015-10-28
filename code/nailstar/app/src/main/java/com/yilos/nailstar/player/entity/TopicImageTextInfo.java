@@ -5,7 +5,7 @@ import java.util.ArrayList;
 /**
  * Created by yilos on 2015-10-22.
  */
-public class TopicsImageTextInfo {
+public class TopicImageTextInfo {
     private String id;
     private ArrayList articles;
     private ArrayList pictures;

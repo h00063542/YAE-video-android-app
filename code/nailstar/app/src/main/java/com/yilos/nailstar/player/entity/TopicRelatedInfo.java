@@ -3,7 +3,7 @@ package com.yilos.nailstar.player.entity;
 /**
  * Created by yilos on 2015-10-27.
  */
-public class TopicsRelatedInfo {
+public class TopicRelatedInfo {
     private String topicId;
     private String thumbUrl;
 

@@ -29,6 +29,7 @@ public class PullRefreshLayout extends PtrFrameLayout {
     }
 
     private void initViews() {
+        disableWhenHorizontalMove(true);
         this.pullRefreshHeader = new PullRefreshHeader(this.getContext());
         this.setHeaderView(this.pullRefreshHeader);
         this.addPtrUIHandler(this.pullRefreshHeader);
