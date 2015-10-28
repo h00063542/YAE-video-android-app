@@ -1,33 +1,21 @@
 package com.yilos.nailstar.requirelession.view;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
-import android.os.Environment;
-import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ListView;
 
 import com.yilos.nailstar.R;
 import com.yilos.nailstar.requirelession.Presenter.LessionPresenter;
 import com.yilos.nailstar.requirelession.entity.CandidateLession;
 import com.yilos.nailstar.requirelession.entity.LessionActivity;
-import com.yilos.nailstar.requirelession.model.LessionServiceImpl;
 import com.yilos.nailstar.takeImage.TakeImage;
 import com.yilos.nailstar.takeImage.TakeImageCallback;
 
-import org.json.JSONException;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -35,11 +23,15 @@ import java.util.List;
  */
 public class RequireLessionFragment extends Fragment implements LessionView {
 
+    private LessionPresenter lessionPresenter = new LessionPresenter(this);
+
 //    private static final String YILOS_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/yilos";
 //
 //    private TakeImage takeImage;
 
-    private LessionPresenter lessionPresenter = new LessionPresenter(this);
+    private ListView lessionRankingView;
+
+    private RankingListViewAdapter rankingListViewAdapter;
 
     public RequireLessionFragment() {
         // Required empty public constructor
@@ -54,8 +46,7 @@ public class RequireLessionFragment extends Fragment implements LessionView {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_require_lession, container, false);
-        bindControl(view);
-        initView();
+        initView(view, inflater);
         return view;
     }
 
@@ -75,9 +66,15 @@ public class RequireLessionFragment extends Fragment implements LessionView {
 //        });
     }
 
-    private void initView() {
+    private void initView(View view, LayoutInflater inflater) {
+
+        rankingListViewAdapter = new RankingListViewAdapter(inflater);
+        lessionRankingView = (ListView)view.findViewById(R.id.lessionRankingView);
+        lessionRankingView.setAdapter(rankingListViewAdapter);
+
         lessionPresenter.queryActivityTopic();
         lessionPresenter.queryRankingLession();
+
     }
 
     @Override
@@ -101,7 +98,8 @@ public class RequireLessionFragment extends Fragment implements LessionView {
 
     @Override
     public void refreshRankingLession(List<CandidateLession> rankingLessionList) {
-
+        rankingListViewAdapter.setRankingLessionList(rankingLessionList);
+        rankingListViewAdapter.notifyDataSetChanged();
     }
 
 }

@@ -1,62 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
+    android:padding="15dp"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
         android:text="1"
         android:id="@+id/lessionRankingNo" />
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="3"
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
+        android:gravity="center_vertical"
         android:src="@mipmap/nail_works"
         android:id="@+id/lessionRankingImg" />
 
     <LinearLayout
+        android:layout_marginLeft="20dp"
         android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:gravity="center_vertical"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="6" >
 
         <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="wrap_content"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal">
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/lessionAuthorPhoto" />
+            android:gravity="center_vertical">
+            <com.yilos.widget.circleimageview.CircleImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@mipmap/nail_works"
+                android:id="@+id/lessionAuthorPhoto"/>
             <TextView
+                android:layout_marginLeft="5dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/lessionAuthorName" />
+                android:id="@+id/lessionAuthorName"
+                android:text="作者"/>
         </LinearLayout>
 
         <LinearLayout
             android:orientation="horizontal"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal">
+            android:gravity="center_vertical">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="票数: " />
+                android:text="票数:  " />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/lessionvoteCount" />
+                android:id="@+id/lessionvoteCount"
+                android:text="10"/>
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal">
+                android:layout_weight="1"
+                android:gravity="center_vertical|right">
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@mipmap/vote_black"
                     android:id="@+id/lessionVotePic" />
                 <TextView
                     android:layout_width="wrap_content"
@@ -67,8 +83,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="拉票"
-                    android:id="@+id/lessionCanvass"
-                    android:layout_gravity="bottom" />
+                    android:id="@+id/lessionCanvass" />
             </LinearLayout>
         </LinearLayout>
 
