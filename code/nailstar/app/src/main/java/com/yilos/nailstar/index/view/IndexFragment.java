@@ -2,7 +2,6 @@ package com.yilos.nailstar.index.view;
 
 import android.app.Fragment;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +12,7 @@ import com.yilos.nailstar.framework.entity.NailStarApplicationContext;
 import com.yilos.nailstar.index.entity.IndexContent;
 import com.yilos.nailstar.index.entity.Poster;
 import com.yilos.nailstar.index.presenter.IndexPresenter;
-import com.yilos.nailstar.player.VideoPlayerActivity;
+import com.yilos.nailstar.util.ActivityUtil;
 import com.yilos.nailstar.util.CollectionUtil;
 import com.yilos.widget.banner.Banner;
 import com.yilos.widget.pullrefresh.PullRefreshLayout;
@@ -117,17 +116,14 @@ public class IndexFragment extends Fragment implements IIndexView {
         final List<ImageCacheView> views = new ArrayList<>(8);
 
         if(!CollectionUtil.isEmpty(posters)){
-            for(Poster poster : posters){
+            for(final Poster poster : posters){
                 ImageCacheView imageCacheView = new ImageCacheView(getActivity().getApplicationContext());
                 imageCacheView.setImageSrc(poster.getPicUrl());
                 imageCacheView.setClickable(true);
                 imageCacheView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(getActivity(), VideoPlayerActivity.class);
-                        startActivity(intent);
-//                        SplashActivity.this.finish();
-//                        SplashActivity.this.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                        ActivityUtil.toVideoPlayerPage(getActivity(), poster.getTopicId());
                     }
                 });
                 views.add(imageCacheView);
