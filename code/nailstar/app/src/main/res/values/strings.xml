@@ -82,4 +82,6 @@
     <string name="cannot_switch_player">暂时无法切换播放器</string>
     <string name="dlna">DLNA</string>
     <string name="sorry_cannot_switch_player">抱歉，该设备无法切换播放器</string>
+
+    <string name="abnormal_exit_program">抱歉，程序出现异常，即将退出。</string>
 </resources>

@@ -17,15 +17,15 @@ import java.util.ArrayList;
 public interface ITopicService {
 
     // 获取主题信息
-    TopicInfo getTopicInfo(String topicId) throws IOException, JSONException, NetworkDisconnectException;
+    TopicInfo getTopicInfo(String topicId) throws NetworkDisconnectException;
 
     // 获取主题图文信息
-    TopicImageTextInfo getTopicImageTextInfo(String topicId) throws NetworkDisconnectException, IOException, JSONException;
+    TopicImageTextInfo getTopicImageTextInfo(String topicId) throws NetworkDisconnectException;
 
     // 获取关联的主题信息
-    ArrayList<TopicRelatedInfo> getTopicRelatedInfoList(String topicId) throws NetworkDisconnectException, JSONException;
+    ArrayList<TopicRelatedInfo> getTopicRelatedInfoList(String topicId) throws NetworkDisconnectException;
 
     // 获取主题评论
-    ArrayList<TopicCommentInfo> getTopicComments(String topicId, int page) throws NetworkDisconnectException, JSONException;
+    ArrayList<TopicCommentInfo> getTopicComments(String topicId, int page) throws NetworkDisconnectException;
 
 }
