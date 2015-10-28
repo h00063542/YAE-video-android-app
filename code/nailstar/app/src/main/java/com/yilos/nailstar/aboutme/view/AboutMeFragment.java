@@ -1,4 +1,4 @@
-package com.yilos.nailstar.aboutme;
+package com.yilos.nailstar.aboutme.view;
 
 import android.app.Activity;
 import android.net.Uri;
@@ -7,9 +7,14 @@ import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.yilos.nailstar.R;
+import com.yilos.nailstar.aboutme.entity.Message;
+import com.yilos.nailstar.aboutme.presenter.MessagePresenter;
+import com.yilos.nailstar.framework.exception.JSONParseException;
+import com.yilos.nailstar.framework.exception.NetworkDisconnectException;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -71,8 +76,29 @@ public class AboutMeFragment extends Fragment {
         return view;
     }
 
-    private void initViews(View view) {
-//        Button view
+    private int getMessageCount(){
+        MessagePresenter messagePresenter = new MessagePresenter();
+        Message message = new Message();
+        try {
+            message = messagePresenter.getMessage();
+        } catch (NetworkDisconnectException e) {
+            //throw new NetworkDisconnectException("",e);
+        } catch (JSONParseException e) {
+            //throw new JSONParseException("",e);
+        }
+        return message.getCount();
+    }
+
+    private void initViews(View view){
+        RelativeLayout relativeLayout = (RelativeLayout)view.findViewById(R.id.about_me_message_group);
+        final TextView textView = (TextView)view.findViewById(R.id.about_me_message_count);
+
+        relativeLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                textView.setText(String.valueOf(getMessageCount()));
+            }
+        });
     }
 
     // TODO: Rename method, update argument and hook method into UI event

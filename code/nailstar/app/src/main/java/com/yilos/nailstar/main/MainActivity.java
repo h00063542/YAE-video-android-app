@@ -3,7 +3,6 @@ package com.yilos.nailstar.main;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -11,11 +10,10 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.yilos.nailstar.R;
-import com.yilos.nailstar.aboutme.AboutMeFragment;
+import com.yilos.nailstar.aboutme.view.AboutMeFragment;
 import com.yilos.nailstar.circle.CircleFragment;
 import com.yilos.nailstar.requirelession.view.RequireLessionFragment;
 import com.yilos.nailstar.index.view.IndexFragment;
-import com.yilos.nailstar.player.VideoPlayerActivity;
 
 public class MainActivity extends Activity {
     private FragmentManager fragmentManager;
