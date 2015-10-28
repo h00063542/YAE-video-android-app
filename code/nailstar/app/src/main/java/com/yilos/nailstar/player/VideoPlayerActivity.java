@@ -1,6 +1,5 @@
 package com.yilos.nailstar.player;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
@@ -12,6 +11,7 @@ import android.graphics.RectF;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -47,6 +47,7 @@ import com.yilos.nailstar.player.view.IVideoPlayerView;
 import com.yilos.nailstar.util.CollectionUtil;
 import com.yilos.nailstar.util.Constants;
 import com.yilos.nailstar.util.StringUtil;
+import com.yilos.widget.circleimageview.CircleImageView;
 import com.yilos.widget.view.ImageCacheView;
 
 import java.util.ArrayList;
@@ -72,7 +73,8 @@ public class VideoPlayerActivity extends BaseActivity implements
     private FloatingActionButton mFabVideoPlayer;
 
     // 作者信息
-    private ImageView mIvVideoAuthorPhoto;
+    private LinearLayout mLayoutVideoDetailHead;
+    private CircleImageView mIvVideoAuthorPhoto;
     private TextView mTvVideoAuthorName;
     private TextView mTvVideoPlayingTimes;
     private ImageView mIvVideoImageTextIcon;
@@ -153,7 +155,8 @@ public class VideoPlayerActivity extends BaseActivity implements
         mFabVideoPlayer = (FloatingActionButton) findViewById(R.id.fab_video_player);
 
         // 作者信息
-        mIvVideoAuthorPhoto = (ImageView) findViewById(R.id.iv_video_author_photo);
+        mLayoutVideoDetailHead = (LinearLayout) findViewById(R.id.layout_video_detail_head);
+//        mIvVideoAuthorPhoto = (ImageView) findViewById(R.id.iv_video_author_photo);
         mTvVideoAuthorName = (TextView) findViewById(R.id.tv_video_author_name);
         mTvVideoPlayingTimes = (TextView) findViewById(R.id.tv_video_playing_times);
         mIvVideoImageTextIcon = (ImageView) findViewById(R.id.iv_video_image_text_icon);
@@ -382,7 +385,7 @@ public class VideoPlayerActivity extends BaseActivity implements
             return;
         }
 
-        showVideoInfo2Page(topicInfo);
+        showTopicInfo2Page(topicInfo);
         VDVideoListInfo mVDVideoListInfo = new VDVideoListInfo();
         VDVideoInfo info = new VDVideoInfo();
         VideoInfo mVideoEntity = topicInfo.getVideos().get(0);
@@ -509,14 +512,14 @@ public class VideoPlayerActivity extends BaseActivity implements
 
             // 设置评论人头像
             if (!StringUtil.isEmpty(topicCommentInfo.getAuthorPhoto())) {
-                ImageCacheView imageView = new ImageCacheView(this);
+                CircleImageView imageView = new CircleImageView(this);
                 imageView.setImageSrc(topicCommentInfo.getAuthorPhoto());
                 LinearLayout.LayoutParams imageViewLp = new LinearLayout.LayoutParams(dp_40, dp_40);
                 imageViewLp.setMargins(dp_10, 0, dp_10, 0);
                 imageView.setLayoutParams(imageViewLp);
                 linearLayout.addView(imageView);
             } else {
-                ImageView imageView = new ImageView(this);
+                CircleImageView imageView = new CircleImageView(this);
                 imageView.setImageResource(R.drawable.man);
                 LinearLayout.LayoutParams imageViewLp = new LinearLayout.LayoutParams(dp_40, dp_40);
                 imageViewLp.setMargins(dp_10, 0, dp_10, 0);
@@ -658,10 +661,17 @@ public class VideoPlayerActivity extends BaseActivity implements
 
     // 将视频信息显示在界面上
 
-    private void showVideoInfo2Page(TopicInfo topicInfo) {
+    private void showTopicInfo2Page(TopicInfo topicInfo) {
         // 视频名称
         mTvVideoName.setText(topicInfo.getTitle());
         // 作者照片
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(getResources().getDimensionPixelSize(R.dimen.dp_60), getResources().getDimensionPixelSize(R.dimen.dp_60));
+        lp.setMargins(dp_10, 0, dp_10, 0);
+        lp.gravity = Gravity.CENTER_VERTICAL;
+        mIvVideoAuthorPhoto = new CircleImageView(VideoPlayerActivity.this);
+        mIvVideoAuthorPhoto.setLayoutParams(lp);
+        mIvVideoAuthorPhoto.setImageSrc(topicInfo.getAuthorPhoto());
+        mLayoutVideoDetailHead.addView(mIvVideoAuthorPhoto, 0);
 //        mIvVideoAuthorPhoto.setImageBitmap(ImageLoader.getInstance().loadImageSync(topicInfo.getAuthorPhoto()));
         // 作者名称
         mTvVideoAuthorName.setText(topicInfo.getAuthor());
