@@ -14,6 +14,7 @@ import com.yilos.nailstar.aboutme.view.AboutMeFragment;
 import com.yilos.nailstar.circle.CircleFragment;
 import com.yilos.nailstar.index.view.IndexFragment;
 import com.yilos.nailstar.requirelession.view.RequireLessionFragment;
+import com.yilos.nailstar.util.ActivityUtil;
 
 public class MainActivity extends Activity {
     private FragmentManager fragmentManager;
@@ -55,6 +56,7 @@ public class MainActivity extends Activity {
                 }
             }
         });
+        ActivityUtil.toVideoPlayerPage(this, "");
     }
 
     @Override
