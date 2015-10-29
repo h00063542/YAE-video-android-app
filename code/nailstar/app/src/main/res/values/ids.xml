@@ -4,4 +4,6 @@
     <item name="topic_comment_info" type="id" />
     <item name="topic_comment_reply_id" type="id" />
     <item name="topic_comment_reply_info" type="id" />
+
+    <item name="topic_related_info" type="id" />
 </resources>

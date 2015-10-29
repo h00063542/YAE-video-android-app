@@ -142,17 +142,13 @@ public class TopicServiceImpl implements ITopicService {
             if (StringUtil.isEmpty(strTopicsRelatedInfo)) {
                 return result;
             }
-            TopicRelatedInfo topicRelatedInfo = new TopicRelatedInfo();
             JSONObject jsonObject = new JSONObject(strTopicsRelatedInfo);
             JSONObject jsonResult = jsonObject.optJSONObject(Constants.RESULT);
 
             JSONArray jsonRelated = jsonResult.optJSONArray(Constants.RELATED);
             for (int i = 0; i < jsonRelated.length(); i++) {
-                topicRelatedInfo.setTopicId(topicId);
-                topicRelatedInfo.setThumbUrl(jsonRelated.optJSONObject(i).optString(Constants.THUMB_URL, null));
+                result.add(new TopicRelatedInfo(topicId, jsonRelated.optJSONObject(i).optString(Constants.THUMB_URL, null)));
             }
-
-            result.add(topicRelatedInfo);
         } catch (IOException e) {
             e.printStackTrace();
             LOGGER.error(MessageFormat.format("获取topic关联信息失败，topicId:{0}，url:{1}", topicId, url), e);

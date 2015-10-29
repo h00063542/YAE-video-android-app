@@ -95,10 +95,10 @@ public class CircleImageView extends ImageView implements ImageLoadingListener, 
 
     public CircleImageView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
-        int bg = Color.rgb((int) Math.floor(Math.random() * 128) + 64,
-                (int) Math.floor(Math.random() * 128) + 64,
-                (int) Math.floor(Math.random() * 128) + 64);
-        setBackgroundColor(bg);
+//        int bg = Color.rgb((int) Math.floor(Math.random() * 128) + 64,
+//                (int) Math.floor(Math.random() * 128) + 64,
+//                (int) Math.floor(Math.random() * 128) + 64);
+//        setBackgroundColor(bg);
 
         setOnClickListener(this);
     }
@@ -106,10 +106,10 @@ public class CircleImageView extends ImageView implements ImageLoadingListener, 
     public CircleImageView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
 
-        int bg = Color.rgb((int) Math.floor(Math.random() * 128) + 64,
-                (int) Math.floor(Math.random() * 128) + 64,
-                (int) Math.floor(Math.random() * 128) + 64);
-        setBackgroundColor(bg);
+//        int bg = Color.rgb((int) Math.floor(Math.random() * 128) + 64,
+//                (int) Math.floor(Math.random() * 128) + 64,
+//                (int) Math.floor(Math.random() * 128) + 64);
+//        setBackgroundColor(bg);
 
         setOnClickListener(this);
 
