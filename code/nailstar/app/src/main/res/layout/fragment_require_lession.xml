@@ -39,7 +39,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/candidateBackground"
-            android:background="@mipmap/top">
+            android:background="@mipmap/candidate_background">
 
             <LinearLayout
                 android:orientation="vertical"
@@ -190,7 +190,7 @@
         <ListView
             android:id="@+id/lessionRankingView"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"></ListView>
 
     </LinearLayout>
 
