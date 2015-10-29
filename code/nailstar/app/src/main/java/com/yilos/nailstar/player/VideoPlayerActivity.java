@@ -47,13 +47,16 @@ import com.yilos.nailstar.util.CollectionUtil;
 import com.yilos.nailstar.util.Constants;
 import com.yilos.nailstar.util.StringUtil;
 import com.yilos.widget.circleimageview.CircleImageView;
+import com.yilos.widget.pullrefresh.PullToRefreshView;
 import com.yilos.widget.view.ImageCacheView;
 
 import java.util.ArrayList;
 import java.util.Date;
 
 public class VideoPlayerActivity extends BaseActivity implements
-        IVideoPlayerView, VDVideoExtListeners.OnVDVideoPlaylistListener {
+        IVideoPlayerView, VDVideoExtListeners.OnVDVideoPlaylistListener
+        , PullToRefreshView.OnHeaderRefreshListener
+        , PullToRefreshView.OnFooterRefreshListener {
     private static final String TAG = "VideoPlayerActivity";
     private int dp_2;
     private int dp_5;
@@ -66,6 +69,7 @@ public class VideoPlayerActivity extends BaseActivity implements
     private ImageView mBtnVideoShare;
     private TextView mTvVideoName;
 
+    private PullToRefreshView mTopicPullToRefreshView;
     private ScrollView mSvVideoPlayer;
     // 视频播放控件
     private VDVideoView mVDVideoView;
@@ -110,6 +114,7 @@ public class VideoPlayerActivity extends BaseActivity implements
     private TextView mTvVideoSubmittedResult;
 
     private String mTopicId;
+    private int mPage = 1;
 
 
     private TopicPresenter mVideoPlayerPresenter;
@@ -123,7 +128,7 @@ public class VideoPlayerActivity extends BaseActivity implements
         mVideoPlayerPresenter.playerVideo(mTopicId);
         mVideoPlayerPresenter.initTopicRelatedInfo(mTopicId);
         mVideoPlayerPresenter.initTopicImageTextInfo(mTopicId);
-        mVideoPlayerPresenter.initTopicComments(mTopicId, 1);
+        mVideoPlayerPresenter.initTopicComments(mTopicId, mPage);
     }
 
 
@@ -136,12 +141,16 @@ public class VideoPlayerActivity extends BaseActivity implements
 
         // 获取topic id
         mTopicId = getIntent().getStringExtra(Constants.TOPIC_ID);
+        mPage = 1;
 
         // 顶部返回、topic名称、分享
         mBtnVideoPlayerBack = (ImageView) findViewById(R.id.btn_video_player_back);
         mBtnVideoShare = (ImageView) findViewById(R.id.btn_video_share);
         mTvVideoName = (TextView) findViewById(R.id.tv_video_name);
 
+        mTopicPullToRefreshView = (PullToRefreshView) findViewById(R.id.topic_pull_refresh_view);
+//        mTopicPullToRefreshView.setOnHeaderRefreshListener(this);
+        mTopicPullToRefreshView.setOnFooterRefreshListener(this);
         // 视频播放控件
         mSvVideoPlayer = (ScrollView) findViewById(R.id.sv_video_player);
         mVDVideoView = (VDVideoView) findViewById(R.id.video_player);
@@ -609,12 +618,11 @@ public class VideoPlayerActivity extends BaseActivity implements
             tvTopicCommentCreateDateLp.setMargins(dp_10, 0, 0, 0);
             tvTopicCommentCreateDateLp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
             tvTopicCommentCreateDate.setLayoutParams(tvTopicCommentCreateDateLp);
-            Date createDate = new Date(topicCommentInfo.getCreateDate());
             StringBuffer text = new StringBuffer();
             if (topicCommentInfo.getIsHomework() == 1) {
                 text.append("<font color=\"#555657\">#交作业#    </font>");
             }
-            text.append("<font color=\"#adafb0\">" + createDate.getHours() + "点" + createDate.getMinutes() + "分</font>");
+            text.append("<font color=\"#adafb0\">" + getTopicCommentDateStr(topicCommentInfo.getCreateDate()) + "</font>");
             tvTopicCommentCreateDate.setText(Html.fromHtml(text.toString()));
             relativeLayout.addView(tvTopicCommentCreateDate);
 //            relativeLayout.addView(tempLayout);
@@ -706,6 +714,35 @@ public class VideoPlayerActivity extends BaseActivity implements
         }
     }
 
+
+    @Override
+    public void onFooterRefresh(PullToRefreshView view) {
+        mTopicPullToRefreshView.postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                mPage++;
+                mVideoPlayerPresenter.initTopicComments(mTopicId, mPage);
+                if (mPage >= 3) {
+                    mTopicPullToRefreshView.setFooterLastUpdate(getResources().getString(R.string.loading_finish));
+                } else {
+                    mTopicPullToRefreshView.onFooterRefreshComplete();
+                }
+            }
+        }, 1000);
+    }
+
+    @Override
+    public void onHeaderRefresh(PullToRefreshView view) {
+        mTopicPullToRefreshView.postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                mTopicPullToRefreshView.onHeaderRefreshComplete();
+            }
+        }, 1000);
+
+    }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -805,4 +842,28 @@ public class VideoPlayerActivity extends BaseActivity implements
 
         return output;
     }
+
+    private String getTopicCommentDateStr(long time) {
+        Date date = new Date(time);
+        Date today = new Date();
+        long result = today.getTime() - time;
+        if (result / 1000 <= 60) {
+            return "刚刚";
+        } else if (result / 1000 > 60 && result / 1000 <= 3600) {
+            return Math.floor((result / 1000) / 60) + "分钟前";
+        } else if (result / 1000 > 3600 && result / 1000 <= 86400) {
+            return date.getHours() + "点" + date.getMinutes() + "分";
+        }
+//        else if (result / 1000 > 3600 && result / 1000 <= 86400) {
+//            return Math.floor((result / 1000) / 3600) + "小时前";
+//        }
+//        else if (result / 1000 > 86400 && result / 1000 <= 86400 * 30) {
+//            return Math.floor((result / 1000) / 86400) + "天前";
+//        }
+        else {
+            return (date.getMonth() + 1) + "月" + date.getDate() + "日";
+        }
+
+    }
+
 }
