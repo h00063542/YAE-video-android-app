@@ -23,10 +23,10 @@
     public void notShowTitleView() 
 
 获取返回按钮对象
-    public Button getBackButton() 
+    public ImageView getBackButton() 
 
 获取确定按钮对象
-    public Button getSureButton() 
+    public TextView getSureButton() 
 
 获取标题对象
     public TextView getTitleView() 

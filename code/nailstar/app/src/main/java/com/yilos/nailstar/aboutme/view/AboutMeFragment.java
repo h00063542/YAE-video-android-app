@@ -89,28 +89,11 @@ public class AboutMeFragment extends Fragment implements IAboutMeView{
         initViews(view);
         return view;
     }
-    private Handler handler = new Handler() {
-        @Override
-        public void close() {
-
-        }
-
-        @Override
-        public void flush() {
-
-        }
-
-        @Override
-        public void publish(LogRecord record) {
-
-        }
-    };
     private void initViews(View view){
         relativeLayout = (RelativeLayout)view.findViewById(R.id.about_me_message_group);
         textView = (TextView)view.findViewById(R.id.about_me_message_count);
         titleBar = (TitleBar)view.findViewById(R.id.about_me_header_nav);
         titleBar.notShowSureButton();
-
     }
 
     // TODO: Rename method, update argument and hook method into UI event

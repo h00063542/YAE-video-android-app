@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -15,8 +14,8 @@ import com.yilos.widget.R;
  * Created by sisilai on 15/10/28.
  */
 public class TitleBar extends RelativeLayout {
-    private Button backButton;//返回按钮
-    private Button sureButton;//确定按钮
+    private ImageView backButton;//返回按钮
+    private TextView sureButton;//确定按钮
     private TextView titleView;//顶部标题
     private String titleText;
 
@@ -53,11 +52,11 @@ public class TitleBar extends RelativeLayout {
         titleView.setVisibility(INVISIBLE);
     }
 
-    public Button getBackButton() {
+    public ImageView getBackButton() {
         return backButton;
     }
 
-    public Button getSureButton() {
+    public TextView getSureButton() {
         return sureButton;
     }
 
@@ -68,8 +67,8 @@ public class TitleBar extends RelativeLayout {
     private void init() {
         LayoutInflater layoutInflater = LayoutInflater.from(mContext);
         layoutInflater.inflate(R.layout.title_bar, this);
-        backButton = (Button)findViewById(R.id.title_bar_left_back);
-        sureButton = (Button)findViewById(R.id.title_bar_sure);
+        backButton = (ImageView)findViewById(R.id.title_bar_left_back);
+        sureButton = (TextView)findViewById(R.id.title_bar_sure);
         titleView= (TextView)findViewById(R.id.title_bar_title);
     }
 }
