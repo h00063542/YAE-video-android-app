@@ -76,7 +76,7 @@ public class VideoPlayerActivity extends BaseActivity implements
     private FloatingActionButton mFabVideoPlayer;
 
     // 作者信息
-    private LinearLayout mLayoutTopicsImageTextHead;
+//    private LinearLayout mLayoutTopicsImageTextHead;
     private CircleImageView mIvVideoAuthorPhoto;
     private TextView mTvVideoAuthorName;
     private TextView mTvVideoPlayingTimes;
@@ -115,10 +115,11 @@ public class VideoPlayerActivity extends BaseActivity implements
 
     private String mTopicId;
     private int mPage = 1;
+    // 是否最后一页评论
+    private boolean mIsTopicsCommentLastPage = false;
 
 
     private TopicPresenter mVideoPlayerPresenter;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -160,7 +161,7 @@ public class VideoPlayerActivity extends BaseActivity implements
 //        mFabVideoPlayer = (FloatingActionButton) findViewById(R.id.fab_video_player);
 
         // 作者信息
-        mLayoutTopicsImageTextHead = (LinearLayout) findViewById(R.id.layout_topic_image_text_head);
+//        mLayoutTopicsImageTextHead = (LinearLayout) findViewById(R.id.layout_topic_image_text_head);
         mIvVideoAuthorPhoto = (CircleImageView) findViewById(R.id.iv_video_author_photo);
         mTvVideoAuthorName = (TextView) findViewById(R.id.tv_video_author_name);
         mTvVideoPlayingTimes = (TextView) findViewById(R.id.tv_video_playing_times);
@@ -543,9 +544,12 @@ public class VideoPlayerActivity extends BaseActivity implements
     @Override
     public void initTopicCommentsInfo(ArrayList<TopicCommentInfo> topicComments) {
         //TODO 提示获取主题评论信息失败
-        if (null == topicComments) {
+        if (CollectionUtil.isEmpty(topicComments)) {
+            mIsTopicsCommentLastPage = true;
+            mTopicPullToRefreshView.setFooterLastUpdate(null);
             return;
         }
+        mTopicPullToRefreshView.onFooterRefreshComplete();
         for (int i = 0; i < topicComments.size(); i++) {
             TopicCommentInfo topicCommentInfo = topicComments.get(i);
 
@@ -625,11 +629,8 @@ public class VideoPlayerActivity extends BaseActivity implements
             text.append("<font color=\"#adafb0\">" + getTopicCommentDateStr(topicCommentInfo.getCreateDate()) + "</font>");
             tvTopicCommentCreateDate.setText(Html.fromHtml(text.toString()));
             relativeLayout.addView(tvTopicCommentCreateDate);
-//            relativeLayout.addView(tempLayout);
-
 
             layoutTopicComments.addView(relativeLayout);
-
 
             // 设置评论内容
             TextView tvTopicCommentContent = new TextView(this);
@@ -661,24 +662,12 @@ public class VideoPlayerActivity extends BaseActivity implements
 
             // 设置评论回复内容
             for (TopicCommentReplyInfo topicCommentReplyInfo : topicCommentInfo.getReplies()) {
-//                LinearLayout.LayoutParams layoutTopicCommentReplyLp = new LinearLayout.LayoutParams(
-//                        ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-//                layoutTopicCommentReplyLp.setMargins(0, 0, dp_10, dp_5);
-//                LinearLayout layoutTopicCommentContentReply = new LinearLayout(this);
-//                layoutTopicCommentContentReply.setLayoutParams(layoutTopicCommentReplyLp);
-//                layoutTopicCommentContentReply.setBackgroundColor(
-//                        getResources().getColor(R.color.topic_comment_reply_background_color));
-
-
                 LinearLayout.LayoutParams tvTopicCommentContentReplyLp = new LinearLayout.LayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 TextView tvTopicCommentContentReply = new TextView(this);
                 tvTopicCommentContentReplyLp.setMargins(0, 0, dp_10, dp_5);
 
 
-//                LinearLayout.LayoutParams layoutTopicCommentReplyLp = new LinearLayout.LayoutParams(
-//                        ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-//                layoutTopicCommentReplyLp.setMargins(0, 0, dp_10, dp_5);
                 tvTopicCommentContentReply.setLayoutParams(tvTopicCommentContentReplyLp);
                 tvTopicCommentContentReply.setText(Html.fromHtml("<font color=\"#693012\">"
                         + topicCommentReplyInfo.getAuthor()
@@ -702,8 +691,6 @@ public class VideoPlayerActivity extends BaseActivity implements
                     }
                 });
 
-//                layoutTopicCommentContentReply.addView(tvTopicCommentContentReply);
-
                 layoutTopicComments.addView(tvTopicCommentContentReply);
             }
 
@@ -721,12 +708,10 @@ public class VideoPlayerActivity extends BaseActivity implements
 
             @Override
             public void run() {
-                mPage++;
-                mVideoPlayerPresenter.initTopicComments(mTopicId, mPage);
-                if (mPage >= 3) {
+                if (mIsTopicsCommentLastPage) {
                     mTopicPullToRefreshView.setFooterLastUpdate(getResources().getString(R.string.loading_finish));
                 } else {
-                    mTopicPullToRefreshView.onFooterRefreshComplete();
+                    mVideoPlayerPresenter.initTopicComments(mTopicId, ++mPage);
                 }
             }
         }, 1000);
