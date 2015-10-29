@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.sina.sinavideo.coreplayer.util.StringUtils;
 import com.yilos.nailstar.R;
 import com.yilos.nailstar.aboutme.entity.Message;
 import com.yilos.nailstar.aboutme.presenter.MessagePresenter;
@@ -33,7 +34,7 @@ public class AboutMeFragment extends Fragment implements IAboutMeView{
 
     @Override
     public void initMessageCount(Message message) {
-        int count = 1;
+        textView.setText(String.valueOf(message.getCount()));
     }
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -49,6 +50,7 @@ public class AboutMeFragment extends Fragment implements IAboutMeView{
     RelativeLayout relativeLayout;
     TextView textView;
     TitleBar titleBar;
+    private MessagePresenter messagePresenter;
 
     /**
      * Use this factory method to create a new instance of
@@ -68,9 +70,9 @@ public class AboutMeFragment extends Fragment implements IAboutMeView{
         return fragment;
     }
 
-    public AboutMeFragment() {
-        // Required empty public constructor
-    }
+//    public AboutMeFragment() {
+//        // Required empty public constructor
+//    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -94,6 +96,8 @@ public class AboutMeFragment extends Fragment implements IAboutMeView{
         textView = (TextView)view.findViewById(R.id.about_me_message_count);
         titleBar = (TitleBar)view.findViewById(R.id.about_me_header_nav);
         titleBar.notShowSureButton();
+        messagePresenter = MessagePresenter.getInstance(this);
+        messagePresenter.getMessage();
     }
 
     // TODO: Rename method, update argument and hook method into UI event
