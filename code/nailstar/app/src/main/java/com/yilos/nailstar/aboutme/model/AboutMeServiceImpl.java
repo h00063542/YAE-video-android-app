@@ -14,12 +14,10 @@ import java.io.IOException;
  * Created by sisilai on 15/10/24.
  */
 public class AboutMeServiceImpl implements AboutMeService {
-    public Message message = new Message();
     @Override
-    public Message getMessageContext() throws NetworkDisconnectException, JSONParseException {
-        String jsonObject = null;
+    public Message getMessageContext(Message message) throws NetworkDisconnectException, JSONParseException {
+        String jsonObject = "";
         JSONObject countObject = null;
-        //{"code":0,"result":{"count":0}}
         try {
             jsonObject = HttpClient.getJson("/vapi/nailstar/messages/count");
         } catch (IOException e) {
@@ -28,7 +26,6 @@ public class AboutMeServiceImpl implements AboutMeService {
             throw new NetworkDisconnectException("读取失败", e);
         }
         try {
-            //jsonObject = HttpClient.getJson("/vapi/nailstar/posters");//" /vapi/nailstar/messages/count
             countObject = new JSONObject(jsonObject);
             if (countObject.getInt("code") != 0) {
                 return null;

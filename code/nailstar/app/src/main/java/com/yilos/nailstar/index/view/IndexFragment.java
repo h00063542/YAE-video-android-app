@@ -106,8 +106,6 @@ public class IndexFragment extends Fragment implements IIndexView {
         } else {
             indexPresenter.refreshPosters(true);
         }
-
-
     }
 
     @Override

@@ -11,27 +11,32 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
         <!-- 头部导航 -->
-        <RelativeLayout
+        <!--<RelativeLayout-->
+            <!--android:id="@+id/about_me_header_nav"-->
+            <!--android:orientation="horizontal"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="@dimen/about_me_header_nav"-->
+            <!--android:background="@color/tab_font_orange_color"-->
+            <!--android:gravity="center_vertical">-->
+            <!--<ImageView-->
+                <!--android:layout_width="@dimen/about_me_left_back"-->
+                <!--android:layout_height="@dimen/about_me_left_back"-->
+                <!--android:layout_centerVertical="true"-->
+                <!--android:src="@mipmap/ic_about_me_left_back"-->
+                <!--android:padding="@dimen/about_me_border_padding"/>-->
+            <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_centerInParent="true"-->
+                <!--android:text="@string/about_me_my"-->
+                <!--android:textColor="@color/white"-->
+                <!--android:textSize="@dimen/about_me_header_nav_title"/>-->
+        <!--</RelativeLayout>-->
+        <com.yilos.widget.titlebar.TitleBar
             android:id="@+id/about_me_header_nav"
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/about_me_header_nav"
-            android:background="@color/tab_font_orange_color"
-            android:gravity="center_vertical">
-            <ImageView
-                android:layout_width="@dimen/about_me_left_back"
-                android:layout_height="@dimen/about_me_left_back"
-                android:layout_centerVertical="true"
-                android:src="@mipmap/ic_about_me_left_back"
-                android:padding="@dimen/about_me_border_padding"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:text="@string/about_me_my"
-                android:textColor="@color/white"
-                android:textSize="@dimen/about_me_header_nav_title"/>
-        </RelativeLayout>
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent">
+        </com.yilos.widget.titlebar.TitleBar>
         <!-- 我的信息 -->
         <LinearLayout
             android:background="@color/white"
