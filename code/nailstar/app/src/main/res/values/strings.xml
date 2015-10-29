@@ -11,6 +11,15 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="video_player_times">次播放</string>
+    <string name="topic_image_text_content">图文分解</string>
+    <string name="hide_topic_image_text_content">收起图文</string>
+    <string name="download_topic_image_text_content">下载图文到本地</string>
+    <string name="more_videos">更多视频</string>
+    <string name="download">下载</string>
+    <string name="collection">收藏</string>
+    <string name="comment">评论</string>
+    <string name="submitted_result">交作业</string>
 
     <!-- about me -->
     <string name="about_me_my">我的</string>
@@ -73,4 +82,8 @@
     <string name="cannot_switch_player">暂时无法切换播放器</string>
     <string name="dlna">DLNA</string>
     <string name="sorry_cannot_switch_player">抱歉，该设备无法切换播放器</string>
+
+    <string name="abnormal_exit_program">抱歉，程序出现异常，即将退出。</string>
+    <string name="back">返回</string>
+    <string name="share">分享</string>
 </resources>

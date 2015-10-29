@@ -115,6 +115,28 @@ public class Banner<T> extends CViewPager{
     }
 
     @Override
+    public boolean dispatchTouchEvent(MotionEvent ev){
+        final int action = ev.getAction();
+
+        switch (action & MotionEventCompat.ACTION_MASK) {
+            case MotionEvent.ACTION_DOWN: {
+                pause();
+                return super.dispatchTouchEvent(ev);
+            }
+            case MotionEvent.ACTION_MOVE:
+                pause();
+                return super.dispatchTouchEvent(ev);
+            case MotionEvent.ACTION_UP:
+                resume();
+                return super.dispatchTouchEvent(ev);
+            default:
+                break;
+        }
+
+        return super.dispatchTouchEvent(ev);
+    }
+
+    @Override
     public boolean onTouchEvent(MotionEvent ev){
         final int action = ev.getAction();
 

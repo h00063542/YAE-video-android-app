@@ -1,4 +1,4 @@
-package com.yilos.nailstar.aboutme;
+package com.yilos.nailstar.aboutme.view;
 
 import android.app.Activity;
 import android.net.Uri;
@@ -8,8 +8,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.yilos.nailstar.R;
+import com.yilos.nailstar.aboutme.entity.Message;
+import com.yilos.nailstar.aboutme.presenter.MessagePresenter;
+import com.yilos.nailstar.framework.exception.JSONParseException;
+import com.yilos.nailstar.framework.exception.NetworkDisconnectException;
+import com.yilos.widget.titlebar.TitleBar;
+
+import java.util.logging.Handler;
+import java.util.logging.LogRecord;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -19,7 +29,12 @@ import com.yilos.nailstar.R;
  * Use the {@link AboutMeFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class AboutMeFragment extends Fragment {
+public class AboutMeFragment extends Fragment implements IAboutMeView{
+
+    @Override
+    public void initMessageCount(Message message) {
+        int count = 1;
+    }
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -30,6 +45,10 @@ public class AboutMeFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+
+    RelativeLayout relativeLayout;
+    TextView textView;
+    TitleBar titleBar;
 
     /**
      * Use this factory method to create a new instance of
@@ -70,9 +89,11 @@ public class AboutMeFragment extends Fragment {
         initViews(view);
         return view;
     }
-
-    private void initViews(View view) {
-//        Button view
+    private void initViews(View view){
+        relativeLayout = (RelativeLayout)view.findViewById(R.id.about_me_message_group);
+        textView = (TextView)view.findViewById(R.id.about_me_message_count);
+        titleBar = (TitleBar)view.findViewById(R.id.about_me_header_nav);
+        titleBar.notShowSureButton();
     }
 
     // TODO: Rename method, update argument and hook method into UI event

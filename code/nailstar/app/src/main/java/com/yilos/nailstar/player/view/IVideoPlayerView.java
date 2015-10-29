@@ -1,19 +1,24 @@
 package com.yilos.nailstar.player.view;
 
-import com.yilos.nailstar.player.entity.VideoInfoEntity;
+import com.yilos.nailstar.player.entity.TopicCommentInfo;
+import com.yilos.nailstar.player.entity.TopicImageTextInfo;
+import com.yilos.nailstar.player.entity.TopicInfo;
+import com.yilos.nailstar.player.entity.TopicRelatedInfo;
+
+import java.util.ArrayList;
 
 /**
  * Created by yilos on 2015-10-22.
  */
 public interface IVideoPlayerView {
 
-    String getVideoId();
+    void playVideo(TopicInfo topicInfo);
 
-    void playVideo(VideoInfoEntity videoInfoEntity);
+    void initTopicImageTextInfo(TopicImageTextInfo topicImageTextInfo);
 
-    void showImageTextDetail();
+    void initTopicCommentsInfo(ArrayList<TopicCommentInfo> topicComments);
 
-    void hideImageTextDetail();
+    void initTopicRelatedInfo(ArrayList<TopicRelatedInfo> topicRelateds);
 
 
 }
