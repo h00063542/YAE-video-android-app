@@ -8,6 +8,7 @@
     <dimen name="dp_10">10dp</dimen>
     <dimen name="dp_20">20dp</dimen>
     <dimen name="dp_40">40dp</dimen>
+    <dimen name="dp_60">60dp</dimen>
 
     <!-- fragment_about_me -->
     <dimen name="about_me_header_nav">50dp</dimen>

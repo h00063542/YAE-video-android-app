@@ -19,6 +19,8 @@ import com.yilos.nailstar.framework.entity.NailStarApplicationContext;
 import com.yilos.nailstar.framework.exception.JSONParseException;
 import com.yilos.nailstar.framework.exception.NetworkDisconnectException;
 import com.yilos.nailstar.index.model.IndexServiceImpl;
+import com.yilos.nailstar.util.Constants;
+import com.yilos.nailstar.util.CrashHandler;
 
 import java.io.File;
 
@@ -80,6 +82,8 @@ public class NailStarApplication extends android.app.Application {
 
         // 播放器初始化，要在app启动前进行初始化，才能解压出相应的解码器
         initVideoPlayer();
+
+        CrashHandler.getInstance().init(this);
     }
 
     public void preloadIndexContent() {

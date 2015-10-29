@@ -7,6 +7,15 @@ public class TopicRelatedInfo {
     private String topicId;
     private String thumbUrl;
 
+    public TopicRelatedInfo() {
+
+    }
+
+    public TopicRelatedInfo(String topicId, String thumbUrl) {
+        this.topicId = topicId;
+        this.thumbUrl = thumbUrl;
+    }
+
     public String getTopicId() {
         return topicId;
     }

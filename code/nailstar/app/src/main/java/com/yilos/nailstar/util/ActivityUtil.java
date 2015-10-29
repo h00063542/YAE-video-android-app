@@ -12,7 +12,7 @@ public class ActivityUtil {
 
     public static void toVideoPlayerPage(Activity activity, String topicId) {
         Intent intent = new Intent(activity, VideoPlayerActivity.class);
-        intent.putExtra(Constants.TOPICID, topicId);
+        intent.putExtra(Constants.TOPIC_ID, topicId);
         activity.startActivity(intent);
 //        activity.finish();
 //        activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
