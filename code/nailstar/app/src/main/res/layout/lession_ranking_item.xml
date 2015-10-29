@@ -10,10 +10,10 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:gravity="center_vertical"
-        android:text="1"
+        android:text="0"
         android:id="@+id/lessionRankingNo" />
 
-    <com.yilos.widget.view.ImageCacheView
+    <ImageView
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="3"
@@ -39,7 +39,7 @@
             <com.yilos.widget.circleimageview.CircleImageView
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:src="@mipmap/nail_works"
+                android:src="@mipmap/default_photo"
                 android:id="@+id/lessionAuthorPhoto"/>
             <TextView
                 android:layout_marginLeft="5dp"
@@ -62,7 +62,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/lessionvoteCount"
-                android:text="10"/>
+                android:text="0"/>
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="wrap_content"

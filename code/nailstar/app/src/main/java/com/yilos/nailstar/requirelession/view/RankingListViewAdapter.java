@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.yilos.nailstar.R;
 import com.yilos.nailstar.requirelession.entity.CandidateLession;
-import com.yilos.widget.view.ImageCacheView;
 
 import java.util.List;
 
@@ -60,7 +59,7 @@ public class RankingListViewAdapter extends BaseAdapter {
 
             holder = new ViewHolder();
             holder.lessionRankingNo = (TextView) convertView.findViewById(R.id.lessionRankingNo);
-            holder.lessionRankingImg = (ImageCacheView) convertView.findViewById(R.id.lessionRankingImg);
+            holder.lessionRankingImg = (ImageView) convertView.findViewById(R.id.lessionRankingImg);
             holder.lessionAuthorPhoto = (ImageView) convertView.findViewById(R.id.lessionAuthorPhoto);
             holder.lessionAuthorName = (TextView) convertView.findViewById(R.id.lessionAuthorName);
             holder.lessionvoteCount = (TextView) convertView.findViewById(R.id.lessionvoteCount);
@@ -77,7 +76,6 @@ public class RankingListViewAdapter extends BaseAdapter {
         }
 
         holder.lessionRankingNo.setText(String.valueOf(position + 1));
-        holder.lessionRankingImg.setImageSrc(candidateLession.getPicUrl());
         holder.lessionAuthorName.setText(candidateLession.getAuthorName());
         holder.lessionvoteCount.setText(String.valueOf(candidateLession.getVoteCount()));
         if (candidateLession.getVoted() == 1) {
@@ -97,7 +95,7 @@ public class RankingListViewAdapter extends BaseAdapter {
 
         public TextView lessionRankingNo;
 
-        public ImageCacheView lessionRankingImg;
+        public ImageView lessionRankingImg;
 
         public ImageView lessionAuthorPhoto;
 
