@@ -1,6 +1,5 @@
 package com.yilos.nailstar.requirelession.view;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,21 +16,21 @@ import java.util.List;
 /**
  * 求教程排行榜ListView的Adapter
  */
-public class RankingListViewAdapter extends BaseAdapter {
+public class voteListViewAdapter extends BaseAdapter {
 
     private LayoutInflater layoutInflater;
 
-    private List<CandidateLession> rankingLessionList;
+    private List<CandidateLession> voteLessionList;
 
-    public RankingListViewAdapter(LayoutInflater layoutInflater) {
+    public voteListViewAdapter(LayoutInflater layoutInflater) {
         this.layoutInflater = layoutInflater;
     }
 
     @Override
     public int getCount() {
         int count = 0;
-        if (rankingLessionList != null) {
-            count = rankingLessionList.size();
+        if (voteLessionList != null) {
+            count = voteLessionList.size();
         }
         return count;
     }
@@ -51,7 +50,7 @@ public class RankingListViewAdapter extends BaseAdapter {
 
         ViewHolder holder;
 
-        CandidateLession candidateLession = rankingLessionList.get(position);
+        CandidateLession candidateLession = voteLessionList.get(position);
 
         if (convertView == null) {
 
@@ -85,9 +84,9 @@ public class RankingListViewAdapter extends BaseAdapter {
         return convertView;
     }
 
-    public void setRankingLessionList(List<CandidateLession> rankingLessionList) {
+    public void setVoteLessionList(List<CandidateLession> voteLessionList) {
 
-        this.rankingLessionList = rankingLessionList;
+        this.voteLessionList = voteLessionList;
 
     }
 
