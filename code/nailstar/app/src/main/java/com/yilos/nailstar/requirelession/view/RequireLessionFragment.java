@@ -41,7 +41,7 @@ public class RequireLessionFragment extends Fragment implements LessionView {
     private ListView lessionVoteView;
 
     // 投票候选列表Adapter
-    private com.yilos.nailstar.requirelession.view.voteListViewAdapter voteListViewAdapter;
+    private VoteListViewAdapter voteListViewAdapter;
 
     // 单选按钮group
     private RadioGroup switchLessionView;
@@ -109,7 +109,7 @@ public class RequireLessionFragment extends Fragment implements LessionView {
         lessionVoteView.addHeaderView(lessionViewHead0, null, false);
         lessionVoteView.addHeaderView(lessionViewHead1, null, false);
 
-        voteListViewAdapter = new voteListViewAdapter(inflater);
+        voteListViewAdapter = new VoteListViewAdapter(inflater);
         lessionVoteView.setAdapter(voteListViewAdapter);
 
         // 页面头部悬浮效果
@@ -170,12 +170,19 @@ public class RequireLessionFragment extends Fragment implements LessionView {
     @Override
     public void refreshVoteLession(List<CandidateLession> voteLessionList) {
 
+        voteListViewAdapter.setVoteLessionList(voteLessionList);
+        voteListViewAdapter.setViewType(VoteListViewAdapter.ViewType.VOTE_LIST);
+        voteListViewAdapter.notifyDataSetChanged();
+
     }
 
     @Override
     public void refreshRankingLession(List<CandidateLession> voteLessionList) {
+
         voteListViewAdapter.setVoteLessionList(voteLessionList);
+        voteListViewAdapter.setViewType(VoteListViewAdapter.ViewType.RANKING_LIST);
         voteListViewAdapter.notifyDataSetChanged();
+
     }
 
 }

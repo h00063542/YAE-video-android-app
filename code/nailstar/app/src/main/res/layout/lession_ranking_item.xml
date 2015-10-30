@@ -61,7 +61,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/lessionvoteCount"
+                android:id="@+id/lessionVoteCount"
                 android:text="0"/>
             <LinearLayout
                 android:orientation="horizontal"
