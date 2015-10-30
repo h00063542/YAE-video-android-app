@@ -36,29 +36,32 @@ public class AboutMeService implements AboutMeServiceImpl {
 //
 //    不返回gender, location, birthday字段
     @Override
-    public PersonInfo getPersonInfo() {
+    public PersonInfo getPersonInfo() throws NetworkDisconnectException,JSONException{
         String jsonObject;
-        JSONObject messageCountObject;
-        String lt = "1445669825802";
+        JSONObject personInfoObject;
+        JSONObject resultObject;
         String uid = "a8affd60-efe6-11e4-a908-3132fc2abe39";
-        int type = 5;
-        String url = "/vapi2/nailstar/messages/count?lt="+ lt + "&uid=" + uid + "&type=" + type;
+        String url = "/vapi2/nailstar/account/profile?uid=" + uid;
         try {
-            jsonObject = HttpClient.getJson(url);//"{\"code\":0,\"result\":{\"count\":3}}";
+            jsonObject = HttpClient.getJson(url);
         } catch (IOException e) {
             throw new NetworkDisconnectException("网络获取消息数失败", e);
         }
         try {
-            messageCountObject = new JSONObject(jsonObject);
-            if (messageCountObject.getInt("code") != 0) {
+            personInfoObject = new JSONObject(jsonObject);
+            if (personInfoObject.getInt("code") != 0) {
                 return null;
             }
-            messageCount.setCount(messageCountObject.getJSONObject("result").getInt("count"));
-            return messageCount;
+            resultObject = personInfoObject.getJSONObject("result");
+            personInfo.setUid(resultObject.getString("uid"));
+            personInfo.setNickname(resultObject.getString("nickname"));
+            personInfo.setPhotoUrl(resultObject.getString("photoUrl"));
+            personInfo.setType(resultObject.getInt("type"));
+            personInfo.setProfile(resultObject.getString("profile"));
+            return personInfo;
         }catch (JSONException e) {
             throw new JSONException("消息数解析失败");
         }
-        return personInfo;
     }
 
     //    ##修改个人资料（增加分支）
@@ -82,23 +85,27 @@ public class AboutMeService implements AboutMeServiceImpl {
 //
 //    去掉了gender, location, birthday字段，如果没有，服务端就不存
     @Override
-    public Boolean setPersonInfo() throws NetworkDisconnectException, JSONException {
+    public PersonInfo setPersonInfo() throws NetworkDisconnectException, JSONException {
         String jsonObject;
         JSONObject personInfoObject;
 
         String uid = "a8affd60-efe6-11e4-a908-3132fc2abe39";
         String nickname = "昵称";
-        String type = String.valueOf(1);
+        int type = 1;
         String photoUrl = "http://sssdsdsds/sdsdsdsd";
         String profile = "这是个人签名";
 
-        String url = "/vapi2/nailstar/account/profile/" + uid;
-
+        personInfo.setNickname(nickname);
+        personInfo.setType(type);
+        personInfo.setProfile(profile);
+        personInfo.setPhotoUrl(photoUrl);
+        personInfo.setUid(uid);
+        String url = "/vapi2/nailstar/account/profile/" + personInfo.getUid();
         RequestBody formBody = new FormEncodingBuilder()
-                .add("nickname", nickname)
-                .add("type", type)
-                .add("photoUrl",photoUrl)
-                .add("profile",profile)
+                .add("nickname", personInfo.getNickname())
+                .add("type", String.valueOf(personInfo.getType()))
+                .add("photoUrl", personInfo.getPhotoUrl())
+                .add("profile",personInfo.getProfile())
                 .build();
         try {
             jsonObject = HttpClient.post(url,formBody);
@@ -106,14 +113,13 @@ public class AboutMeService implements AboutMeServiceImpl {
             throw new NetworkDisconnectException("网络更新个人资料失败",e);
         }
         personInfoObject = new JSONObject(jsonObject);
-        //还暂时不清楚返回JSON格式的写法
         if (personInfoObject.getInt("code") != 0) {
-            return false;
+            return null;
         }
         if (personInfoObject.getJSONObject("result").getString("messages") == "ok" ) {
-            return true;
+            return personInfo;
         }
-        return false;
+        return null;
     }
 
     MessageCount messageCount = new MessageCount();

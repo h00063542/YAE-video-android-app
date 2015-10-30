@@ -4,7 +4,6 @@ import com.yilos.nailstar.aboutme.entity.MessageCount;
 import com.yilos.nailstar.aboutme.model.AboutMeService;
 import com.yilos.nailstar.aboutme.model.AboutMeServiceImpl;
 import com.yilos.nailstar.aboutme.view.IAboutMeView;
-import com.yilos.nailstar.framework.exception.JSONParseException;
 import com.yilos.nailstar.framework.exception.NetworkDisconnectException;
 import com.yilos.nailstar.util.TaskManager;
 
@@ -14,13 +13,13 @@ import org.json.JSONException;
 /**
  * Created by sisilai on 15/10/24.
  */
-public class MessagePresenter {
-    private static MessagePresenter messagePresenter =new MessagePresenter();
+public class AboutMePresenter {
+    private static AboutMePresenter aboutMePresenter =new AboutMePresenter();
     private IAboutMeView aboutMeFragment;
     private AboutMeServiceImpl aboutMeService = new AboutMeService();
-    public static MessagePresenter getInstance(IAboutMeView aboutMeFragment) {
-        messagePresenter.aboutMeFragment = aboutMeFragment;
-        return messagePresenter;
+    public static AboutMePresenter getInstance(IAboutMeView aboutMeFragment) {
+        aboutMePresenter.aboutMeFragment = aboutMeFragment;
+        return aboutMePresenter;
     }
 
     public void getMessageCount(){
@@ -48,5 +47,4 @@ public class MessagePresenter {
 
         new TaskManager().next(loadMessageCount).next(messageUITask).start();
     }
-
 }

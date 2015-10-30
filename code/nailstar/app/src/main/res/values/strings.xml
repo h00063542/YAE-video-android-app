@@ -42,6 +42,13 @@
     <string name="about_me_share">分享美甲大咖给朋友</string>
     <string name="about_me_setting">设置</string>
 
+    <!-- 修改资料界面-->
+    <string name="edit_person_info">修改资料</string>
+    <string name="person_info_photo">头像</string>
+    <string name="person_info_name">昵称</string>
+    <string name="person_info_identity">身份</string>
+    <string name="person_info_introduction">个人介绍</string>
+
     <!--sina vedio view sdk-->
     <string name="vitamio_init_decoders">Initializing decoders…</string>
     <string name="vitamio_videoview_error_title">Cannot play video</string>

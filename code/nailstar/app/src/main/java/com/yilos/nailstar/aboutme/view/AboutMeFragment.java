@@ -1,6 +1,7 @@
 package com.yilos.nailstar.aboutme.view;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
@@ -12,7 +13,8 @@ import android.widget.TextView;
 
 import com.yilos.nailstar.R;
 import com.yilos.nailstar.aboutme.entity.MessageCount;
-import com.yilos.nailstar.aboutme.presenter.MessagePresenter;
+import com.yilos.nailstar.aboutme.presenter.AboutMePresenter;
+import com.yilos.nailstar.main.MainActivity;
 import com.yilos.widget.titlebar.TitleBar;
 
 /**
@@ -40,7 +42,8 @@ public class AboutMeFragment extends Fragment implements IAboutMeView{
     private TextView messageCountText;
     private TitleBar titleBar;
     private TextView titleText;
-    private MessagePresenter messagePresenter;
+    private AboutMePresenter aboutMePresenter;
+    private RelativeLayout personInfoLayout;
 
     /**
      * Use this factory method to create a new instance of
@@ -93,8 +96,18 @@ public class AboutMeFragment extends Fragment implements IAboutMeView{
         titleBar = (TitleBar)view.findViewById(R.id.about_me_header_nav);
         titleText = titleBar.getTitleView();
         titleText.setText(R.string.about_me_my);
-        messagePresenter = MessagePresenter.getInstance(this);
-        messagePresenter.getMessageCount();
+        aboutMePresenter = AboutMePresenter.getInstance(this);
+        aboutMePresenter.getMessageCount();
+
+        personInfoLayout = (RelativeLayout)view.findViewById(R.id.about_me_person_info_layout);
+        personInfoLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(),PersonInfoActivity.class);
+                startActivity(intent);
+            }
+        });
+
     }
 
     // TODO: Rename method, update argument and hook method into UI event
