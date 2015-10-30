@@ -29,27 +29,32 @@ public class TitleBar extends RelativeLayout {
         init();
     }
 
-    public void hideWidget(View view) {
-        view.setVisibility(INVISIBLE);
+    public void showWidget(View view) {
+        view.setVisibility(VISIBLE);
     }
 
     public ImageView getBackButton() {
+        showWidget(backButton);
         return backButton;
     }
 
     public TextView getRightTextButton() {
+        showWidget(rightTextButton);
         return rightTextButton;
     }
 
     public TextView getTitleView() {
+        showWidget(titleView);
         return titleView;
     }
 
     public ImageView getRightImageButtonOne() {
+        showWidget(rightImageButtonOne);
         return rightImageButtonOne;
     }
 
     public ImageView getRightImageButtonTwo() {
+        showWidget(rightImageButtonTwo);
         return rightImageButtonTwo;
     }
 

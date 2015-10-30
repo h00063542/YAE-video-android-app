@@ -44,9 +44,9 @@ public class AboutMeFragment extends Fragment implements IAboutMeView{
     private OnFragmentInteractionListener mListener;
 
     private RelativeLayout relativeLayout;
-    private TextView textView;
+    private TextView messageCountText;
     private TitleBar titleBar;
-    private TextView rightTextButton;//右边确定按钮
+    private TextView titleText;
     private MessagePresenter messagePresenter;
 
     /**
@@ -73,7 +73,7 @@ public class AboutMeFragment extends Fragment implements IAboutMeView{
 
     @Override
     public void initMessageCount(Message message) {
-        textView.setText(String.valueOf(message.getCount()));
+        messageCountText.setText(String.valueOf(message.getCount()));
     }
 
     @Override
@@ -95,11 +95,11 @@ public class AboutMeFragment extends Fragment implements IAboutMeView{
     }
     private void initViews(View view){
         relativeLayout = (RelativeLayout)view.findViewById(R.id.about_me_message_group);
-        textView = (TextView)view.findViewById(R.id.about_me_message_count);
+        messageCountText = (TextView)view.findViewById(R.id.about_me_message_count);
 
         titleBar = (TitleBar)view.findViewById(R.id.about_me_header_nav);
-        rightTextButton = titleBar.getRightTextButton();
-        titleBar.hideWidget(rightTextButton);
+        titleText = titleBar.getTitleView();
+        titleText.setText("我的");
         messagePresenter = MessagePresenter.getInstance(this);
         messagePresenter.getMessage();
     }
