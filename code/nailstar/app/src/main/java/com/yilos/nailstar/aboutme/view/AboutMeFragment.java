@@ -32,10 +32,6 @@ import java.util.logging.LogRecord;
  */
 public class AboutMeFragment extends Fragment implements IAboutMeView{
 
-    @Override
-    public void initMessageCount(Message message) {
-        textView.setText(String.valueOf(message.getCount()));
-    }
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -47,9 +43,10 @@ public class AboutMeFragment extends Fragment implements IAboutMeView{
 
     private OnFragmentInteractionListener mListener;
 
-    RelativeLayout relativeLayout;
-    TextView textView;
-    TitleBar titleBar;
+    private RelativeLayout relativeLayout;
+    private TextView textView;
+    private TitleBar titleBar;
+    private TextView rightTextButton;//右边确定按钮
     private MessagePresenter messagePresenter;
 
     /**
@@ -75,6 +72,11 @@ public class AboutMeFragment extends Fragment implements IAboutMeView{
 //    }
 
     @Override
+    public void initMessageCount(Message message) {
+        textView.setText(String.valueOf(message.getCount()));
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
@@ -94,8 +96,10 @@ public class AboutMeFragment extends Fragment implements IAboutMeView{
     private void initViews(View view){
         relativeLayout = (RelativeLayout)view.findViewById(R.id.about_me_message_group);
         textView = (TextView)view.findViewById(R.id.about_me_message_count);
+
         titleBar = (TitleBar)view.findViewById(R.id.about_me_header_nav);
-        titleBar.notShowSureButton();
+        rightTextButton = titleBar.getRightTextButton();
+        titleBar.hideWidget(rightTextButton);
         messagePresenter = MessagePresenter.getInstance(this);
         messagePresenter.getMessage();
     }

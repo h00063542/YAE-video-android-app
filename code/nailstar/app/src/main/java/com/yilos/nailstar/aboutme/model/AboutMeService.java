@@ -20,7 +20,7 @@ public class AboutMeService implements AboutMeServiceImpl {
         String jsonObject;
         JSONObject countObject;
         try {
-            jsonObject = HttpClient.getJson("/vapi/nailstar/messages/count");
+            jsonObject = HttpClient.getJson("/vapi/nailstar/messages/count");//"{\"code\":0,\"result\":{\"count\":3}}";
         } catch (IOException e) {
             throw new NetworkDisconnectException("读取失败", e);
         }
@@ -29,7 +29,7 @@ public class AboutMeService implements AboutMeServiceImpl {
             if (countObject.getInt("code") != 0) {
                 return null;
             }
-            message.setCount(countObject.optJSONObject("result").getInt("count"));
+            message.setCount(countObject.getJSONObject("result").getInt("count"));
             return message;
         }catch (JSONException e) {
             throw new NetworkDisconnectException("网络连接失败", e);
