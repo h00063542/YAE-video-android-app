@@ -40,5 +40,7 @@ public class Constants {
     public static final String NICKNAME = "nickname";
     public static final String REPLIES = "replys";
 
+    public static final int IS_HOME_WORK_VALUE = 1;
+
     public static final long ONE_MB_SIZE = 1024L * 1024;
 }

@@ -100,13 +100,13 @@
 
                     <com.yilos.widget.circleimageview.CircleImageView
                         android:id="@+id/iv_video_author_photo"
-                        android:layout_width="@dimen/dp_60"
-                        android:layout_height="@dimen/dp_60"
-                        android:layout_margin="@dimen/dp_10" />
+                        android:layout_width="@dimen/topic_author_photo_size"
+                        android:layout_height="@dimen/topic_author_photo_size"
+                        android:layout_margin="@dimen/topic_comment_margin_left" />
 
                     <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="60dp"
+                        android:layout_height="@dimen/topic_author_photo_size"
                         android:layout_gravity="center_vertical"
                         android:layout_weight="1">
 
@@ -115,7 +115,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="30dp"
                             android:gravity="center_vertical"
-                            android:text="" />
+                            android:text=""
+                            android:textSize="@dimen/topic_author_font_size" />
 
                         <TextView
                             android:id="@+id/tv_video_playing_times"
@@ -124,14 +125,16 @@
                             android:layout_marginLeft="5dp"
                             android:layout_toRightOf="@id/tv_video_author_name"
                             android:gravity="center_vertical"
-                            android:text="0" />
+                            android:text="0"
+                            android:textSize="@dimen/topic_video_playing_time_font_size" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="30dp"
                             android:layout_toRightOf="@id/tv_video_playing_times"
                             android:gravity="center_vertical"
-                            android:text="@string/video_player_times" />
+                            android:text="@string/video_player_times"
+                            android:textSize="@dimen/topic_video_playing_time_font_size" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -147,7 +150,7 @@
                                 android:gravity="center_vertical"
                                 android:paddingLeft="5dp"
                                 android:paddingRight="5dp"
-                                android:textSize="12sp"
+                                android:textSize="@dimen/topic_tags_font_size"
                                 android:visibility="gone" />
 
                             <TextView
@@ -159,7 +162,7 @@
                                 android:gravity="center_vertical"
                                 android:paddingLeft="5dp"
                                 android:paddingRight="5dp"
-                                android:textSize="12sp"
+                                android:textSize="@dimen/topic_tags_font_size"
                                 android:visibility="gone" />
 
                             <TextView
@@ -171,7 +174,7 @@
                                 android:gravity="center_vertical"
                                 android:paddingLeft="5dp"
                                 android:paddingRight="5dp"
-                                android:textSize="12sp"
+                                android:textSize="@dimen/topic_tags_font_size"
                                 android:visibility="gone" />
 
                             <!--<ImageView-->
@@ -196,7 +199,8 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:layout_marginLeft="10dp"
-                            android:text="@string/topic_image_text_content" />
+                            android:text="@string/topic_image_text_content"
+                            android:textSize="@dimen/topic_image_text_font_size" />
 
                         <ImageView
                             android:id="@+id/iv_video_image_text_icon"
@@ -237,7 +241,6 @@
                         android:orientation="vertical">
 
                     </LinearLayout>
-
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -294,7 +297,8 @@
                         android:layout_height="20dp"
                         android:layout_marginLeft="10dp"
                         android:layout_marginTop="10dp"
-                        android:text="@string/more_videos" />
+                        android:text="@string/more_videos"
+                        android:textSize="@dimen/topic_more_videos_font_size" />
 
                     <LinearLayout
                         android:id="@+id/layout_more_videos"
@@ -307,34 +311,7 @@
                         android:layout_marginTop="10dp"
                         android:orientation="horizontal">
 
-                        <!--<ImageView-->
-                        <!--android:id="@+id/iv_more_videos_1"-->
-                        <!--android:layout_width="match_parent"-->
-                        <!--android:layout_height="match_parent"-->
-                        <!--android:layout_weight="1">-->
 
-                        <!--</ImageView>-->
-
-                        <!--<ImageView-->
-                        <!--android:id="@+id/iv_more_videos_2"-->
-                        <!--android:layout_width="match_parent"-->
-                        <!--android:layout_height="match_parent"-->
-                        <!--android:layout_marginLeft="5dp"-->
-                        <!--android:layout_weight="1" />-->
-
-                        <!--<ImageView-->
-                        <!--android:id="@+id/iv_more_videos_3"-->
-                        <!--android:layout_width="match_parent"-->
-                        <!--android:layout_height="match_parent"-->
-                        <!--android:layout_marginLeft="5dp"-->
-                        <!--android:layout_weight="1" />-->
-
-                        <!--<ImageView-->
-                        <!--android:id="@+id/iv_more_videos_4"-->
-                        <!--android:layout_width="match_parent"-->
-                        <!--android:layout_height="match_parent"-->
-                        <!--android:layout_marginLeft="5dp"-->
-                        <!--android:layout_weight="1" />-->
                     </LinearLayout>
                 </RelativeLayout>
 
@@ -379,6 +356,7 @@
         android:background="@drawable/top_border"
         android:orientation="horizontal">
 
+        <!--下载-->
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -410,6 +388,7 @@
 
         </RelativeLayout>
 
+        <!--收藏-->
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -439,6 +418,7 @@
             </RelativeLayout>
         </RelativeLayout>
 
+        <!--评论-->
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -469,7 +449,7 @@
             </RelativeLayout>
         </RelativeLayout>
 
-
+        <!--交作业-->
         <TextView
             android:id="@+id/tv_video_submitted_result"
             android:layout_width="0dp"
@@ -477,7 +457,7 @@
             android:layout_gravity="center_horizontal|center_vertical"
             android:layout_marginTop="2px"
             android:layout_weight="1"
-            android:background="@color/submited_homework_background_color"
+            android:background="@color/submitted_homework_background_color"
             android:gravity="center_horizontal|center_vertical"
             android:text="@string/submitted_result"
             android:textColor="@color/white" />

@@ -3,12 +3,47 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
-    <dimen name="dp_2">2dp</dimen>
-    <dimen name="dp_5">5dp</dimen>
-    <dimen name="dp_10">10dp</dimen>
-    <dimen name="dp_20">20dp</dimen>
-    <dimen name="dp_40">40dp</dimen>
-    <dimen name="dp_60">60dp</dimen>
+
+    <!--topic-->
+    <dimen name="topic_author_photo_size">60dp</dimen>
+
+
+    <dimen name="topic_image_text_margin">10dp</dimen>
+    <dimen name="topic_comment_author_photo_size">40dp</dimen>
+    <dimen name="topic_comment_author_photo_margin">10dp</dimen>
+    <dimen name="topic_related_margin_right">5dp</dimen>
+    <dimen name="topic_comment_margin_top">10dp</dimen>
+    <dimen name="topic_comment_margin_left">10dp</dimen>
+    <dimen name="topic_comment_margin_right">10dp</dimen>
+    <dimen name="topic_comment_margin_bottom">10dp</dimen>
+
+    <dimen name="topic_comment_content_margin_top">10dp</dimen>
+    <dimen name="topic_comment_content_margin_bottom">10dp</dimen>
+
+    <dimen name="topic_comment_content_pic_margin_bottom">10dp</dimen>
+    <dimen name="topic_comment_content_padding_bottom">10dp</dimen>
+
+    <dimen name="topic_comment_reply_padding_left">5dp</dimen>
+    <dimen name="topic_comment_reply_padding_top">5dp</dimen>
+    <dimen name="topic_comment_reply_padding_right">5dp</dimen>
+    <dimen name="topic_comment_reply_padding_bottom">2dp</dimen>
+    <dimen name="topic_comment_reply_margin_bottom">2dp</dimen>
+    <dimen name="topic_comment_reply_line_height">5dp</dimen>
+
+
+    <dimen name="topic_author_font_size">16sp</dimen>
+    <dimen name="topic_video_playing_time_font_size">15sp</dimen>
+    <dimen name="topic_tags_font_size">12sp</dimen>
+    <dimen name="topic_image_text_font_size">16sp</dimen>
+
+    <dimen name="topic_more_videos_font_size">15sp</dimen>
+
+    <dimen name="topic_comment_author_font_size">15sp</dimen>
+    <dimen name="topic_comment_is_home_work_font_size">14sp</dimen>
+    <dimen name="topic_comment_create_date_font_size">14sp</dimen>
+    <dimen name="topic_comment_content_font_size">16sp</dimen>
+    <dimen name="topic_comment_reply_font_size">14sp</dimen>
+
 
     <!-- fragment_about_me -->
     <dimen name="about_me_header_nav">50dp</dimen>
