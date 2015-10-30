@@ -3,6 +3,7 @@ package com.yilos.nailstar.aboutme.view;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -18,6 +19,7 @@ public class PersonInfoActivity extends Activity {
     private TextView rightTextButton;
     private RelativeLayout personInfoIdentityLayout;
     private RelativeLayout personInfoIdentityPopup;
+    private ImageView backButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,7 +27,13 @@ public class PersonInfoActivity extends Activity {
         titleBar = (TitleBar)findViewById(R.id.edit_person_info_title_bar);
         personInfoIdentityLayout = (RelativeLayout)findViewById(R.id.person_info_identity_layout);
         personInfoIdentityPopup = (RelativeLayout)findViewById(R.id.person_info_identity_popup);
-        titleBar.getBackButton();
+        backButton = titleBar.getBackButton();
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
         titleBarTitle = titleBar.getTitleView();
         titleBarTitle.setText(R.string.edit_person_info);
         rightTextButton = titleBar.getRightTextButton();
@@ -35,6 +43,7 @@ public class PersonInfoActivity extends Activity {
 
             }
         });
+
         personInfoIdentityLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
