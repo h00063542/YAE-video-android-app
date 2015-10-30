@@ -324,25 +324,29 @@
                     android:background="@color/line_color"
                     android:orientation="horizontal"></LinearLayout>
 
-                <!--视频评论-->
-                <LinearLayout
-                    android:id="@+id/layout_topic_comments"
+                <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/layout_more_videos_line"
-                    android:orientation="vertical">
+                    android:layout_below="@id/layout_more_videos_line">
+                    <!--视频评论-->
+                    <LinearLayout
+                        android:id="@+id/layout_topic_comments"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/layout_more_videos_line"
+                        android:orientation="vertical"></LinearLayout>
 
-                    <!--<com.melnykov.fab.FloatingActionButton-->
-                    <!--android:id="@+id/fab_back_top"-->
-                    <!--android:layout_width="10dp"-->
-                    <!--android:layout_height="10dp"-->
-                    <!--android:layout_margin="10dp"-->
-                    <!--android:layout_gravity="bottom|right"-->
-                    <!--android:src="@drawable/back_up"-->
-                    <!--fab:fab_colorNormal="@color/grey"-->
-                    <!--fab:fab_colorPressed="@color/green"/>-->
+                    <com.melnykov.fab.FloatingActionButton
+                        android:id="@+id/fab_back_top"
+                        android:layout_width="10dp"
+                        android:layout_height="10dp"
+                        android:layout_gravity="bottom|right"
+                        android:layout_margin="10dp"
+                        android:src="@drawable/back_up"
+                        fab:fab_colorNormal="@color/grey"
+                        fab:fab_colorPressed="@color/green" />
+                </FrameLayout>
 
-                </LinearLayout>
 
             </RelativeLayout>
         </ScrollView>
