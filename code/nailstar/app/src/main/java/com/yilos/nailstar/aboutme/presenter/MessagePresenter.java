@@ -1,6 +1,6 @@
 package com.yilos.nailstar.aboutme.presenter;
 
-import com.yilos.nailstar.aboutme.entity.Message;
+import com.yilos.nailstar.aboutme.entity.MessageCount;
 import com.yilos.nailstar.aboutme.model.AboutMeService;
 import com.yilos.nailstar.aboutme.model.AboutMeServiceImpl;
 import com.yilos.nailstar.aboutme.view.IAboutMeView;
@@ -23,24 +23,24 @@ public class MessagePresenter {
         return messagePresenter;
     }
 
-    public void getMessage(){
+    public void getMessageCount(){
         TaskManager.Task loadMessageCount = new TaskManager.BackgroundTask() {
             @Override
             public Object doWork(Object data) {
                 try {
-                    return aboutMeService.getMessageContext();
+                    return aboutMeService.getMessageCount();
                 } catch (NetworkDisconnectException e) {
                     e.printStackTrace();
-                } catch (JSONParseException e) {
+                } catch (JSONException e) {
                     e.printStackTrace();
                 }
                 return null;
             }
         };
 
-        TaskManager.UITask<Message> messageUITask = new TaskManager.UITask<Message>() {
+        TaskManager.UITask<MessageCount> messageUITask = new TaskManager.UITask<MessageCount>() {
             @Override
-            public Message doWork(Message data) {
+            public MessageCount doWork(MessageCount data) {
                 aboutMeFragment.initMessageCount(data);
                 return null;
             }

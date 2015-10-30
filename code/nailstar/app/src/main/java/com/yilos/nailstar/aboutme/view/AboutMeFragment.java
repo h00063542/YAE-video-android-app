@@ -7,20 +7,13 @@ import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.sina.sinavideo.coreplayer.util.StringUtils;
 import com.yilos.nailstar.R;
-import com.yilos.nailstar.aboutme.entity.Message;
+import com.yilos.nailstar.aboutme.entity.MessageCount;
 import com.yilos.nailstar.aboutme.presenter.MessagePresenter;
-import com.yilos.nailstar.framework.exception.JSONParseException;
-import com.yilos.nailstar.framework.exception.NetworkDisconnectException;
 import com.yilos.widget.titlebar.TitleBar;
-
-import java.util.logging.Handler;
-import java.util.logging.LogRecord;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -72,8 +65,8 @@ public class AboutMeFragment extends Fragment implements IAboutMeView{
 //    }
 
     @Override
-    public void initMessageCount(Message message) {
-        messageCountText.setText(String.valueOf(message.getCount()));
+    public void initMessageCount(MessageCount messageCount) {
+        messageCountText.setText(String.valueOf(messageCount.getCount()));
     }
 
     @Override
@@ -99,9 +92,9 @@ public class AboutMeFragment extends Fragment implements IAboutMeView{
 
         titleBar = (TitleBar)view.findViewById(R.id.about_me_header_nav);
         titleText = titleBar.getTitleView();
-        titleText.setText("我的");
+        titleText.setText(R.string.about_me_my);
         messagePresenter = MessagePresenter.getInstance(this);
-        messagePresenter.getMessage();
+        messagePresenter.getMessageCount();
     }
 
     // TODO: Rename method, update argument and hook method into UI event
