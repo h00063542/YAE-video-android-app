@@ -2,16 +2,11 @@ package com.yilos.nailstar.player;
 
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Matrix;
-import android.graphics.Paint;
-import android.graphics.Rect;
-import android.graphics.RectF;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -19,6 +14,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.view.animation.TranslateAnimation;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -83,11 +79,7 @@ public class VideoPlayerActivity extends BaseActivity implements
     private TextView mTvVideoAuthorTag3;
 
     // 更多视频
-    private LinearLayout mLayoutMoreVideos;
-    private ImageCacheView mIvTopicRelate1;
-    private ImageCacheView mIvTopicRelate2;
-    private ImageCacheView mIvTopicRelate3;
-    private ImageCacheView mIvTopicRelate4;
+    private LinearLayout mLayoutMoreVideosContent;
 
 
     // 图文分解
@@ -131,6 +123,9 @@ public class VideoPlayerActivity extends BaseActivity implements
     private int mAuthorPhotoSize;
     private int mAuthorPhotoMargin;
 
+    private int mTopicRelatedMarginRight;
+    private int mTopicRelatedPlayImageSize;
+
     private int mCommentMarginTop;
     private int mCommentMarginRight;
     private int mCommentMarginBottom;
@@ -155,12 +150,8 @@ public class VideoPlayerActivity extends BaseActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_player);
-        init();
         mVideoPlayerPresenter = TopicPresenter.getInstance(this);
-        mVideoPlayerPresenter.playerVideo(mTopicId);
-        mVideoPlayerPresenter.initTopicRelatedInfo(mTopicId);
-        mVideoPlayerPresenter.initTopicImageTextInfo(mTopicId);
-        mVideoPlayerPresenter.initTopicComments(mTopicId, mPage);
+        init();
     }
 
 
@@ -182,6 +173,10 @@ public class VideoPlayerActivity extends BaseActivity implements
         mAuthorPhotoSize = getResources().getDimensionPixelSize(R.dimen.topic_comment_author_photo_size);
         mAuthorPhotoMargin = getResources().getDimensionPixelSize(R.dimen.topic_comment_author_photo_margin);
 
+        mTopicRelatedMarginRight = getResources().getDimensionPixelSize(R.dimen.topic_related_margin_right);
+        mTopicRelatedPlayImageSize = getResources().getDimensionPixelSize(R.dimen.topic_related_play_image_size);
+
+
         mCommentMarginTop = getResources().getDimensionPixelSize(R.dimen.topic_comment_margin_top);
         mCommentMarginRight = getResources().getDimensionPixelSize(R.dimen.topic_comment_margin_right);
         mCommentMarginBottom = getResources().getDimensionPixelSize(R.dimen.topic_comment_margin_bottom);
@@ -201,6 +196,12 @@ public class VideoPlayerActivity extends BaseActivity implements
         mCommentReplyPaddingBottom = getResources().getDimensionPixelSize(R.dimen.topic_comment_reply_padding_bottom);
 
         mCommentReplyBackgroundColor = getResources().getColor(R.color.topic_comment_reply_background_color);
+
+
+        mVideoPlayerPresenter.playerVideo(mTopicId);
+        mVideoPlayerPresenter.initTopicRelatedInfo(mTopicId);
+        mVideoPlayerPresenter.initTopicImageTextInfo(mTopicId);
+        mVideoPlayerPresenter.initTopicComments(mTopicId, mPage);
     }
 
     private void initControl() {
@@ -216,8 +217,7 @@ public class VideoPlayerActivity extends BaseActivity implements
         mSvVideoPlayer = (ScrollView) findViewById(R.id.sv_video_player);
         mVDVideoView = (VDVideoView) findViewById(R.id.video_player);
         // 手动这是播放窗口父类，横屏的时候，会用这个做为容器使用，如果不设置，那么默认直接跳转到DecorView
-        mVDVideoView.setVDVideoViewContainer((ViewGroup) mVDVideoView
-                .getParent());
+        mVDVideoView.setVDVideoViewContainer((ViewGroup) mVDVideoView.getParent());
 //        mFabVideoPlayer = (FloatingActionButton) findViewById(R.id.fab_video_player);
 
         // 作者信息
@@ -231,7 +231,7 @@ public class VideoPlayerActivity extends BaseActivity implements
         mTvVideoAuthorTag3 = (TextView) findViewById(R.id.tv_video_author_tag_3);
 
         // 更多视频
-        mLayoutMoreVideos = (LinearLayout) findViewById(R.id.layout_more_videos);
+        mLayoutMoreVideosContent = (LinearLayout) findViewById(R.id.layout_more_videos_content);
 
         // 图文分解
         mLayoutShowTopicImageTextContent = (LinearLayout) findViewById(R.id.layout_show_topic_image_text_content);
@@ -245,7 +245,7 @@ public class VideoPlayerActivity extends BaseActivity implements
 
         mLayoutTopicComments = (LinearLayout) findViewById(R.id.layout_topic_comments);
 
-//        mFabBackTop = (FloatingActionButton) findViewById(R.id.fab_video_player);
+        mFabBackTop = (FloatingActionButton) findViewById(R.id.fab_back_top);
 
         // 底部下载、收藏、评论、交作业
         mLayoutBtnVideoDownload = (RelativeLayout) findViewById(R.id.layout_btn_video_download);
@@ -279,9 +279,26 @@ public class VideoPlayerActivity extends BaseActivity implements
         mSvVideoPlayer.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_MOVE) {
-                    //可以监听到ScrollView的滚动事件
-                    //Toast.makeText(VideoPlayerActivity.this, "ScrollView的滚动事件", Toast.LENGTH_SHORT).show();
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_MOVE://移动
+                        Log.i(TAG, "ScrollView的滚动事件" + (event.getAction() == MotionEvent.ACTION_DOWN));
+                        break;
+                    case MotionEvent.ACTION_UP://向上
+                        View childView = mSvVideoPlayer.getChildAt(0);
+                        Log.i(TAG, "=======================================childView.getMeasuredHeight():" + childView.getMeasuredHeight());
+                        Log.i(TAG, "=======================================mSvVideoPlayer.getScrollY():" + mSvVideoPlayer.getScrollY());
+                        Log.i(TAG, "=======================================mSvVideoPlayer.getHeight():" + mSvVideoPlayer.getHeight());
+                        Log.i(TAG, "=======================================minus:" + (childView.getMeasuredHeight() <= mSvVideoPlayer.getScrollY() + mSvVideoPlayer.getHeight()));
+                        if (childView != null && childView.getMeasuredHeight() <= mSvVideoPlayer.getScrollY() + mSvVideoPlayer.getHeight()) {
+                            mFabBackTop.setVisibility(View.VISIBLE);
+                            Log.i(TAG, "=======================================底部1");
+                        } else {
+                            mFabBackTop.setVisibility(View.GONE);
+                        }
+                        break;
+                    case MotionEvent.ACTION_DOWN://向下
+                        mFabBackTop.setVisibility(View.GONE);
+                        break;
                 }
                 return false;
             }
@@ -312,13 +329,14 @@ public class VideoPlayerActivity extends BaseActivity implements
             }
         });
 
-//        mFabBackTop.setOnClickListener(new View.OnClickListener() {
-//
-//            @Override
-//            public void onClick(View v) {
-//                mSvVideoPlayer.fullScroll(ScrollView.FOCUS_UP);
-//            }
-//        });
+        mFabBackTop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mFabBackTop.setVisibility(View.GONE);
+                Log.i(TAG, "==========================================Back top");
+                mSvVideoPlayer.fullScroll(ScrollView.FOCUS_UP);
+            }
+        });
 
         // 下载图文按钮
         mTvDownloadTopicImageTextContent.setOnClickListener(new View.OnClickListener() {
@@ -362,10 +380,10 @@ public class VideoPlayerActivity extends BaseActivity implements
             public boolean onTouch(View v, MotionEvent event) {
                 ImageView imageView = (ImageView) mLayoutBtnVideoCollection.getChildAt(0);
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    imageView.setImageResource(R.drawable.collection);
+                    imageView.setImageResource(R.drawable.message);
 
                 } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                    imageView.setImageResource(R.drawable.message);
+                    imageView.setImageResource(R.drawable.collection);
                 }
                 return false;
             }
@@ -540,80 +558,57 @@ public class VideoPlayerActivity extends BaseActivity implements
     }
 
     @Override
-    public void initTopicRelatedInfo(ArrayList<TopicRelatedInfo> topicRelateds) {
-        if (CollectionUtil.isEmpty(topicRelateds)) {
+    public void initTopicRelatedInfo(ArrayList<TopicRelatedInfo> topicRelatedList) {
+        if (CollectionUtil.isEmpty(topicRelatedList)) {
             return;
         }
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1.0f);
-        lp.setMargins(0, 0, getResources().getDimensionPixelSize(R.dimen.topic_related_margin_right), 0);
+        LinearLayout.LayoutParams layoutLp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1.0f);
+        layoutLp.setMargins(0, 0, mTopicRelatedMarginRight, 0);
 
-        mIvTopicRelate1 = new ImageCacheView(VideoPlayerActivity.this);
-        mIvTopicRelate1.setLayoutParams(lp);
-        if (null != topicRelateds.get(0)) {
-            mIvTopicRelate1.setImageSrc(topicRelateds.get(0).getThumbUrl());
-            mIvTopicRelate1.setTag(R.id.topic_related_info, topicRelateds.get(0));
-        }
-        mIvTopicRelate1.setAdjustViewBounds(true);
-        mIvTopicRelate1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showTopicRelated((TopicRelatedInfo) v.getTag(R.id.topic_related_info));
+        FrameLayout.LayoutParams topicRelateIvLp = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
+        FrameLayout.LayoutParams playTopicRelateIvLp = new FrameLayout.LayoutParams(mTopicRelatedPlayImageSize, mTopicRelatedPlayImageSize);
+        playTopicRelateIvLp.gravity = Gravity.RIGHT | Gravity.BOTTOM;
+        playTopicRelateIvLp.setMargins(0, 0, mAuthorPhotoMargin, mAuthorPhotoMargin);
+
+
+        for (int i = 0; i < 4; i++) {
+            FrameLayout topicRelateLayout = new FrameLayout(this);
+            topicRelateLayout.setLayoutParams(layoutLp);
+
+            ImageCacheView topicRelateIv = new ImageCacheView(VideoPlayerActivity.this);
+            topicRelateIv.setLayoutParams(topicRelateIvLp);
+            topicRelateIv.setAdjustViewBounds(true);
+            if (topicRelatedList.size() > i && null != topicRelatedList.get(i)) {
+                topicRelateIv.setImageSrc(topicRelatedList.get(i).getThumbUrl());
+                topicRelateIv.setTag(R.id.topic_related_info, topicRelatedList.get(i));
+                topicRelateIv.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showTopicRelated((TopicRelatedInfo) v.getTag(R.id.topic_related_info));
+                    }
+                });
+                topicRelateLayout.addView(topicRelateIv);
+
+                ImageView playTopicRelateIv = new ImageView(this);
+                playTopicRelateIv.setImageResource(R.drawable.play);
+                playTopicRelateIv.setLayoutParams(playTopicRelateIvLp);
+                topicRelateLayout.addView(playTopicRelateIv);
+            } else {
+                topicRelateIv.setBackgroundResource(R.color.white);
+                topicRelateLayout.addView(topicRelateIv);
             }
-        });
 
 
-        mIvTopicRelate2 = new ImageCacheView(VideoPlayerActivity.this);
-        mIvTopicRelate2.setLayoutParams(lp);
-        if (topicRelateds.size() > 1 && null != topicRelateds.get(1)) {
-            mIvTopicRelate2.setImageSrc(topicRelateds.get(1).getThumbUrl());
-            mIvTopicRelate2.setTag(R.id.topic_related_info, topicRelateds.get(1));
+            mLayoutMoreVideosContent.addView(topicRelateLayout);
         }
-        mIvTopicRelate2.setAdjustViewBounds(true);
-        mIvTopicRelate2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showTopicRelated((TopicRelatedInfo) v.getTag(R.id.topic_related_info));
-            }
-        });
-
-
-        mIvTopicRelate3 = new ImageCacheView(VideoPlayerActivity.this);
-        mIvTopicRelate3.setLayoutParams(lp);
-        if (topicRelateds.size() > 2 && null != topicRelateds.get(2)) {
-            mIvTopicRelate3.setImageSrc(topicRelateds.get(2).getThumbUrl());
-            mIvTopicRelate3.setTag(R.id.topic_related_info, topicRelateds.get(2));
-        }
-        mIvTopicRelate3.setAdjustViewBounds(true);
-        mIvTopicRelate3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showTopicRelated((TopicRelatedInfo) v.getTag(R.id.topic_related_info));
-            }
-        });
-
-
-        mIvTopicRelate4 = new ImageCacheView(VideoPlayerActivity.this);
-        mIvTopicRelate4.setLayoutParams(lp);
-        if (topicRelateds.size() > 3 && null != topicRelateds.get(3)) {
-            mIvTopicRelate4.setImageSrc(topicRelateds.get(3).getThumbUrl());
-            mIvTopicRelate4.setTag(R.id.topic_related_info, topicRelateds.get(3));
-        }
-        mIvTopicRelate4.setAdjustViewBounds(true);
-        mIvTopicRelate4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showTopicRelated((TopicRelatedInfo) v.getTag(R.id.topic_related_info));
-            }
-        });
-
-        mLayoutMoreVideos.addView(mIvTopicRelate1);
-        mLayoutMoreVideos.addView(mIvTopicRelate2);
-        mLayoutMoreVideos.addView(mIvTopicRelate3);
-        mLayoutMoreVideos.addView(mIvTopicRelate4);
     }
 
     private void showTopicRelated(TopicRelatedInfo topicRelatedInfo) {
-
+        Intent intent = new Intent(this, VideoPlayerActivity.class);
+        intent.putExtra(Constants.TOPIC_ID, topicRelatedInfo.getTopicId());
+        this.startActivity(intent);
+        this.finish();
     }
 
 

@@ -79,8 +79,8 @@ public class TopicPresenter {
 
         TaskManager.UITask<ArrayList<TopicRelatedInfo>> updateUi = new TaskManager.UITask<ArrayList<TopicRelatedInfo>>() {
             @Override
-            public Object doWork(ArrayList<TopicRelatedInfo> TopicRelateds) {
-                videoPlayerView.initTopicRelatedInfo(TopicRelateds);
+            public Object doWork(ArrayList<TopicRelatedInfo> topicRelatedList) {
+                videoPlayerView.initTopicRelatedInfo(topicRelatedList);
                 return null;
             }
         };

@@ -18,7 +18,7 @@ public interface IVideoPlayerView {
 
     void initTopicCommentsInfo(ArrayList<TopicCommentInfo> topicComments);
 
-    void initTopicRelatedInfo(ArrayList<TopicRelatedInfo> topicRelateds);
+    void initTopicRelatedInfo(ArrayList<TopicRelatedInfo> topicRelatedList);
 
 
 }

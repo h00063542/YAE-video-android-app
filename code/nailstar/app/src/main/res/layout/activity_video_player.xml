@@ -49,285 +49,281 @@
 
     </RelativeLayout>
 
-    <!--视频播放界面中间部分，视频播放框，图文分解，更多视频，评论-->
-    <com.yilos.widget.pullrefresh.PullToRefreshView
-        android:id="@+id/topic_pull_refresh_view"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_weight="1"
-        android:orientation="vertical">
-
-        <ScrollView
-            android:id="@+id/sv_video_player"
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
+        <!--视频播放界面中间部分，视频播放框，图文分解，更多视频，评论-->
+        <com.yilos.widget.pullrefresh.PullToRefreshView
+            android:id="@+id/topic_pull_refresh_view"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:cacheColorHint="#00000000">
+            android:orientation="vertical">
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1">
+            <ScrollView
+                android:id="@+id/sv_video_player"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:cacheColorHint="#00000000">
 
-                <!--视频播放组件-->
-                <com.sina.sinavideo.sdk.VDVideoView
-                    android:id="@+id/video_player"
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="240dp"
-                    android:layout_alignParentTop="true"
-                    android:background="@color/black"
-                    app:layerAttrs="@array/video_layers">
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
 
-                    <!--<com.melnykov.fab.FloatingActionButton-->
-                    <!--android:id="@+id/fab_video_player"-->
-                    <!--android:layout_width="10dp"-->
-                    <!--android:layout_height="10dp"-->
-                    <!--android:layout_gravity="center_vertical|center_horizontal"-->
-                    <!--android:layout_margin="10dp"-->
-                    <!--android:src="@drawable/play"-->
-                    <!--fab:fab_colorNormal="@color/grey"-->
-                    <!--fab:fab_colorPressed="@color/green" />-->
-                </com.sina.sinavideo.sdk.VDVideoView>
-
-                <!--图文分解头-->
-
-
-                <LinearLayout
-                    android:id="@+id/layout_topic_image_text_head"
-                    android:layout_width="match_parent"
-                    android:layout_height="80dp"
-                    android:layout_below="@id/video_player"
-                    android:orientation="horizontal">
-
-                    <com.yilos.widget.circleimageview.CircleImageView
-                        android:id="@+id/iv_video_author_photo"
-                        android:layout_width="@dimen/topic_author_photo_size"
-                        android:layout_height="@dimen/topic_author_photo_size"
-                        android:layout_margin="@dimen/topic_comment_margin_left" />
-
-                    <RelativeLayout
+                    <!--视频播放组件-->
+                    <com.sina.sinavideo.sdk.VDVideoView
+                        android:id="@+id/video_player"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/topic_author_photo_size"
-                        android:layout_gravity="center_vertical"
-                        android:layout_weight="1">
+                        android:layout_height="@dimen/topic_video_player_height"
+                        android:layout_alignParentTop="true"
+                        android:background="@color/black"
+                        app:layerAttrs="@array/video_layers">
 
-                        <TextView
-                            android:id="@+id/tv_video_author_name"
-                            android:layout_width="wrap_content"
-                            android:layout_height="30dp"
-                            android:gravity="center_vertical"
-                            android:text=""
-                            android:textSize="@dimen/topic_author_font_size" />
+                        <!--<com.melnykov.fab.FloatingActionButton-->
+                        <!--android:id="@+id/fab_video_player"-->
+                        <!--android:layout_width="10dp"-->
+                        <!--android:layout_height="10dp"-->
+                        <!--android:layout_gravity="center_vertical|center_horizontal"-->
+                        <!--android:layout_margin="10dp"-->
+                        <!--android:src="@drawable/play"-->
+                        <!--fab:fab_colorNormal="@color/grey"-->
+                        <!--fab:fab_colorPressed="@color/green" />-->
+                    </com.sina.sinavideo.sdk.VDVideoView>
 
-                        <TextView
-                            android:id="@+id/tv_video_playing_times"
-                            android:layout_width="wrap_content"
-                            android:layout_height="30dp"
-                            android:layout_marginLeft="5dp"
-                            android:layout_toRightOf="@id/tv_video_author_name"
-                            android:gravity="center_vertical"
-                            android:text="0"
-                            android:textSize="@dimen/topic_video_playing_time_font_size" />
+                    <!--图文分解头-->
+                    <LinearLayout
+                        android:id="@+id/layout_topic_image_text_head"
+                        android:layout_width="match_parent"
+                        android:layout_height="80dp"
+                        android:layout_below="@id/video_player"
+                        android:orientation="horizontal">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="30dp"
-                            android:layout_toRightOf="@id/tv_video_playing_times"
-                            android:gravity="center_vertical"
-                            android:text="@string/video_player_times"
-                            android:textSize="@dimen/topic_video_playing_time_font_size" />
+                        <com.yilos.widget.circleimageview.CircleImageView
+                            android:id="@+id/iv_video_author_photo"
+                            android:layout_width="@dimen/topic_author_photo_size"
+                            android:layout_height="@dimen/topic_author_photo_size"
+                            android:layout_margin="@dimen/topic_comment_author_photo_margin" />
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/topic_author_photo_size"
+                            android:layout_gravity="center_vertical"
+                            android:layout_weight="1">
+
+                            <TextView
+                                android:id="@+id/tv_video_author_name"
+                                android:layout_width="wrap_content"
+                                android:layout_height="30dp"
+                                android:gravity="center_vertical"
+                                android:textSize="@dimen/topic_author_font_size" />
+
+                            <TextView
+                                android:id="@+id/tv_video_playing_times"
+                                android:layout_width="wrap_content"
+                                android:layout_height="30dp"
+                                android:layout_marginLeft="2dp"
+                                android:layout_toRightOf="@id/tv_video_author_name"
+                                android:gravity="center_vertical"
+                                android:text="0"
+                                android:textSize="@dimen/topic_video_playing_time_font_size" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="30dp"
+                                android:layout_toRightOf="@id/tv_video_playing_times"
+                                android:gravity="center_vertical"
+                                android:text="@string/video_player_times"
+                                android:textSize="@dimen/topic_video_playing_time_font_size" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="30dp"
+                                android:layout_below="@id/tv_video_author_name"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:id="@+id/tv_video_author_tag_1"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="20dp"
+                                    android:background="@color/author_tag_color"
+                                    android:gravity="center_vertical"
+                                    android:paddingLeft="5dp"
+                                    android:paddingRight="5dp"
+                                    android:textSize="@dimen/topic_tags_font_size"
+                                    android:visibility="gone" />
+
+                                <TextView
+                                    android:id="@+id/tv_video_author_tag_2"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="20dp"
+                                    android:layout_marginLeft="10dp"
+                                    android:background="@color/author_tag_color"
+                                    android:gravity="center_vertical"
+                                    android:paddingLeft="5dp"
+                                    android:paddingRight="5dp"
+                                    android:textSize="@dimen/topic_tags_font_size"
+                                    android:visibility="gone" />
+
+                                <TextView
+                                    android:id="@+id/tv_video_author_tag_3"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="20dp"
+                                    android:layout_marginLeft="10dp"
+                                    android:background="@color/author_tag_color"
+                                    android:gravity="center_vertical"
+                                    android:paddingLeft="5dp"
+                                    android:paddingRight="5dp"
+                                    android:textSize="@dimen/topic_tags_font_size"
+                                    android:visibility="gone" />
+
+                                <!--<ImageView-->
+                                <!--android:layout_width="10dp"-->
+                                <!--android:layout_height="20dp"-->
+                                <!--android:layout_toRightOf="@id/tv_video_author_tag_1"-->
+                                <!--android:src="@drawable/graya" />-->
+
+                            </LinearLayout>
+
+                        </RelativeLayout>
 
                         <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="30dp"
-                            android:layout_below="@id/tv_video_author_name"
+                            android:id="@+id/layout_show_topic_image_text_content"
+                            android:layout_width="wrap_content"
+                            android:layout_height="60dp"
+                            android:layout_gravity="center_vertical"
                             android:orientation="horizontal">
 
                             <TextView
-                                android:id="@+id/tv_video_author_tag_1"
                                 android:layout_width="wrap_content"
-                                android:layout_height="20dp"
-                                android:background="@color/author_tag_color"
-                                android:gravity="center_vertical"
-                                android:paddingLeft="5dp"
-                                android:paddingRight="5dp"
-                                android:textSize="@dimen/topic_tags_font_size"
-                                android:visibility="gone" />
-
-                            <TextView
-                                android:id="@+id/tv_video_author_tag_2"
-                                android:layout_width="wrap_content"
-                                android:layout_height="20dp"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
                                 android:layout_marginLeft="10dp"
-                                android:background="@color/author_tag_color"
-                                android:gravity="center_vertical"
-                                android:paddingLeft="5dp"
-                                android:paddingRight="5dp"
-                                android:textSize="@dimen/topic_tags_font_size"
-                                android:visibility="gone" />
+                                android:text="@string/topic_image_text_content"
+                                android:textSize="@dimen/topic_image_text_font_size" />
 
-                            <TextView
-                                android:id="@+id/tv_video_author_tag_3"
-                                android:layout_width="wrap_content"
-                                android:layout_height="20dp"
+                            <ImageView
+                                android:id="@+id/iv_video_image_text_icon"
+                                android:layout_width="15dp"
+                                android:layout_height="15dp"
+                                android:layout_gravity="center_vertical"
                                 android:layout_marginLeft="10dp"
-                                android:background="@color/author_tag_color"
-                                android:gravity="center_vertical"
-                                android:paddingLeft="5dp"
-                                android:paddingRight="5dp"
-                                android:textSize="@dimen/topic_tags_font_size"
-                                android:visibility="gone" />
+                                android:layout_marginRight="10dp"
+                                android:src="@drawable/back_down" />
+                        </LinearLayout>
 
-                            <!--<ImageView-->
-                            <!--android:layout_width="10dp"-->
-                            <!--android:layout_height="20dp"-->
-                            <!--android:layout_toRightOf="@id/tv_video_author_tag_1"-->
-                            <!--android:src="@drawable/graya" />-->
+
+                    </LinearLayout>
+
+                    <!--图文分解内容-->
+                    <LinearLayout
+                        android:id="@+id/layout_topic_image_text_content_parent"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_below="@id/layout_topic_image_text_head"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+                        <!--分割线-->
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/line_color" />
+
+                        <LinearLayout
+                            android:id="@+id/layout_topic_image_text_content"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="10dp"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_marginTop="10dp"
+                            android:orientation="vertical">
 
                         </LinearLayout>
 
-                    </RelativeLayout>
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="35dp">
 
-                    <LinearLayout
-                        android:id="@+id/layout_show_topic_image_text_content"
-                        android:layout_width="wrap_content"
-                        android:layout_height="60dp"
-                        android:layout_gravity="center_vertical"
-                        android:orientation="horizontal">
+                            <TextView
+                                android:id="@+id/tv_hide_topic_image_text_content"
+                                android:layout_width="wrap_content"
+                                android:layout_height="20dp"
+                                android:layout_centerInParent="true"
+                                android:text="@string/hide_topic_image_text_content" />
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginLeft="10dp"
-                            android:text="@string/topic_image_text_content"
-                            android:textSize="@dimen/topic_image_text_font_size" />
-
-                        <ImageView
-                            android:id="@+id/iv_video_image_text_icon"
-                            android:layout_width="15dp"
-                            android:layout_height="15dp"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginLeft="10dp"
-                            android:layout_marginRight="10dp"
-                            android:src="@drawable/back_down" />
-                    </LinearLayout>
+                            <ImageView
+                                android:id="@+id/imageView2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="12dp"
+                                android:layout_centerInParent="true"
+                                android:layout_toLeftOf="@id/tv_hide_topic_image_text_content"
+                                android:src="@drawable/back_up" />
 
 
-                </LinearLayout>
-
-                <!--图文分解内容-->
-                <LinearLayout
-                    android:id="@+id/layout_topic_image_text_content_parent"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_below="@id/layout_topic_image_text_head"
-                    android:orientation="vertical"
-                    android:visibility="gone">
-
-                    <!--分割线-->
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/line_color" />
-
-                    <LinearLayout
-                        android:id="@+id/layout_topic_image_text_content"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="10dp"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginRight="10dp"
-                        android:layout_marginTop="10dp"
-                        android:orientation="vertical">
+                            <TextView
+                                android:id="@+id/tv_download_topic_image_text_content"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentEnd="true"
+                                android:layout_alignParentRight="true"
+                                android:layout_centerInParent="true"
+                                android:layout_marginRight="10dp"
+                                android:text="@string/download_topic_image_text_content" />
+                        </RelativeLayout>
 
                     </LinearLayout>
 
+                    <!--图文分解分割线-->
+                    <LinearLayout
+                        android:id="@+id/layout_topic_image_text_line"
+                        android:layout_width="match_parent"
+                        android:layout_height="5dp"
+                        android:layout_below="@id/layout_topic_image_text_content_parent"
+                        android:background="@color/line_color"
+                        android:orientation="horizontal"></LinearLayout>
+
+                    <!--更多视频-->
                     <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="35dp">
-
-                        <TextView
-                            android:id="@+id/tv_hide_topic_image_text_content"
-                            android:layout_width="wrap_content"
-                            android:layout_height="20dp"
-                            android:layout_centerInParent="true"
-                            android:text="@string/hide_topic_image_text_content" />
-
-                        <ImageView
-                            android:id="@+id/imageView2"
-                            android:layout_width="wrap_content"
-                            android:layout_height="12dp"
-                            android:layout_centerInParent="true"
-                            android:layout_toLeftOf="@id/tv_hide_topic_image_text_content"
-                            android:src="@drawable/back_up" />
-
-
-                        <TextView
-                            android:id="@+id/tv_download_topic_image_text_content"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true"
-                            android:layout_alignParentRight="true"
-                            android:layout_centerInParent="true"
-                            android:layout_marginRight="10dp"
-                            android:text="@string/download_topic_image_text_content" />
-                    </RelativeLayout>
-
-                </LinearLayout>
-
-                <!--图文分解分割线-->
-                <LinearLayout
-                    android:id="@+id/layout_topic_image_text_line"
-                    android:layout_width="match_parent"
-                    android:layout_height="5dp"
-                    android:layout_below="@id/layout_topic_image_text_content_parent"
-                    android:background="@color/line_color"
-                    android:orientation="horizontal"></LinearLayout>
-
-                <!--更多视频-->
-                <RelativeLayout
-                    android:id="@+id/more_videos_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/layout_topic_image_text_line">
-
-                    <TextView
-                        android:id="@+id/tv_more_videos"
-                        android:layout_width="wrap_content"
-                        android:layout_height="20dp"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginTop="10dp"
-                        android:text="@string/more_videos"
-                        android:textSize="@dimen/topic_more_videos_font_size" />
-
-                    <LinearLayout
                         android:id="@+id/layout_more_videos"
                         android:layout_width="match_parent"
-                        android:layout_height="70dp"
-                        android:layout_below="@id/tv_more_videos"
-                        android:layout_marginBottom="10dp"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginRight="10dp"
-                        android:layout_marginTop="10dp"
-                        android:orientation="horizontal">
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/layout_topic_image_text_line">
+
+                        <TextView
+                            android:id="@+id/tv_more_videos"
+                            android:layout_width="wrap_content"
+                            android:layout_height="20dp"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginTop="10dp"
+                            android:text="@string/more_videos"
+                            android:textSize="@dimen/topic_more_videos_font_size" />
+
+                        <LinearLayout
+                            android:id="@+id/layout_more_videos_content"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/tv_more_videos"
+                            android:layout_marginBottom="@dimen/topic_comment_author_photo_margin"
+                            android:layout_marginLeft="@dimen/topic_comment_author_photo_margin"
+                            android:layout_marginRight="@dimen/topic_comment_author_photo_margin"
+                            android:layout_marginTop="@dimen/topic_comment_author_photo_margin"
+                            android:orientation="horizontal">
 
 
-                    </LinearLayout>
-                </RelativeLayout>
+                        </LinearLayout>
+                    </RelativeLayout>
 
-                <!--更多视频与评论之间的分割线-->
-                <LinearLayout
-                    android:id="@+id/layout_more_videos_line"
-                    android:layout_width="match_parent"
-                    android:layout_height="5dp"
-                    android:layout_below="@id/more_videos_layout"
-                    android:background="@color/line_color"
-                    android:orientation="horizontal"></LinearLayout>
+                    <!--更多视频与评论之间的分割线-->
+                    <LinearLayout
+                        android:id="@+id/layout_more_videos_line"
+                        android:layout_width="match_parent"
+                        android:layout_height="5dp"
+                        android:layout_below="@id/layout_more_videos"
+                        android:background="@color/line_color"
+                        android:orientation="horizontal"></LinearLayout>
 
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/layout_more_videos_line">
                     <!--视频评论-->
                     <LinearLayout
                         android:id="@+id/layout_topic_comments"
@@ -336,21 +332,22 @@
                         android:layout_below="@id/layout_more_videos_line"
                         android:orientation="vertical"></LinearLayout>
 
-                    <com.melnykov.fab.FloatingActionButton
-                        android:id="@+id/fab_back_top"
-                        android:layout_width="10dp"
-                        android:layout_height="10dp"
-                        android:layout_gravity="bottom|right"
-                        android:layout_margin="10dp"
-                        android:src="@drawable/back_up"
-                        fab:fab_colorNormal="@color/grey"
-                        fab:fab_colorPressed="@color/green" />
-                </FrameLayout>
+                </RelativeLayout>
+            </ScrollView>
+        </com.yilos.widget.pullrefresh.PullToRefreshView>
 
-
-            </RelativeLayout>
-        </ScrollView>
-    </com.yilos.widget.pullrefresh.PullToRefreshView>
+        <!--评论区域置顶按钮-->
+        <com.melnykov.fab.FloatingActionButton
+            android:id="@+id/fab_back_top"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:layout_gravity="bottom|right"
+            android:layout_margin="10dp"
+            android:src="@drawable/back_up"
+            android:visibility="gone"
+            fab:fab_colorNormal="@color/grey"
+            fab:fab_colorPressed="@color/green" />
+    </FrameLayout>
 
     <!--视频播放界面底部，下载，收藏，评论，交作业-->
     <LinearLayout
