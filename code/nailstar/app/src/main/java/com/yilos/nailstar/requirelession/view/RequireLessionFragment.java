@@ -3,13 +3,13 @@ package com.yilos.nailstar.requirelession.view;
 import android.content.Intent;
 import android.os.Bundle;
 import android.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import com.yilos.nailstar.R;
@@ -53,11 +53,16 @@ public class RequireLessionFragment extends Fragment implements LessionView {
     private Button requireLessionBtn;
 
     // 投票列表按钮
-    private Button goVotingBtn;
+    private RadioButton goVotingBtn;
 
     // 排行榜按钮
-    private Button goRankingBtn;
+    private RadioButton goRankingBtn;
 
+    // 在悬浮头中的投票列表按钮
+    private RadioButton goVotingBtnFloat;
+
+    // 在悬浮头中的排行榜按钮
+    private RadioButton goRankingBtnFloat;
 
     private LessionPresenter lessionPresenter = new LessionPresenter(this);
 
@@ -82,23 +87,8 @@ public class RequireLessionFragment extends Fragment implements LessionView {
         lessionViewHead1 = inflater.inflate(R.layout.lession_listview_head1, null);
         initView(inflater);
         initData();
+        bindControl();
         return view;
-    }
-
-    private void bindControl() {
-//        takeImage = new TakeImage.Builder().context(this).uri(YILOS_PATH).callback(new TakeImageCallback() {
-//            @Override
-//            public void callback(Uri uri) {
-//                Log.d(RequireLessionFragment.class.getName(), "callback " + uri);
-//            }
-//        }).build();
-//        Button button = (Button) view.findViewById(R.id.hand_in_homework_btn);
-//        button.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                takeImage.initTakeImage();
-//            }
-//        });
     }
 
     private void initView(LayoutInflater inflater) {
@@ -136,21 +126,91 @@ public class RequireLessionFragment extends Fragment implements LessionView {
             }
         });
 
-        // 切换到投票列表的按钮
-        RadioGroup.OnCheckedChangeListener onCheckedChangeListener = new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                Log.d(RequireLessionFragment.class.getName(), String.valueOf(checkedId));
-            }
-        };
-        switchLessionView = (RadioGroup)lessionViewHead1.findViewById(R.id.switchLessionView);
-        switchLessionView.setOnCheckedChangeListener(onCheckedChangeListener);
     }
 
     private void initData() {
         // 查询数据
         lessionPresenter.queryActivityTopic();
-        lessionPresenter.queryRankingLession();
+        lessionPresenter.queryAndRefreshVoteLession();
+    }
+
+    private void bindControl() {
+//        takeImage = new TakeImage.Builder().context(this).uri(YILOS_PATH).callback(new TakeImageCallback() {
+//            @Override
+//            public void callback(Uri uri) {
+//                Log.d(RequireLessionFragment.class.getName(), "callback " + uri);
+//            }
+//        }).build();
+//        Button button = (Button) view.findViewById(R.id.hand_in_homework_btn);
+//        button.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                takeImage.initTakeImage();
+//            }
+//        });
+
+        // 投票列表、排行榜列表切换按钮
+
+        // 页头的按钮
+        switchLessionView = (RadioGroup)lessionViewHead1.findViewById(R.id.switchLessionView);
+        goVotingBtn = (RadioButton) lessionViewHead1.findViewById(R.id.goVotingBtn);
+        goRankingBtn = (RadioButton) lessionViewHead1.findViewById(R.id.goRankingBtn);
+        requireLessionBtn = (Button)lessionViewHead1.findViewById(R.id.requireLessionBtn);
+
+        // 悬浮页头的按钮
+        switchLessionViewFloat = (RadioGroup)view.findViewById(R.id.switchLessionViewFloat);
+        goVotingBtnFloat = (RadioButton) view.findViewById(R.id.goVotingBtnFloat);
+        goRankingBtnFloat = (RadioButton) view.findViewById(R.id.goRankingBtnFloat);
+
+        switchLessionView.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                if (checkedId == goVotingBtn.getId()) {
+
+                    lessionPresenter.goVoteLessionList();
+
+                    // 切换的时候，保证页首显示的是返回的第一条数据
+                    if (lessionVoteView.getFirstVisiblePosition() > 1){
+                        lessionVoteView.setSelection(1);
+                    }
+
+                    // 更新悬浮页头的按钮状态
+                    goVotingBtnFloat.setChecked(true);
+
+                } else if (checkedId == goRankingBtn.getId()) {
+
+                    lessionPresenter.goRankingLessionList();
+
+                    // 切换的时候，保证页首显示的是返回的第一条数据
+                    if (lessionVoteView.getFirstVisiblePosition() > 1){
+                        lessionVoteView.setSelection(1);
+                    }
+
+                    // 更新悬浮页头的按钮状态
+                    goRankingBtnFloat.setChecked(true);
+                }
+            }
+        });
+
+        switchLessionViewFloat.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+
+                if (checkedId == goVotingBtnFloat.getId()) {
+
+                    if (!goVotingBtn.isChecked()) {
+                        goVotingBtn.setChecked(true);
+                    }
+
+                } else if (checkedId == goRankingBtnFloat.getId()) {
+
+                    if (!goRankingBtn.isChecked()) {
+                        goRankingBtn.setChecked(true);
+                    }
+
+                }
+            }
+        });
     }
 
     @Override

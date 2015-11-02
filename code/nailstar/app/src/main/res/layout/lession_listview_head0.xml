@@ -24,11 +24,11 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_weight="25">
-            <!--android:src="@mipmap/nail_works"-->
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
+                android:src="@mipmap/default_photo"
                 android:scaleType="fitCenter" />
         </LinearLayout>
 
@@ -67,6 +67,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
+                android:src="@mipmap/default_photo"
                 android:scaleType="fitCenter" />
         </LinearLayout>
 

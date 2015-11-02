@@ -20,6 +20,7 @@
         android:adjustViewBounds="true"
         android:scaleType="fitCenter"
         android:gravity="center_vertical"
+        android:src="@mipmap/default_photo"
         android:id="@+id/lessionRankingImg" />
 
     <LinearLayout
