@@ -84,11 +84,12 @@ public class VoteListViewAdapter extends BaseAdapter {
 
         ViewHolder holder;
 
-        if (convertView == null) {
+        if (convertView == null || !((ViewHolder) convertView.getTag()).viewType.equals(ViewType.RANKING_LIST)) {
 
             convertView = layoutInflater.inflate(R.layout.lession_ranking_item, null);
 
             holder = new ViewHolder();
+            holder.viewType = ViewType.RANKING_LIST;
             holder.rankingItem.lessionRankingNo = (TextView) convertView.findViewById(R.id.lessionRankingNo);
             holder.rankingItem.lessionRankingImg = (ImageView) convertView.findViewById(R.id.lessionRankingImg);
             holder.rankingItem.lessionAuthorPhoto = (ImageView) convertView.findViewById(R.id.lessionAuthorPhoto);
@@ -119,12 +120,12 @@ public class VoteListViewAdapter extends BaseAdapter {
 
         ViewHolder holder;
 
-        if (convertView == null) {
+        if (convertView == null || !((ViewHolder) convertView.getTag()).viewType.equals(ViewType.VOTE_LIST)) {
 
-            convertView = layoutInflater.inflate(R.layout.lession_ranking_item, null);
+            convertView = layoutInflater.inflate(R.layout.lession_vote_item, null);
 
             holder = new ViewHolder();
-
+            holder.viewType = ViewType.VOTE_LIST;
             VoteItem voteItem = new VoteItem();
             voteItem.voteItem = convertView.findViewById(R.id.voteItem0);
             voteItem.lessionVoteImg = (ImageView) convertView.findViewById(R.id.lessionVoteImg0);
@@ -149,19 +150,30 @@ public class VoteListViewAdapter extends BaseAdapter {
             voteItem.lessionTime = (TextView) convertView.findViewById(R.id.lessionTime2);
             holder.voteItemList.add(voteItem);
 
+            convertView.setTag(holder);
 
         } else {
-            holder = (ViewHolder) convertView.getTag();
-        }
-        
-        for (int i = 0; i < 3; i++) {
 
+            holder = (ViewHolder) convertView.getTag();
+
+        }
+
+        for (int i = 0; i < 3; i++) {
+            VoteItem voteItem = holder.voteItemList.get(i);
+            if (position * 3 + i > voteLessionList.size()) {
+                voteItem.voteItem.setVisibility(View.INVISIBLE);
+            } else {
+                CandidateLession candidateLession = voteLessionList.get(position * 3 + i);
+                voteItem.lessionvoteCount.setText(String.valueOf(candidateLession.getVoteCount()));
+            }
         }
 
         return convertView;
     }
 
     class ViewHolder {
+
+        public ViewType viewType;
 
         public RankingItem rankingItem;
 
