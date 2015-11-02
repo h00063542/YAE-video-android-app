@@ -11,10 +11,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.yilos.nailstar.R;
-import com.yilos.nailstar.aboutme.entity.Message;
+import com.yilos.nailstar.aboutme.entity.MessageCount;
 import com.yilos.nailstar.aboutme.presenter.MessagePresenter;
-import com.yilos.nailstar.framework.exception.JSONParseException;
-import com.yilos.nailstar.framework.exception.NetworkDisconnectException;
+import com.yilos.widget.titlebar.TitleBar;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -24,7 +23,8 @@ import com.yilos.nailstar.framework.exception.NetworkDisconnectException;
  * Use the {@link AboutMeFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class AboutMeFragment extends Fragment {
+public class AboutMeFragment extends Fragment implements IAboutMeView{
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -35,6 +35,12 @@ public class AboutMeFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+
+    private RelativeLayout relativeLayout;
+    private TextView messageCountText;
+    private TitleBar titleBar;
+    private TextView titleText;
+    private MessagePresenter messagePresenter;
 
     /**
      * Use this factory method to create a new instance of
@@ -54,8 +60,13 @@ public class AboutMeFragment extends Fragment {
         return fragment;
     }
 
-    public AboutMeFragment() {
-        // Required empty public constructor
+//    public AboutMeFragment() {
+//        // Required empty public constructor
+//    }
+
+    @Override
+    public void initMessageCount(MessageCount messageCount) {
+        messageCountText.setText(String.valueOf(messageCount.getCount()));
     }
 
     @Override
@@ -75,30 +86,15 @@ public class AboutMeFragment extends Fragment {
         initViews(view);
         return view;
     }
-
-    private int getMessageCount(){
-        MessagePresenter messagePresenter = new MessagePresenter();
-        Message message = new Message();
-        try {
-            message = messagePresenter.getMessage();
-        } catch (NetworkDisconnectException e) {
-            //throw new NetworkDisconnectException("",e);
-        } catch (JSONParseException e) {
-            //throw new JSONParseException("",e);
-        }
-        return message.getCount();
-    }
-
     private void initViews(View view){
-        RelativeLayout relativeLayout = (RelativeLayout)view.findViewById(R.id.about_me_message_group);
-        final TextView textView = (TextView)view.findViewById(R.id.about_me_message_count);
+        relativeLayout = (RelativeLayout)view.findViewById(R.id.about_me_message_group);
+        messageCountText = (TextView)view.findViewById(R.id.about_me_message_count);
 
-        relativeLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                textView.setText(String.valueOf(getMessageCount()));
-            }
-        });
+        titleBar = (TitleBar)view.findViewById(R.id.about_me_header_nav);
+        titleText = titleBar.getTitleView();
+        titleText.setText(R.string.about_me_my);
+        messagePresenter = MessagePresenter.getInstance(this);
+        messagePresenter.getMessageCount();
     }
 
     // TODO: Rename method, update argument and hook method into UI event

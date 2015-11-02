@@ -2,7 +2,7 @@
 <resources>
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
-    <color name="tab_font_orange_color">#FF0000</color>
+    <!--<color name="tab_font_orange_color">#FF0000</color>-->
     <color name="tab_border">#999999</color>
 
     <!-- about me -->
@@ -29,8 +29,10 @@
 
     <color name="line_color">#ebeeef</color>
     <color name="topic_comment_reply_background_color">#ebeeef</color>
-    <color name="submited_result_color">#e85b2f</color>
+    <color name="submited_homework_background_color">#e85b2f</color>
     <color name="author_tag_color">#e1dede</color>
 
     <color name="user_at_color">#693012</color>
+    <color name="submited_homework_label_color">#555657</color>
+    <color name="topic_comment_create_date_label_color">#adafb0</color>
 </resources>

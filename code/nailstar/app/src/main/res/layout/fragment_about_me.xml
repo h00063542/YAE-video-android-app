@@ -1,37 +1,16 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent" tools:context="com.yilos.nailstar.aboutme.view.AboutMeFragment">
-
-    <!-- TODO: Update blank fragment layout -->
-    <!--<TextView android:layout_width="match_parent" android:layout_height="match_parent"-->
-        <!--android:text="about me!" />-->
     <RelativeLayout
         android:background="@color/tab_background_gray"
         android:id="@+id/about_me_info"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
         <!-- 头部导航 -->
-        <RelativeLayout
+        <com.yilos.widget.titlebar.TitleBar
             android:id="@+id/about_me_header_nav"
-            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/about_me_header_nav"
-            android:background="@color/tab_font_orange_color"
-            android:gravity="center_vertical">
-            <ImageView
-                android:layout_width="@dimen/about_me_left_back"
-                android:layout_height="@dimen/about_me_left_back"
-                android:layout_centerVertical="true"
-                android:src="@mipmap/ic_about_me_left_back"
-                android:padding="@dimen/about_me_border_padding"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:text="@string/about_me_my"
-                android:textColor="@color/white"
-                android:textSize="@dimen/about_me_header_nav_title"/>
-        </RelativeLayout>
+            android:layout_height="wrap_content"/>
         <!-- 我的信息 -->
         <LinearLayout
             android:background="@color/white"
@@ -39,8 +18,8 @@
             android:orientation="horizontal"
             android:layout_below="@id/about_me_header_nav"
             android:layout_width="match_parent"
-            android:gravity="center_vertical"
-            android:layout_height="@dimen/about_me_my_info_height">
+            android:layout_height="@dimen/about_me_my_info_height"
+            android:gravity="center_vertical">
             <com.yilos.widget.circleimageview.CircleImageView
                 android:id="@+id/profile_image"
                 android:layout_width="@dimen/about_me_my_info_image"
@@ -98,8 +77,8 @@
             android:layout_height="@dimen/about_me_number_count_height">
             <!-- 关注 -->
             <LinearLayout
-                android:layout_height="fill_parent"
                 android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
                 android:orientation="vertical"
                 android:layout_weight="1"
                 android:gravity="center">
@@ -126,8 +105,8 @@
 
             <!-- 粉丝 -->
             <LinearLayout
-                android:layout_height="fill_parent"
                 android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
                 android:orientation="vertical"
                 android:layout_weight="1"
                 android:gravity="center"
@@ -154,8 +133,8 @@
             </LinearLayout>
             <!-- 咖币-->
             <LinearLayout
-                android:layout_height="fill_parent"
                 android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
                 android:orientation="vertical"
                 android:layout_weight="1"
                 android:gravity="center"
@@ -199,10 +178,10 @@
                         <RelativeLayout
                             android:id="@+id/about_me_message_group"
                             android:layout_width="fill_parent"
+                            android:layout_height="@dimen/about_me_list_item_height"
                             android:orientation="horizontal"
                             android:background="@drawable/selector"
-                            android:clickable="true"
-                            android:layout_height="@dimen/about_me_list_item_height">
+                            android:clickable="true">
                             <ImageView
                                 android:id="@+id/about_me_message"
                                 android:layout_centerVertical="true"
@@ -247,8 +226,8 @@
                             android:background="@drawable/selector"
                             android:clickable="true"
                             android:layout_width="fill_parent"
-                            android:orientation="horizontal"
-                            android:layout_height="@dimen/about_me_list_item_height">
+                            android:layout_height="@dimen/about_me_list_item_height"
+                            android:orientation="horizontal">
                             <ImageView
                                 android:id="@+id/about_me_person_info"
                                 android:layout_centerVertical="true"
@@ -285,8 +264,8 @@
                             android:clickable="true"
                             android:id="@+id/list_item_group"
                             android:layout_width="fill_parent"
-                            android:orientation="horizontal"
-                            android:layout_height="@dimen/about_me_list_item_height">
+                            android:layout_height="@dimen/about_me_list_item_height"
+                            android:orientation="horizontal">
                             <ImageView
                                 android:id="@+id/about_me_collect"
                                 android:layout_centerVertical="true"
@@ -359,8 +338,8 @@
                             android:background="@drawable/selector"
                             android:clickable="true"
                             android:layout_width="fill_parent"
-                            android:orientation="horizontal"
-                            android:layout_height="@dimen/about_me_list_item_height">
+                            android:layout_height="@dimen/about_me_list_item_height"
+                            android:orientation="horizontal">
                             <ImageView
                                 android:id="@+id/about_me_require_lesson"
                                 android:layout_centerVertical="true"
@@ -403,8 +382,8 @@
                             android:background="@drawable/selector"
                             android:clickable="true"
                             android:layout_width="fill_parent"
-                            android:orientation="horizontal"
-                            android:layout_height="@dimen/about_me_list_item_height">
+                            android:layout_height="@dimen/about_me_list_item_height"
+                            android:orientation="horizontal">
                             <ImageView
                                 android:id="@+id/about_me_give_us_advice"
                                 android:layout_centerVertical="true"
@@ -440,8 +419,8 @@
                             android:background="@drawable/selector"
                             android:clickable="true"
                             android:layout_width="fill_parent"
-                            android:orientation="horizontal"
-                            android:layout_height="@dimen/about_me_list_item_height">
+                            android:layout_height="@dimen/about_me_list_item_height"
+                            android:orientation="horizontal">
                             <ImageView
                                 android:id="@+id/about_me_share"
                                 android:layout_centerVertical="true"
@@ -484,8 +463,8 @@
                             android:background="@drawable/selector"
                             android:clickable="true"
                             android:layout_width="fill_parent"
-                            android:orientation="horizontal"
-                            android:layout_height="@dimen/about_me_list_item_height">
+                            android:layout_height="@dimen/about_me_list_item_height"
+                            android:orientation="horizontal">
                             <ImageView
                                 android:id="@+id/about_me_setting"
                                 android:layout_centerVertical="true"

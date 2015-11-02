@@ -41,4 +41,8 @@
     <string name="cannot_switch_player">暂时无法切换播放器</string>
     <string name="dlna">DLNA</string>
     <string name="sorry_cannot_switch_player">抱歉，该设备无法切换播放器</string>
+
+    <!-- titleBar 组件-->
+    <string name="titleBarTitle">我是titleBar标题</string>
+    <string name="titleBarSure">确定</string>
 </resources>

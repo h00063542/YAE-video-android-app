@@ -1,48 +1,52 @@
 package com.yilos.nailstar.aboutme.presenter;
 
-import com.yilos.nailstar.aboutme.entity.Message;
-import com.yilos.nailstar.aboutme.model.AboutMeServiceImpl;
+import com.yilos.nailstar.aboutme.entity.MessageCount;
 import com.yilos.nailstar.aboutme.model.AboutMeService;
+import com.yilos.nailstar.aboutme.model.AboutMeServiceImpl;
+import com.yilos.nailstar.aboutme.view.IAboutMeView;
 import com.yilos.nailstar.framework.exception.JSONParseException;
 import com.yilos.nailstar.framework.exception.NetworkDisconnectException;
-import com.yilos.nailstar.index.entity.Poster;
 import com.yilos.nailstar.util.TaskManager;
 
-import java.io.IOException;
-import java.util.List;
+import org.json.JSONException;
+
 
 /**
  * Created by sisilai on 15/10/24.
  */
 public class MessagePresenter {
-    public AboutMeService aboutMeService = new AboutMeServiceImpl();
-    Message message = new Message();
+    private static MessagePresenter messagePresenter =new MessagePresenter();
+    private IAboutMeView aboutMeFragment;
+    private AboutMeServiceImpl aboutMeService = new AboutMeService();
+    public static MessagePresenter getInstance(IAboutMeView aboutMeFragment) {
+        messagePresenter.aboutMeFragment = aboutMeFragment;
+        return messagePresenter;
+    }
 
-    public Message getMessage() throws NetworkDisconnectException, JSONParseException {
-//        try {
-//            message = aboutMeService.getMessageContext();
-//        } catch (NetworkDisconnectException e) {
-//            //throw new NetworkDisconnectException("网络连接失败",e);
-//        } catch (JSONParseException e) {
-//            //throw new JSONParseException("网络解析失败",e);
-//        }
-//        return message.getCount();
-
+    public void getMessageCount(){
         TaskManager.Task loadMessageCount = new TaskManager.BackgroundTask() {
             @Override
             public Object doWork(Object data) {
                 try {
-                    message = aboutMeService.getMessageContext();
+                    return aboutMeService.getMessageCount();
                 } catch (NetworkDisconnectException e) {
-                    //throw new NetworkDisconnectException("网络连接失败",e);
-                } catch (JSONParseException e) {
-                    //throw new JSONParseException("网络解析失败",e);
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-                return message;
+                return null;
             }
         };
-        new TaskManager().next(loadMessageCount).start();
-        return message;
+
+        TaskManager.UITask<MessageCount> messageUITask = new TaskManager.UITask<MessageCount>() {
+            @Override
+            public MessageCount doWork(MessageCount data) {
+                aboutMeFragment.initMessageCount(data);
+                return null;
+            }
+        };
+
+        new TaskManager().next(loadMessageCount).next(messageUITask).start();
     }
 
 }
