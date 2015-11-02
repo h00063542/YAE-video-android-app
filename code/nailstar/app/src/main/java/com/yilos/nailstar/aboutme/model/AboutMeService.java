@@ -1,8 +1,11 @@
 package com.yilos.nailstar.aboutme.model;
 
+import android.graphics.Bitmap;
+
 import com.squareup.okhttp.FormEncodingBuilder;
 import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.RequestBody;
+import com.yilos.nailstar.aboutme.entity.AboutMeNumber;
 import com.yilos.nailstar.aboutme.entity.MessageCount;
 import com.yilos.nailstar.aboutme.entity.PersonInfo;
 import com.yilos.nailstar.framework.exception.JSONParseException;
@@ -130,13 +133,14 @@ public class AboutMeService implements AboutMeServiceImpl {
         String lt = "1445669825802";
         String uid = "a8affd60-efe6-11e4-a908-3132fc2abe39";
         int type = 5;
-        String url = "/vapi2/nailstar/messages/count?lt="+ lt + "&uid=" + uid + "&type=" + type;
+        //String url = "/vapi2/nailstar/messages/count?lt="+ lt + "&uid=" + uid + "&type=" + type;
+        String url = "/vapi2/nailstar/messages/count";
         try {
-            jsonObject = HttpClient.getJson(url);//"{\"code\":0,\"result\":{\"count\":3}}";
-        } catch (IOException e) {
-            throw new NetworkDisconnectException("网络获取消息数失败", e);
-        }
-        try {
+            jsonObject = "{\"code\":0,\"result\":{\"count\":3}}";//HttpClient.getJson(url);
+//        } catch (IOException e) {
+//            throw new NetworkDisconnectException("网络获取消息数失败", e);
+//        }
+//        try {
             messageCountObject = new JSONObject(jsonObject);
             if (messageCountObject.getInt("code") != 0) {
                 return null;
@@ -145,6 +149,34 @@ public class AboutMeService implements AboutMeServiceImpl {
             return messageCount;
         }catch (JSONException e) {
             throw new JSONException("消息数解析失败");
+        }
+    }
+
+//    http://api2.naildaka.com/vapi/nailstar/account/myInfo/a8affd60-efe6-11e4-a908-3132fc2abe39
+    AboutMeNumber aboutMeNumber = new AboutMeNumber();
+    @Override
+    public AboutMeNumber getAboutMeNumber() throws NetworkDisconnectException, JSONException {
+        String jsonObject;
+        JSONObject aboutMeNumberObject;
+        JSONObject aboutMeNumberResult;
+        String uid = "a8affd60-efe6-11e4-a908-3132fc2abe39";
+        //http://api2.naildaka.com/vapi/nailstar/account/myInfo/a8affd60-efe6-11e4-a908-3132fc2abe39
+        String url = "/vapi/nailstar/account/myInfo/" + uid;
+        try {
+            jsonObject = HttpClient.getJson(url);
+            //"{\"code\":0,\"result\":{\"fansNumber\":2,\"focusNumber\":105,\"exp\":544,\"dakaCoin\":264}}";
+            aboutMeNumberObject = new JSONObject(jsonObject);
+            if (aboutMeNumberObject.getInt("code") != 0) {
+                return null;
+            }
+            aboutMeNumberResult = aboutMeNumberObject.getJSONObject("result");
+            aboutMeNumber.setDakaCoin(aboutMeNumberResult.getInt("dakaCoin"));
+            aboutMeNumber.setExp(aboutMeNumberResult.getInt("exp"));
+            aboutMeNumber.setFansNumber(aboutMeNumberResult.getInt("fansNumber"));
+            aboutMeNumber.setFocusNumber(aboutMeNumberResult.getInt("focusNumber"));
+            return aboutMeNumber;
+        } catch (IOException e) {
+            throw new NetworkDisconnectException("网络获取我的页面的经验、咖币、粉丝数和关注数信息失败", e);
         }
     }
 }

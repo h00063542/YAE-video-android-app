@@ -5,13 +5,14 @@
     android:layout_height="@dimen/title_bar"
     android:background="@color/tab_font_orange_color"
     android:gravity="center_vertical">
+
+    <!--android:background="@drawable/title_bar_back_button"-->
     <ImageView
         android:visibility="invisible"
         android:id="@+id/title_bar_left_back"
         android:layout_width="@dimen/title_bar_icon"
         android:layout_height="@dimen/title_bar_icon"
         android:src="@drawable/title_bar_left_back"
-        android:background="@drawable/title_bar_back_button"
         android:layout_centerVertical="true"
         android:clickable="true"
         android:padding="@dimen/title_bar_icon_padding"/>
