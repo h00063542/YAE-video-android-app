@@ -63,7 +63,6 @@
             android:layout_gravity="center_vertical"
             android:layout_marginRight="20dp"
             android:layout_weight="30">
-            <!--android:src="@mipmap/nail_works"-->
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
