@@ -1,4 +1,4 @@
-package com.yilos.nailstar.player;
+package com.yilos.nailstar.player.view;
 
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -39,7 +39,6 @@ import com.yilos.nailstar.player.entity.TopicInfo;
 import com.yilos.nailstar.player.entity.TopicRelatedInfo;
 import com.yilos.nailstar.player.entity.VideoInfo;
 import com.yilos.nailstar.player.presenter.TopicPresenter;
-import com.yilos.nailstar.player.view.IVideoPlayerView;
 import com.yilos.nailstar.util.CollectionUtil;
 import com.yilos.nailstar.util.Constants;
 import com.yilos.nailstar.util.StringUtil;
@@ -74,9 +73,14 @@ public class VideoPlayerActivity extends BaseActivity implements
     private TextView mTvVideoAuthorName;
     private TextView mTvVideoPlayingTimes;
     private ImageView mIvVideoImageTextIcon;
-    private TextView mTvVideoAuthorTag1;
-    private TextView mTvVideoAuthorTag2;
-    private TextView mTvVideoAuthorTag3;
+    private TextView mTvTopicAuthorTag1;
+    private TextView mTvTopicAuthorTag2;
+    private TextView mTvTopicAuthorTag3;
+
+    private ImageView mIvTopicAuthorTag1Icon;
+    private ImageView mIvTopicAuthorTag2Icon;
+    private ImageView mIvTopicAuthorTag3Icon;
+
 
     // 更多视频
     private LinearLayout mLayoutMoreVideosContent;
@@ -161,8 +165,8 @@ public class VideoPlayerActivity extends BaseActivity implements
         mPage = 1;
         // 初始化控件
         initControl();
-        // 绑定控件事件
-        bindControlEvent();
+        // 初始化控件事件
+        initControlEvent();
 
         mCommentAuthorFontSize = getResources().getDimensionPixelSize(R.dimen.topic_comment_author_font_size);
         mCommentIsHomeWorkFontSize = getResources().getDimensionPixelSize(R.dimen.topic_comment_is_home_work_font_size);
@@ -226,9 +230,13 @@ public class VideoPlayerActivity extends BaseActivity implements
         mTvVideoAuthorName = (TextView) findViewById(R.id.tv_video_author_name);
         mTvVideoPlayingTimes = (TextView) findViewById(R.id.tv_video_playing_times);
         mIvVideoImageTextIcon = (ImageView) findViewById(R.id.iv_video_image_text_icon);
-        mTvVideoAuthorTag1 = (TextView) findViewById(R.id.tv_video_author_tag_1);
-        mTvVideoAuthorTag2 = (TextView) findViewById(R.id.tv_video_author_tag_2);
-        mTvVideoAuthorTag3 = (TextView) findViewById(R.id.tv_video_author_tag_3);
+        mTvTopicAuthorTag1 = (TextView) findViewById(R.id.tv_topic_author_tag_1);
+        mTvTopicAuthorTag2 = (TextView) findViewById(R.id.tv_topic_author_tag_2);
+        mTvTopicAuthorTag3 = (TextView) findViewById(R.id.tv_topic_author_tag_3);
+        mIvTopicAuthorTag1Icon = (ImageView) findViewById(R.id.iv_topic_author_tag_1_icon);
+        mIvTopicAuthorTag2Icon = (ImageView) findViewById(R.id.iv_topic_author_tag_2_icon);
+        mIvTopicAuthorTag3Icon = (ImageView) findViewById(R.id.iv_topic_author_tag_3_icon);
+
 
         // 更多视频
         mLayoutMoreVideosContent = (LinearLayout) findViewById(R.id.layout_more_videos_content);
@@ -255,7 +263,7 @@ public class VideoPlayerActivity extends BaseActivity implements
         mTvTopicSubmittedHomework = (TextView) findViewById(R.id.tv_submitted_homework);
     }
 
-    private void bindControlEvent() {
+    private void initControlEvent() {
         // 界面顶部返回按钮
         mBtnVideoPlayerBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -484,7 +492,11 @@ public class VideoPlayerActivity extends BaseActivity implements
         mVDVideoView.play(0);
     }
 
-    // 将视频信息显示在界面上
+    /**
+     * 将视频信息显示在界面上
+     *
+     * @param topicInfo
+     */
     private void showTopicInfo2Page(TopicInfo topicInfo) {
         // 视频名称
         mTvVideoName.setText(topicInfo.getTitle());
@@ -497,18 +509,20 @@ public class VideoPlayerActivity extends BaseActivity implements
 
         ArrayList tags = topicInfo.getTags();
         if (null != tags && !tags.isEmpty()) {
-            if (tags.size() > 1 && null != tags.get(0)) {
-                mTvVideoAuthorTag1.setText(tags.get(0).toString());
-                mTvVideoAuthorTag2.setVisibility(View.VISIBLE);
+            if (tags.size() > 0 && null != tags.get(0)) {
+                mTvTopicAuthorTag1.setText(tags.get(0).toString());
+                mTvTopicAuthorTag1.setVisibility(View.VISIBLE);
+                mIvTopicAuthorTag1Icon.setVisibility(View.VISIBLE);
             }
-            if (tags.size() > 2 && null != tags.get(1)) {
-                mTvVideoAuthorTag2.setText(tags.get(1).toString());
-                mTvVideoAuthorTag2.setVisibility(View.VISIBLE);
-
+            if (tags.size() > 1 && null != tags.get(1)) {
+                mTvTopicAuthorTag2.setText(tags.get(1).toString());
+                mTvTopicAuthorTag2.setVisibility(View.VISIBLE);
+                mIvTopicAuthorTag2Icon.setVisibility(View.VISIBLE);
             }
-            if (tags.size() > 3 && null != tags.get(2)) {
-                mTvVideoAuthorTag3.setText(tags.get(2).toString());
-                mTvVideoAuthorTag3.setVisibility(View.VISIBLE);
+            if (tags.size() > 2 && null != tags.get(2)) {
+                mTvTopicAuthorTag3.setText(tags.get(2).toString());
+                mTvTopicAuthorTag3.setVisibility(View.VISIBLE);
+                mIvTopicAuthorTag3Icon.setVisibility(View.VISIBLE);
             }
         }
     }
@@ -604,6 +618,11 @@ public class VideoPlayerActivity extends BaseActivity implements
         }
     }
 
+    /**
+     * 跳转到topic关联的topic
+     *
+     * @param topicRelatedInfo
+     */
     private void showTopicRelated(TopicRelatedInfo topicRelatedInfo) {
         Intent intent = new Intent(this, VideoPlayerActivity.class);
         intent.putExtra(Constants.TOPIC_ID, topicRelatedInfo.getTopicId());
@@ -640,21 +659,16 @@ public class VideoPlayerActivity extends BaseActivity implements
 
 
             // -----------------设置评论人头像-----------------
-            if (!StringUtil.isEmpty(topicCommentInfo.getAuthorPhoto())) {
-                CircleImageView topicCommentAuthorIV = new CircleImageView(this);
+            LinearLayout.LayoutParams imageViewLp = new LinearLayout.LayoutParams(mAuthorPhotoSize, mAuthorPhotoSize);
+            imageViewLp.setMargins(mAuthorPhotoMargin, mAuthorPhotoMargin, mAuthorPhotoMargin, 0);
+            CircleImageView topicCommentAuthorIV = new CircleImageView(this);
+            topicCommentAuthorIV.setLayoutParams(imageViewLp);
+            if (!StringUtil.isEmpty(topicCommentInfo.getAuthorPhoto())) {//使用用户自定义头像
                 topicCommentAuthorIV.setImageSrc(topicCommentInfo.getAuthorPhoto());
-                LinearLayout.LayoutParams imageViewLp = new LinearLayout.LayoutParams(mAuthorPhotoSize, mAuthorPhotoSize);
-                imageViewLp.setMargins(mAuthorPhotoMargin, mAuthorPhotoMargin, mAuthorPhotoMargin, 0);
-                topicCommentAuthorIV.setLayoutParams(imageViewLp);
-                topicCommentLayout.addView(topicCommentAuthorIV);
-            } else {
-                CircleImageView topicCommentAuthorIV = new CircleImageView(this);
+            } else {// 使用默认头像
                 topicCommentAuthorIV.setImageResource(R.drawable.man);
-                LinearLayout.LayoutParams imageViewLp = new LinearLayout.LayoutParams(mAuthorPhotoSize, mAuthorPhotoSize);
-                imageViewLp.setMargins(mAuthorPhotoMargin, mAuthorPhotoMargin, mAuthorPhotoMargin, 0);
-                topicCommentAuthorIV.setLayoutParams(imageViewLp);
-                topicCommentLayout.addView(topicCommentAuthorIV);
             }
+            topicCommentLayout.addView(topicCommentAuthorIV);
 
 
             // -----------------主题评论内容父布局，用于显示每条评论底部的线-----------------
@@ -698,7 +712,7 @@ public class VideoPlayerActivity extends BaseActivity implements
             topicCommentCreateDateTv.setLayoutParams(tvTopicCommentCreateDateLp);
             StringBuffer contentText = new StringBuffer();
             if (topicCommentInfo.getIsHomework() == Constants.IS_HOME_WORK_VALUE) {
-                contentText.append("<font color=\"#555657\">#交作业#    </font>");
+                contentText.append("<font color=\"#555657\">#" + getResources().getString(R.string.submitted_homework) + "#    </font>");
             }
             contentText.append("<font color=\"#adafb0\">" + getTopicCommentDateStr(topicCommentInfo.getCreateDate()) + "</font>");
             topicCommentCreateDateTv.setText(Html.fromHtml(contentText.toString()));
@@ -751,7 +765,7 @@ public class VideoPlayerActivity extends BaseActivity implements
                 topicCommentReplyTv.setLayoutParams(topicCommentContentReplyLp);
                 StringBuffer replyText = new StringBuffer();
                 replyText.append("<font color=\"#693012\">" + topicCommentReplyInfo.getAuthor() + "</font>");
-                replyText.append("<font color=\"#555657\"> 回复 " + topicCommentReplyInfo.getAt().getNickName() + ": </font>");
+                replyText.append("<font color=\"#555657\"> " + getResources().getString(R.string.reply) + " " + topicCommentReplyInfo.getAt().getNickName() + ": </font>");
                 replyText.append("<font color=\"#000000\">" + topicCommentReplyInfo.getContent() + "</font>");
                 topicCommentReplyTv.setText(Html.fromHtml(replyText.toString()));
                 // 设置行高
@@ -800,6 +814,12 @@ public class VideoPlayerActivity extends BaseActivity implements
         }, 1000);
     }
 
+
+    /**
+     * scrollView header刷新，不需要处理
+     *
+     * @param view
+     */
     @Override
     public void onHeaderRefresh(PullToRefreshView view) {
         mTopicPullToRefreshView.postDelayed(new Runnable() {

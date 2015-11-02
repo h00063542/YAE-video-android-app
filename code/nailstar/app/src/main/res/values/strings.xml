@@ -20,6 +20,7 @@
     <string name="collection">收藏</string>
     <string name="comment">评论</string>
     <string name="submitted_homework">交作业</string>
+    <string name="reply">回复</string>
 
     <!-- about me -->
     <string name="about_me_my">我的</string>

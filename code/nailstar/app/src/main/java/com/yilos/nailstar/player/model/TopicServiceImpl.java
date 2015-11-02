@@ -11,6 +11,7 @@ import com.yilos.nailstar.player.entity.TopicRelatedInfo;
 import com.yilos.nailstar.player.entity.VideoInfo;
 import com.yilos.nailstar.util.Constants;
 import com.yilos.nailstar.util.HttpClient;
+import com.yilos.nailstar.util.JsonUtil;
 import com.yilos.nailstar.util.LoggerFactory;
 import com.yilos.nailstar.util.StringUtil;
 
@@ -43,32 +44,33 @@ public class TopicServiceImpl implements ITopicService {
                 return topicInfo;
             }
             topicInfo = new TopicInfo();
+
             JSONObject jsonObject = new JSONObject(strVideoInfo);
             JSONObject jsonResult = jsonObject.optJSONObject(Constants.RESULT);
 
             ArrayList tags = new ArrayList();
             JSONArray jsonTags = jsonResult.optJSONArray(Constants.TAGS);
             for (int i = 0; i < jsonTags.length(); i++) {
-                tags.add(jsonTags.optString(i, null));
+                tags.add(JsonUtil.optString(jsonTags, i));
             }
 
             ArrayList videos = new ArrayList();
             JSONArray jsonVideos = jsonResult.optJSONArray(Constants.VIDEOS);
             for (int i = 0; i < jsonVideos.length(); i++) {
                 JSONObject jsonVideoObj = jsonVideos.optJSONObject(i);
-                videos.add(new VideoInfo(jsonVideoObj.optString(Constants.VIDEO_ID, null), jsonVideoObj.optInt("playTimes", 0), jsonVideoObj.optString("ccUrl", null), jsonVideoObj.optString("ossUrl", null)));
+                videos.add(new VideoInfo(JsonUtil.optString(jsonVideoObj, Constants.VIDEO_ID), jsonVideoObj.optInt("playTimes", 0), JsonUtil.optString(jsonVideoObj, Constants.CC_URL), JsonUtil.optString(jsonVideoObj, Constants.OSS_URL)));
             }
 
-            topicInfo.setId(jsonResult.optString(Constants.ID, null));
-            topicInfo.setTitle(jsonResult.optString(Constants.TITLE, null));
-            topicInfo.setType(jsonResult.optString(Constants.TYPE, null));
-            topicInfo.setAuthorPhoto(jsonResult.optString(Constants.AUTHOR_PHOTO, null));
-            topicInfo.setThumbUrl(jsonResult.optString(Constants.THUMB_URL, null));
+            topicInfo.setId(JsonUtil.optString(jsonResult, Constants.ID));
+            topicInfo.setTitle(JsonUtil.optString(jsonResult, Constants.TITLE));
+            topicInfo.setType(JsonUtil.optString(jsonResult, Constants.TYPE));
+            topicInfo.setAuthorPhoto(JsonUtil.optString(jsonResult, Constants.AUTHOR_PHOTO));
+            topicInfo.setThumbUrl(JsonUtil.optString(jsonResult, Constants.THUMB_URL));
             topicInfo.setCreateDate(jsonResult.optLong(Constants.CREATE_DATE, 0));
             topicInfo.setTags(tags);
             topicInfo.setVideos(videos);
-            topicInfo.setAuthorId(jsonResult.optString(Constants.AUTHOR_ID, null));
-            topicInfo.setAuthor(jsonResult.optString(Constants.AUTHOR, null));
+            topicInfo.setAuthorId(JsonUtil.optString(jsonResult, Constants.AUTHOR_ID));
+            topicInfo.setAuthor(JsonUtil.optString(jsonResult, Constants.AUTHOR));
         } catch (IOException e) {
             e.printStackTrace();
             LOGGER.error(MessageFormat.format("获取topic信息失败，topicId:{0}，url:{1}", topicId, url), e);
@@ -102,16 +104,16 @@ public class TopicServiceImpl implements ITopicService {
             ArrayList pictures = new ArrayList();
             JSONArray jsonPictures = jsonResult.optJSONArray(Constants.PICTURES);
             for (int i = 0; i < jsonPictures.length(); i++) {
-                pictures.add(jsonPictures.optString(i, null));
+                pictures.add(JsonUtil.optString(jsonPictures, i));
             }
 
             ArrayList articles = new ArrayList();
             JSONArray jsonArticles = jsonResult.optJSONArray(Constants.ARTICLES);
             for (int i = 0; i < jsonArticles.length(); i++) {
-                articles.add(jsonArticles.optString(i, null));
+                articles.add(JsonUtil.optString(jsonArticles, i));
             }
 
-            topicImageTextInfo.setId(jsonResult.optString(Constants.ID, null));
+            topicImageTextInfo.setId(JsonUtil.optString(jsonResult, Constants.ID));
             topicImageTextInfo.setArticles(articles);
             topicImageTextInfo.setPictures(pictures);
         } catch (IOException e) {
@@ -144,8 +146,8 @@ public class TopicServiceImpl implements ITopicService {
 
             JSONArray jsonRelated = jsonResult.optJSONArray(Constants.RELATED);
             for (int i = 0; i < jsonRelated.length(); i++) {
-                result.add(new TopicRelatedInfo(jsonRelated.optJSONObject(i).optString(Constants.TOPIC_ID, null)
-                        , jsonRelated.optJSONObject(i).optString(Constants.THUMB_URL, null)));
+                result.add(new TopicRelatedInfo(JsonUtil.optString(jsonRelated.optJSONObject(i), Constants.TOPIC_ID)
+                        , JsonUtil.optString(jsonRelated.optJSONObject(i), Constants.THUMB_URL)));
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -180,12 +182,12 @@ public class TopicServiceImpl implements ITopicService {
                 JSONObject jsonComment = jsonComments.optJSONObject(i);
                 TopicCommentInfo topicCommentInfo = new TopicCommentInfo();
 
-                topicCommentInfo.setId(jsonComment.optString(Constants.ID, null));
-                topicCommentInfo.setUserId(jsonComment.optString(Constants.USER_ID_LOWER, null));
-                topicCommentInfo.setAuthor(jsonComment.optString(Constants.AUTHOR, null));
-                topicCommentInfo.setAuthorPhoto(jsonComment.optString(Constants.AUTHOR_PHOTO, null));
-                topicCommentInfo.setContent(jsonComment.optString(Constants.CONTENT));
-                topicCommentInfo.setContentPic(jsonComment.optString(Constants.CONTENT_PIC, null));
+                topicCommentInfo.setId(JsonUtil.optString(jsonComment, Constants.ID));
+                topicCommentInfo.setUserId(JsonUtil.optString(jsonComment, Constants.USER_ID_LOWER));
+                topicCommentInfo.setAuthor(JsonUtil.optString(jsonComment, Constants.AUTHOR));
+                topicCommentInfo.setAuthorPhoto(JsonUtil.optString(jsonComment, Constants.AUTHOR_PHOTO));
+                topicCommentInfo.setContent(JsonUtil.optString(jsonComment, Constants.CONTENT));
+                topicCommentInfo.setContentPic(JsonUtil.optString(jsonComment, Constants.CONTENT_PIC));
 
                 topicCommentInfo.setCreateDate(jsonComment.optLong(Constants.CREATE_DATE, 0));
                 topicCommentInfo.setIsHomework(jsonComment.optInt(Constants.IS_HOME_WORK, 0));
@@ -195,8 +197,8 @@ public class TopicServiceImpl implements ITopicService {
                 JSONObject jsonAt = jsonComment.optJSONObject(Constants.AT);
                 if (null != jsonAt) {
                     TopicCommentAtInfo topicCommentAtInfo = new TopicCommentAtInfo();
-                    topicCommentAtInfo.setUserId(jsonAt.optString(Constants.USER_ID, null));
-                    topicCommentAtInfo.setNickName(jsonAt.optString(Constants.NICKNAME, null));
+                    topicCommentAtInfo.setUserId(JsonUtil.optString(jsonAt, Constants.USER_ID));
+                    topicCommentAtInfo.setNickName(JsonUtil.optString(jsonAt, Constants.NICKNAME));
                     topicCommentInfo.setAt(topicCommentAtInfo);
                 }
                 topicCommentInfo.setReplies(buildTopicCommentReplies(jsonComment.optJSONArray(Constants.REPLIES)));
@@ -221,18 +223,18 @@ public class TopicServiceImpl implements ITopicService {
         for (int i = 0; i < jsonReplies.length(); i++) {
             JSONObject jsonReply = jsonReplies.optJSONObject(i);
             TopicCommentReplyInfo topicCommentReplyInfo = new TopicCommentReplyInfo();
-            topicCommentReplyInfo.setId(jsonReply.optString(Constants.ID, null));
-            topicCommentReplyInfo.setUserId(jsonReply.optString(Constants.USER_ID_LOWER, null));
-            topicCommentReplyInfo.setAuthor(jsonReply.optString(Constants.AUTHOR, null));
-            topicCommentReplyInfo.setContent(jsonReply.optString(Constants.CONTENT, null));
-            topicCommentReplyInfo.setContentPic(jsonReply.optString(Constants.CONTENT_PIC, null));
+            topicCommentReplyInfo.setId(JsonUtil.optString(jsonReply, Constants.ID));
+            topicCommentReplyInfo.setUserId(JsonUtil.optString(jsonReply, Constants.USER_ID_LOWER));
+            topicCommentReplyInfo.setAuthor(JsonUtil.optString(jsonReply, Constants.AUTHOR));
+            topicCommentReplyInfo.setContent(JsonUtil.optString(jsonReply, Constants.CONTENT));
+            topicCommentReplyInfo.setContentPic(JsonUtil.optString(jsonReply, Constants.CONTENT_PIC));
             topicCommentReplyInfo.setCreateDate(jsonReply.optLong(Constants.CREATE_DATE, 0));
             topicCommentReplyInfo.setIsHomework(jsonReply.optInt(Constants.IS_HOME_WORK, 0));
             topicCommentReplyInfo.setStatus(jsonReply.optInt(Constants.STATUS, 0));
             JSONObject jsonAt = jsonReply.optJSONObject(Constants.AT);
             TopicCommentAtInfo topicCommentAtInfo = new TopicCommentAtInfo();
-            topicCommentAtInfo.setUserId(jsonAt.optString(Constants.USER_ID, null));
-            topicCommentAtInfo.setNickName(jsonAt.optString(Constants.NICKNAME, null));
+            topicCommentAtInfo.setUserId(JsonUtil.optString(jsonReply, Constants.USER_ID));
+            topicCommentAtInfo.setNickName(JsonUtil.optString(jsonReply, Constants.NICKNAME));
             topicCommentReplyInfo.setAt(topicCommentAtInfo);
 
             topicCommentReplies.add(topicCommentReplyInfo);
