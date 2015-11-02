@@ -50,7 +50,7 @@ public class VoteListViewAdapter extends BaseAdapter {
 
         // 投票列表每行显示3个，所以需要除以3
         if (viewType.equals(ViewType.VOTE_LIST)) {
-            count = (int) Math.ceil(count / 3);
+            count = (int) Math.ceil((double)count / 3);
         }
 
         return count;
@@ -160,11 +160,12 @@ public class VoteListViewAdapter extends BaseAdapter {
 
         for (int i = 0; i < 3; i++) {
             VoteItem voteItem = holder.voteItemList.get(i);
-            if (position * 3 + i > voteLessionList.size()) {
-                voteItem.voteItem.setVisibility(View.INVISIBLE);
-            } else {
+            if (position * 3 + i < voteLessionList.size()) {
                 CandidateLession candidateLession = voteLessionList.get(position * 3 + i);
                 voteItem.lessionvoteCount.setText(String.valueOf(candidateLession.getVoteCount()));
+                voteItem.voteItem.setVisibility(View.VISIBLE);
+            } else {
+                voteItem.voteItem.setVisibility(View.INVISIBLE);
             }
         }
 
