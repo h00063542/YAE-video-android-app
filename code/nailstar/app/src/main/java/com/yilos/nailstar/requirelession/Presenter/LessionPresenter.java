@@ -1,18 +1,13 @@
 package com.yilos.nailstar.requirelession.Presenter;
 
 import android.os.Handler;
-import android.util.Log;
 
 import com.yilos.nailstar.requirelession.entity.CandidateLession;
 import com.yilos.nailstar.requirelession.entity.LessionActivity;
-import com.yilos.nailstar.requirelession.entity.VideoLession;
 import com.yilos.nailstar.requirelession.model.LessionService;
 import com.yilos.nailstar.requirelession.model.LessionServiceImpl;
 import com.yilos.nailstar.requirelession.view.LessionView;
 
-import org.json.JSONException;
-
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -63,7 +58,7 @@ public class LessionPresenter {
     /**
      * 查询投票页面数据并刷新
      */
-    public void queryVoteLession() {
+    public void queryAndRefreshVoteLession() {
         new Thread() {
             @Override
             public void run() {
@@ -90,7 +85,7 @@ public class LessionPresenter {
     /**
      * 查询投票排行榜并刷新
      */
-    public void queryRankingLession() {
+    public void queryAndRefreshRankingLession() {
         new Thread() {
             @Override
             public void run() {
@@ -114,4 +109,27 @@ public class LessionPresenter {
         }.start();
     }
 
+    /**
+     * 切换到投票页面
+     */
+    public void goVoteLessionList() {
+
+        if (voteLessionList != null) {
+            view.refreshVoteLession(voteLessionList);
+        } else {
+            queryAndRefreshVoteLession();
+        }
+
+    }
+
+    /**
+     * 切换到排行榜页面
+     */
+    public void goRankingLessionList() {
+        if (rankingLessionList != null) {
+            view.refreshRankingLession(rankingLessionList);
+        } else {
+            queryAndRefreshRankingLession();
+        }
+    }
 }

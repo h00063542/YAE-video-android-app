@@ -92,6 +92,7 @@ public class LessionServiceImpl implements LessionService {
 
     @Override
     public List<VideoLession> queryHistoryLessionList(int page) throws IOException, JSONException {
+
         String url = "/vapi/nailstar/qjc/history?page=" + page;
         String stringResult = HttpClient.getJson(url);
 
