@@ -1,25 +1,21 @@
 package com.yilos.nailstar.aboutme.view;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.yilos.nailstar.R;
-import com.yilos.nailstar.aboutme.entity.Message;
-import com.yilos.nailstar.aboutme.presenter.MessagePresenter;
-import com.yilos.nailstar.framework.exception.JSONParseException;
-import com.yilos.nailstar.framework.exception.NetworkDisconnectException;
+import com.yilos.nailstar.aboutme.entity.MessageCount;
+import com.yilos.nailstar.aboutme.presenter.AboutMePresenter;
+import com.yilos.nailstar.main.MainActivity;
 import com.yilos.widget.titlebar.TitleBar;
-
-import java.util.logging.Handler;
-import java.util.logging.LogRecord;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -31,10 +27,6 @@ import java.util.logging.LogRecord;
  */
 public class AboutMeFragment extends Fragment implements IAboutMeView{
 
-    @Override
-    public void initMessageCount(Message message) {
-        int count = 1;
-    }
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -46,9 +38,12 @@ public class AboutMeFragment extends Fragment implements IAboutMeView{
 
     private OnFragmentInteractionListener mListener;
 
-    RelativeLayout relativeLayout;
-    TextView textView;
-    TitleBar titleBar;
+    private RelativeLayout relativeLayout;
+    private TextView messageCountText;
+    private TitleBar titleBar;
+    private TextView titleText;
+    private AboutMePresenter aboutMePresenter;
+    private RelativeLayout personInfoLayout;
 
     /**
      * Use this factory method to create a new instance of
@@ -68,8 +63,13 @@ public class AboutMeFragment extends Fragment implements IAboutMeView{
         return fragment;
     }
 
-    public AboutMeFragment() {
-        // Required empty public constructor
+//    public AboutMeFragment() {
+//        // Required empty public constructor
+//    }
+
+    @Override
+    public void initMessageCount(MessageCount messageCount) {
+        messageCountText.setText(String.valueOf(messageCount.getCount()));
     }
 
     @Override
@@ -91,9 +91,23 @@ public class AboutMeFragment extends Fragment implements IAboutMeView{
     }
     private void initViews(View view){
         relativeLayout = (RelativeLayout)view.findViewById(R.id.about_me_message_group);
-        textView = (TextView)view.findViewById(R.id.about_me_message_count);
+        messageCountText = (TextView)view.findViewById(R.id.about_me_message_count);
+
         titleBar = (TitleBar)view.findViewById(R.id.about_me_header_nav);
-        titleBar.notShowSureButton();
+        titleText = titleBar.getTitleView();
+        titleText.setText(R.string.about_me_my);
+        aboutMePresenter = AboutMePresenter.getInstance(this);
+        aboutMePresenter.getMessageCount();
+
+        personInfoLayout = (RelativeLayout)view.findViewById(R.id.about_me_person_info_layout);
+        personInfoLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(),PersonInfoActivity.class);
+                startActivity(intent);
+            }
+        });
+
     }
 
     // TODO: Rename method, update argument and hook method into UI event

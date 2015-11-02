@@ -2,6 +2,7 @@ package com.yilos.nailstar.index.presenter;
 
 import com.yilos.nailstar.framework.exception.JSONParseException;
 import com.yilos.nailstar.framework.exception.NetworkDisconnectException;
+import com.yilos.nailstar.index.entity.Category;
 import com.yilos.nailstar.index.entity.IndexContent;
 import com.yilos.nailstar.index.entity.Poster;
 import com.yilos.nailstar.index.model.IndexService;
@@ -89,6 +90,42 @@ public class IndexPresenter {
 
         new TaskManager()
                 .next(loadPosters)
+                .next(updateUi)
+                .start();
+    }
+
+    public void refreshCategory(final boolean flush){
+        TaskManager.Task loadCategory = new TaskManager.BackgroundTask() {
+            @Override
+            public Object doWork(Object data) {
+                try {
+                    return indexService.getIndexCategoriesFromNet();
+                } catch (NetworkDisconnectException e) {
+                    //e.printStackTrace();
+                } catch (JSONParseException e) {
+                    //e.printStackTrace();
+                }
+
+                return indexContentCache.getPosters();
+            }
+        };
+
+        TaskManager.UITask<List<Category>> updateUi = new TaskManager.UITask<List<Category>>() {
+            @Override
+            public Object doWork(List<Category> data) {
+                if(!flush && (indexContentCache.getCategories() != null && indexContentCache.getCategories().equals(data))) {
+                    // 不需要更新
+                }
+                else {
+                    iIndexView.initCategoriesMenu(data);
+                }
+
+                return null;
+            }
+        };
+
+        new TaskManager()
+                .next(loadCategory)
                 .next(updateUi)
                 .start();
     }
