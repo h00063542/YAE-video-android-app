@@ -97,10 +97,10 @@ public class VideoPlayerActivity extends BaseActivity implements
 
     // 底部下载、收藏、评论、交作业
     private RelativeLayout mLayoutBtnVideoDownload;
-    private RelativeLayout mLayoutBtnVideoCollection;
-    private RelativeLayout mLayoutBtnVideoComment;
+    private RelativeLayout mLayoutBtnTopicCollection;
+    private RelativeLayout mLayoutBtnTopicComment;
 
-    private TextView mTvVideoSubmittedResult;
+    private TextView mTvTopicSubmittedHomework;
 
     private String mTopicId;
     private int mPage = 1;
@@ -249,10 +249,10 @@ public class VideoPlayerActivity extends BaseActivity implements
 
         // 底部下载、收藏、评论、交作业
         mLayoutBtnVideoDownload = (RelativeLayout) findViewById(R.id.layout_btn_video_download);
-        mLayoutBtnVideoCollection = (RelativeLayout) findViewById(R.id.layout_btn_video_collection);
-        mLayoutBtnVideoComment = (RelativeLayout) findViewById(R.id.layout_btn_video_comment);
+        mLayoutBtnTopicCollection = (RelativeLayout) findViewById(R.id.layout_btn_topic_collection);
+        mLayoutBtnTopicComment = (RelativeLayout) findViewById(R.id.layout_btn_topic_comment);
 
-        mTvVideoSubmittedResult = (TextView) findViewById(R.id.tv_video_submitted_result);
+        mTvTopicSubmittedHomework = (TextView) findViewById(R.id.tv_submitted_homework);
     }
 
     private void bindControlEvent() {
@@ -369,16 +369,16 @@ public class VideoPlayerActivity extends BaseActivity implements
         });
 
         // 收藏按钮
-        mLayoutBtnVideoCollection.setOnClickListener(new View.OnClickListener() {
+        mLayoutBtnTopicCollection.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast.makeText(VideoPlayerActivity.this, "收藏视频成功", Toast.LENGTH_SHORT).show();
             }
         });
-        mLayoutBtnVideoCollection.setOnTouchListener(new View.OnTouchListener() {
+        mLayoutBtnTopicCollection.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                ImageView imageView = (ImageView) mLayoutBtnVideoCollection.getChildAt(0);
+                ImageView imageView = (ImageView) mLayoutBtnTopicCollection.getChildAt(0);
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     imageView.setImageResource(R.drawable.message);
 
@@ -390,16 +390,16 @@ public class VideoPlayerActivity extends BaseActivity implements
         });
 
         // 评论按钮
-        mLayoutBtnVideoComment.setOnClickListener(new View.OnClickListener() {
+        mLayoutBtnTopicComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast.makeText(VideoPlayerActivity.this, "评论成功", Toast.LENGTH_SHORT).show();
             }
         });
-        mLayoutBtnVideoComment.setOnTouchListener(new View.OnTouchListener() {
+        mLayoutBtnTopicComment.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                ImageView imageView = (ImageView) mLayoutBtnVideoComment.getChildAt(0);
+                ImageView imageView = (ImageView) mLayoutBtnTopicComment.getChildAt(0);
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     imageView.setImageResource(R.drawable.collection);
                 } else if (event.getAction() == MotionEvent.ACTION_UP) {
@@ -410,7 +410,7 @@ public class VideoPlayerActivity extends BaseActivity implements
         });
 
         // 交作业按钮
-        mTvVideoSubmittedResult.setOnClickListener(new View.OnClickListener() {
+        mTvTopicSubmittedHomework.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast.makeText(VideoPlayerActivity.this, "交作业成功", Toast.LENGTH_SHORT).show();

@@ -49,6 +49,9 @@
     <dimen name="topic_comment_content_font_size">16sp</dimen>
     <dimen name="topic_comment_reply_font_size">14sp</dimen>
 
+    <dimen name="topic_footer_layout_height">50dp</dimen>
+    <dimen name="topic_footer_icon_size">30dp</dimen>
+
 
     <!-- fragment_about_me -->
     <dimen name="about_me_header_nav">50dp</dimen>

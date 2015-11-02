@@ -254,7 +254,6 @@
                                 android:text="@string/hide_topic_image_text_content" />
 
                             <ImageView
-                                android:id="@+id/imageView2"
                                 android:layout_width="wrap_content"
                                 android:layout_height="12dp"
                                 android:layout_centerInParent="true"
@@ -353,7 +352,7 @@
     <LinearLayout
         android:id="@+id/layout_video_player_footer"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="@dimen/topic_footer_layout_height"
         android:background="@drawable/top_border"
         android:orientation="horizontal">
 
@@ -371,8 +370,8 @@
 
                 <ImageView
                     android:id="@+id/iv_video_download_icon"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="@dimen/topic_footer_icon_size"
+                    android:layout_height="@dimen/topic_footer_icon_size"
                     android:layout_centerVertical="true"
                     android:src="@drawable/message" />
 
@@ -397,23 +396,23 @@
             android:gravity="center_horizontal|center_vertical">
 
             <RelativeLayout
-                android:id="@+id/layout_btn_video_collection"
+                android:id="@+id/layout_btn_topic_collection"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
                 <ImageView
-                    android:id="@+id/iv_video_collection_icon"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:id="@+id/iv_topic_collection_icon"
+                    android:layout_width="@dimen/topic_footer_icon_size"
+                    android:layout_height="@dimen/topic_footer_icon_size"
                     android:layout_centerVertical="true"
                     android:src="@drawable/collection" />
 
                 <TextView
-                    android:id="@+id/tv_video_collection_text"
+                    android:id="@+id/tv_topic_collection_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_toRightOf="@id/iv_video_collection_icon"
+                    android:layout_toRightOf="@id/iv_topic_collection_icon"
                     android:text="@string/collection"
                     android:textColor="@color/black" />
             </RelativeLayout>
@@ -427,24 +426,24 @@
             android:gravity="center_horizontal|center_vertical">
 
             <RelativeLayout
-                android:id="@+id/layout_btn_video_comment"
+                android:id="@+id/layout_btn_topic_comment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
                 <ImageView
-                    android:id="@+id/iv_video_comment_icon"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:id="@+id/iv_topic_comment_icon"
+                    android:layout_width="@dimen/topic_footer_icon_size"
+                    android:layout_height="@dimen/topic_footer_icon_size"
                     android:layout_centerVertical="true"
                     android:src="@drawable/message" />
 
 
                 <TextView
-                    android:id="@+id/tv_video_comment_text"
+                    android:id="@+id/tv_topic_comment_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:layout_toRightOf="@id/iv_video_comment_icon"
+                    android:layout_toRightOf="@id/iv_topic_comment_icon"
                     android:text="@string/comment"
                     android:textColor="@color/black" />
             </RelativeLayout>
@@ -452,7 +451,7 @@
 
         <!--交作业-->
         <TextView
-            android:id="@+id/tv_video_submitted_result"
+            android:id="@+id/tv_submitted_homework"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_gravity="center_horizontal|center_vertical"
@@ -460,7 +459,7 @@
             android:layout_weight="1"
             android:background="@color/submitted_homework_background_color"
             android:gravity="center_horizontal|center_vertical"
-            android:text="@string/submitted_result"
+            android:text="@string/submitted_homework"
             android:textColor="@color/white" />
     </LinearLayout>
 
