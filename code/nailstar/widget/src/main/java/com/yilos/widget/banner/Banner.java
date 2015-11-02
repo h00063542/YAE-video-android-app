@@ -2,27 +2,33 @@ package com.yilos.widget.banner;
 
 import android.content.Context;
 import android.support.v4.view.MotionEventCompat;
-import android.support.v4.view.PagerAdapter;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.yilos.widget.view.CViewPager;
+import com.yilos.widget.view.MViewPager;
 
 import java.util.List;
 
 /**
  * Created by yangdan on 15/10/21.
  */
-public class Banner<T> extends CViewPager{
+public class Banner<T> extends MViewPager {
+    /**
+     * Banner的view创建器
+     */
+    private ViewCreator viewCreator;
+
+    private List<View> views;
+
     private int viewCount = 0;
 
     private int interval = 5000; //默认播放间隔为5000毫秒
 
     private boolean playing = false;
 
-    private boolean pause = false;
+    private int currentPlayTimes = 0;
 
     public Banner(Context context) {
         super(context);
@@ -32,15 +38,27 @@ public class Banner<T> extends CViewPager{
         super(context, attrs);
 
         setClipChildren(false);
-        setOffscreenPageLimit(2);
     }
 
-    public Banner<T> setViews(final ViewCreator creator, final List<T> data){
-        viewCount = data == null ? 0 : data.size();
-        setAdapter(new PagerAdapter() {
+    public void setViewCreator(ViewCreator viewCreator) {
+        this.viewCreator = viewCreator;
+        views = viewCreator.createViews();
+
+        viewCount = views == null ? 0 : views.size();
+        setOffscreenPageLimit((viewCount-1)/2);
+
+        if(viewCount == 1) {
+            views.addAll(viewCreator.createViews());
+            views.addAll(viewCreator.createViews());
+        } else if(viewCount == 2) {
+            views.addAll(viewCreator.createViews());
+        }
+
+        setAdapter(new BannerAdapter() {
             @Override
-            public Object instantiateItem(ViewGroup container, final int position) {
-                View view = creator.createView(getContext(), getRealPosition(position), data.get(getRealPosition(position)));
+            public Object createItem(ViewGroup container, final int position) {
+                View view = views.get(position);
+
                 if (view.getParent() != null) {
                     container.removeView(view);
                 }
@@ -50,8 +68,13 @@ public class Banner<T> extends CViewPager{
             }
 
             @Override
-            public int getCount() {
-                return 2 * 1314000 * viewCount;
+            public boolean isLoop() {
+                return true;
+            }
+
+            @Override
+            public int getActualCount() {
+                return viewCount;
             }
 
             @Override
@@ -62,22 +85,46 @@ public class Banner<T> extends CViewPager{
             @Override
             public void destroyItem(ViewGroup container, int position, Object object) {
             }
-
-            private int getRealPosition(int position) {
-                position = position % viewCount;
-                if (position < 0) {
-                    position += viewCount;
-                }
-
-                return position;
-            }
         });
-
-        setCurrentItem(1314000 * viewCount);
-        play();
-
-        return this;
     }
+
+//    public Banner<T> setViews(final ViewCreator creator, final List<T> data){
+//        viewCount = data == null ? 0 : data.size();
+//        setOffscreenPageLimit((viewCount-1)/2);
+//        setAdapter(new MPagerAdapter() {
+//            @Override
+//            public Object createItem(ViewGroup container, final int position) {
+//                View view = creator.createView(getContext(), position, data.get(position));
+//                if (view.getParent() != null) {
+//                    container.removeView(view);
+//                }
+//                //view.setClickable(true);
+//                container.addView(view, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+//                return view;
+//            }
+//
+//            @Override
+//            public boolean isLoop() {
+//                return true;
+//            }
+//
+//            @Override
+//            public int getActualCount() {
+//                return viewCount;
+//            }
+//
+//            @Override
+//            public boolean isViewFromObject(View view, Object object) {
+//                return view == object;
+//            }
+//
+//            @Override
+//            public void destroyItem(ViewGroup container, int position, Object object) {
+//            }
+//        });
+//
+//        return this;
+//    }
 
     public Banner<T> play() {
         if(playing) {
@@ -85,26 +132,13 @@ public class Banner<T> extends CViewPager{
         }
 
         playing = true;
-        delayPlay();
-        pause = false;
+        currentPlayTimes = (currentPlayTimes + 1) % 10000;
+        delayPlay(currentPlayTimes);
         return this;
     }
 
     public Banner<T> stop() {
         playing = false;
-        pause = true;
-
-        return this;
-    }
-
-    public Banner<T> resume() {
-        pause = false;
-
-        return this;
-    }
-
-    public Banner<T> pause() {
-        pause = true;
 
         return this;
     }
@@ -114,22 +148,25 @@ public class Banner<T> extends CViewPager{
         return this;
     }
 
+
+
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev){
         final int action = ev.getAction();
 
         switch (action & MotionEventCompat.ACTION_MASK) {
             case MotionEvent.ACTION_DOWN: {
-                pause();
+                stop();
                 return super.dispatchTouchEvent(ev);
             }
             case MotionEvent.ACTION_MOVE:
-                pause();
+                stop();
                 return super.dispatchTouchEvent(ev);
             case MotionEvent.ACTION_UP:
-                resume();
+                play();
                 return super.dispatchTouchEvent(ev);
             default:
+                play();
                 break;
         }
 
@@ -142,16 +179,17 @@ public class Banner<T> extends CViewPager{
 
         switch (action & MotionEventCompat.ACTION_MASK) {
             case MotionEvent.ACTION_DOWN: {
-                pause();
+                stop();
                 break;
             }
             case MotionEvent.ACTION_MOVE:
-                pause();
+                stop();
                 break;
             case MotionEvent.ACTION_UP:
-                resume();
+                play();
                 break;
             default:
+                play();
                 break;
         }
 
@@ -159,19 +197,20 @@ public class Banner<T> extends CViewPager{
     }
 
     public interface ViewCreator<T> {
-        View createView(Context context, int position, T data);
+        //View createView(Context context, int position, T data);
+
+        List<View> createViews();
     }
 
-    private void delayPlay(){
+    private void delayPlay(final long playTimes){
         postDelayed(new Runnable() {
             @Override
             public void run() {
                 if(playing) {
-                    if(!pause) {
+                    if(playTimes == currentPlayTimes) {
                         playNext();
+                        delayPlay(currentPlayTimes);
                     }
-
-                    delayPlay();
                 }
             }
         }, interval);
