@@ -12,7 +12,7 @@ import org.json.JSONException;
  */
 public interface AboutMeServiceImpl {
     MessageCount getMessageCount() throws NetworkDisconnectException, JSONException;
-    Boolean setPersonInfo() throws NetworkDisconnectException,JSONException;
-    PersonInfo getPersonInfo();
+    PersonInfo setPersonInfo() throws NetworkDisconnectException,JSONException;
+    PersonInfo getPersonInfo() throws NetworkDisconnectException,JSONException;
 }
 
