@@ -99,7 +99,7 @@ public class RequireLessionFragment extends Fragment implements LessionView {
         lessionVoteView.addHeaderView(lessionViewHead0, null, false);
         lessionVoteView.addHeaderView(lessionViewHead1, null, false);
 
-        voteListViewAdapter = new VoteListViewAdapter(inflater);
+        voteListViewAdapter = new VoteListViewAdapter(this.getActivity(), inflater);
         lessionVoteView.setAdapter(voteListViewAdapter);
 
         // 页面头部悬浮效果

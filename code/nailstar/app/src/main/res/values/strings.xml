@@ -82,6 +82,12 @@
     <string name="switch_player">切换播放器</string>
     <string name="play_list">选集</string>
 
+    <!-- 求教程-->
+    <string name="just_now">刚刚</string>
+    <string name="minute">分钟</string>
+    <string name="hour">小时</string>
+    <string name="day">天</string>
+    <string name="before">前</string>
     <!-- DLNA -->
     <string name="dlna_switch_to_mobile">切回手机播放</string>
     <string name="dlna_connect_to_device">已连接至设备:</string>

@@ -1,5 +1,6 @@
 package com.yilos.nailstar.requirelession.view;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,13 +21,15 @@ import java.util.List;
  */
 public class VoteListViewAdapter extends BaseAdapter {
 
+    private Context context;
     private LayoutInflater layoutInflater;
 
     private ViewType viewType = ViewType.VOTE_LIST;
 
     private List<CandidateLession> voteLessionList;
 
-    public VoteListViewAdapter(LayoutInflater layoutInflater) {
+    public VoteListViewAdapter(Context context, LayoutInflater layoutInflater) {
+        this.context = context;
         this.layoutInflater = layoutInflater;
     }
 
@@ -38,6 +41,16 @@ public class VoteListViewAdapter extends BaseAdapter {
 
         this.voteLessionList = voteLessionList;
 
+    }
+
+    @Override
+    public boolean areAllItemsEnabled() {
+        return false;
+    }
+
+    @Override
+    public boolean isEnabled(int position) {
+        return false;
     }
 
     @Override
@@ -120,6 +133,8 @@ public class VoteListViewAdapter extends BaseAdapter {
 
         ViewHolder holder;
 
+        Long now = System.currentTimeMillis();
+
         if (convertView == null || !((ViewHolder) convertView.getTag()).viewType.equals(ViewType.VOTE_LIST)) {
 
             convertView = layoutInflater.inflate(R.layout.lession_vote_item, null);
@@ -161,9 +176,27 @@ public class VoteListViewAdapter extends BaseAdapter {
         for (int i = 0; i < 3; i++) {
             VoteItem voteItem = holder.voteItemList.get(i);
             if (position * 3 + i < voteLessionList.size()) {
+                voteItem.voteItem.setVisibility(View.VISIBLE);
                 CandidateLession candidateLession = voteLessionList.get(position * 3 + i);
                 voteItem.lessionvoteCount.setText(String.valueOf(candidateLession.getVoteCount()));
-                voteItem.voteItem.setVisibility(View.VISIBLE);
+
+                String lessionTime = "";
+                if ((now - candidateLession.getCreateDate()) / 1000 < 60) {
+                    lessionTime = context.getResources().getString(R.string.just_now);
+                } else if ((now - candidateLession.getCreateDate()) / 1000 < 60 * 60) {
+                    lessionTime = String.valueOf((int)Math.floor((now - candidateLession.getCreateDate()) / (60 * 1000)));
+                    lessionTime += context.getResources().getString(R.string.minute);
+                    lessionTime += context.getResources().getString(R.string.before);
+                } else if ((now - candidateLession.getCreateDate()) / 1000 < 60 * 60 * 24) {
+                    lessionTime = String.valueOf((int)Math.floor((now - candidateLession.getCreateDate()) / (60 * 60 * 1000)));
+                    lessionTime += context.getResources().getString(R.string.hour);
+                    lessionTime += context.getResources().getString(R.string.before);
+                } else {
+                    lessionTime = String.valueOf((int)Math.floor((now - candidateLession.getCreateDate()) / (24 * 60 * 60 * 1000)));
+                    lessionTime += context.getResources().getString(R.string.day);
+                    lessionTime += context.getResources().getString(R.string.before);
+                }
+                voteItem.lessionTime.setText(lessionTime);
             } else {
                 voteItem.voteItem.setVisibility(View.INVISIBLE);
             }
