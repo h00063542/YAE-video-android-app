@@ -1,20 +1,23 @@
 package com.yilos.nailstar.index.view;
 
 import android.app.Fragment;
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.GridLayout;
+import android.widget.ImageView;
 
 import com.yilos.nailstar.R;
 import com.yilos.nailstar.framework.entity.NailStarApplicationContext;
+import com.yilos.nailstar.index.entity.Category;
 import com.yilos.nailstar.index.entity.IndexContent;
 import com.yilos.nailstar.index.entity.Poster;
 import com.yilos.nailstar.index.presenter.IndexPresenter;
 import com.yilos.nailstar.util.ActivityUtil;
 import com.yilos.nailstar.util.CollectionUtil;
 import com.yilos.widget.banner.Banner;
+import com.yilos.widget.pageindicator.CirclePageIndicator;
 import com.yilos.widget.pullrefresh.PullRefreshLayout;
 import com.yilos.widget.view.ImageCacheView;
 
@@ -35,9 +38,15 @@ public class IndexFragment extends Fragment implements IIndexView {
     /**
      * 轮播图
      */
-    private Banner banner;
+    private Banner posterBanner;
+
+    private Banner categoryBanner;
 
     private IndexPresenter indexPresenter;
+
+    private LayoutInflater inflater;
+
+    private View view;
 
     public IndexFragment() {
         // Required empty public constructor
@@ -53,7 +62,8 @@ public class IndexFragment extends Fragment implements IIndexView {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_index, container, false);
+        this.inflater = inflater;
+        view = inflater.inflate(R.layout.fragment_index, container, false);
         initViews(view);
 
         if(NailStarApplicationContext.getInstance().getIndexContent() != null){
@@ -76,7 +86,8 @@ public class IndexFragment extends Fragment implements IIndexView {
     }
 
     private void initViews(View view) {
-        banner = (Banner) view.findViewById(R.id.convenientBanner);
+        posterBanner = (Banner) view.findViewById(R.id.posterBanner);
+        categoryBanner = (Banner) view.findViewById(R.id.categoryBanner);
 
         // 初始化下拉刷新功能
         final PullRefreshLayout pullRefreshLayout = (PullRefreshLayout) view.findViewById(R.id.fragment_home_ptr_frame);
@@ -107,38 +118,84 @@ public class IndexFragment extends Fragment implements IIndexView {
             indexPresenter.refreshPosters(true);
         }
 
-
+        if(indexContent != null && indexContent.getCategories() != null) {
+            initCategoriesMenu(indexContent.getCategories());
+        } else {
+            indexPresenter.refreshCategory(true);
+        }
     }
 
     @Override
-    public void initPosters(List<Poster> posters) {
+    public void initPosters(final List<Poster> posters) {
+        posterBanner.setViewCreator(new Banner.ViewCreator() {
+            @Override
+            public List<View> createViews() {
+                final List<View> views = new ArrayList<>(8);
 
-        final List<ImageCacheView> views = new ArrayList<>(8);
+                if (!CollectionUtil.isEmpty(posters)) {
+                    for (final Poster poster : posters) {
+                        ImageCacheView imageCacheView = new ImageCacheView(getActivity());
 
-        if(!CollectionUtil.isEmpty(posters)){
-            for(final Poster poster : posters){
-                ImageCacheView imageCacheView = new ImageCacheView(getActivity().getApplicationContext());
-                imageCacheView.setImageSrc(poster.getPicUrl());
-                imageCacheView.setClickable(true);
-                imageCacheView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        ActivityUtil.toVideoPlayerPage(getActivity(), poster.getTopicId());
+                        Banner.LayoutParams layoutParams = new Banner.LayoutParams();
+                        layoutParams.width = Banner.LayoutParams.MATCH_PARENT;
+                        layoutParams.height = Banner.LayoutParams.WRAP_CONTENT;
+                        imageCacheView.setLayoutParams(layoutParams);
+                        imageCacheView.setAdjustViewBounds(true);
+                        imageCacheView.setScaleType(ImageView.ScaleType.FIT_START);
+
+                        imageCacheView.setImageSrc(poster.getPicUrl());
+                        imageCacheView.setClickable(true);
+                        imageCacheView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                ActivityUtil.toVideoPlayerPage(getActivity(), poster.getTopicId());
+                            }
+                        });
+                        views.add(imageCacheView);
                     }
-                });
-                views.add(imageCacheView);
+                }
+
+                return views;
             }
+        });
+
+        ((CirclePageIndicator)view.findViewById(R.id.indicator)).setViewPager(posterBanner);
+    }
+
+    @Override
+    public void initCategoriesMenu(final List<Category> categories) {
+        if(CollectionUtil.isEmpty(categories)){
+            return;
         }
 
-        banner.setViews(new Banner.ViewCreator<Poster>() {
-
+        categoryBanner.setViewCreator(new Banner.ViewCreator() {
             @Override
-            public View createView(Context context, int position, Poster data) {
-                ImageCacheView imageCacheView = views.get(position);
+            public List<View> createViews() {
+                final List<View> gridViews = new ArrayList<>(4);
+                for(int i = 0, count = categories.size(); i < count; i++){
+                    if(i % 8 == 0) {
+                        GridLayout gridLayout = (GridLayout)inflater.inflate(R.layout.category_gridview, null);
+                        gridViews.add(gridLayout);
 
-                return imageCacheView;
+                        for(int j = i; j < count && j < i + 8; j++) {
+                            ImageCacheView imageCacheView = new ImageCacheView(getActivity());
+                            GridLayout.LayoutParams layoutParams = new GridLayout.LayoutParams();
+                            imageCacheView.setLayoutParams(layoutParams);
+                            imageCacheView.setAdjustViewBounds(true);
+                            imageCacheView.setScaleType(ImageView.ScaleType.FIT_START);
+
+                            imageCacheView.setImageSrc(categories.get(j).getPicUrl());
+                            imageCacheView.setClickable(true);
+                            gridLayout.addView(imageCacheView);
+                        }
+                    }
+                }
+
+                return gridViews;
             }
-        }, posters);
+        });
+
+        //((CirclePageIndicator)view.findViewById(R.id.indicator)).setViewPager(banner);
     }
 
     @Override
