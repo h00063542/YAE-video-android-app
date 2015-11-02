@@ -12,6 +12,7 @@ import in.srain.cube.views.ptr.PtrFrameLayout;
 public class PullRefreshLayout extends PtrFrameLayout {
     private PullRefreshHeader pullRefreshHeader;
     private boolean disallowInterceptTouchEvent = false;
+    private float downY = 0;
 
     public PullRefreshLayout(Context context) {
         super(context);
@@ -54,15 +55,21 @@ public class PullRefreshLayout extends PtrFrameLayout {
     }
 
     @Override
-    public void requestDisallowInterceptTouchEvent(boolean disallowIntercept) {
-        disallowInterceptTouchEvent = disallowIntercept;
-        super.requestDisallowInterceptTouchEvent(disallowIntercept);
-    }
-
-    @Override
     public boolean dispatchTouchEvent(MotionEvent e) {
-        if (disallowInterceptTouchEvent) {
-            return dispatchTouchEventSupper(e);
+        int action = e.getAction();
+        switch (action) {
+            case MotionEvent.ACTION_DOWN:
+                downY = e.getY();
+                return super.dispatchTouchEvent(e);
+            case MotionEvent.ACTION_MOVE:
+                // 下拉的距离较大时，才执行下拉刷新，以保证容器内的横向滚动获得更高的优先级
+                if(e.getY() - downY > 100) {
+                    return super.dispatchTouchEvent(e);
+                } else {
+                    return dispatchTouchEventSupper(e);
+                }
+            default:
+                break;
         }
         return super.dispatchTouchEvent(e);
     }

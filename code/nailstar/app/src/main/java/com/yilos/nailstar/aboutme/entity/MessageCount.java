@@ -3,7 +3,7 @@ package com.yilos.nailstar.aboutme.entity;
 /**
  * Created by sisilai on 15/10/24.
  */
-public class Message {
+public class MessageCount {
 
     /**
      * count : 0

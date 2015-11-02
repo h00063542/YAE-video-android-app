@@ -2,7 +2,7 @@
 <resources>
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
-    <color name="tab_font_orange_color">#FF0000</color>
+    <!--<color name="tab_font_orange_color">#FF0000</color>-->
     <color name="tab_border">#999999</color>
 
     <!-- about me -->
