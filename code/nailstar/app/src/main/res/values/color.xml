@@ -29,10 +29,10 @@
 
     <color name="line_color">#ebeeef</color>
     <color name="topic_comment_reply_background_color">#ebeeef</color>
-    <color name="submited_homework_background_color">#e85b2f</color>
-    <color name="author_tag_color">#e1dede</color>
+    <color name="submitted_homework_background_color">#e85b2f</color>
+    <color name="author_tag_color">#ebeeef</color>
 
     <color name="user_at_color">#693012</color>
-    <color name="submited_homework_label_color">#555657</color>
+    <color name="submitted_homework_label_color">#555657</color>
     <color name="topic_comment_create_date_label_color">#adafb0</color>
 </resources>

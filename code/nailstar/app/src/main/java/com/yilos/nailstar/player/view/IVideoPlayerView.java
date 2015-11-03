@@ -12,13 +12,33 @@ import java.util.ArrayList;
  */
 public interface IVideoPlayerView {
 
+    /**
+     * 播放指定的视频
+     *
+     * @param topicInfo
+     */
     void playVideo(TopicInfo topicInfo);
 
+    /**
+     * 初始化topic图文分解信息
+     *
+     * @param topicImageTextInfo
+     */
     void initTopicImageTextInfo(TopicImageTextInfo topicImageTextInfo);
 
+    /**
+     * 初始化topic评论信息
+     *
+     * @param topicComments
+     */
     void initTopicCommentsInfo(ArrayList<TopicCommentInfo> topicComments);
 
-    void initTopicRelatedInfo(ArrayList<TopicRelatedInfo> topicRelateds);
+    /**
+     * 初始化topic关联的topic信息
+     *
+     * @param topicRelatedList
+     */
+    void initTopicRelatedInfo(ArrayList<TopicRelatedInfo> topicRelatedList);
 
 
 }

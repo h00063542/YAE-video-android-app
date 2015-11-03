@@ -3,7 +3,7 @@ package com.yilos.nailstar.util;
 import android.app.Activity;
 import android.content.Intent;
 
-import com.yilos.nailstar.player.VideoPlayerActivity;
+import com.yilos.nailstar.player.view.VideoPlayerActivity;
 
 /**
  * Created by yilos on 2015-10-28.
