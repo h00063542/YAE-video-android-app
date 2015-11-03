@@ -13,7 +13,7 @@ import com.yilos.widget.titlebar.TitleBar;
 /**
  * Created by sisilai on 15/10/30.
  */
-public class PersonInfoActivity extends Activity {
+public class PersonInfoActivity extends Activity implements View.OnClickListener {
     private TitleBar titleBar;
     private TextView titleBarTitle;
     private TextView rightTextButton;
@@ -37,12 +37,7 @@ public class PersonInfoActivity extends Activity {
         titleBarTitle = titleBar.getTitleView();
         titleBarTitle.setText(R.string.edit_person_info);
         rightTextButton = titleBar.getRightTextButton();
-        rightTextButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
+        rightTextButton.setOnClickListener(this);
 
         personInfoIdentityLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -50,5 +45,12 @@ public class PersonInfoActivity extends Activity {
                 personInfoIdentityPopup.setVisibility(View.VISIBLE);
             }
         });
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            //case :break;
+        }
     }
 }
