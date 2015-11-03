@@ -1,10 +1,6 @@
 package com.yilos.nailstar.player.presenter;
 
-import android.app.Activity;
-import android.content.Intent;
-
 import com.yilos.nailstar.framework.exception.NetworkDisconnectException;
-import com.yilos.nailstar.player.VideoPlayerActivity;
 import com.yilos.nailstar.player.entity.TopicCommentInfo;
 import com.yilos.nailstar.player.entity.TopicCommentReplyInfo;
 import com.yilos.nailstar.player.entity.TopicImageTextInfo;
@@ -13,15 +9,13 @@ import com.yilos.nailstar.player.entity.TopicRelatedInfo;
 import com.yilos.nailstar.player.model.ITopicService;
 import com.yilos.nailstar.player.model.TopicServiceImpl;
 import com.yilos.nailstar.player.view.IVideoPlayerView;
-import com.yilos.nailstar.util.Constants;
 import com.yilos.nailstar.util.LoggerFactory;
 import com.yilos.nailstar.util.TaskManager;
 
 import org.apache.log4j.Logger;
-import org.json.JSONException;
 
-import java.io.IOException;
 import java.util.ArrayList;
+
 
 
 /**
@@ -85,8 +79,8 @@ public class TopicPresenter {
 
         TaskManager.UITask<ArrayList<TopicRelatedInfo>> updateUi = new TaskManager.UITask<ArrayList<TopicRelatedInfo>>() {
             @Override
-            public Object doWork(ArrayList<TopicRelatedInfo> TopicRelateds) {
-                videoPlayerView.initTopicRelatedInfo(TopicRelateds);
+            public Object doWork(ArrayList<TopicRelatedInfo> topicRelatedList) {
+                videoPlayerView.initTopicRelatedInfo(topicRelatedList);
                 return null;
             }
         };

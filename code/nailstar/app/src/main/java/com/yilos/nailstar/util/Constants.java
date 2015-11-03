@@ -40,5 +40,13 @@ public class Constants {
     public static final String NICKNAME = "nickname";
     public static final String REPLIES = "replys";
 
+    public static final String PLAY_TIMES = "playTimes";
+    public static final String CC_URL = "ccUrl";
+    public static final String OSS_URL = "ossUrl";
+
+    public static final int IS_HOME_WORK_VALUE = 1;
+
     public static final long ONE_MB_SIZE = 1024L * 1024;
+
+    public static final String EMPTY_STRING = "";
 }

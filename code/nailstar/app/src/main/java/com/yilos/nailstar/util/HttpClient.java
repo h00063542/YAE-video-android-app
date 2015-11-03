@@ -18,14 +18,15 @@ public class HttpClient {
 
     private static final OkHttpClient okHttpClient = new OkHttpClient();
 
-    private static final String serviceBaseUrl = "http://api2.naildaka.com";//http://192.168.1.121:5013";
+    private static final String serviceBaseUrl = "http://api2.naildaka.com";
 
-    static{
+    static {
         okHttpClient.setConnectTimeout(10, TimeUnit.SECONDS);
     }
 
     /**
      * 获取Json数据
+     *
      * @param url url地址
      * @return
      */
@@ -35,7 +36,7 @@ public class HttpClient {
                 .build();
 
         Response response = okHttpClient.newCall(request).execute();
-        if (!response.isSuccessful()){
+        if (!response.isSuccessful()) {
             throw new IOException("Unexpected code " + response);
         }
 
@@ -44,6 +45,7 @@ public class HttpClient {
 
     /**
      * 以json格式提交post请求
+     *
      * @param url
      * @param json
      * @return
@@ -64,6 +66,7 @@ public class HttpClient {
 
     /**
      * 以键值对格式提交post请求
+     *
      * @param url
      * @param formBody 例: RequestBody formBody = new FormEncodingBuilder().add("search", "Jurassic Park").build();
      * @return
