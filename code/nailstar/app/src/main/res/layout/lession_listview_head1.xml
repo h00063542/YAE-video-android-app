@@ -19,7 +19,7 @@
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/requireLessionBtn"
             android:layout_toStartOf="@+id/requireLessionBtn"
-            android:text="上传想要学习的作品，截止之前票数最高的则由老师录制视频教你学哦~！"
+            android:text="@string/upload_description"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
         <Button
@@ -29,7 +29,7 @@
             android:layout_alignParentRight="true"
             android:layout_marginLeft="15dp"
             android:drawableLeft="@mipmap/cross"
-            android:text="  求教程" />
+            android:text="@string/upload_candidate_btn" />
     </RelativeLayout>
 
     <RadioGroup
@@ -46,7 +46,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:checked="true"
-            android:text="投票" />
+            android:text="@string/vote" />
 
         <RadioButton
             android:id="@+id/goRankingBtn"
@@ -54,7 +54,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="排行榜" />
+            android:text="@string/ranking" />
 
     </RadioGroup>
 

@@ -49,8 +49,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:gravity="right"
-                    android:id="@+id/lessionTime0"
-                    android:text="刚刚"/>
+                    android:id="@+id/lessionTime0" />
             </LinearLayout>
         </LinearLayout>
 
@@ -93,8 +92,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:gravity="right"
-                    android:id="@+id/lessionTime1"
-                    android:text="刚刚"/>
+                    android:id="@+id/lessionTime1" />
             </LinearLayout>
         </LinearLayout>
 
@@ -137,8 +135,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:gravity="right"
-                    android:id="@+id/lessionTime2"
-                    android:text="刚刚"/>
+                    android:id="@+id/lessionTime2" />
             </LinearLayout>
         </LinearLayout>
 
