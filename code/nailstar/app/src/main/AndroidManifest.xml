@@ -28,7 +28,7 @@
             android:name=".main.MainActivity"
             android:label="@string/title_activity_main" />
         <activity
-            android:name=".player.VideoPlayerActivity"
+            android:name=".player.view.VideoPlayerActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"></activity>
         <activity android:name=".aboutme.view.PersonInfoActivity">
         </activity>
