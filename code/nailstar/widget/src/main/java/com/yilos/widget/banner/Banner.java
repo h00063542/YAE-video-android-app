@@ -28,7 +28,17 @@ public class Banner<T> extends MViewPager {
 
     private boolean playing = false;
 
+    private boolean pause = false;
+
     private int currentPlayTimes = 0;
+
+    private long lastPlayTime = 0;
+
+    private long pauseTime = 0;
+
+    private long pausedTime = 0;
+
+    private long touchDownTime = 0;
 
     public Banner(Context context) {
         super(context);
@@ -38,6 +48,37 @@ public class Banner<T> extends MViewPager {
         super(context, attrs);
 
         setClipChildren(false);
+    }
+
+    public Banner<T> play() {
+        if(playing) {
+            return this;
+        }
+
+        playing = true;
+        lastPlayTime = System.currentTimeMillis();
+        currentPlayTimes = (currentPlayTimes + 1) % 10000;
+        delayPlay(currentPlayTimes);
+        return this;
+    }
+
+    public void resume() {
+        pause = false;
+        pauseTime += (System.currentTimeMillis() - pausedTime);
+        currentPlayTimes = (currentPlayTimes + 1) % 10000;
+
+        delayPlay(currentPlayTimes);
+    }
+
+    public Banner<T> stop() {
+        playing = false;
+
+        return this;
+    }
+
+    public void pause() {
+        pause = true;
+        pausedTime = System.currentTimeMillis();
     }
 
     public void setViewCreator(ViewCreator viewCreator) {
@@ -88,85 +129,30 @@ public class Banner<T> extends MViewPager {
         });
     }
 
-//    public Banner<T> setViews(final ViewCreator creator, final List<T> data){
-//        viewCount = data == null ? 0 : data.size();
-//        setOffscreenPageLimit((viewCount-1)/2);
-//        setAdapter(new MPagerAdapter() {
-//            @Override
-//            public Object createItem(ViewGroup container, final int position) {
-//                View view = creator.createView(getContext(), position, data.get(position));
-//                if (view.getParent() != null) {
-//                    container.removeView(view);
-//                }
-//                //view.setClickable(true);
-//                container.addView(view, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-//                return view;
-//            }
-//
-//            @Override
-//            public boolean isLoop() {
-//                return true;
-//            }
-//
-//            @Override
-//            public int getActualCount() {
-//                return viewCount;
-//            }
-//
-//            @Override
-//            public boolean isViewFromObject(View view, Object object) {
-//                return view == object;
-//            }
-//
-//            @Override
-//            public void destroyItem(ViewGroup container, int position, Object object) {
-//            }
-//        });
-//
-//        return this;
-//    }
-
-    public Banner<T> play() {
-        if(playing) {
-            return this;
-        }
-
-        playing = true;
-        currentPlayTimes = (currentPlayTimes + 1) % 10000;
-        delayPlay(currentPlayTimes);
-        return this;
-    }
-
-    public Banner<T> stop() {
-        playing = false;
-
-        return this;
-    }
-
     public Banner<T> setInterval(int interval){
         this.interval = interval;
         return this;
     }
-
-
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev){
         final int action = ev.getAction();
 
         switch (action & MotionEventCompat.ACTION_MASK) {
-            case MotionEvent.ACTION_DOWN: {
-                stop();
+            case MotionEvent.ACTION_DOWN:
+                pause();
+                touchDownTime = System.currentTimeMillis();
                 return super.dispatchTouchEvent(ev);
-            }
             case MotionEvent.ACTION_MOVE:
-                stop();
-                return super.dispatchTouchEvent(ev);
+                break;
             case MotionEvent.ACTION_UP:
-                play();
+                resume();
+                if(System.currentTimeMillis() - touchDownTime > 500) {
+                    return true;
+                }
                 return super.dispatchTouchEvent(ev);
             default:
-                play();
+                resume();
                 break;
         }
 
@@ -179,17 +165,17 @@ public class Banner<T> extends MViewPager {
 
         switch (action & MotionEventCompat.ACTION_MASK) {
             case MotionEvent.ACTION_DOWN: {
-                stop();
+                pause();
                 break;
             }
             case MotionEvent.ACTION_MOVE:
-                stop();
+                //pause();
                 break;
             case MotionEvent.ACTION_UP:
-                play();
+                resume();
                 break;
             default:
-                play();
+                resume();
                 break;
         }
 
@@ -197,26 +183,42 @@ public class Banner<T> extends MViewPager {
     }
 
     public interface ViewCreator<T> {
-        //View createView(Context context, int position, T data);
-
         List<View> createViews();
     }
 
     private void delayPlay(final long playTimes){
-        postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if(playing) {
-                    if(playTimes == currentPlayTimes) {
-                        playNext();
-                        delayPlay(currentPlayTimes);
-                    }
+        if(pauseTime > 0) {
+            postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    playAndNext(playTimes);
                 }
-            }
-        }, interval);
+            }, interval - pauseTime);
+        } else {
+            postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    playAndNext(playTimes);
+                }
+            }, interval);
+        }
+    }
+
+    private void playAndNext(final long playTimes) {
+        if(!playing) {
+            return;
+        }
+
+        if(playTimes == currentPlayTimes && !pause) {
+            playNext();
+            delayPlay(currentPlayTimes);
+        }
     }
 
     private void playNext() {
-        setCurrentItem(getCurrentItem() + 1);
+        setCurrentItem(getCurrentItem() + 1, true);
+
+        lastPlayTime = System.currentTimeMillis();
+        pauseTime = 0;
     }
 }

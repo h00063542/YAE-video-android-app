@@ -2,11 +2,14 @@ package com.yilos.nailstar.index.view;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.GridLayout;
 import android.widget.ImageView;
+import android.widget.TableLayout;
+import android.widget.TableRow;
+import android.widget.TextView;
 
 import com.yilos.nailstar.R;
 import com.yilos.nailstar.framework.entity.NailStarApplicationContext;
@@ -17,6 +20,7 @@ import com.yilos.nailstar.index.presenter.IndexPresenter;
 import com.yilos.nailstar.util.ActivityUtil;
 import com.yilos.nailstar.util.CollectionUtil;
 import com.yilos.widget.banner.Banner;
+import com.yilos.widget.circleimageview.CircleImageView;
 import com.yilos.widget.pageindicator.CirclePageIndicator;
 import com.yilos.widget.pullrefresh.PullRefreshLayout;
 import com.yilos.widget.view.ImageCacheView;
@@ -160,6 +164,7 @@ public class IndexFragment extends Fragment implements IIndexView {
         });
 
         ((CirclePageIndicator)view.findViewById(R.id.indicator)).setViewPager(posterBanner);
+        posterBanner.play();
     }
 
     @Override
@@ -174,19 +179,32 @@ public class IndexFragment extends Fragment implements IIndexView {
                 final List<View> gridViews = new ArrayList<>(4);
                 for(int i = 0, count = categories.size(); i < count; i++){
                     if(i % 8 == 0) {
-                        GridLayout gridLayout = (GridLayout)inflater.inflate(R.layout.category_gridview, null);
-                        gridViews.add(gridLayout);
+                        TableLayout tableLayout = (TableLayout)inflater.inflate(R.layout.category_gridview, null);
+                        TableRow upLayout = (TableRow)tableLayout.findViewById(R.id.upLayout);
+                        TableRow downLayout = (TableRow)tableLayout.findViewById(R.id.downLayout);
+                        gridViews.add(tableLayout);
 
-                        for(int j = i; j < count && j < i + 8; j++) {
-                            ImageCacheView imageCacheView = new ImageCacheView(getActivity());
-                            GridLayout.LayoutParams layoutParams = new GridLayout.LayoutParams();
-                            imageCacheView.setLayoutParams(layoutParams);
-                            imageCacheView.setAdjustViewBounds(true);
-                            imageCacheView.setScaleType(ImageView.ScaleType.FIT_START);
+                        for(int j = i; j < i + 8; j++) {
+                            View menuView = inflater.inflate(R.layout.category_menu_item, null);
+                            TableRow.LayoutParams layoutParams = new TableRow.LayoutParams();
+                            layoutParams.weight = 1;
+                            layoutParams.gravity = Gravity.CENTER;
+                            menuView.setLayoutParams(layoutParams);
+                            CircleImageView circleImageView = ((CircleImageView)menuView.findViewById(R.id.category_circle_image_view));
+                            if(j < count) {
+                                circleImageView.setImageSrc(categories.get(j).getPicUrl());
+                                ((TextView)menuView.findViewById(R.id.category_text_view)).setText(categories.get(j).getName());
+                                circleImageView.setClickable(true);
+                            }
 
-                            imageCacheView.setImageSrc(categories.get(j).getPicUrl());
-                            imageCacheView.setClickable(true);
-                            gridLayout.addView(imageCacheView);
+                            if(j - i < 4) {
+                                upLayout.addView(menuView);
+                            }
+                            else {
+                                downLayout.addView(menuView);
+                            }
+
+                            circleImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
                         }
                     }
                 }
