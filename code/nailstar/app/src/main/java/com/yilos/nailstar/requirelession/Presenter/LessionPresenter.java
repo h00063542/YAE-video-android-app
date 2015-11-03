@@ -9,6 +9,8 @@ import com.yilos.nailstar.requirelession.model.LessionServiceImpl;
 import com.yilos.nailstar.requirelession.view.LessionView;
 
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Created by yilos on 15/10/24.
@@ -23,26 +25,37 @@ public class LessionPresenter {
     private List<CandidateLession> voteLessionList;
     private List<CandidateLession> rankingLessionList;
 
+    private Timer timer = new Timer();
+    private boolean stopCountDown = false;
+    private TimerTask countDownTask;
+
     public LessionPresenter(LessionView view) {
         this.view = view;
         this.service = new LessionServiceImpl();
     }
 
+    public void setStopCountDown(boolean stopCountDown) {
+        this.stopCountDown = stopCountDown;
+    }
+
     /**
      * 查询当前求教程活动并刷新
      */
-    public void queryActivityTopic() {
+    public void queryAndRefreshActivityTopic() {
         new Thread() {
             @Override
             public void run() {
                 try {
                     lessionActivity = service.queryLessionActivity();
+                    // 刷新页面
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
                             view.refreshActivityTopic(lessionActivity);
                         }
                     });
+                    // 倒计时
+                    startCountDown(lessionActivity.getEndTime());
                 } catch (Exception e) {
                     mHandler.post(new Runnable() {
                         @Override
@@ -53,6 +66,65 @@ public class LessionPresenter {
                 }
             }
         }.start();
+    }
+
+    // 开始倒计时
+    private void startCountDown(final long endTime) {
+
+        if (countDownTask != null) {
+            countDownTask.cancel();
+        }
+
+        countDownTask = new TimerTask() {
+
+            @Override
+            public void run() {
+
+                int leftSeconds = (int)(endTime - System.currentTimeMillis()) / 1000;
+
+                if (stopCountDown) {
+                    this.cancel();
+                    return;
+                }
+
+                if (leftSeconds < 0) {
+                    leftSeconds = 0;
+                }
+                int hours = leftSeconds / (60 * 60);
+                int minutes = (leftSeconds / 60) % 60;
+                int seconds = leftSeconds % 60;
+
+                final StringBuilder leftTime = new StringBuilder();
+
+                if (hours < 10) {
+                    leftTime.append("0");
+                }
+                leftTime.append(hours);
+                leftTime.append(":");
+
+                if (minutes < 10) {
+                    leftTime.append("0");
+                }
+                leftTime.append(minutes);
+                leftTime.append(":");
+
+                if (seconds < 10) {
+                    leftTime.append("0");
+                }
+                leftTime.append(seconds);
+
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        view.refreshCountDown(leftTime.toString());
+                    }
+                });
+            }
+        };
+
+        timer.schedule(countDownTask, 0, 1000);
+
+
     }
 
     /**

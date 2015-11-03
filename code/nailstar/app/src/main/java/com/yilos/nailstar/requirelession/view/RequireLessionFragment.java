@@ -7,10 +7,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 
 import com.yilos.nailstar.R;
 import com.yilos.nailstar.requirelession.Presenter.LessionPresenter;
@@ -31,6 +31,24 @@ public class RequireLessionFragment extends Fragment implements LessionView {
     // 页面头部（求教程榜首）
     private View lessionViewHead0;
 
+    // 求教程榜首（第一阶段：求教程阶段）
+    private View lessionBackground;
+
+    // 求教程榜首（第二阶段：视频制作阶段）
+    private View candidateBackground;
+
+    // 教程名称
+    private TextView lessionTopic;
+
+    // 教程讲师
+    private TextView lessionAuthorName;
+
+    // 倒计时描述
+    private TextView lessionCountDownText;
+
+    // 剩余时间
+    private TextView lessionCountDownValue;
+
     // 页面头部（求教程按钮）
     private View lessionViewHead1;
 
@@ -48,9 +66,6 @@ public class RequireLessionFragment extends Fragment implements LessionView {
 
     // 在悬浮头中的单选按钮group
     private RadioGroup switchLessionViewFloat;
-
-    // 求教程按钮
-    private Button requireLessionBtn;
 
     // 投票列表按钮
     private RadioButton goVotingBtn;
@@ -126,11 +141,18 @@ public class RequireLessionFragment extends Fragment implements LessionView {
             }
         });
 
+        // 求教程榜首，因为是放在listview的header中，必须放在listview初始化之后
+        lessionBackground = view.findViewById(R.id.lessionBackground);
+        candidateBackground = view.findViewById(R.id.candidateBackground);
+        lessionTopic = (TextView)view.findViewById(R.id.lessionTopic);
+        lessionAuthorName = (TextView)view.findViewById(R.id.lessionAuthorName);
+        lessionCountDownText = (TextView)view.findViewById(R.id.lessionCountDownText);
+        lessionCountDownValue = (TextView)view.findViewById(R.id.lessionCountDownValue);
     }
 
     private void initData() {
         // 查询数据
-        lessionPresenter.queryActivityTopic();
+        lessionPresenter.queryAndRefreshActivityTopic();
         lessionPresenter.queryAndRefreshVoteLession();
     }
 
@@ -155,7 +177,6 @@ public class RequireLessionFragment extends Fragment implements LessionView {
         switchLessionView = (RadioGroup)lessionViewHead1.findViewById(R.id.switchLessionView);
         goVotingBtn = (RadioButton) lessionViewHead1.findViewById(R.id.goVotingBtn);
         goRankingBtn = (RadioButton) lessionViewHead1.findViewById(R.id.goRankingBtn);
-        requireLessionBtn = (Button)lessionViewHead1.findViewById(R.id.requireLessionBtn);
 
         // 悬浮页头的按钮
         switchLessionViewFloat = (RadioGroup)view.findViewById(R.id.switchLessionViewFloat);
@@ -225,6 +246,11 @@ public class RequireLessionFragment extends Fragment implements LessionView {
 
     @Override
     public void refreshActivityTopic(LessionActivity lessionActivity) {
+        if (lessionActivity.getStage() == 1) {
+            handleLessionTopic(lessionActivity);
+        } else if (lessionActivity.getStage() == 2) {
+            handleCandidateTopic(lessionActivity);
+        }
     }
 
     @Override
@@ -245,4 +271,30 @@ public class RequireLessionFragment extends Fragment implements LessionView {
 
     }
 
+    @Override
+    public void refreshCountDown(String time) {
+        lessionCountDownValue.setText(time);
+    }
+
+    // 求教程第一阶段
+    private void handleLessionTopic(LessionActivity lessionActivity) {
+
+        // 显示现阶段的页头，隐藏其它阶段页头
+        candidateBackground.setVisibility(View.GONE);
+        lessionBackground.setVisibility(View.VISIBLE);
+
+        lessionTopic.setText(lessionActivity.getPrevious().getTitle());
+        lessionAuthorName.setText(lessionActivity.getPrevious().getAuthorName());
+        lessionCountDownText.setText(getResources().getString(R.string.stage1_count_down));
+    }
+
+    // 求教程第二阶段
+    private void handleCandidateTopic(LessionActivity lessionActivity) {
+
+        // 显示现阶段的页头，隐藏其它阶段页头
+        lessionBackground.setVisibility(View.GONE);
+        candidateBackground.setVisibility(View.VISIBLE);
+
+        lessionCountDownText.setText(getResources().getString(R.string.stage2_count_down));
+    }
 }

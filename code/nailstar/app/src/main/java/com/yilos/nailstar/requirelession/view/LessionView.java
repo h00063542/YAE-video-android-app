@@ -16,7 +16,7 @@ public interface LessionView {
     void refreshFailed();
 
     /**
-     * 刷新当前求教程活动
+     * 刷新当前求教程活动(求教程榜首)
      * @param lessionActivity
      */
     void refreshActivityTopic(LessionActivity lessionActivity);
@@ -32,4 +32,10 @@ public interface LessionView {
      * @param rankingLessionList
      */
     void refreshRankingLession(List<CandidateLession> rankingLessionList);
+
+    /**
+     * 刷新倒计时
+     * @param time
+     */
+    void refreshCountDown(String time);
 }

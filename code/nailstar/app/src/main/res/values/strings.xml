@@ -89,6 +89,8 @@
     <string name="hour">小时</string>
     <string name="day">天</string>
     <string name="before">前</string>
+    <string name="stage1_count_down">本期求教程结束时间还剩</string>
+    <string name="stage2_count_down">大咖视频制作中，离出炉时间还剩</string>
     <!-- DLNA -->
     <string name="dlna_switch_to_mobile">切回手机播放</string>
     <string name="dlna_connect_to_device">已连接至设备:</string>
