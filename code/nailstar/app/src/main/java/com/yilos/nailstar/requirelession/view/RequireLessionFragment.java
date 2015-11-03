@@ -1,12 +1,14 @@
 package com.yilos.nailstar.requirelession.view;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -16,7 +18,9 @@ import com.yilos.nailstar.R;
 import com.yilos.nailstar.requirelession.Presenter.LessionPresenter;
 import com.yilos.nailstar.requirelession.entity.CandidateLession;
 import com.yilos.nailstar.requirelession.entity.LessionActivity;
-
+import com.yilos.nailstar.takeImage.TakeImage;
+import com.yilos.nailstar.takeImage.TakeImageCallback;
+import com.yilos.nailstar.util.Constants;
 
 import java.util.List;
 
@@ -55,6 +59,12 @@ public class RequireLessionFragment extends Fragment implements LessionView {
     // 页面悬浮部分（求教程按钮）
     private View lessionViewHeadFloat;
 
+    // 求教程按钮
+    private Button requireLessionBtn;
+
+    // 悬浮页头的求教程按钮
+    private Button requireLessionBtnFloat;
+
     // 候选款式列表
     private ListView lessionVoteView;
 
@@ -81,9 +91,7 @@ public class RequireLessionFragment extends Fragment implements LessionView {
 
     private LessionPresenter lessionPresenter = new LessionPresenter(this);
 
-//    private static final String YILOS_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/yilos";
-//
-//    private TakeImage takeImage;
+    private TakeImage takeImage;
 
     public RequireLessionFragment() {
         // Required empty public constructor
@@ -148,6 +156,9 @@ public class RequireLessionFragment extends Fragment implements LessionView {
         lessionAuthorName = (TextView)view.findViewById(R.id.lessionAuthorName);
         lessionCountDownText = (TextView)view.findViewById(R.id.lessionCountDownText);
         lessionCountDownValue = (TextView)view.findViewById(R.id.lessionCountDownValue);
+
+        requireLessionBtn = (Button)view.findViewById(R.id.requireLessionBtn);
+        requireLessionBtnFloat = (Button)view.findViewById(R.id.requireLessionBtnFloat);
     }
 
     private void initData() {
@@ -157,21 +168,6 @@ public class RequireLessionFragment extends Fragment implements LessionView {
     }
 
     private void bindControl() {
-//        takeImage = new TakeImage.Builder().context(this).uri(YILOS_PATH).callback(new TakeImageCallback() {
-//            @Override
-//            public void callback(Uri uri) {
-//                Log.d(RequireLessionFragment.class.getName(), "callback " + uri);
-//            }
-//        }).build();
-//        Button button = (Button) view.findViewById(R.id.hand_in_homework_btn);
-//        button.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                takeImage.initTakeImage();
-//            }
-//        });
-
-        // 投票列表、排行榜列表切换按钮
 
         // 页头的按钮
         switchLessionView = (RadioGroup)lessionViewHead1.findViewById(R.id.switchLessionView);
@@ -183,6 +179,7 @@ public class RequireLessionFragment extends Fragment implements LessionView {
         goVotingBtnFloat = (RadioButton) view.findViewById(R.id.goVotingBtnFloat);
         goRankingBtnFloat = (RadioButton) view.findViewById(R.id.goRankingBtnFloat);
 
+        // 点击页头的列表切换
         switchLessionView.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -213,6 +210,7 @@ public class RequireLessionFragment extends Fragment implements LessionView {
             }
         });
 
+        // 点击悬浮页头的列表切换
         switchLessionViewFloat.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -232,12 +230,29 @@ public class RequireLessionFragment extends Fragment implements LessionView {
                 }
             }
         });
+
+        takeImage = new TakeImage.Builder().context(this).uri(Constants.YILOS_PATH).callback(new TakeImageCallback() {
+            @Override
+            public void callback(Uri uri) {
+                // TODO
+            }
+        }).build();
+
+        View.OnClickListener requireLessionBtnListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                takeImage.initTakeImage();
+            }
+        };
+
+        requireLessionBtn.setOnClickListener(requireLessionBtnListener);
+        requireLessionBtnFloat.setOnClickListener(requireLessionBtnListener);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-//        takeImage.onActivityResult(requestCode, resultCode, data);
+        takeImage.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override

@@ -98,6 +98,10 @@
     <string name="vote_count">票数:</string>
     <string name="canvass">拉票</string>
 
+    <string name="from_camera">拍照</string>
+    <string name="from_library">从手机相册中挑选</string>
+    <string name="cancel">取消</string>
+
     <!-- DLNA -->
     <string name="dlna_switch_to_mobile">切回手机播放</string>
     <string name="dlna_connect_to_device">已连接至设备:</string>
