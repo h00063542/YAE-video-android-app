@@ -6,11 +6,13 @@
         android:id="@+id/about_me_info"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
+
         <!-- 头部导航 -->
         <com.yilos.widget.titlebar.TitleBar
             android:id="@+id/about_me_header_nav"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
+
         <!-- 我的信息 -->
         <LinearLayout
             android:background="@color/white"
