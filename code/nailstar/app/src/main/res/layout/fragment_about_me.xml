@@ -193,7 +193,7 @@
                                 android:layout_centerVertical="true"
                                 android:layout_width="@dimen/about_me_list_item_img"
                                 android:layout_height="@dimen/about_me_list_item_img"
-                                android:src="@mipmap/ic_about_me_message"
+                                android:src="@mipmap/ic_message"
                                 android:layout_marginLeft="@dimen/about_me_border_padding"/>
                             <TextView
                                 android:layout_centerVertical="true"
