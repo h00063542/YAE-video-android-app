@@ -1,5 +1,6 @@
 package com.yilos.nailstar.aboutme.model;
 
+import com.yilos.nailstar.aboutme.entity.AboutMeNumber;
 import com.yilos.nailstar.aboutme.entity.MessageCount;
 import com.yilos.nailstar.aboutme.entity.PersonInfo;
 import com.yilos.nailstar.framework.exception.JSONParseException;
@@ -14,5 +15,6 @@ public interface AboutMeServiceImpl {
     MessageCount getMessageCount() throws NetworkDisconnectException, JSONException;
     PersonInfo setPersonInfo() throws NetworkDisconnectException,JSONException;
     PersonInfo getPersonInfo() throws NetworkDisconnectException,JSONException;
+    AboutMeNumber getAboutMeNumber() throws NetworkDisconnectException,JSONException;
 }
 

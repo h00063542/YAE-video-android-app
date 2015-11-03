@@ -8,11 +8,14 @@ import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.yilos.nailstar.R;
+import com.yilos.nailstar.aboutme.entity.AboutMeNumber;
 import com.yilos.nailstar.aboutme.entity.MessageCount;
+import com.yilos.nailstar.aboutme.entity.PersonInfo;
 import com.yilos.nailstar.aboutme.presenter.AboutMePresenter;
 import com.yilos.nailstar.main.MainActivity;
 import com.yilos.widget.titlebar.TitleBar;
@@ -39,11 +42,20 @@ public class AboutMeFragment extends Fragment implements IAboutMeView{
     private OnFragmentInteractionListener mListener;
 
     private RelativeLayout relativeLayout;
-    private TextView messageCountText;
-    private TitleBar titleBar;
-    private TextView titleText;
+    private TextView messageCountText;//信息数
+    private TitleBar titleBar;//标题栏
+    private TextView titleText;//标题栏标题
     private AboutMePresenter aboutMePresenter;
     private RelativeLayout personInfoLayout;
+
+    private TextView levelText;//等级
+    private TextView attentionText;//关注
+    private TextView fansText;//粉丝
+    private TextView kaBiText;//咖币
+
+    private ImageView profileImage;//头像
+    private TextView nameText;//名字
+    private TextView identity;//身份
 
     /**
      * Use this factory method to create a new instance of
@@ -63,13 +75,61 @@ public class AboutMeFragment extends Fragment implements IAboutMeView{
         return fragment;
     }
 
-//    public AboutMeFragment() {
-//        // Required empty public constructor
-//    }
+    public AboutMeFragment() {
+        // Required empty public constructor
+    }
 
     @Override
     public void initMessageCount(MessageCount messageCount) {
         messageCountText.setText(String.valueOf(messageCount.getCount()));
+    }
+
+    private enum Level{lv1,lv2,lv3,lv4,lv5};
+    public Level calcLevel (int exp) {
+        if (exp >= 0 && exp < 50) {
+            return Level.lv1;
+        } else if (exp >= 50 && exp < 100) {
+            return Level.lv2;
+        } else if (exp >= 100 && exp < 200) {
+            return Level.lv3;
+        } else if (exp >= 200 && exp < 1000) {
+            return Level.lv4;
+        } else if (exp >= 1000) {
+            return Level.lv5;
+        }
+        return Level.lv1;
+    }
+
+    @Override
+    public void getPersonInfo(PersonInfo personInfo) {
+
+    }
+
+    @Override
+    public void getAboutMeNumber(AboutMeNumber aboutMeNumber) {
+        kaBiText.setText(String.valueOf(aboutMeNumber.getDakaCoin()));
+        int level = 1;
+        Level exp = calcLevel(aboutMeNumber.getExp());
+        switch (exp) {
+            case lv1 :
+                level = 1;
+                break;
+            case lv2 :
+                level = 2;
+                break;
+            case lv3 :
+                level = 3;
+                break;
+            case lv4 :
+                level = 4;
+                break;
+            case lv5 :
+                level = 5;
+                break;
+        }
+        levelText.setText("lv" + String.valueOf(level));
+        fansText.setText(String.valueOf(aboutMeNumber.getFansNumber()));
+        attentionText.setText(String.valueOf(aboutMeNumber.getFocusNumber()));
     }
 
     @Override
@@ -93,11 +153,17 @@ public class AboutMeFragment extends Fragment implements IAboutMeView{
         relativeLayout = (RelativeLayout)view.findViewById(R.id.about_me_message_group);
         messageCountText = (TextView)view.findViewById(R.id.about_me_message_count);
 
+        levelText = (TextView) view.findViewById(R.id.about_me_level);
+        attentionText = (TextView) view.findViewById(R.id.about_me_attention_count);
+        fansText = (TextView) view.findViewById(R.id.about_me_fans_count);
+        kaBiText = (TextView) view.findViewById(R.id.about_me_ka_bi_count);
+
         titleBar = (TitleBar)view.findViewById(R.id.about_me_header_nav);
         titleText = titleBar.getTitleView();
         titleText.setText(R.string.about_me_my);
         aboutMePresenter = AboutMePresenter.getInstance(this);
         aboutMePresenter.getMessageCount();
+        aboutMePresenter.getAboutMeNumber();
 
         personInfoLayout = (RelativeLayout)view.findViewById(R.id.about_me_person_info_layout);
         personInfoLayout.setOnClickListener(new View.OnClickListener() {
