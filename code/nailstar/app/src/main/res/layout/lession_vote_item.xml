@@ -28,6 +28,8 @@
                 android:id="@+id/lessionVoteImg0" />
             <LinearLayout
                 android:paddingTop="5dp"
+                android:paddingRight="5dp"
+                android:paddingLeft="5dp"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
                 android:layout_width="match_parent"
@@ -47,8 +49,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:gravity="right"
-                    android:id="@+id/lessionTime0"
-                    android:text="3小时前"/>
+                    android:id="@+id/lessionTime0" />
             </LinearLayout>
         </LinearLayout>
 
@@ -70,6 +71,8 @@
                 android:id="@+id/lessionVoteImg1" />
             <LinearLayout
                 android:paddingTop="5dp"
+                android:paddingRight="5dp"
+                android:paddingLeft="5dp"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
                 android:layout_width="match_parent"
@@ -89,8 +92,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:gravity="right"
-                    android:id="@+id/lessionTime1"
-                    android:text="3小时前"/>
+                    android:id="@+id/lessionTime1" />
             </LinearLayout>
         </LinearLayout>
 
@@ -112,6 +114,8 @@
                 android:id="@+id/lessionVoteImg2" />
             <LinearLayout
                 android:paddingTop="5dp"
+                android:paddingRight="5dp"
+                android:paddingLeft="5dp"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
                 android:layout_width="match_parent"
@@ -131,8 +135,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:gravity="right"
-                    android:id="@+id/lessionTime2"
-                    android:text="3小时前"/>
+                    android:id="@+id/lessionTime2" />
             </LinearLayout>
         </LinearLayout>
 

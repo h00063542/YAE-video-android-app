@@ -83,6 +83,26 @@
     <string name="switch_player">切换播放器</string>
     <string name="play_list">选集</string>
 
+    <!-- 求教程-->
+    <string name="just_now">刚刚</string>
+    <string name="minute">分钟</string>
+    <string name="hour">小时</string>
+    <string name="day">天</string>
+    <string name="before">前</string>
+    <string name="stage1_count_down">本期求教程结束时间还剩</string>
+    <string name="stage2_count_down">大咖视频制作中，离出炉时间还剩</string>
+    <string name="upload_description">上传想要学习的作品，截止之前票数最高的则由老师录制视频教你学哦~！</string>
+    <string name="upload_candidate_btn">求教程</string>
+    <string name="vote">投票</string>
+    <string name="voted">已投</string>
+    <string name="ranking">排行榜</string>
+    <string name="vote_count">票数:</string>
+    <string name="canvass">拉票</string>
+
+    <string name="from_camera">拍照</string>
+    <string name="from_library">从手机相册中挑选</string>
+    <string name="cancel">取消</string>
+
     <!-- DLNA -->
     <string name="dlna_switch_to_mobile">切回手机播放</string>
     <string name="dlna_connect_to_device">已连接至设备:</string>
