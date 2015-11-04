@@ -13,6 +13,8 @@ import android.widget.TextView;
 import com.yilos.nailstar.R;
 import com.yilos.nailstar.requirelession.Presenter.LessionPresenter;
 import com.yilos.nailstar.requirelession.entity.CandidateLession;
+import com.yilos.widget.circleimageview.CircleImageView;
+import com.yilos.widget.view.ImageCacheView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -120,8 +122,8 @@ public class VoteListViewAdapter extends BaseAdapter {
             holder = new ViewHolder();
             holder.viewType = ViewType.RANKING_LIST;
             holder.rankingItem.lessionRankingNo = (TextView) convertView.findViewById(R.id.lessionRankingNo);
-            holder.rankingItem.lessionRankingImg = (ImageView) convertView.findViewById(R.id.lessionRankingImg);
-            holder.rankingItem.lessionAuthorPhoto = (ImageView) convertView.findViewById(R.id.lessionAuthorPhoto);
+            holder.rankingItem.lessionRankingImg = (ImageCacheView) convertView.findViewById(R.id.lessionRankingImg);
+            holder.rankingItem.lessionAuthorPhoto = (CircleImageView) convertView.findViewById(R.id.lessionAuthorPhoto);
             holder.rankingItem.lessionAuthorName = (TextView) convertView.findViewById(R.id.lessionAuthorName);
             holder.rankingItem.lessionVoteCount = (TextView) convertView.findViewById(R.id.lessionVoteCount);
             holder.rankingItem.lessionVotePic = (ImageView) convertView.findViewById(R.id.lessionVotePic);
@@ -141,6 +143,8 @@ public class VoteListViewAdapter extends BaseAdapter {
         holder.rankingItem.lessionRankingNo.setText(String.valueOf(position + 1));
         holder.rankingItem.lessionAuthorName.setText(candidateLession.getAuthorName());
         holder.rankingItem.lessionVoteCount.setText(String.valueOf(candidateLession.getVoteCount()));
+        holder.rankingItem.lessionRankingImg.setImageSrc(candidateLession.getPicUrl());
+        holder.rankingItem.lessionAuthorPhoto.setImageSrc(candidateLession.getAuthorPhoto());
 
         // 是否已投票
         if (candidateLession.getVoted() > 0) {
@@ -195,7 +199,7 @@ public class VoteListViewAdapter extends BaseAdapter {
             holder.viewType = ViewType.VOTE_LIST;
             VoteItem voteItem = new VoteItem();
             voteItem.voteItem = convertView.findViewById(R.id.voteItem0);
-            voteItem.lessionVoteImg = (ImageView) convertView.findViewById(R.id.lessionVoteImg0);
+            voteItem.lessionVoteImg = (ImageCacheView) convertView.findViewById(R.id.lessionVoteImg0);
             voteItem.lessionVotePic = (ImageView) convertView.findViewById(R.id.lessionVotePic0);
             voteItem.lessionvoteCount = (TextView) convertView.findViewById(R.id.lessionvoteCount0);
             voteItem.lessionTime = (TextView) convertView.findViewById(R.id.lessionTime0);
@@ -203,7 +207,7 @@ public class VoteListViewAdapter extends BaseAdapter {
 
             voteItem = new VoteItem();
             voteItem.voteItem = convertView.findViewById(R.id.voteItem1);
-            voteItem.lessionVoteImg = (ImageView) convertView.findViewById(R.id.lessionVoteImg1);
+            voteItem.lessionVoteImg = (ImageCacheView) convertView.findViewById(R.id.lessionVoteImg1);
             voteItem.lessionVotePic = (ImageView) convertView.findViewById(R.id.lessionVotePic1);
             voteItem.lessionvoteCount = (TextView) convertView.findViewById(R.id.lessionvoteCount1);
             voteItem.lessionTime = (TextView) convertView.findViewById(R.id.lessionTime1);
@@ -211,7 +215,7 @@ public class VoteListViewAdapter extends BaseAdapter {
 
             voteItem = new VoteItem();
             voteItem.voteItem = convertView.findViewById(R.id.voteItem2);
-            voteItem.lessionVoteImg = (ImageView) convertView.findViewById(R.id.lessionVoteImg2);
+            voteItem.lessionVoteImg = (ImageCacheView) convertView.findViewById(R.id.lessionVoteImg2);
             voteItem.lessionVotePic = (ImageView) convertView.findViewById(R.id.lessionVotePic2);
             voteItem.lessionvoteCount = (TextView) convertView.findViewById(R.id.lessionvoteCount2);
             voteItem.lessionTime = (TextView) convertView.findViewById(R.id.lessionTime2);
@@ -236,6 +240,7 @@ public class VoteListViewAdapter extends BaseAdapter {
                 CandidateLession candidateLession = voteLessionList.get(position * 3 + i);
 
                 voteItem.lessionvoteCount.setText(String.valueOf(candidateLession.getVoteCount()));
+                voteItem.lessionVoteImg.setImageSrc(candidateLession.getPicUrl());
 
                 String lessionTime = "";
                 if ((now - candidateLession.getCreateDate()) / 1000 < 60) {
@@ -296,9 +301,9 @@ public class VoteListViewAdapter extends BaseAdapter {
 
         public TextView lessionRankingNo;
 
-        public ImageView lessionRankingImg;
+        public ImageCacheView lessionRankingImg;
 
-        public ImageView lessionAuthorPhoto;
+        public CircleImageView lessionAuthorPhoto;
 
         public TextView lessionAuthorName;
 
@@ -317,7 +322,7 @@ public class VoteListViewAdapter extends BaseAdapter {
 
         public View voteItem;
 
-        public ImageView lessionVoteImg;
+        public ImageCacheView lessionVoteImg;
 
         public ImageView lessionVotePic;
 
