@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,8 @@ import com.yilos.nailstar.requirelession.entity.LessionActivity;
 import com.yilos.nailstar.takeImage.TakeImage;
 import com.yilos.nailstar.takeImage.TakeImageCallback;
 import com.yilos.nailstar.util.Constants;
+import com.yilos.widget.circleimageview.CircleImageView;
+import com.yilos.widget.view.ImageCacheView;
 
 import java.util.List;
 
@@ -38,8 +41,20 @@ public class RequireLessionFragment extends Fragment implements LessionView {
     // 求教程榜首（第一阶段：求教程阶段）
     private View lessionBackground;
 
+    // 视频图片（第一阶段：求教程阶段）
+    private ImageCacheView lessionPhoto;
+
+    // 老师头像（第一阶段：求教程阶段）
+    private CircleImageView lessionAuthorPhoto;
+
     // 求教程榜首（第二阶段：视频制作阶段）
     private View candidateBackground;
+
+    // 榜首图片（视频制作阶段）
+    private ImageCacheView lessionCandidatePic;
+
+    // 榜首作者（视频制作阶段）
+    private CircleImageView lessionUserPhoto;
 
     // 教程名称
     private TextView lessionTopic;
@@ -270,6 +285,47 @@ public class RequireLessionFragment extends Fragment implements LessionView {
         voteListViewAdapter.setStage(lessionActivity.getStage());
     }
 
+
+    // 求教程第一阶段（求教程阶段）
+    private void handleLessionTopic(LessionActivity lessionActivity) {
+
+        lessionPhoto = (ImageCacheView) view.findViewById(R.id.lessionPhoto);
+        lessionAuthorPhoto = (CircleImageView) view.findViewById(R.id.lessionAuthorPhoto);
+
+        lessionPhoto.setImageSrc(lessionActivity.getPrevious().getPicUrl());
+        lessionAuthorPhoto.setImageSrc(lessionActivity.getPrevious().getAuthorPhoto());
+
+        lessionTopic.setText(lessionActivity.getPrevious().getTitle());
+        lessionAuthorName.setText(lessionActivity.getPrevious().getAuthorName());
+        lessionCountDownText.setText(getResources().getString(R.string.stage1_count_down));
+
+        // 显示现阶段的页头，隐藏其它阶段页头
+        candidateBackground.setVisibility(View.GONE);
+        lessionBackground.setVisibility(View.VISIBLE);
+
+    }
+
+    // 求教程第二阶段（视频制作阶段）
+    private void handleCandidateTopic(LessionActivity lessionActivity) {
+
+        lessionCandidatePic = (ImageCacheView) view.findViewById(R.id.lessionCandidatePic);
+        lessionUserPhoto = (CircleImageView) view.findViewById(R.id.lessionUserPhoto);
+
+        lessionCandidatePic.setImageSrc(lessionActivity.getCurrent().getPicUrl());
+        lessionUserPhoto.setImageSrc(lessionActivity.getCurrent().getAuthorPhoto());
+        lessionCountDownText.setText(getResources().getString(R.string.stage2_count_down));
+
+        //根据背景图片的比例设置头部高度
+        DisplayMetrics metric = new DisplayMetrics();
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(metric);
+        candidateBackground.getLayoutParams().height = metric.widthPixels * 3 / 11;
+
+        // 显示现阶段的页头，隐藏其它阶段页头
+        lessionBackground.setVisibility(View.GONE);
+        candidateBackground.setVisibility(View.VISIBLE);
+
+    }
+
     @Override
     public void notifyRefreshListView() {
 
@@ -300,25 +356,4 @@ public class RequireLessionFragment extends Fragment implements LessionView {
         lessionCountDownValue.setText(time);
     }
 
-    // 求教程第一阶段
-    private void handleLessionTopic(LessionActivity lessionActivity) {
-
-        // 显示现阶段的页头，隐藏其它阶段页头
-        candidateBackground.setVisibility(View.GONE);
-        lessionBackground.setVisibility(View.VISIBLE);
-
-        lessionTopic.setText(lessionActivity.getPrevious().getTitle());
-        lessionAuthorName.setText(lessionActivity.getPrevious().getAuthorName());
-        lessionCountDownText.setText(getResources().getString(R.string.stage1_count_down));
-    }
-
-    // 求教程第二阶段
-    private void handleCandidateTopic(LessionActivity lessionActivity) {
-
-        // 显示现阶段的页头，隐藏其它阶段页头
-        lessionBackground.setVisibility(View.GONE);
-        candidateBackground.setVisibility(View.VISIBLE);
-
-        lessionCountDownText.setText(getResources().getString(R.string.stage2_count_down));
-    }
 }

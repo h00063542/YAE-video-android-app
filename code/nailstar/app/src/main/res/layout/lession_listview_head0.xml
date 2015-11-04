@@ -15,7 +15,7 @@
             android:orientation="vertical"
             android:layout_width="0px"
             android:layout_height="wrap_content"
-            android:layout_weight="3">
+            android:layout_weight="4">
         </LinearLayout>
 
         <LinearLayout
@@ -23,8 +23,9 @@
             android:layout_width="0px"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_weight="25">
-            <ImageView
+            android:layout_weight="23">
+            <com.yilos.widget.view.ImageCacheView
+                android:id="@+id/lessionCandidatePic"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
@@ -36,20 +37,58 @@
             android:orientation="vertical"
             android:layout_width="0px"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="25">
-
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_weight="27">
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:adjustViewBounds="true"
+                android:src="@mipmap/crown2"
+                android:scaleType="fitCenter" />
+            <com.yilos.widget.circleimageview.CircleImageView
+                android:layout_marginTop="-13dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:id="@+id/lessionUserPhoto"
+                android:src="@mipmap/default_photo" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="用户名称"
+                android:id="@+id/lessionUserName" />
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_marginTop="3dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="@string/vote_count" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="0"
+                    android:id="@+id/lessionVoteCount" />
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="0px"
             android:layout_height="wrap_content"
-            android:layout_weight="47"></LinearLayout>
+            android:layout_weight="46"></LinearLayout>
 
     </LinearLayout>
 
     <LinearLayout
+        android:visibility="gone"
         android:orientation="horizontal"
         android:padding="15dp"
         android:layout_width="match_parent"
@@ -63,7 +102,7 @@
             android:layout_gravity="center_vertical"
             android:layout_marginRight="20dp"
             android:layout_weight="30">
-            <ImageView
+            <com.yilos.widget.view.ImageCacheView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
@@ -90,8 +129,8 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical">
                 <com.yilos.widget.circleimageview.CircleImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:id="@+id/lessionAuthorPhoto"
                     android:src="@mipmap/default_photo" />
                 <TextView
