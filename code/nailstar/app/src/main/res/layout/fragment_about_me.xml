@@ -27,7 +27,7 @@
                 android:layout_width="@dimen/about_me_my_info_image"
                 android:layout_height="@dimen/about_me_my_info_image"
                 android:layout_margin="@dimen/about_me_star_padding"
-                android:src="@mipmap/ic_about_me_star"/>
+                android:src="@mipmap/ic_default_photo"/>
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="fill_parent"
@@ -242,7 +242,7 @@
                                 android:layout_centerVertical="true"
                                 android:layout_width="@dimen/about_me_list_item_img"
                                 android:layout_height="@dimen/about_me_list_item_img"
-                                android:src="@mipmap/ic_about_me_person_info"
+                                android:src="@mipmap/ic_person_info"
                                 android:layout_marginLeft="@dimen/about_me_border_padding"/>
                             <TextView
                                 android:layout_centerVertical="true"
@@ -280,7 +280,7 @@
                                 android:layout_centerVertical="true"
                                 android:layout_width="@dimen/about_me_list_item_img"
                                 android:layout_height="@dimen/about_me_list_item_img"
-                                android:src="@mipmap/ic_about_me_collect"
+                                android:src="@mipmap/ic_collect"
                                 android:layout_marginLeft="@dimen/about_me_border_padding"/>
                             <TextView
                                 android:layout_centerVertical="true"
@@ -317,7 +317,7 @@
                                 android:layout_centerVertical="true"
                                 android:layout_width="@dimen/about_me_list_item_img"
                                 android:layout_height="@dimen/about_me_list_item_img"
-                                android:src="@mipmap/ic_about_me_downloaded"
+                                android:src="@mipmap/ic_downloaded"
                                 android:layout_marginLeft="@dimen/about_me_border_padding"/>
                             <TextView
                                 android:layout_centerVertical="true"
@@ -354,7 +354,7 @@
                                 android:layout_centerVertical="true"
                                 android:layout_width="@dimen/about_me_list_item_img"
                                 android:layout_height="@dimen/about_me_list_item_img"
-                                android:src="@mipmap/ic_about_me_require_lesson"
+                                android:src="@mipmap/ic_require_lesson"
                                 android:layout_marginLeft="@dimen/about_me_border_padding"/>
                             <TextView
                                 android:layout_centerVertical="true"
@@ -398,7 +398,7 @@
                                 android:layout_centerVertical="true"
                                 android:layout_width="@dimen/about_me_list_item_img"
                                 android:layout_height="@dimen/about_me_list_item_img"
-                                android:src="@mipmap/ic_about_me_give_us_advice"
+                                android:src="@mipmap/ic_give_us_advice"
                                 android:layout_marginLeft="@dimen/about_me_border_padding"/>
                             <TextView
                                 android:layout_centerVertical="true"
@@ -435,7 +435,7 @@
                                 android:layout_centerVertical="true"
                                 android:layout_width="@dimen/about_me_list_item_img"
                                 android:layout_height="@dimen/about_me_list_item_img"
-                                android:src="@mipmap/ic_about_me_share"
+                                android:src="@mipmap/ic_share"
                                 android:layout_marginLeft="@dimen/about_me_border_padding"/>
                             <TextView
                                 android:layout_centerVertical="true"
@@ -479,7 +479,7 @@
                                 android:layout_centerVertical="true"
                                 android:layout_width="@dimen/about_me_list_item_img"
                                 android:layout_height="@dimen/about_me_list_item_img"
-                                android:src="@mipmap/ic_about_me_setting"
+                                android:src="@mipmap/ic_setting"
                                 android:layout_marginLeft="@dimen/about_me_border_padding"/>
                             <TextView
                                 android:layout_centerVertical="true"
