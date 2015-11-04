@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -38,7 +39,7 @@ import java.net.URL;
  * Use the {@link AboutMeFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class AboutMeFragment extends Fragment implements IAboutMeView{
+public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnClickListener {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -66,6 +67,8 @@ public class AboutMeFragment extends Fragment implements IAboutMeView{
     private ImageView profileImage;//头像
     private TextView nameText;//名字
     private TextView identityText;//身份
+
+    private LinearLayout myFollowList;
 
     /**
      * Use this factory method to create a new instance of
@@ -192,8 +195,10 @@ public class AboutMeFragment extends Fragment implements IAboutMeView{
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_about_me, container, false);
         initViews(view);
+        initEvents();
         return view;
     }
+
     private void initViews(View view){
         relativeLayout = (RelativeLayout)view.findViewById(R.id.about_me_message_group);
         messageCountText = (TextView)view.findViewById(R.id.about_me_message_count);
@@ -208,6 +213,25 @@ public class AboutMeFragment extends Fragment implements IAboutMeView{
         kaBiText = (TextView) view.findViewById(R.id.about_me_ka_bi_count);
 
         titleBar = (TitleBar)view.findViewById(R.id.about_me_header_nav);
+        personInfoLayout = (RelativeLayout)view.findViewById(R.id.about_me_person_info_layout);
+
+        myFollowList = (LinearLayout)view.findViewById(R.id.my_follow_list);
+
+    }
+    
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.my_follow_list:
+                Intent intent = new Intent(getActivity(),FollowListActivity.class);
+                startActivity(intent);
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void initEvents() {
         titleText = titleBar.getTitleView();
         titleText.setText(R.string.about_me_my);
         aboutMePresenter = AboutMePresenter.getInstance(this);
@@ -215,7 +239,8 @@ public class AboutMeFragment extends Fragment implements IAboutMeView{
         aboutMePresenter.getAboutMeNumber();
         aboutMePresenter.getPersonInfo();
 
-        personInfoLayout = (RelativeLayout)view.findViewById(R.id.about_me_person_info_layout);
+        myFollowList.setOnClickListener(this);
+
         personInfoLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -223,7 +248,6 @@ public class AboutMeFragment extends Fragment implements IAboutMeView{
                 startActivity(intent);
             }
         });
-
     }
 
     // TODO: Rename method, update argument and hook method into UI event

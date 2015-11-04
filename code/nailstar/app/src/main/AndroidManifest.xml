@@ -30,8 +30,8 @@
         <activity
             android:name=".player.view.VideoPlayerActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"></activity>
-        <activity android:name=".aboutme.view.PersonInfoActivity">
-        </activity>
+        <activity android:name=".aboutme.view.PersonInfoActivity"></activity>
+        <activity android:name=".aboutme.view.FollowListActivity"></activity>
     </application>
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission>

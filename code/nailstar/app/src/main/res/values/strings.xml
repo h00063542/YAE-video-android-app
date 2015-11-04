@@ -24,15 +24,16 @@
 
     <!-- about me -->
     <string name="about_me_my">我的</string>
-    <string name="about_me_name">莉莉</string>
-    <string name="about_me_identity">初级美甲师</string>
-    <string name="about_me_level">lv8</string>
+    <string name="about_me_name">昵称</string>
+    <string name="about_me_identity">身份</string>
+    <string name="about_me_level">lv0</string>
     <string name="about_me_attention">关注</string>
-    <string name="about_me_attention_count">191</string>
+    <string name="my_follow_list">我的关注</string>
+    <string name="about_me_attention_count">0</string>
     <string name="about_me_fans">粉丝</string>
-    <string name="about_me_fans_count">23070</string>
+    <string name="about_me_fans_count">0</string>
     <string name="about_me_ka_bi">咖币</string>
-    <string name="about_me_ka_bi_count">120</string>
+    <string name="about_me_ka_bi_count">0</string>
     <string name="about_me_message">消息</string>
     <string name="about_me_message_count">0</string>
     <string name="about_me_person_info">个人资料</string>
