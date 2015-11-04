@@ -57,7 +57,7 @@ public class FollowListActivity extends Activity implements View.OnClickListener
 
     private void initData() {
         // TODO Auto-generated method stub
-        MyData one = new MyData("one", R.mipmap.ic_about_me_star);
+        MyData one = new MyData("one", R.mipmap.ic_default_photo);
         MyData two = new MyData("two", R.mipmap.ic_about_me_star_test);
         dataList.add(one);
         dataList.add(two);
