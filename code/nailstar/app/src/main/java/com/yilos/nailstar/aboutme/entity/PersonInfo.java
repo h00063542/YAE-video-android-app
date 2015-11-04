@@ -1,5 +1,7 @@
 package com.yilos.nailstar.aboutme.entity;
 
+import android.graphics.Bitmap;
+
 /**
  * Created by sisilai on 15/10/30.
  */
@@ -17,6 +19,15 @@ public class PersonInfo {
     private int type;
     private String photoUrl;
     private String profile;
+    private Bitmap imageBitmap;
+
+    public void setImageBitmap(Bitmap bitmap) {
+        this.imageBitmap = bitmap;
+    }
+
+    public Bitmap getImageBitmap() {
+        return imageBitmap;
+    }
 
     public void setUid(String uid) {
         this.uid = uid;
