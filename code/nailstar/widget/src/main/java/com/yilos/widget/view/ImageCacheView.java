@@ -60,7 +60,7 @@ public class ImageCacheView extends ImageView implements ImageLoadingListener, I
 
     }
 
-    public void setImageSrc(String src){
+    public void setImageSrc(String src) {
         imageSrc = src;
         loading = false;
         loadSuccess = false;
@@ -68,8 +68,12 @@ public class ImageCacheView extends ImageView implements ImageLoadingListener, I
         loadImage();
     }
 
-    public void reloadImage(){
-        if(loading) {
+    public String getImageSrc() {
+        return imageSrc;
+    }
+
+    public void reloadImage() {
+        if (loading) {
             return;
         }
 
@@ -102,7 +106,7 @@ public class ImageCacheView extends ImageView implements ImageLoadingListener, I
     @Override
     public void onClick(View v) {
         //如果当前没有加载，并且之前的加载失败了，点击可以重新加载图片
-        if(!loading && !loadSuccess) {
+        if (!loading && !loadSuccess) {
             reloadImage();
         }
     }
@@ -112,8 +116,8 @@ public class ImageCacheView extends ImageView implements ImageLoadingListener, I
 
     }
 
-    private void loadImage(){
-        if(null == imageSrc){
+    private void loadImage() {
+        if (null == imageSrc) {
             return;
         }
 

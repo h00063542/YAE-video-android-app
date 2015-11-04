@@ -1,6 +1,7 @@
 package com.yilos.nailstar.index.view;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,8 +15,9 @@ import com.yilos.nailstar.index.entity.Category;
 import com.yilos.nailstar.index.entity.IndexContent;
 import com.yilos.nailstar.index.entity.Poster;
 import com.yilos.nailstar.index.presenter.IndexPresenter;
-import com.yilos.nailstar.util.ActivityUtil;
+import com.yilos.nailstar.player.view.VideoPlayerActivity;
 import com.yilos.nailstar.util.CollectionUtil;
+import com.yilos.nailstar.util.Constants;
 import com.yilos.widget.banner.Banner;
 import com.yilos.widget.pageindicator.CirclePageIndicator;
 import com.yilos.widget.pullrefresh.PullRefreshLayout;
@@ -66,7 +68,7 @@ public class IndexFragment extends Fragment implements IIndexView {
         view = inflater.inflate(R.layout.fragment_index, container, false);
         initViews(view);
 
-        if(NailStarApplicationContext.getInstance().getIndexContent() != null){
+        if (NailStarApplicationContext.getInstance().getIndexContent() != null) {
             // 闪屏出现时已经加载了数据
             IndexContent indexContent = NailStarApplicationContext.getInstance().getIndexContent();
             NailStarApplicationContext.getInstance().setIndexContent(null);
@@ -111,14 +113,14 @@ public class IndexFragment extends Fragment implements IIndexView {
         });
     }
 
-    private void init(IndexContent indexContent){
-        if(indexContent != null && indexContent.getPosters() != null) {
+    private void init(IndexContent indexContent) {
+        if (indexContent != null && indexContent.getPosters() != null) {
             initPosters(indexContent.getPosters());
         } else {
             indexPresenter.refreshPosters(true);
         }
 
-        if(indexContent != null && indexContent.getCategories() != null) {
+        if (indexContent != null && indexContent.getCategories() != null) {
             initCategoriesMenu(indexContent.getCategories());
         } else {
             indexPresenter.refreshCategory(true);
@@ -148,7 +150,9 @@ public class IndexFragment extends Fragment implements IIndexView {
                         imageCacheView.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                ActivityUtil.toVideoPlayerPage(getActivity(), poster.getTopicId());
+                                Intent intent = new Intent(getActivity(), VideoPlayerActivity.class);
+                                intent.putExtra(Constants.TOPIC_ID, poster.getTopicId());
+                                startActivity(intent);
                             }
                         });
                         views.add(imageCacheView);
@@ -159,12 +163,12 @@ public class IndexFragment extends Fragment implements IIndexView {
             }
         });
 
-        ((CirclePageIndicator)view.findViewById(R.id.indicator)).setViewPager(posterBanner);
+        ((CirclePageIndicator) view.findViewById(R.id.indicator)).setViewPager(posterBanner);
     }
 
     @Override
     public void initCategoriesMenu(final List<Category> categories) {
-        if(CollectionUtil.isEmpty(categories)){
+        if (CollectionUtil.isEmpty(categories)) {
             return;
         }
 
@@ -172,12 +176,12 @@ public class IndexFragment extends Fragment implements IIndexView {
             @Override
             public List<View> createViews() {
                 final List<View> gridViews = new ArrayList<>(4);
-                for(int i = 0, count = categories.size(); i < count; i++){
-                    if(i % 8 == 0) {
-                        GridLayout gridLayout = (GridLayout)inflater.inflate(R.layout.category_gridview, null);
+                for (int i = 0, count = categories.size(); i < count; i++) {
+                    if (i % 8 == 0) {
+                        GridLayout gridLayout = (GridLayout) inflater.inflate(R.layout.category_gridview, null);
                         gridViews.add(gridLayout);
 
-                        for(int j = i; j < count && j < i + 8; j++) {
+                        for (int j = i; j < count && j < i + 8; j++) {
                             ImageCacheView imageCacheView = new ImageCacheView(getActivity());
                             GridLayout.LayoutParams layoutParams = new GridLayout.LayoutParams();
                             imageCacheView.setLayoutParams(layoutParams);

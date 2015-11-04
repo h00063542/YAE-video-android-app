@@ -34,7 +34,7 @@ public class TopicPresenter {
         return topicPresenter;
     }
 
-    public void playerVideo(final String topicId) {
+    public void initTopicVideo(final String topicId) {
         TaskManager.Task loadTopicInfo = new TaskManager.BackgroundTask() {
             @Override
             public Object doWork(Object data) {
@@ -51,7 +51,7 @@ public class TopicPresenter {
         TaskManager.UITask<TopicInfo> updateUi = new TaskManager.UITask<TopicInfo>() {
             @Override
             public Object doWork(TopicInfo topicInfo) {
-                videoPlayerView.playVideo(topicInfo);
+                videoPlayerView.initTopicVideo(topicInfo);
 
                 return null;
             }
