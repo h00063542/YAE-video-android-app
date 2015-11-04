@@ -22,6 +22,11 @@ public interface LessionView {
     void refreshActivityTopic(LessionActivity lessionActivity);
 
     /**
+     * 通知listview: 数据已刷新
+     */
+    void notifyRefreshListView();
+
+    /**
      * 刷新投票页面
      * @param voteLessionList
      */

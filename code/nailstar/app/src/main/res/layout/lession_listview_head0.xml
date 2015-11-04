@@ -111,22 +111,20 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="15dp"
-        android:background="#ebeeef">
+        android:background="@color/line_color">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:id="@+id/lessionCountDownText"
-            android:text="@string/stage1_count_down"
             android:layout_marginRight="10dp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="00:00:00"
             android:id="@+id/lessionCountDownValue"
-            android:textColor="#e85b2f"/>
+            android:textColor="@color/submitted_homework_background_color"/>
     </LinearLayout>
 
 </LinearLayout>

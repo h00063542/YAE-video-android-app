@@ -49,5 +49,12 @@ public interface LessionService {
      */
     List<VideoLession> queryHistoryLessionList(int page) throws IOException, JSONException;
 
+    /**
+     * 求教程投票
+     * @param id
+     * @throws IOException
+     * @throws JSONException
+     */
+    void vote(String id) throws IOException, JSONException;
 
 }

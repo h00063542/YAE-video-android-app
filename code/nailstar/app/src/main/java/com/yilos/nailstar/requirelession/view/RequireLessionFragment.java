@@ -117,12 +117,12 @@ public class RequireLessionFragment extends Fragment implements LessionView {
     private void initView(LayoutInflater inflater) {
 
         // 初始化ListView
-        lessionVoteView = (ListView)view.findViewById(R.id.lessionVoteView);
+        lessionVoteView = (ListView) view.findViewById(R.id.lessionVoteView);
 
         lessionVoteView.addHeaderView(lessionViewHead0, null, false);
         lessionVoteView.addHeaderView(lessionViewHead1, null, false);
 
-        voteListViewAdapter = new VoteListViewAdapter(this.getActivity(), inflater);
+        voteListViewAdapter = new VoteListViewAdapter(this.getActivity(), inflater, lessionPresenter);
         lessionVoteView.setAdapter(voteListViewAdapter);
 
         // 页面头部悬浮效果
@@ -152,13 +152,13 @@ public class RequireLessionFragment extends Fragment implements LessionView {
         // 求教程榜首，因为是放在listview的header中，必须放在listview初始化之后
         lessionBackground = view.findViewById(R.id.lessionBackground);
         candidateBackground = view.findViewById(R.id.candidateBackground);
-        lessionTopic = (TextView)view.findViewById(R.id.lessionTopic);
-        lessionAuthorName = (TextView)view.findViewById(R.id.lessionAuthorName);
-        lessionCountDownText = (TextView)view.findViewById(R.id.lessionCountDownText);
-        lessionCountDownValue = (TextView)view.findViewById(R.id.lessionCountDownValue);
+        lessionTopic = (TextView) view.findViewById(R.id.lessionTopic);
+        lessionAuthorName = (TextView) view.findViewById(R.id.lessionAuthorName);
+        lessionCountDownText = (TextView) view.findViewById(R.id.lessionCountDownText);
+        lessionCountDownValue = (TextView) view.findViewById(R.id.lessionCountDownValue);
 
-        requireLessionBtn = (Button)view.findViewById(R.id.requireLessionBtn);
-        requireLessionBtnFloat = (Button)view.findViewById(R.id.requireLessionBtnFloat);
+        requireLessionBtn = (Button) view.findViewById(R.id.requireLessionBtn);
+        requireLessionBtnFloat = (Button) view.findViewById(R.id.requireLessionBtnFloat);
     }
 
     private void initData() {
@@ -170,12 +170,12 @@ public class RequireLessionFragment extends Fragment implements LessionView {
     private void bindControl() {
 
         // 页头的按钮
-        switchLessionView = (RadioGroup)lessionViewHead1.findViewById(R.id.switchLessionView);
+        switchLessionView = (RadioGroup) lessionViewHead1.findViewById(R.id.switchLessionView);
         goVotingBtn = (RadioButton) lessionViewHead1.findViewById(R.id.goVotingBtn);
         goRankingBtn = (RadioButton) lessionViewHead1.findViewById(R.id.goRankingBtn);
 
         // 悬浮页头的按钮
-        switchLessionViewFloat = (RadioGroup)view.findViewById(R.id.switchLessionViewFloat);
+        switchLessionViewFloat = (RadioGroup) view.findViewById(R.id.switchLessionViewFloat);
         goVotingBtnFloat = (RadioButton) view.findViewById(R.id.goVotingBtnFloat);
         goRankingBtnFloat = (RadioButton) view.findViewById(R.id.goRankingBtnFloat);
 
@@ -188,7 +188,7 @@ public class RequireLessionFragment extends Fragment implements LessionView {
                     lessionPresenter.goVoteLessionList();
 
                     // 切换的时候，保证页首显示的是返回的第一条数据
-                    if (lessionVoteView.getFirstVisiblePosition() > 1){
+                    if (lessionVoteView.getFirstVisiblePosition() > 1) {
                         lessionVoteView.setSelection(1);
                     }
 
@@ -200,7 +200,7 @@ public class RequireLessionFragment extends Fragment implements LessionView {
                     lessionPresenter.goRankingLessionList();
 
                     // 切换的时候，保证页首显示的是返回的第一条数据
-                    if (lessionVoteView.getFirstVisiblePosition() > 1){
+                    if (lessionVoteView.getFirstVisiblePosition() > 1) {
                         lessionVoteView.setSelection(1);
                     }
 
@@ -266,6 +266,15 @@ public class RequireLessionFragment extends Fragment implements LessionView {
         } else if (lessionActivity.getStage() == 2) {
             handleCandidateTopic(lessionActivity);
         }
+        // 列表需要获取当前阶段以决定是否显示投票按钮
+        voteListViewAdapter.setStage(lessionActivity.getStage());
+    }
+
+    @Override
+    public void notifyRefreshListView() {
+
+        voteListViewAdapter.notifyDataSetChanged();
+
     }
 
     @Override
