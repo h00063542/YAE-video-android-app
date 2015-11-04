@@ -13,11 +13,11 @@ import java.util.ArrayList;
 public interface IVideoPlayerView {
 
     /**
-     * 播放指定的视频
+     * 初始化topic视频
      *
      * @param topicInfo
      */
-    void playVideo(TopicInfo topicInfo);
+    void initTopicVideo(TopicInfo topicInfo);
 
     /**
      * 初始化topic图文分解信息
