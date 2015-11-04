@@ -94,6 +94,9 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
 
     @Override
     public void initMessageCount(MessageCount messageCount) {
+        if (messageCount == null) {
+            return;
+        }
         messageCountText.setText(String.valueOf(messageCount.getCount()));
     }
 
@@ -155,6 +158,9 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
 
     @Override
     public void getAboutMeNumber(AboutMeNumber aboutMeNumber) {
+        if (aboutMeNumber == null) {
+            return;
+        }
         kaBiText.setText(String.valueOf(aboutMeNumber.getDakaCoin()));
         int level = 1;
         Level exp = calcLevel(aboutMeNumber.getExp());
@@ -218,7 +224,7 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
         myFollowList = (LinearLayout)view.findViewById(R.id.my_follow_list);
 
     }
-    
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {

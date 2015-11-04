@@ -145,10 +145,6 @@ public class AboutMeServiceImpl implements AboutMeService {
             //"{\"code\":0,\"result\":{\"fansNumber\":2,\"focusNumber\":105,\"exp\":544,\"dakaCoin\":264}}";
             aboutMeNumberObject = new JSONObject(jsonObject);
             if (aboutMeNumberObject.getInt("code") != 0) {
-                aboutMeNumber.setDakaCoin(0);
-                aboutMeNumber.setExp(0);
-                aboutMeNumber.setFansNumber(0);
-                aboutMeNumber.setFocusNumber(0);
                 return aboutMeNumber;
             }
             aboutMeNumberResult = aboutMeNumberObject.getJSONObject("result");
@@ -167,7 +163,6 @@ public class AboutMeServiceImpl implements AboutMeService {
         if (!NailStarApplicationContext.getInstance().isNetworkConnected()) {
             throw new NetworkDisconnectException("网络没有连接");
         }
-        //FollowList followList = new FollowList("","","","",6);
         String jsonObject;
         JSONObject followListObject;
         JSONArray followListUsersArray;
@@ -181,7 +176,7 @@ public class AboutMeServiceImpl implements AboutMeService {
             //"{\"code\":0,\"result\":{\"users\":[{\"accountId\":\"066cf7d0-20cc-11e5-8c5f-976ea1df5a0b\",\"nickname\":\"sluor\",\"type\":5,\"photoUrl\":null,\"profile\":null},{\"accountId\":\"0690bcf0-0b56-11e5-ab1c-19acfe3e02c3\",\"nickname\":\"PN~大象\",\"type\":5,\"photoUrl\":\"http://pic.yilos.com/4856ce582e504bb62917759606ed2e3a\",\"profile\":null},{\"accountId\":\"07bf2ff0-10ea-11e5-aac6-adb2ba47dce6\",\"nickname\":\"格格，格格\",\"type\":5,\"photoUrl\":\"http://pic.yilos.com/2c0325ccb60f7d7046af4ffeae555ba8\",\"profile\":null},{\"accountId\":\"096d2e00-f944-11e4-a616-5fd981a864f9\",\"nickname\":\"王红老师\",\"type\":5,\"photoUrl\":\"http://pic.yilos.com/da89a693f41d092aa6ac6636a2682624\",\"profile\":null},{\"accountId\":\"09e75780-0f73-11e5-bbc3-1b530b7063a3\",\"nickname\":\"手机用户4043\",\"type\":5,\"photoUrl\":\"http://pic.yilos.com/b379b447bc76f0644ca88dbe85c91469\",\"profile\":null},{\"accountId\":\"0d979ea0-117e-11e5-aac6-adb2ba47dce6\",\"nickname\":\"稻草老板\",\"type\":5,\"photoUrl\":\"http://pic.yilos.com/b5e3d07ef7fec4ad27bc698e81257829\",\"profile\":null},{\"accountId\":\"0f0ed700-2653-11e5-a88e-fdfbd1e95ab4\",\"nickname\":\"指爱你\",\"type\":5,\"photoUrl\":\"http://pic.yilos.com/2ed56a15dda4b84ee3e017df2d9f004c\",\"profile\":null},{\"accountId\":\"1\",\"nickname\":\"Kimi老师\",\"type\":5,\"photoUrl\":\"http://pic.yilos.com/5180d65d1c25151ce7157ef510e35cd1\",\"profile\":null},{\"accountId\":\"1154f3f0-f944-11e4-a616-5fd981a864f9\",\"nickname\":\"董亚坡老师\",\"type\":5,\"photoUrl\":\"http://pic.yilos.com/02f411645410a3d32f94b59466dfc019\",\"profile\":\"哥哥哥哥哥哥恍恍惚惚恍恍惚惚后悔恍恍惚惚恍恍惚惚隐隐约约\"},{\"accountId\":\"14be1160-29dd-11e5-8eb7-e53278ec7d31\",\"nickname\":\"手机用户3147\",\"type\":5,\"photoUrl\":null,\"profile\":null},{\"accountId\":\"17ab47e0-1113-11e5-8b80-a3f63c025f8f\",\"nickname\":\"东子\",\"type\":5,\"photoUrl\":\"http://pic.yilos.com/c27e2b0a0aa77745ac99c78119191703\",\"profile\":null},{\"accountId\":\"1959a1e0-222f-11e5-be2b-e35c4c3fc600\",\"nickname\":\"vicky\",\"type\":5,\"photoUrl\":\"http://pic.yilos.com/469319a26eca94622fc559112281a5f6\",\"profile\":null},{\"accountId\":\"1d6484c0-0480-11e5-9619-4387ab0c5156\",\"nickname\":\"汤汤老师\",\"type\":5,\"photoUrl\":\"http://pic.yilos.com/672875f0b8474bc41269897b5019dcfe\",\"profile\":null},{\"accountId\":\"29aafd60-fb1e-11e4-8889-8f2786c0b7fc\",\"nickname\":\"东东老师\",\"type\":5,\"photoUrl\":\"http://pic.yilos.com/939daa8860d5a6c83be1a29c9c885b64\",\"profile\":null},{\"accountId\":\"24f912a0-1b1e-11e5-a63f-dda38fcc1100\",\"nickname\":\"手机用户0606\",\"type\":5,\"photoUrl\":\"http://pic.yilos.com/d0f6d1bb5c5f51e1ea59dfce8758faac\",\"profile\":null}]}}";
             followListObject = new JSONObject(jsonObject);
             if (followListObject.getInt("code") != 0) {
-                return null;
+                return followLists;
             }
             followListUsersArray = followListObject.getJSONObject("result").getJSONArray("users");
             for (int index = 0;index < followListUsersArray.length(); index ++) {
