@@ -5,11 +5,15 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.util.DisplayMetrics;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -32,6 +36,8 @@ import java.util.List;
  */
 public class RequireLessionFragment extends Fragment implements LessionView {
 
+    private int screenWidth;
+
     // 求教程页面
     private View view;
 
@@ -41,26 +47,8 @@ public class RequireLessionFragment extends Fragment implements LessionView {
     // 求教程榜首（第一阶段：求教程阶段）
     private View lessionBackground;
 
-    // 视频图片（第一阶段：求教程阶段）
-    private ImageCacheView lessionPhoto;
-
-    // 老师头像（第一阶段：求教程阶段）
-    private CircleImageView lessionAuthorPhoto;
-
     // 求教程榜首（第二阶段：视频制作阶段）
     private View candidateBackground;
-
-    // 榜首图片（视频制作阶段）
-    private ImageCacheView lessionCandidatePic;
-
-    // 榜首作者（视频制作阶段）
-    private CircleImageView lessionUserPhoto;
-
-    // 教程名称
-    private TextView lessionTopic;
-
-    // 教程讲师
-    private TextView lessionAuthorName;
 
     // 倒计时描述
     private TextView lessionCountDownText;
@@ -120,6 +108,10 @@ public class RequireLessionFragment extends Fragment implements LessionView {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        DisplayMetrics metric = new DisplayMetrics();
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(metric);
+        screenWidth = metric.widthPixels;
+
         view = inflater.inflate(R.layout.fragment_require_lession, container, false);
         lessionViewHead0 = inflater.inflate(R.layout.lession_listview_head0, null);
         lessionViewHead1 = inflater.inflate(R.layout.lession_listview_head1, null);
@@ -167,8 +159,7 @@ public class RequireLessionFragment extends Fragment implements LessionView {
         // 求教程榜首，因为是放在listview的header中，必须放在listview初始化之后
         lessionBackground = view.findViewById(R.id.lessionBackground);
         candidateBackground = view.findViewById(R.id.candidateBackground);
-        lessionTopic = (TextView) view.findViewById(R.id.lessionTopic);
-        lessionAuthorName = (TextView) view.findViewById(R.id.lessionAuthorName);
+
         lessionCountDownText = (TextView) view.findViewById(R.id.lessionCountDownText);
         lessionCountDownValue = (TextView) view.findViewById(R.id.lessionCountDownValue);
 
@@ -289,12 +280,30 @@ public class RequireLessionFragment extends Fragment implements LessionView {
     // 求教程第一阶段（求教程阶段）
     private void handleLessionTopic(LessionActivity lessionActivity) {
 
-        lessionPhoto = (ImageCacheView) view.findViewById(R.id.lessionPhoto);
-        lessionAuthorPhoto = (CircleImageView) view.findViewById(R.id.lessionAuthorPhoto);
+        // 设置图片
+        ImageCacheView lessionPhoto = (ImageCacheView) view.findViewById(R.id.lessionPhoto);
+        CircleImageView lessionAuthorPhoto = (CircleImageView) view.findViewById(R.id.lessionAuthorPhoto);
 
         lessionPhoto.setImageSrc(lessionActivity.getPrevious().getPicUrl());
         lessionAuthorPhoto.setImageSrc(lessionActivity.getPrevious().getAuthorPhoto());
 
+        lessionAuthorPhoto.getLayoutParams().width = screenWidth / 15;
+        lessionAuthorPhoto.getLayoutParams().height = screenWidth / 15;
+
+        ImageView newVideoIcon = (ImageView) view.findViewById(R.id.newVideoIcon);
+        newVideoIcon.getLayoutParams().width = screenWidth / 12;
+        newVideoIcon.getLayoutParams().height = screenWidth / 12;
+        ImageView playVideoIcon = (ImageView) view.findViewById(R.id.playVideoIcon);
+        playVideoIcon.getLayoutParams().width = screenWidth / 18;
+        playVideoIcon.getLayoutParams().height = screenWidth / 18;
+        FrameLayout.LayoutParams playVideoIconLayoutLp = new FrameLayout.LayoutParams(playVideoIcon.getLayoutParams());
+        playVideoIconLayoutLp.setMargins(0, 0, screenWidth / 50, screenWidth / 50);
+        playVideoIconLayoutLp.gravity = Gravity.RIGHT | Gravity.BOTTOM;
+        playVideoIcon.setLayoutParams(playVideoIconLayoutLp);
+
+        // 设置文字
+        TextView lessionTopic = (TextView) view.findViewById(R.id.lessionTopic);
+        TextView lessionAuthorName = (TextView) view.findViewById(R.id.lessionAuthorName);
         lessionTopic.setText(lessionActivity.getPrevious().getTitle());
         lessionAuthorName.setText(lessionActivity.getPrevious().getAuthorName());
         lessionCountDownText.setText(getResources().getString(R.string.stage1_count_down));
@@ -308,17 +317,25 @@ public class RequireLessionFragment extends Fragment implements LessionView {
     // 求教程第二阶段（视频制作阶段）
     private void handleCandidateTopic(LessionActivity lessionActivity) {
 
-        lessionCandidatePic = (ImageCacheView) view.findViewById(R.id.lessionCandidatePic);
-        lessionUserPhoto = (CircleImageView) view.findViewById(R.id.lessionUserPhoto);
+        ImageCacheView lessionCandidatePic = (ImageCacheView) view.findViewById(R.id.lessionCandidatePic);
+        CircleImageView lessionUserPhoto = (CircleImageView) view.findViewById(R.id.lessionUserPhoto);
 
         lessionCandidatePic.setImageSrc(lessionActivity.getCurrent().getPicUrl());
         lessionUserPhoto.setImageSrc(lessionActivity.getCurrent().getAuthorPhoto());
         lessionCountDownText.setText(getResources().getString(R.string.stage2_count_down));
 
         //根据背景图片的比例设置头部高度
-        DisplayMetrics metric = new DisplayMetrics();
-        getActivity().getWindowManager().getDefaultDisplay().getMetrics(metric);
-        candidateBackground.getLayoutParams().height = metric.widthPixels * 3 / 11;
+        candidateBackground.getLayoutParams().height = screenWidth * 3 / 11;
+
+        ImageView crownImage = (ImageView) view.findViewById(R.id.crownImage);
+
+        LinearLayout.LayoutParams crownImageLayoutLp = new LinearLayout.LayoutParams(screenWidth / 15, screenWidth / 10, 1);
+        crownImageLayoutLp.setMargins(0, 0, 0, 0);
+        crownImage.setLayoutParams(crownImageLayoutLp);
+
+        LinearLayout.LayoutParams userPhotoLayoutLp = new LinearLayout.LayoutParams(screenWidth / 15, screenWidth / 10, 1);
+        userPhotoLayoutLp.setMargins(0, -screenWidth / 52, 0, 0);
+        lessionUserPhoto.setLayoutParams(userPhotoLayoutLp);
 
         // 显示现阶段的页头，隐藏其它阶段页头
         lessionBackground.setVisibility(View.GONE);

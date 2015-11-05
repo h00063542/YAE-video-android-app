@@ -1,7 +1,8 @@
 package com.yilos.nailstar.requirelession.view;
 
-import android.content.Context;
+import android.app.Activity;
 import android.support.annotation.NonNull;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +25,7 @@ import java.util.List;
  */
 public class VoteListViewAdapter extends BaseAdapter {
 
-    private Context context;
+    private Activity context;
     private LayoutInflater layoutInflater;
     private LessionPresenter lessionPresenter;
 
@@ -34,10 +35,16 @@ public class VoteListViewAdapter extends BaseAdapter {
 
     private int stage;
 
-    public VoteListViewAdapter(Context context, LayoutInflater layoutInflater, LessionPresenter lessionPresenter) {
+    private int screenWidth;
+
+    public VoteListViewAdapter(Activity context, LayoutInflater layoutInflater, LessionPresenter lessionPresenter) {
         this.context = context;
         this.layoutInflater = layoutInflater;
         this.lessionPresenter = lessionPresenter;
+
+        DisplayMetrics metric = new DisplayMetrics();
+        context.getWindowManager().getDefaultDisplay().getMetrics(metric);
+        screenWidth = metric.widthPixels;
     }
 
     public void setViewType(ViewType viewType) {
@@ -129,6 +136,10 @@ public class VoteListViewAdapter extends BaseAdapter {
             holder.rankingItem.lessionVotePic = (ImageView) convertView.findViewById(R.id.lessionVotePic);
             holder.rankingItem.lessionVote = (TextView) convertView.findViewById(R.id.lessionVote);
             holder.rankingItem.lessionCanvass = (Button) convertView.findViewById(R.id.lessionCanvass);
+
+            // 设置头像大小
+            holder.rankingItem.lessionAuthorPhoto.getLayoutParams().width = screenWidth / 18;
+            holder.rankingItem.lessionAuthorPhoto.getLayoutParams().height = screenWidth / 18;
 
             convertView.setTag(holder);
 
