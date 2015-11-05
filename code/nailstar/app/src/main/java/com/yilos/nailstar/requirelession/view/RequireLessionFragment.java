@@ -25,6 +25,7 @@ import com.yilos.nailstar.requirelession.entity.CandidateLession;
 import com.yilos.nailstar.requirelession.entity.LessionActivity;
 import com.yilos.nailstar.takeImage.TakeImage;
 import com.yilos.nailstar.takeImage.TakeImageCallback;
+import com.yilos.nailstar.util.ActivityUtil;
 import com.yilos.nailstar.util.Constants;
 import com.yilos.widget.circleimageview.CircleImageView;
 import com.yilos.widget.view.ImageCacheView;
@@ -36,6 +37,7 @@ import java.util.List;
  */
 public class RequireLessionFragment extends Fragment implements LessionView {
 
+    // 屏幕宽度
     private int screenWidth;
 
     // 求教程页面
@@ -43,6 +45,15 @@ public class RequireLessionFragment extends Fragment implements LessionView {
 
     // 页面头部（求教程榜首）
     private View lessionViewHead0;
+
+    // 页面头部（求教程按钮）
+    private View lessionViewHead1;
+
+    // 候选款式列表
+    private ListView lessionVoteView;
+
+    // 投票候选列表Adapter
+    private VoteListViewAdapter voteListViewAdapter;
 
     // 求教程榜首（第一阶段：求教程阶段）
     private View lessionBackground;
@@ -56,9 +67,6 @@ public class RequireLessionFragment extends Fragment implements LessionView {
     // 剩余时间
     private TextView lessionCountDownValue;
 
-    // 页面头部（求教程按钮）
-    private View lessionViewHead1;
-
     // 页面悬浮部分（求教程按钮）
     private View lessionViewHeadFloat;
 
@@ -67,12 +75,6 @@ public class RequireLessionFragment extends Fragment implements LessionView {
 
     // 悬浮页头的求教程按钮
     private Button requireLessionBtnFloat;
-
-    // 候选款式列表
-    private ListView lessionVoteView;
-
-    // 投票候选列表Adapter
-    private VoteListViewAdapter voteListViewAdapter;
 
     // 单选按钮group
     private RadioGroup switchLessionView;
@@ -278,7 +280,7 @@ public class RequireLessionFragment extends Fragment implements LessionView {
 
 
     // 求教程第一阶段（求教程阶段）
-    private void handleLessionTopic(LessionActivity lessionActivity) {
+    private void handleLessionTopic(final LessionActivity lessionActivity) {
 
         // 设置图片
         ImageCacheView lessionPhoto = (ImageCacheView) view.findViewById(R.id.lessionPhoto);
@@ -307,6 +309,15 @@ public class RequireLessionFragment extends Fragment implements LessionView {
         lessionTopic.setText(lessionActivity.getPrevious().getTitle());
         lessionAuthorName.setText(lessionActivity.getPrevious().getAuthorName());
         lessionCountDownText.setText(getResources().getString(R.string.stage1_count_down));
+
+        // 绑定播放按钮
+        lessionPhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ActivityUtil.toVideoPlayerPage(getActivity(), lessionActivity.getPrevious().getTopicId())
+                ;
+            }
+        });
 
         // 显示现阶段的页头，隐藏其它阶段页头
         candidateBackground.setVisibility(View.GONE);
