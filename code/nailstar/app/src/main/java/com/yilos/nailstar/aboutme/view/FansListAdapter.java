@@ -9,16 +9,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.yilos.nailstar.R;
-import com.yilos.nailstar.aboutme.entity.FollowList;
+import com.yilos.nailstar.aboutme.entity.FansList;
+
 import java.util.List;
 
 /**
- * Created by sisilai on 15/11/4.
+ * Created by sisilai on 15/11/5.
  */
-public class FollowListAdapter extends ArrayAdapter<FollowList> {
+
+public class FansListAdapter extends ArrayAdapter<FansList> {
 
     private int resourceId;
-    public FollowListAdapter(Context context, int textViewResourceId, List<FollowList> objects) {
+    public FansListAdapter(Context context, int textViewResourceId, List<FansList> objects) {
         super(context, textViewResourceId, objects);
         resourceId = textViewResourceId;
     }
@@ -26,23 +28,23 @@ public class FollowListAdapter extends ArrayAdapter<FollowList> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         // TODO Auto-generated method stub
-        FollowList followList = getItem(position);
+        FansList fansList = getItem(position);
         View view;
         if (convertView == null) {
             view = LayoutInflater.from(getContext()).inflate(resourceId, null);
         } else {
             view = convertView;
         }
-        ImageView followListPhoto = (ImageView) view.findViewById(R.id.follow_list_photo);
-        TextView followListName = (TextView) view.findViewById(R.id.follow_list_name);
-        TextView followListIntroduction = (TextView) view.findViewById(R.id.follow_list_introduction);
-        if (followList.getImageBitmap() == null) {
+        ImageView followListPhoto = (ImageView) view.findViewById(R.id.fans_list_photo);
+        TextView followListName = (TextView) view.findViewById(R.id.fans_list_name);
+        TextView followListIntroduction = (TextView) view.findViewById(R.id.fans_list_introduction);
+        if (fansList.getImageBitmap() == null) {
             followListPhoto.setImageResource(R.mipmap.ic_default_photo);
         } else {
-            followListPhoto.setImageBitmap(followList.getImageBitmap());
+            followListPhoto.setImageBitmap(fansList.getImageBitmap());
         }
-        followListName.setText(followList.getNickname());
-        followListIntroduction.setText(followList.getProfile());
+        followListName.setText(fansList.getNickname());
+        followListIntroduction.setText(fansList.getProfile());
         return view;
     }
 }

@@ -4,7 +4,6 @@ import com.yilos.nailstar.aboutme.entity.FollowList;
 import com.yilos.nailstar.aboutme.model.AboutMeService;
 import com.yilos.nailstar.aboutme.model.AboutMeServiceImpl;
 import com.yilos.nailstar.aboutme.view.FollowListActivity;
-import com.yilos.nailstar.aboutme.view.FollowListAdapter;
 import com.yilos.nailstar.framework.exception.NetworkDisconnectException;
 import com.yilos.nailstar.util.TaskManager;
 

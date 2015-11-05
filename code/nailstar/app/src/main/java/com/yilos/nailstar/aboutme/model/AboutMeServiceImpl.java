@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import com.squareup.okhttp.FormEncodingBuilder;
 import com.squareup.okhttp.RequestBody;
 import com.yilos.nailstar.aboutme.entity.AboutMeNumber;
+import com.yilos.nailstar.aboutme.entity.FansList;
 import com.yilos.nailstar.aboutme.entity.FollowList;
 import com.yilos.nailstar.aboutme.entity.MessageCount;
 import com.yilos.nailstar.aboutme.entity.PersonInfo;
@@ -115,20 +116,19 @@ public class AboutMeServiceImpl implements AboutMeService {
         String lt = "1445669825802";
         String uid = "a8affd60-efe6-11e4-a908-3132fc2abe39";
         int type = 5;
-        //String url = "/vapi2/nailstar/messages/count?lt="+ lt + "&uid=" + uid + "&type=" + type;
-        String url = "/vapi2/nailstar/messages/count";
+        String url = "/vapi/nailstar/messages/count?lt="+ lt + "&uid=" + uid + "&type=" + type;
+        //String url = "/vapi2/nailstar/messages/count";
         try {
-            jsonObject = "{\"code\":0,\"result\":{\"count\":3}}";//HttpClient.getJson(url);
-//        } catch (IOException e) {
-//            throw new NetworkDisconnectException("网络获取消息数失败", e);
-//        }
-//        try {
+            jsonObject = HttpClient.getJson(url);
+            //"{\"code\":0,\"result\":{\"count\":3}}";
             messageCountObject = new JSONObject(jsonObject);
             if (messageCountObject.getInt("code") != 0) {
                 return null;
             }
             messageCount.setCount(messageCountObject.getJSONObject("result").getInt("count"));
             return messageCount;
+        } catch (IOException e) {
+            throw new NetworkDisconnectException("网络获取消息数失败", e);
         }catch (JSONException e) {
             throw new JSONException("消息数解析失败");
         }
@@ -173,7 +173,7 @@ public class AboutMeServiceImpl implements AboutMeService {
         Bitmap imageBitmap = null;
         String photoUrl;
         //String uid = "a8affd60-efe6-11e4-a908-3132fc2abe39";
-        //http://api2.naildaka.com/vapi2/nailstar/account/a8affd60-efe6-11e4-a908-3132fc2abe39/followList?page=1
+        //http://api2.naildaka.com/vapi/nailstar/account/a8affd60-efe6-11e4-a908-3132fc2abe39/followList?page=1
         String url = "/vapi/nailstar/account/" + uid + "/followList?page=1";
         try {
             jsonObject = HttpClient.getJson(url);
@@ -192,7 +192,7 @@ public class AboutMeServiceImpl implements AboutMeService {
                         imageBitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
                     } catch (IOException e) {
                         e.printStackTrace();
-                        LOGGER.error("获取imageBitmap失败，imageBitmap:" + imageBitmap + "index:" + index, e);
+                        LOGGER.error("获取imageBitmap失败，imageBitmap:" + imageBitmap + "index:" + index + "photoUrl:" + photoUrl, e);
                     }
                 }
 
@@ -211,5 +211,57 @@ public class AboutMeServiceImpl implements AboutMeService {
             e.printStackTrace();
         }
         return followLists;
+    }
+
+    @Override
+    public ArrayList<FansList> getFansList(String uid) throws NetworkDisconnectException {
+        if (!NailStarApplicationContext.getInstance().isNetworkConnected()) {
+            throw new NetworkDisconnectException("网络没有连接");
+        }
+        String jsonObject;
+        JSONObject fansListObject;
+        JSONArray fansListUsersArray;
+        ArrayList<FansList> fansLists = new ArrayList<FansList>();
+        Bitmap imageBitmap = null;
+        String photoUrl;
+        //String uid = "a8affd60-efe6-11e4-a908-3132fc2abe39";
+        //http://api2.naildaka.com/vapi/nailstar/account/a8affd60-efe6-11e4-a908-3132fc2abe39/fansList?page=1
+        String url = "/vapi/nailstar/account/" + uid + "/fansList?page=1";
+        try {
+            jsonObject = HttpClient.getJson(url);
+            //"{\"code\":0,\"result\":{\"users\":[{\"accountId\":\"dc282890-f87c-11e4-b13e-57eb04c66d6e\",\"nickname\":\"大咖程序猿\",\"type\":6,\"photoUrl\":\"http://pic.yilos.com/5f8d77bef850f6dd90a95688803b2929\",\"profile\":null},{\"accountId\":\"dc282890-f87c-11e4-b13e-57eb04c66d6e\",\"nickname\":\"大咖程序猿\",\"type\":6,\"photoUrl\":\"http://pic.yilos.com/5f8d77bef850f6dd90a95688803b2929\",\"profile\":null},{\"accountId\":\"dc282890-f87c-11e4-b13e-57eb04c66d6e\",\"nickname\":\"大咖程序猿\",\"type\":5,\"photoUrl\":\"http://pic.yilos.com/5f8d77bef850f6dd90a95688803b2929\",\"profile\":null}]}}";
+            fansListObject = new JSONObject(jsonObject);
+            if (fansListObject.getInt("code") != 0) {
+                return fansLists;
+            }
+            fansListUsersArray = fansListObject.getJSONObject("result").getJSONArray("users");
+            for (int index = 0;index < fansListUsersArray.length(); index ++) {
+                photoUrl = JsonUtil.optString(fansListUsersArray.optJSONObject(index), "photoUrl");
+                if(photoUrl != null) {
+                    byte[] data;
+                    try {
+                        data = ImageUtil.getBytes(new URL(photoUrl).openStream());
+                        imageBitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        LOGGER.error("获取imageBitmap失败，imageBitmap:" + imageBitmap + "index:" + index + "photoUrl:" + photoUrl, e);
+                    }
+                }
+
+                fansLists.add(new FansList(
+                        JsonUtil.optString(fansListUsersArray.optJSONObject(index),"accountId"),
+                        JsonUtil.optString(fansListUsersArray.optJSONObject(index),"nickname"),
+                        photoUrl,
+                        JsonUtil.optString(fansListUsersArray.optJSONObject(index),"profile"),
+                        fansListUsersArray.optJSONObject(index).getInt("type"),
+                        imageBitmap
+                ));
+            }
+        } catch (IOException e) {
+            throw new NetworkDisconnectException("网络获取我的关注列表失败", e);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return fansLists;
     }
 }

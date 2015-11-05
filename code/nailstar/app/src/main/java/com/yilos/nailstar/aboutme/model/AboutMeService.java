@@ -1,6 +1,7 @@
 package com.yilos.nailstar.aboutme.model;
 
 import com.yilos.nailstar.aboutme.entity.AboutMeNumber;
+import com.yilos.nailstar.aboutme.entity.FansList;
 import com.yilos.nailstar.aboutme.entity.FollowList;
 import com.yilos.nailstar.aboutme.entity.MessageCount;
 import com.yilos.nailstar.aboutme.entity.PersonInfo;
@@ -19,5 +20,6 @@ public interface AboutMeService {
     PersonInfo getPersonInfo() throws NetworkDisconnectException,JSONException;
     AboutMeNumber getAboutMeNumber() throws NetworkDisconnectException,JSONException;
     ArrayList<FollowList> getFollowList(String uid) throws NetworkDisconnectException;
+    ArrayList<FansList> getFansList(String uid) throws NetworkDisconnectException;
 }
 

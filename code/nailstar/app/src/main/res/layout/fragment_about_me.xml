@@ -113,12 +113,13 @@
 
             <!-- 粉丝 -->
             <LinearLayout
+                android:id="@+id/my_fans_list"
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
                 android:orientation="vertical"
                 android:layout_weight="1"
-                android:gravity="center"
-                >
+                android:clickable="true"
+                android:gravity="center">
                 <TextView
                     android:id="@+id/about_me_fans_count"
                     android:layout_width="wrap_content"

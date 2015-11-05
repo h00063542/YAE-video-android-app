@@ -5,7 +5,7 @@
     android:background="@color/white">
 
     <com.yilos.widget.circleimageview.CircleImageView
-        android:id="@+id/follow_list_photo"
+        android:id="@+id/fans_list_photo"
         android:layout_width="@dimen/about_me_my_info_image"
         android:layout_height="@dimen/about_me_my_info_image"
         android:layout_margin="15dp" />
@@ -15,12 +15,12 @@
         android:orientation="vertical"
         android:gravity="center_vertical">
         <TextView
-            android:id="@+id/follow_list_name"
+            android:id="@+id/fans_list_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="20sp"/>
         <TextView
-            android:id="@+id/follow_list_introduction"
+            android:id="@+id/fans_list_introduction"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="18sp"

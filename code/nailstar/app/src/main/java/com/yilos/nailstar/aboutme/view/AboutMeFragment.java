@@ -3,7 +3,6 @@ package com.yilos.nailstar.aboutme.view;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
@@ -20,16 +19,7 @@ import com.yilos.nailstar.aboutme.entity.AboutMeNumber;
 import com.yilos.nailstar.aboutme.entity.MessageCount;
 import com.yilos.nailstar.aboutme.entity.PersonInfo;
 import com.yilos.nailstar.aboutme.presenter.AboutMePresenter;
-import com.yilos.nailstar.main.MainActivity;
-import com.yilos.nailstar.util.ImageUtil;
 import com.yilos.widget.titlebar.TitleBar;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -73,6 +63,7 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
     private TextView identityText;//身份
 
     private LinearLayout myFollowList;
+    private LinearLayout myFansList;
 
     /**
      * Use this factory method to create a new instance of
@@ -226,14 +217,19 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
         personInfoLayout = (RelativeLayout)view.findViewById(R.id.about_me_person_info_layout);
 
         myFollowList = (LinearLayout)view.findViewById(R.id.my_follow_list);
+        myFansList = (LinearLayout)view.findViewById(R.id.my_fans_list);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.my_follow_list:
-                Intent intent = new Intent(getActivity(),FollowListActivity.class);
-                startActivity(intent);
+                Intent myFollowListIntent = new Intent(getActivity(),FollowListActivity.class);
+                startActivity(myFollowListIntent);
+                break;
+            case R.id.my_fans_list:
+                Intent myFansListIntent = new Intent(getActivity(),FansListActivity.class);
+                startActivity(myFansListIntent);
                 break;
             default:
                 break;
@@ -250,6 +246,7 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
         aboutMePresenter.getPersonInfo();
 
         myFollowList.setOnClickListener(this);
+        myFansList.setOnClickListener(this);
 
         personInfoLayout.setOnClickListener(new View.OnClickListener() {
             @Override
