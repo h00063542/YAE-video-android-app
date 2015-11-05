@@ -14,6 +14,7 @@
         android:layout_height="@dimen/title_bar_icon"
         android:layout_centerVertical="true"
         android:clickable="true"
+        android:src="@drawable/ic_head_back"
         android:padding="@dimen/title_bar_icon_padding"/>
     <TextView
         android:visibility="gone"
@@ -21,7 +22,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:text="@string/titleBarTitle"
         android:textColor="@color/white"
         android:textSize="@dimen/title_bar_title"/>
     <TextView
@@ -31,7 +31,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:text="@string/titleBarSure"
         android:textColor="@color/white"
         android:textSize="@dimen/title_bar_title"
         android:clickable="true"
@@ -44,6 +43,7 @@
         android:layout_centerVertical="true"
         android:clickable="true"
         android:layout_alignParentRight="true"
+        android:src="@drawable/ic_head_download"
         android:padding="@dimen/title_bar_icon_padding"/>
     <ImageView
         android:visibility="gone"
@@ -53,6 +53,7 @@
         android:layout_centerVertical="true"
         android:clickable="true"
         android:layout_alignParentRight="true"
+        android:src="@drawable/ic_head_share"
         android:layout_marginRight="@dimen/title_bar_icon_margin_right"
         android:padding="@dimen/title_bar_icon_padding"/>
 </RelativeLayout>

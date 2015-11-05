@@ -56,6 +56,10 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
     private TextView messageCountText;//信息数
     private TitleBar titleBar;//标题栏
     private TextView titleText;//标题栏标题
+    private ImageView backButton;
+    private ImageView rightTwoButton;
+    private ImageView rightOneButton;
+
     private AboutMePresenter aboutMePresenter;
     private RelativeLayout personInfoLayout;
 
@@ -222,7 +226,6 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
         personInfoLayout = (RelativeLayout)view.findViewById(R.id.about_me_person_info_layout);
 
         myFollowList = (LinearLayout)view.findViewById(R.id.my_follow_list);
-
     }
 
     @Override
@@ -240,6 +243,7 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
     private void initEvents() {
         titleText = titleBar.getTitleView();
         titleText.setText(R.string.about_me_my);
+
         aboutMePresenter = AboutMePresenter.getInstance(this);
         aboutMePresenter.getMessageCount();
         aboutMePresenter.getAboutMeNumber();

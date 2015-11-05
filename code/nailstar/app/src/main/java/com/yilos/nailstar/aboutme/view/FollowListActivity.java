@@ -10,7 +10,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.yilos.nailstar.R;
-import com.yilos.nailstar.aboutme.entity.MyData;
+import com.yilos.nailstar.aboutme.entity.FollowList;
+import com.yilos.nailstar.aboutme.presenter.FollowListPresenter;
 import com.yilos.widget.titlebar.TitleBar;
 
 import java.util.ArrayList;
@@ -23,7 +24,27 @@ public class FollowListActivity extends Activity implements View.OnClickListener
     private TitleBar titleBar;
     private ImageView backButton;
     private TextView titleText;
-    private List<MyData> dataList = new ArrayList<MyData>();
+    private List<FollowList> dataList = new ArrayList<FollowList>();
+
+    public void initFollowList(ArrayList<FollowList> followLists) {
+        if (followLists == null) {
+            return;
+        }
+        dataList = followLists;
+        FollowListAdapter adapter = new FollowListAdapter(FollowListActivity.this, R.layout.follow_list_item, dataList);
+        ListView listView = (ListView) findViewById(R.id.follow_list);
+        listView.setAdapter(adapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+                                    long arg3) {
+                // TODO Auto-generated method stub
+                FollowList followList = dataList.get(arg2);
+                Toast.makeText(FollowListActivity.this, followList.getNickname(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,28 +60,8 @@ public class FollowListActivity extends Activity implements View.OnClickListener
                 finish();
             }
         });
-        initData();
-        MyDataAdapter adapter = new MyDataAdapter(FollowListActivity.this, R.layout.mydata_item, dataList);
-        ListView listView = (ListView) findViewById(R.id.listView1);
-        listView.setAdapter(adapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
-                                    long arg3) {
-                // TODO Auto-generated method stub
-                MyData data = dataList.get(arg2);
-                Toast.makeText(FollowListActivity.this, data.getDataString(), Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    private void initData() {
-        // TODO Auto-generated method stub
-        MyData one = new MyData("one", R.mipmap.ic_default_photo);
-        MyData two = new MyData("two", R.mipmap.ic_about_me_star_test);
-        dataList.add(one);
-        dataList.add(two);
+        FollowListPresenter followListPresenter = FollowListPresenter.getInstance(this);
+        followListPresenter.getFollowList("a8affd60-efe6-11e4-a908-3132fc2abe39");
     }
 
     @Override

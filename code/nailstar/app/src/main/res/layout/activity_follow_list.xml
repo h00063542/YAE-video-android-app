@@ -7,9 +7,9 @@
     <com.yilos.widget.titlebar.TitleBar
         android:id="@+id/follow_list_title_bar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/about_me_header_nav"></com.yilos.widget.titlebar.TitleBar>
+        android:layout_height="wrap_content"></com.yilos.widget.titlebar.TitleBar>
     <ListView
-        android:id="@+id/listView1"
+        android:id="@+id/follow_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></ListView>
+        android:layout_height="wrap_content"></ListView>
 </LinearLayout>
