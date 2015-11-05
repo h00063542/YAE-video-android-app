@@ -1,13 +1,19 @@
 package com.yilos.nailstar.player.view;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.text.Html;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,10 +47,14 @@ import com.yilos.nailstar.player.entity.VideoInfo;
 import com.yilos.nailstar.player.presenter.TopicPresenter;
 import com.yilos.nailstar.util.CollectionUtil;
 import com.yilos.nailstar.util.Constants;
+import com.yilos.nailstar.util.LoggerFactory;
 import com.yilos.nailstar.util.StringUtil;
 import com.yilos.widget.circleimageview.CircleImageView;
+import com.yilos.widget.photoview.PhotoView;
 import com.yilos.widget.pullrefresh.PullToRefreshView;
 import com.yilos.widget.view.ImageCacheView;
+
+import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -54,6 +64,8 @@ public class VideoPlayerActivity extends BaseActivity implements
         VDVideoExtListeners.OnVDVideoPlaylistListener,
         PullToRefreshView.OnHeaderRefreshListener,
         PullToRefreshView.OnFooterRefreshListener {
+    private static final Logger LOGGER = LoggerFactory.getLogger(VideoPlayerActivity.class);
+
     private static final String TAG = "VideoPlayerActivity";
 
     // 顶部返回、topic名称、分享
@@ -65,7 +77,7 @@ public class VideoPlayerActivity extends BaseActivity implements
     private ScrollView mSvVideoPlayer;
     // 视频播放控件
     private VDVideoView mVDVideoView;
-    private FloatingActionButton mFabVideoPlayer;
+    private ImageView mIvVideoPlayIcon;
 
     // 作者信息
 //    private LinearLayout mLayoutTopicsImageTextHead;
@@ -93,6 +105,14 @@ public class VideoPlayerActivity extends BaseActivity implements
 
     private LinearLayout mLayoutShowTopicImageTextContent;
     private LinearLayout mLayoutTopicImageTextContentParent;
+
+
+    private View mZoomInImageTextLayout;
+    private TextView mTvZoomInImageTextIndex;
+    private TextView mTvZoomInImageSave;
+    private ViewPager mZoomInImageTextViewPager;
+
+    private Dialog mZoomInImageTextDialog;
 
     // topic评论
     private LinearLayout mLayoutTopicComments;
@@ -202,7 +222,7 @@ public class VideoPlayerActivity extends BaseActivity implements
         mCommentReplyBackgroundColor = getResources().getColor(R.color.topic_comment_reply_background_color);
 
 
-        mVideoPlayerPresenter.playerVideo(mTopicId);
+        mVideoPlayerPresenter.initTopicVideo(mTopicId);
         mVideoPlayerPresenter.initTopicRelatedInfo(mTopicId);
         mVideoPlayerPresenter.initTopicImageTextInfo(mTopicId);
         mVideoPlayerPresenter.initTopicComments(mTopicId, mPage);
@@ -222,7 +242,10 @@ public class VideoPlayerActivity extends BaseActivity implements
         mVDVideoView = (VDVideoView) findViewById(R.id.video_player);
         // 手动这是播放窗口父类，横屏的时候，会用这个做为容器使用，如果不设置，那么默认直接跳转到DecorView
         mVDVideoView.setVDVideoViewContainer((ViewGroup) mVDVideoView.getParent());
-//        mFabVideoPlayer = (FloatingActionButton) findViewById(R.id.fab_video_player);
+        mIvVideoPlayIcon = (ImageView) findViewById(R.id.iv_video_play_icon);
+
+        // 根据视频宽高比例，重新计算视频播放器高度
+        mVDVideoView.getLayoutParams().height = (int) (getResources().getDisplayMetrics().widthPixels / Constants.VIDEO_ASPECT_RATIO);
 
         // 作者信息
 //        mLayoutTopicsImageTextHead = (LinearLayout) findViewById(R.id.layout_topic_image_text_head);
@@ -251,6 +274,15 @@ public class VideoPlayerActivity extends BaseActivity implements
         mLayoutTopicImageTextContent = (LinearLayout) findViewById(R.id.layout_topic_image_text_content);
         mLayoutTopicImageTextContentParent = (LinearLayout) findViewById(R.id.layout_topic_image_text_content_parent);
 
+        mZoomInImageTextLayout = getLayoutInflater().inflate(R.layout.zoomin_topic_image_text_layout, null);
+        mTvZoomInImageTextIndex = (TextView) mZoomInImageTextLayout.findViewById(R.id.tv_zoomIn_topic_image_text_index);
+        mTvZoomInImageSave = (TextView) mZoomInImageTextLayout.findViewById(R.id.tv_zoomIn_topic_image_text_save);
+        mZoomInImageTextViewPager = (ViewPager) mZoomInImageTextLayout.findViewById(R.id.vp_zoomIn_topic_image_text);
+
+        mZoomInImageTextDialog = new Dialog(this, R.style.dialog_fullscreen);
+        mZoomInImageTextDialog.setContentView(mZoomInImageTextLayout);
+        mZoomInImageTextDialog.setCancelable(true);
+
         mLayoutTopicComments = (LinearLayout) findViewById(R.id.layout_topic_comments);
 
         mFabBackTop = (FloatingActionButton) findViewById(R.id.fab_back_top);
@@ -264,6 +296,26 @@ public class VideoPlayerActivity extends BaseActivity implements
     }
 
     private void initControlEvent() {
+        // 设置播放结束监听
+//        VDVideoViewController.getInstance(this).getExtListener().setOnVDVideoCompletionListener(new VDVideoExtListeners.OnVDVideoCompletionListener() {
+//            @Override
+//            public void onVDVideoCompletion(VDVideoInfo info, int status) {
+//                Log.i(TAG, "视频播放结束了1");
+//            }
+//        });
+        mVDVideoView.setCompletionListener(new VDVideoExtListeners.OnVDVideoCompletionListener() {
+            @Override
+            public void onVDVideoCompletion(VDVideoInfo info, int status) {
+                Log.i(TAG, "视频播放结束了2");
+            }
+        });
+        mVDVideoView.setPlayerChangeListener(new VDVideoExtListeners.OnVDVideoPlayerChangeListener() {
+            @Override
+            public void OnVDVideoPlayerChangeSwitch(int index, long position) {
+                //Log.i(TAG, "视频播放结束了");
+            }
+        });
+
         // 界面顶部返回按钮
         mBtnVideoPlayerBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -289,7 +341,7 @@ public class VideoPlayerActivity extends BaseActivity implements
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_MOVE://移动
-                        Log.i(TAG, "ScrollView的滚动事件" + (event.getAction() == MotionEvent.ACTION_DOWN));
+//                        Log.i(TAG, "ScrollView的滚动事件" + (event.getAction() == MotionEvent.ACTION_DOWN));
                         break;
                     case MotionEvent.ACTION_UP://向上
                         View childView = mSvVideoPlayer.getChildAt(0);
@@ -312,14 +364,13 @@ public class VideoPlayerActivity extends BaseActivity implements
             }
         });
 
-//        mFabVideoPlayer.setOnClickListener(new View.OnClickListener() {
-//
-//            @Override
-//            public void onClick(View v) {
-//                mVDVideoView.play(0);
-//                mFabVideoPlayer.setVisibility(View.GONE);
-//            }
-//        });
+        mIvVideoPlayIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mIvVideoPlayIcon.setVisibility(View.GONE);
+                mVDVideoView.play(0);
+            }
+        });
 
         // 展开收起图文按钮
         mLayoutShowTopicImageTextContent.setOnClickListener(new View.OnClickListener() {
@@ -476,9 +527,10 @@ public class VideoPlayerActivity extends BaseActivity implements
 
 
     @Override
-    public void playVideo(TopicInfo topicInfo) {
+    public void initTopicVideo(TopicInfo topicInfo) {
         //TODO 提示获取视频信息失败
         if (null == topicInfo) {
+            LOGGER.error(TAG + " 获取topic信息为null，topicId:" + mTopicId);
             return;
         }
         showTopicInfo2Page(topicInfo);
@@ -489,7 +541,6 @@ public class VideoPlayerActivity extends BaseActivity implements
         info.mPlayUrl = mVideoEntity.getOssUrl();
         mVDVideoListInfo.addVideoInfo(info);
         mVDVideoView.open(VideoPlayerActivity.this, mVDVideoListInfo);
-        mVDVideoView.play(0);
     }
 
     /**
@@ -529,9 +580,10 @@ public class VideoPlayerActivity extends BaseActivity implements
 
 
     @Override
-    public void initTopicImageTextInfo(TopicImageTextInfo topicImageTextInfo) {
+    public void initTopicImageTextInfo(final TopicImageTextInfo topicImageTextInfo) {
         //TODO 提示获取视频图文信息失败
         if (null == topicImageTextInfo) {
+            LOGGER.error(TAG + " 获取topic图文信息为null，topicId:" + mTopicId);
             return;
         }
         ArrayList pictures = topicImageTextInfo.getPictures();
@@ -558,6 +610,7 @@ public class VideoPlayerActivity extends BaseActivity implements
                 @Override
                 public void onClick(View v) {
                     // TODO 显示大图
+                    zoomInTopicImageText((ImageCacheView) v, topicImageTextInfo);
                 }
             });
             mLayoutTopicImageTextContent.addView(imageView);
@@ -571,9 +624,92 @@ public class VideoPlayerActivity extends BaseActivity implements
         }
     }
 
+    private void zoomInTopicImageText(final ImageCacheView imageView, final TopicImageTextInfo topicImageTextInfo) {
+        final ArrayList articles = topicImageTextInfo.getArticles();
+        final ArrayList pictures = topicImageTextInfo.getPictures();
+        final ArrayList<View> listViews = new ArrayList<View>();
+
+        int selectedIndex = -1;
+        LayoutInflater inflater = getLayoutInflater();
+        for (int i = 0; i < pictures.size(); i++) {
+            String picUrl = String.valueOf(pictures.get(i));
+            if (selectedIndex == -1 && picUrl.equals(imageView.getImageSrc())) {
+                selectedIndex = i;
+            }
+
+            View view = inflater.inflate(R.layout.zoomin_topic_image_text_item, null);
+            PhotoView photoView = (PhotoView) view.findViewById(R.id.pv_topic_image);
+            TextView textView = (TextView) view.findViewById(R.id.tv_topic_text);
+
+            photoView.setBackgroundColor(getResources().getColor(R.color.black));
+            photoView.setImageSrc(String.valueOf(picUrl));
+            photoView.enable();
+            textView.setText(String.valueOf(articles.get(i)));
+
+            listViews.add(view);
+        }
+        mZoomInImageTextViewPager.setPageMargin((int) (getResources().getDisplayMetrics().density * 15));
+        mZoomInImageTextViewPager.setAdapter(new PagerAdapter() {
+            @Override
+            public int getCount() {
+                return listViews.size();
+            }
+
+            @Override
+            public boolean isViewFromObject(View view, Object object) {
+                return view == object;
+            }
+
+            @Override
+            public Object instantiateItem(ViewGroup container, int position) {
+                if (position > getCount()) {
+                    return null;
+                }
+                View view = listViews.get(position);
+                container.addView(view);
+                return view;
+            }
+
+            @Override
+            public void destroyItem(ViewGroup container, int position, Object object) {
+                container.removeView((View) object);
+            }
+
+            @Override
+            public void finishUpdate(ViewGroup container) {
+                super.finishUpdate(container);
+                StringBuffer text = new StringBuffer();
+                text.append(mZoomInImageTextViewPager.getCurrentItem() + 1)
+                        .append("/")
+                        .append(getCount());
+                mTvZoomInImageTextIndex.setText(String.valueOf(text));
+            }
+        });
+        if (selectedIndex != -1) {
+            mZoomInImageTextViewPager.getAdapter().notifyDataSetChanged();
+            final int index = selectedIndex;
+            new Handler().post(new Runnable() {
+                @Override
+                public void run() {
+                    mZoomInImageTextViewPager.setCurrentItem(index);
+                }
+            });
+        }
+
+        mTvZoomInImageSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //TODO 保存图片
+            }
+        });
+
+        mZoomInImageTextDialog.show();
+    }
+
     @Override
     public void initTopicRelatedInfo(ArrayList<TopicRelatedInfo> topicRelatedList) {
         if (CollectionUtil.isEmpty(topicRelatedList)) {
+            LOGGER.error(TAG + " topic没有关联其他的的topics，topicId:" + mTopicId);
             return;
         }
         LinearLayout.LayoutParams layoutLp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1.0f);
@@ -584,7 +720,6 @@ public class VideoPlayerActivity extends BaseActivity implements
         FrameLayout.LayoutParams playTopicRelateIvLp = new FrameLayout.LayoutParams(mTopicRelatedPlayImageSize, mTopicRelatedPlayImageSize);
         playTopicRelateIvLp.gravity = Gravity.RIGHT | Gravity.BOTTOM;
         playTopicRelateIvLp.setMargins(0, 0, mAuthorPhotoMargin, mAuthorPhotoMargin);
-
 
         for (int i = 0; i < 4; i++) {
             FrameLayout topicRelateLayout = new FrameLayout(this);
@@ -613,7 +748,6 @@ public class VideoPlayerActivity extends BaseActivity implements
                 topicRelateLayout.addView(topicRelateIv);
             }
 
-
             mLayoutMoreVideosContent.addView(topicRelateLayout);
         }
     }
@@ -634,6 +768,7 @@ public class VideoPlayerActivity extends BaseActivity implements
     @Override
     public void initTopicCommentsInfo(ArrayList<TopicCommentInfo> topicComments) {
         if (CollectionUtil.isEmpty(topicComments)) {
+            // 设置评论已经全部加载完毕
             mIsTopicsCommentLastPage = true;
             mTopicPullToRefreshView.setFooterLastUpdate(null);
             return;
@@ -710,11 +845,18 @@ public class VideoPlayerActivity extends BaseActivity implements
                     ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             tvTopicCommentCreateDateLp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
             topicCommentCreateDateTv.setLayoutParams(tvTopicCommentCreateDateLp);
+
             StringBuffer contentText = new StringBuffer();
             if (topicCommentInfo.getIsHomework() == Constants.IS_HOME_WORK_VALUE) {
-                contentText.append("<font color=\"#555657\">#" + getResources().getString(R.string.submitted_homework) + "#    </font>");
+                contentText.append("<font color=\"#555657\">#")
+                        .append(getResources().getString(R.string.submitted_homework))
+                        .append("#    </font>");
             }
-            contentText.append("<font color=\"#adafb0\">" + getTopicCommentDateStr(topicCommentInfo.getCreateDate()) + "</font>");
+            contentText.append("<font color=\"#adafb0\">")
+                    .append(getTopicCommentDateStr(topicCommentInfo.getCreateDate()))
+                    .append("</font>");
+
+
             topicCommentCreateDateTv.setText(Html.fromHtml(contentText.toString()));
             topicCommentAuthorTv.setTextSize(TypedValue.COMPLEX_UNIT_PX, mCommentCreateDateFontSize);
             relativeLayout.addView(topicCommentCreateDateTv);
@@ -748,7 +890,6 @@ public class VideoPlayerActivity extends BaseActivity implements
                 topicCommentHomeWorkIv.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        //TODO 显示大图
                         Toast.makeText(VideoPlayerActivity.this, "显示大图", Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -764,9 +905,17 @@ public class VideoPlayerActivity extends BaseActivity implements
                 TextView topicCommentReplyTv = new TextView(this);
                 topicCommentReplyTv.setLayoutParams(topicCommentContentReplyLp);
                 StringBuffer replyText = new StringBuffer();
-                replyText.append("<font color=\"#693012\">" + topicCommentReplyInfo.getAuthor() + "</font>");
-                replyText.append("<font color=\"#555657\"> " + getResources().getString(R.string.reply) + " " + topicCommentReplyInfo.getAt().getNickName() + ": </font>");
-                replyText.append("<font color=\"#000000\">" + topicCommentReplyInfo.getContent() + "</font>");
+                replyText.append("<font color=\"#693012\">")
+                        .append(topicCommentReplyInfo.getAuthor())
+                        .append("</font>");
+
+                replyText.append("<font color=\"#555657\"> ")
+                        .append(getResources().getString(R.string.reply) + " " + topicCommentReplyInfo.getAt().getNickName())
+                        .append(": </font>");
+
+                replyText.append("<font color=\"#000000\">")
+                        .append(topicCommentReplyInfo.getContent())
+                        .append("</font>");
                 topicCommentReplyTv.setText(Html.fromHtml(replyText.toString()));
                 // 设置行高
                 topicCommentReplyTv.setLineSpacing(mCommentReplyLineHeight, 1);
@@ -829,7 +978,6 @@ public class VideoPlayerActivity extends BaseActivity implements
                 mTopicPullToRefreshView.onHeaderRefreshComplete();
             }
         }, 1000);
-
     }
 
     @Override
@@ -910,5 +1058,4 @@ public class VideoPlayerActivity extends BaseActivity implements
         }
 
     }
-
 }

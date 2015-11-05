@@ -30,6 +30,11 @@ import java.util.ArrayList;
 public class TopicServiceImpl implements ITopicService {
     private static final Logger LOGGER = LoggerFactory.getLogger(TopicServiceImpl.class);
 
+    /**
+     * @param topicId
+     * @return
+     * @throws NetworkDisconnectException
+     */
     @Override
     public TopicInfo getTopicInfo(String topicId) throws NetworkDisconnectException {
         if (!NailStarApplicationContext.getInstance().isNetworkConnected()) {
@@ -39,13 +44,13 @@ public class TopicServiceImpl implements ITopicService {
 
         String url = "/vapi/nailstar/topics/" + topicId;
         try {
-            String strVideoInfo = HttpClient.getJson(url);
-            if (StringUtil.isEmpty(strVideoInfo)) {
+            String strResult = HttpClient.getJson(url);
+            if (!isSuccess(strResult)) {
                 return topicInfo;
             }
             topicInfo = new TopicInfo();
 
-            JSONObject jsonObject = new JSONObject(strVideoInfo);
+            JSONObject jsonObject = new JSONObject(strResult);
             JSONObject jsonResult = jsonObject.optJSONObject(Constants.RESULT);
 
             ArrayList tags = new ArrayList();
@@ -83,6 +88,11 @@ public class TopicServiceImpl implements ITopicService {
         return topicInfo;
     }
 
+    /**
+     * @param topicId
+     * @return
+     * @throws NetworkDisconnectException
+     */
     @Override
     public TopicImageTextInfo getTopicImageTextInfo(String topicId) throws NetworkDisconnectException {
         if (!NailStarApplicationContext.getInstance().isNetworkConnected()) {
@@ -92,13 +102,13 @@ public class TopicServiceImpl implements ITopicService {
 
         String url = "/vapi/nailstar/topics/article/" + topicId;
         try {
-            String strVideoImageTextInfo = HttpClient.getJson(url);
-            if (StringUtil.isEmpty(strVideoImageTextInfo)) {
+            String strResult = HttpClient.getJson(url);
+            if (!isSuccess(strResult)) {
                 return topicImageTextInfo;
             }
 
             topicImageTextInfo = new TopicImageTextInfo();
-            JSONObject jsonObject = new JSONObject(strVideoImageTextInfo);
+            JSONObject jsonObject = new JSONObject(strResult);
             JSONObject jsonResult = jsonObject.optJSONObject(Constants.RESULT);
 
             ArrayList pictures = new ArrayList();
@@ -128,6 +138,11 @@ public class TopicServiceImpl implements ITopicService {
         return topicImageTextInfo;
     }
 
+    /**
+     * @param topicId
+     * @return
+     * @throws NetworkDisconnectException
+     */
     @Override
     public ArrayList<TopicRelatedInfo> getTopicRelatedInfoList(String topicId) throws NetworkDisconnectException {
         if (!NailStarApplicationContext.getInstance().isNetworkConnected()) {
@@ -137,11 +152,11 @@ public class TopicServiceImpl implements ITopicService {
 
         String url = "/vapi/nailstar/topics/" + topicId + "/related";
         try {
-            String strTopicsRelatedInfo = HttpClient.getJson(url);
-            if (StringUtil.isEmpty(strTopicsRelatedInfo)) {
+            String strResult = HttpClient.getJson(url);
+            if (!isSuccess(strResult)) {
                 return result;
             }
-            JSONObject jsonObject = new JSONObject(strTopicsRelatedInfo);
+            JSONObject jsonObject = new JSONObject(strResult);
             JSONObject jsonResult = jsonObject.optJSONObject(Constants.RESULT);
 
             JSONArray jsonRelated = jsonResult.optJSONArray(Constants.RELATED);
@@ -160,6 +175,12 @@ public class TopicServiceImpl implements ITopicService {
         return result;
     }
 
+    /**
+     * @param topicId
+     * @param page
+     * @return
+     * @throws NetworkDisconnectException
+     */
     @Override
     public ArrayList<TopicCommentInfo> getTopicComments(String topicId, int page) throws NetworkDisconnectException {
         if (!NailStarApplicationContext.getInstance().isNetworkConnected()) {
@@ -169,14 +190,13 @@ public class TopicServiceImpl implements ITopicService {
 
         String url = "/vapi/nailstar/topics/" + topicId + "/comments?page=" + page;
         try {
-            String strTopicCommentsInfo = HttpClient.getJson(url);
-            if (StringUtil.isEmpty(strTopicCommentsInfo)) {
+            String strResult = HttpClient.getJson(url);
+            if (!isSuccess(strResult)) {
                 return result;
             }
-            JSONObject jsonObject = new JSONObject(strTopicCommentsInfo);
+            JSONObject jsonObject = new JSONObject(strResult);
             JSONObject jsonResult = jsonObject.optJSONObject(Constants.RESULT);
             JSONArray jsonComments = jsonResult.optJSONArray(Constants.COMMENTS);
-
 
             for (int i = 0; i < jsonComments.length(); i++) {
                 JSONObject jsonComment = jsonComments.optJSONObject(i);
@@ -215,6 +235,10 @@ public class TopicServiceImpl implements ITopicService {
         return result;
     }
 
+    /**
+     * @param jsonReplies
+     * @return
+     */
     private ArrayList<TopicCommentReplyInfo> buildTopicCommentReplies(JSONArray jsonReplies) {
         ArrayList<TopicCommentReplyInfo> topicCommentReplies = new ArrayList<TopicCommentReplyInfo>();
         if (null == jsonReplies) {
@@ -232,13 +256,172 @@ public class TopicServiceImpl implements ITopicService {
             topicCommentReplyInfo.setIsHomework(jsonReply.optInt(Constants.IS_HOME_WORK, 0));
             topicCommentReplyInfo.setStatus(jsonReply.optInt(Constants.STATUS, 0));
             JSONObject jsonAt = jsonReply.optJSONObject(Constants.AT);
-            TopicCommentAtInfo topicCommentAtInfo = new TopicCommentAtInfo();
-            topicCommentAtInfo.setUserId(JsonUtil.optString(jsonReply, Constants.USER_ID));
-            topicCommentAtInfo.setNickName(JsonUtil.optString(jsonReply, Constants.NICKNAME));
-            topicCommentReplyInfo.setAt(topicCommentAtInfo);
+            if (null != jsonAt) {
+                TopicCommentAtInfo topicCommentAtInfo = new TopicCommentAtInfo();
+                topicCommentAtInfo.setUserId(JsonUtil.optString(jsonAt, Constants.USER_ID));
+                topicCommentAtInfo.setNickName(JsonUtil.optString(jsonAt, Constants.NICKNAME));
+                topicCommentReplyInfo.setAt(topicCommentAtInfo);
+            }
 
             topicCommentReplies.add(topicCommentReplyInfo);
         }
         return topicCommentReplies;
     }
+
+    /**
+     * @param topicId
+     * @return
+     * @throws NetworkDisconnectException
+     */
+    @Override
+    public boolean downloadVideo(String topicId) throws NetworkDisconnectException {
+        return false;
+    }
+
+    /**
+     * {
+     * uid: “daskfjafjafd”,
+     * type: 1, // 1浏览，2赞，3收藏，4转发
+     * topicId: “rerjkdfkajfafdaf222”
+     * }
+     *
+     * @param topicId
+     * @return
+     * @throws NetworkDisconnectException
+     */
+    @Override
+    public boolean collection(String topicId) throws NetworkDisconnectException {
+        if (!NailStarApplicationContext.getInstance().isNetworkConnected()) {
+            throw new NetworkDisconnectException("网络没有连接");
+        }
+        String url = "/vapi/nailstar/topics/" + topicId + "/actions";
+
+        try {
+
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put(Constants.UID, "");
+            jsonObject.put(Constants.TYPE, Constants.ACTION_TYPE_COLLECTION);
+            jsonObject.put(Constants.TOPIC_ID, topicId);
+            String strResult = HttpClient.post(url, jsonObject.toString());
+            return isSuccess(strResult);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            LOGGER.error(MessageFormat.format("收藏topic失败，topicId:{0}，url:{1}", topicId, url), e);
+        } catch (IOException e) {
+            e.printStackTrace();
+            LOGGER.error(MessageFormat.format("收藏topic失败，topicId:{0}，url:{1}", topicId, url), e);
+        }
+        return false;
+    }
+
+
+    /**
+     * {
+     * uid: “daskfjafjafd”,
+     * type: 1, // 2赞，3收藏
+     * topicId: “rerjkdfkajfafdaf222”
+     * }
+     *
+     * @param topicId
+     * @return
+     * @throws NetworkDisconnectException
+     */
+    @Override
+    public boolean cancelCollection(String topicId) throws NetworkDisconnectException {
+        if (!NailStarApplicationContext.getInstance().isNetworkConnected()) {
+            throw new NetworkDisconnectException("网络没有连接");
+        }
+        String url = "/vapi/nailstar/topics/" + topicId + "/cancel";
+
+        try {
+
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put(Constants.UID, "");
+            jsonObject.put(Constants.TYPE, Constants.ACTION_TYPE_COLLECTION);
+            jsonObject.put(Constants.TOPIC_ID, topicId);
+            String strResult = HttpClient.post(url, jsonObject.toString());
+            return isSuccess(strResult);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            LOGGER.error(MessageFormat.format("取消收藏topic失败，topicId:{0}，url:{1}", topicId, url), e);
+        } catch (IOException e) {
+            e.printStackTrace();
+            LOGGER.error(MessageFormat.format("取消收藏topic失败，topicId:{0}，url:{1}", topicId, url), e);
+        }
+        return false;
+    }
+
+    /**
+     * {
+     * author: “djfafdfalfafk”,
+     * atUser: “fdafsdfafsf”,
+     * content: “我也来评论一句”,
+     * contentPic: “http://st.yilos.com/pic/dalfjlafjafdfrere.png”,
+     * replyTo: “fdasjfkajdfkarere”
+     * }
+     *
+     * @param topicId
+     * @return
+     * @throws NetworkDisconnectException
+     */
+    @Override
+    public boolean addComment(String topicId) throws NetworkDisconnectException {
+        if (!NailStarApplicationContext.getInstance().isNetworkConnected()) {
+            throw new NetworkDisconnectException("网络没有连接");
+        }
+        String url = "/vapi/nailstar/topics/" + topicId + "/comments";
+        try {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put(Constants.AUTHOR, "");
+            jsonObject.put(Constants.AT_USER, "");
+            jsonObject.put(Constants.CONTENT, Constants.ACTION_TYPE_COLLECTION);
+            jsonObject.put(Constants.CONTENT_PIC, Constants.ACTION_TYPE_COLLECTION);
+            jsonObject.put(Constants.REPLY_TO, topicId);
+            String strResult = HttpClient.post(url, String.valueOf(jsonObject));
+            return isSuccess(strResult);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            LOGGER.error(MessageFormat.format("评论topic失败，topicId:{0}，url:{1}", topicId, url), e);
+        } catch (IOException e) {
+            e.printStackTrace();
+            LOGGER.error(MessageFormat.format("评论topic失败，topicId:{0}，url:{1}", topicId, url), e);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean submittedHomework(String topicId) throws NetworkDisconnectException {
+        if (!NailStarApplicationContext.getInstance().isNetworkConnected()) {
+            throw new NetworkDisconnectException("网络没有连接");
+        }
+        return false;
+    }
+
+    @Override
+    public boolean addVideoPlayCount(String topicId) throws NetworkDisconnectException {
+        if (!NailStarApplicationContext.getInstance().isNetworkConnected()) {
+            throw new NetworkDisconnectException("网络没有连接");
+        }
+        String url = "/vapi/nailstar/videos/" + topicId + "/actions";
+        try {
+            String strResult = HttpClient.post(url, Constants.EMPTY_JSON_STRING);
+            return isSuccess(strResult);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            LOGGER.error(MessageFormat.format("视频播放次数+1失败，topicId:{0}，url:{1}", topicId, url), e);
+        } catch (IOException e) {
+            e.printStackTrace();
+            LOGGER.error(MessageFormat.format("视频播放次数+1失败，topicId:{0}，url:{1}", topicId, url), e);
+        }
+        return false;
+    }
+
+    private boolean isSuccess(String jsonResultStr) throws JSONException {
+        if (StringUtil.isEmpty(jsonResultStr)) {
+            return false;
+        }
+        JSONObject jsonResult = new JSONObject(jsonResultStr);
+        return (null != jsonResult && Constants.CODE_VALUE_SUCCESS == jsonResult.optInt(Constants.CODE, Constants.CODE_VALUE_SUCCESS));
+    }
+
 }

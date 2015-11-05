@@ -34,7 +34,6 @@ public class HttpClient {
         Request request = new Request.Builder()
                 .url(serviceBaseUrl + url)
                 .build();
-
         Response response = okHttpClient.newCall(request).execute();
         if (!response.isSuccessful()) {
             throw new IOException("Unexpected code " + response);

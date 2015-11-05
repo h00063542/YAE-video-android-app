@@ -16,10 +16,15 @@ public interface LessionView {
     void refreshFailed();
 
     /**
-     * 刷新当前求教程活动
+     * 刷新当前求教程活动(求教程榜首)
      * @param lessionActivity
      */
     void refreshActivityTopic(LessionActivity lessionActivity);
+
+    /**
+     * 通知listview: 数据已刷新
+     */
+    void notifyRefreshListView();
 
     /**
      * 刷新投票页面
@@ -32,4 +37,10 @@ public interface LessionView {
      * @param rankingLessionList
      */
     void refreshRankingLession(List<CandidateLession> rankingLessionList);
+
+    /**
+     * 刷新倒计时
+     * @param time
+     */
+    void refreshCountDown(String time);
 }

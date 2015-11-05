@@ -148,13 +148,13 @@ public class PullToRefreshView extends LinearLayout {
      */
     private void init() {
         // Load all of the animations we need in code rather than through XML
-        mFlipAnimation = new RotateAnimation(0, -180,
+        mFlipAnimation = new RotateAnimation(0, 180,
                 RotateAnimation.RELATIVE_TO_SELF, 0.5f,
                 RotateAnimation.RELATIVE_TO_SELF, 0.5f);
         mFlipAnimation.setInterpolator(new LinearInterpolator());
         mFlipAnimation.setDuration(250);
         mFlipAnimation.setFillAfter(true);
-        mReverseFlipAnimation = new RotateAnimation(-180, 0,
+        mReverseFlipAnimation = new RotateAnimation(180, 0,
                 RotateAnimation.RELATIVE_TO_SELF, 0.5f,
                 RotateAnimation.RELATIVE_TO_SELF, 0.5f);
         mReverseFlipAnimation.setInterpolator(new LinearInterpolator());
