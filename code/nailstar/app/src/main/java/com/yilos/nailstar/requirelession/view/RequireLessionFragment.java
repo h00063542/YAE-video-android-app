@@ -20,12 +20,12 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.yilos.nailstar.R;
+import com.yilos.nailstar.player.view.VideoPlayerActivity;
 import com.yilos.nailstar.requirelession.Presenter.LessionPresenter;
 import com.yilos.nailstar.requirelession.entity.CandidateLession;
 import com.yilos.nailstar.requirelession.entity.LessionActivity;
 import com.yilos.nailstar.takeImage.TakeImage;
 import com.yilos.nailstar.takeImage.TakeImageCallback;
-import com.yilos.nailstar.util.ActivityUtil;
 import com.yilos.nailstar.util.Constants;
 import com.yilos.widget.circleimageview.CircleImageView;
 import com.yilos.widget.view.ImageCacheView;
@@ -362,8 +362,9 @@ public class RequireLessionFragment extends Fragment implements LessionView {
         lessionPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityUtil.toVideoPlayerPage(getActivity(), lessionActivity.getPrevious().getTopicId())
-                ;
+                Intent intent = new Intent(getActivity(), VideoPlayerActivity.class);
+                intent.putExtra(Constants.TOPIC_ID, lessionActivity.getPrevious().getTopicId());
+                startActivity(intent);
             }
         });
 
