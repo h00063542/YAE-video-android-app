@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.yilos.nailstar.R;
@@ -13,13 +14,16 @@ import com.yilos.nailstar.framework.view.BaseActivity;
 import com.yilos.nailstar.topic.presenter.TopicCommentPresenter;
 import com.yilos.nailstar.util.Constants;
 import com.yilos.nailstar.util.StringUtil;
+import com.yilos.widget.titlebar.TitleBar;
 
 /**
  * Created by yilos on 2015-11-05.
  */
 public class TopicCommentActivity extends BaseActivity implements ITopicCommentView {
 
-    private TextView mTvTopicCommentCancel;
+    private TitleBar mTbTopicCommentHead;
+    private ImageView mIvTopicCommentCancel;
+    private TextView mTvTopicCommentTitle;
     private TextView mTvTopicCommentSubmitted;
     private EditText mEtTopicCommentContent;
 
@@ -66,9 +70,16 @@ public class TopicCommentActivity extends BaseActivity implements ITopicCommentV
     }
 
     private void initControl() {
-        mTvTopicCommentCancel = (TextView) findViewById(R.id.tv_topic_comment_cancel);
-        mTvTopicCommentSubmitted = (TextView) findViewById(R.id.tv_topic_comment_submitted);
+        mTbTopicCommentHead = (TitleBar) findViewById(R.id.tb_topic_comment_head);
+        mIvTopicCommentCancel = mTbTopicCommentHead.getBackButton();
+        mTvTopicCommentTitle = mTbTopicCommentHead.getTitleView();
+        mTvTopicCommentSubmitted = mTbTopicCommentHead.getRightTextButton();
         mEtTopicCommentContent = (EditText) findViewById(R.id.et_topic_comment_content);
+
+        mTvTopicCommentTitle.setText(getString(R.string.comment));
+        mTvTopicCommentSubmitted.setText(getString(R.string.submitted));
+
+
         StringBuilder stringBuilder = new StringBuilder();
         if (Constants.TOPIC_COMMENT_TYPE_REPLY == mCommentType) {
             stringBuilder.append(getString(R.string.reply));
@@ -79,7 +90,7 @@ public class TopicCommentActivity extends BaseActivity implements ITopicCommentV
             stringBuilder.append(" ");
             stringBuilder.append(mCommentReplyAuthor);
         } else {
-            stringBuilder.append("写下你的学习心得");
+            stringBuilder.append(getString(R.string.write_down_your_learning_experience));
         }
         mEtTopicCommentContent.setHint(stringBuilder);
 
@@ -88,12 +99,12 @@ public class TopicCommentActivity extends BaseActivity implements ITopicCommentV
     }
 
     private void initControlEvent() {
-        mTvTopicCommentCancel.setOnClickListener(new View.OnClickListener() {
+        mIvTopicCommentCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(TopicCommentActivity.this, TopicVideoPlayerActivity.class);
                 intent.putExtra(Constants.TOPIC_ID, mTopicId);
-                startActivity(intent);
+                setResult(RESULT_CANCELED, intent);
                 finish();
             }
         });

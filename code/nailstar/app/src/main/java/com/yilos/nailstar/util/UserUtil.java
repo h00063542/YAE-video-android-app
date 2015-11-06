@@ -9,7 +9,7 @@ import android.content.SharedPreferences;
 public final class UserUtil {
 
     public static UserInfo getUserInfo(Context context) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(Constants.USER_INFO, context.MODE_WORLD_WRITEABLE);
+        SharedPreferences sharedPreferences = context.getSharedPreferences(Constants.USER_INFO, context.MODE_WORLD_READABLE);
         UserInfo userInfo = new UserInfo();
         userInfo.setUserId(sharedPreferences.getString(Constants.USER_ID, Constants.EMPTY_STRING));
         userInfo.setNickName(sharedPreferences.getString(Constants.NICKNAME, Constants.EMPTY_STRING));

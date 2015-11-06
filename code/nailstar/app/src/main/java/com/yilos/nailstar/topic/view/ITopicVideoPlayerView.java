@@ -27,6 +27,13 @@ public interface ITopicVideoPlayerView {
     void initTopicImageTextInfo(TopicImageTextInfo topicImageTextInfo);
 
     /**
+     * 主题评论数
+     *
+     * @param count
+     */
+    void initTopicCommentCount(int count);
+
+    /**
      * 初始化topic评论信息
      *
      * @param topicComments

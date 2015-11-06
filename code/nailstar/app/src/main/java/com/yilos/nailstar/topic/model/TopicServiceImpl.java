@@ -176,6 +176,37 @@ public class TopicServiceImpl implements ITopicService {
 
     /**
      * @param topicId
+     * @return
+     * @throws NetworkDisconnectException
+     */
+    public int getTopicCommentCount(String topicId) throws NetworkDisconnectException {
+        if (!NailStarApplicationContext.getInstance().isNetworkConnected()) {
+            throw new NetworkDisconnectException("网络没有连接");
+        }
+        int result = 0;
+
+        String url = "/vapi/nailstar/topics/" + topicId + "/";
+        try {
+            String strResult = HttpClient.getJson(url);
+            JSONObject jsonObject = buildJSONObject(strResult);
+            if (null == jsonObject) {
+                return result;
+            }
+            JSONObject jsonResult = jsonObject.optJSONObject(Constants.RESULT);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            LOGGER.error(MessageFormat.format("获取topic评论数失败，topicId:{0}，url:{1}", topicId, url), e);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            LOGGER.error(MessageFormat.format("获取topic评论数失败，topicId:{0}，url:{1}", topicId, url), e);
+        }
+        return result;
+    }
+
+
+    /**
+     * @param topicId
      * @param page
      * @return
      * @throws NetworkDisconnectException
