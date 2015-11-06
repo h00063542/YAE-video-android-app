@@ -937,6 +937,15 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         this.finish();
     }
 
+    @Override
+    public void initTopicCommentCount(int count) {
+        StringBuilder stringBuild = new StringBuilder();
+        stringBuild.append(getString(R.string.topic_comment_count));
+        stringBuild.append(" ");
+        stringBuild.append(count);
+        mTvTopicCommentCount.setText(stringBuild);
+    }
+
 
     @Override
     public void initTopicCommentsInfo(ArrayList<TopicCommentInfo> topicComments, int orderBy) {

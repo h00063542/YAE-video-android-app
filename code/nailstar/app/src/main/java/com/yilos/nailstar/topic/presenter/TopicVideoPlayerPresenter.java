@@ -121,6 +121,34 @@ public class TopicVideoPlayerPresenter {
 
     }
 
+    public void initTopicCommentCount(final String topicId) {
+        TaskManager.Task loadTopicImageTextInfo = new TaskManager.BackgroundTask() {
+            @Override
+            public Object doWork(Object data) {
+                try {
+                    return topicsService.getTopicCommentCount(topicId);
+                } catch (NetworkDisconnectException e) {
+                    e.printStackTrace();
+                    LOGGER.error("获取topic图文信息失败，topicId:" + topicId, e);
+                }
+                return null;
+            }
+        };
+
+        TaskManager.UITask<Integer> updateUi = new TaskManager.UITask<Integer>() {
+            @Override
+            public Object doWork(Integer count) {
+                videoPlayerView.initTopicCommentCount(count);
+                return null;
+            }
+        };
+
+        new TaskManager()
+                .next(loadTopicImageTextInfo)
+                .next(updateUi)
+                .start();
+    }
+
     public void initTopicComments(final String topicId, final int page) {
         TaskManager.Task loadTopicComments = new TaskManager.BackgroundTask() {
             @Override

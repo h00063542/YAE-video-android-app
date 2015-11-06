@@ -41,6 +41,15 @@ public interface ITopicService {
     ArrayList<TopicRelatedInfo> getTopicRelatedInfoList(String topicId) throws NetworkDisconnectException;
 
     /**
+     * 获取主题的评论数量
+     *
+     * @param topicId
+     * @return
+     * @throws NetworkDisconnectException
+     */
+    int getTopicCommentCount(String topicId) throws NetworkDisconnectException;
+
+    /**
      * 获取主题评论
      *
      * @param topicId
