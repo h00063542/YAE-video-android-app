@@ -228,8 +228,8 @@ public class AboutMeServiceImpl implements AboutMeService {
         //http://api2.naildaka.com/vapi/nailstar/account/a8affd60-efe6-11e4-a908-3132fc2abe39/fansList?page=1
         String url = "/vapi/nailstar/account/" + uid + "/fansList?page=1";
         try {
-            jsonObject = HttpClient.getJson(url);
-            //"{\"code\":0,\"result\":{\"users\":[{\"accountId\":\"dc282890-f87c-11e4-b13e-57eb04c66d6e\",\"nickname\":\"大咖程序猿\",\"type\":6,\"photoUrl\":\"http://pic.yilos.com/5f8d77bef850f6dd90a95688803b2929\",\"profile\":null},{\"accountId\":\"dc282890-f87c-11e4-b13e-57eb04c66d6e\",\"nickname\":\"大咖程序猿\",\"type\":6,\"photoUrl\":\"http://pic.yilos.com/5f8d77bef850f6dd90a95688803b2929\",\"profile\":null},{\"accountId\":\"dc282890-f87c-11e4-b13e-57eb04c66d6e\",\"nickname\":\"大咖程序猿\",\"type\":5,\"photoUrl\":\"http://pic.yilos.com/5f8d77bef850f6dd90a95688803b2929\",\"profile\":null}]}}";
+            jsonObject = //HttpClient.getJson(url);
+            "{\"code\":0,\"result\":{\"users\":[{\"accountId\":\"dc282890-f87c-11e4-b13e-57eb04c66d6e\",\"nickname\":\"大咖程序猿\",\"type\":6,\"photoUrl\":\"http://pic.yilos.com/5f8d77bef850f6dd90a95688803b2929\",\"profile\":null},{\"accountId\":\"dc282890-f87c-11e4-b13e-57eb04c66d6e\",\"nickname\":\"大咖程序猿\",\"type\":6,\"photoUrl\":\"http://pic.yilos.com/5f8d77bef850f6dd90a95688803b2929\",\"profile\":null},{\"accountId\":\"dc282890-f87c-11e4-b13e-57eb04c66d6e\",\"nickname\":\"大咖程序猿\",\"type\":5,\"photoUrl\":\"http://pic.yilos.com/5f8d77bef850f6dd90a95688803b2929\",\"profile\":null}]}}";
             fansListObject = new JSONObject(jsonObject);
             if (fansListObject.getInt("code") != 0) {
                 return fansLists;
@@ -257,8 +257,8 @@ public class AboutMeServiceImpl implements AboutMeService {
                         imageBitmap
                 ));
             }
-        } catch (IOException e) {
-            throw new NetworkDisconnectException("网络获取我的关注列表失败", e);
+//        } catch (IOException e) {
+//            throw new NetworkDisconnectException("网络获取我的关注列表失败", e);
         } catch (JSONException e) {
             e.printStackTrace();
         }

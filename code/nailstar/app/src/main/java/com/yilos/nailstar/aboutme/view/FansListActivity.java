@@ -50,19 +50,6 @@ public class FansListActivity extends Activity {
         }
 
         if(nailArtTeacher.size() != 0) {
-//            FansListAdapter fansListAdapter = new FansListAdapter(FansListActivity.this, R.layout.fans_list_item, nailArtTeacher);
-//            ListView listView = (ListView) findViewById(R.id.inner_fans_list);
-//            listView.setAdapter(fansListAdapter);
-//            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//
-//                @Override
-//                public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
-//                                        long arg3) {
-//                    // TODO Auto-generated method stub
-//                    FansList fansList = nailArtTeacher.get(arg2);
-//                    Toast.makeText(FansListActivity.this, fansList.getNickname(), Toast.LENGTH_SHORT).show();
-//                }
-//            });
             mFansListCategoryAdapter.addCategory("老师 " + nailArtTeacher.size(), new FansListAdapter(FansListActivity.this, R.layout.fans_list_item, nailArtTeacher));
         }
 
@@ -90,7 +77,7 @@ public class FansListActivity extends Activity {
         setContentView(R.layout.activity_fans_list);
         titleBar = (TitleBar)findViewById(R.id.fans_list_title_bar);
         titleText = titleBar.getTitleView();
-        titleText.setText("我的粉丝");
+        titleText.setText(R.string.my_fans_list);
         backButton = titleBar.getBackButton();
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,8 +85,8 @@ public class FansListActivity extends Activity {
                 finish();
             }
         });
-        FansListPresenter fansListPresenter = FansListPresenter.getInstance(this);
-        fansListPresenter.getFansList("a8affd60-efe6-11e4-a908-3132fc2abe39");
+//        FansListPresenter fansListPresenter = FansListPresenter.getInstance(this);
+//        fansListPresenter.getFansList("a8affd60-efe6-11e4-a908-3132fc2abe39");
     }
 
     private FansListCategoryAdapter mFansListCategoryAdapter = new FansListCategoryAdapter() {
