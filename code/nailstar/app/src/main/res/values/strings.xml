@@ -44,6 +44,8 @@
     <string name="about_me_give_us_advice">给我们提意见</string>
     <string name="about_me_share">分享美甲大咖给朋友</string>
     <string name="about_me_setting">设置</string>
+    <string name="teacher">老师</string>
+    <string name="ka_you">咖友</string>
 
     <!-- 修改资料界面-->
     <string name="edit_person_info">修改资料</string>

@@ -1,7 +1,6 @@
 package com.yilos.nailstar.aboutme.view;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,25 +10,26 @@ import android.widget.TextView;
 
 import com.yilos.nailstar.R;
 import com.yilos.nailstar.aboutme.entity.FansList;
+import com.yilos.nailstar.aboutme.entity.FansListCategory;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
-import java.util.Objects;
-import java.util.logging.Logger;
 
 /**
  * Created by sisilai on 15/11/6.
  */
 
-public class CategoryAdapter extends BaseAdapter {
+public class FansCategoryAdapter extends BaseAdapter {
 
     private static final int TYPE_CATEGORY_ITEM = 0;
     private static final int TYPE_ITEM = 1;
 
-    private ArrayList<Category> mListData;
+    private ArrayList<FansListCategory> mListData;
     private LayoutInflater mInflater;
 
 
-    public CategoryAdapter(Context context, ArrayList<Category> pData) {
+    public FansCategoryAdapter(Context context, ArrayList<FansListCategory> pData) {
         mListData = pData;
         mInflater = LayoutInflater.from(context);
     }
@@ -40,8 +40,8 @@ public class CategoryAdapter extends BaseAdapter {
 
         if (null != mListData) {
             //  所有分类中item的总和是ListVIew  Item的总个数
-            for (Category category : mListData) {
-                count += category.getItemCount();
+            for (FansListCategory fansListCategory : mListData) {
+                count += fansListCategory.getItemCount();
             }
         }
 
@@ -59,13 +59,13 @@ public class CategoryAdapter extends BaseAdapter {
         // 同一分类内，第一个元素的索引值
         int categroyFirstIndex = 0;
 
-        for (Category category : mListData) {
-            int size = category.getItemCount();
+        for (FansListCategory fansListCategory : mListData) {
+            int size = fansListCategory.getItemCount();
             // 在当前分类中的索引值
             int categoryIndex = position - categroyFirstIndex;
             // item在当前分类内
             if (categoryIndex < size) {
-                return  category.getItem( categoryIndex );
+                return  fansListCategory.getItem( categoryIndex );
             }
 
             // 索引移动到当前分类结尾，即下一个分类第一个元素索引
@@ -84,14 +84,14 @@ public class CategoryAdapter extends BaseAdapter {
         // 同一分类内，第一个元素的索引值
         int categroyFirstIndex = 0;
 
-        for (Category category : mListData) {
-            int size = category.getItemCount();
+        for (FansListCategory fansListCategory : mListData) {
+            int size = fansListCategory.getItemCount();
             // 在当前分类中的索引值
             int categoryIndex = position - categroyFirstIndex;
             // item在当前分类内
             if (categoryIndex < size) {
                 if (categoryIndex == 0) {
-                    return  category.getTitleItem( categoryIndex );
+                    return  fansListCategory.getTitleItem();
                 }
             }
 
@@ -112,8 +112,8 @@ public class CategoryAdapter extends BaseAdapter {
 
         int categroyFirstIndex = 0;
 
-        for (Category category : mListData) {
-            int size = category.getItemCount();
+        for (FansListCategory fansListCategory : mListData) {
+            int size = fansListCategory.getItemCount();
             // 在当前分类中的索引值
             int categoryIndex = position - categroyFirstIndex;
             if (categoryIndex == 0) {
@@ -146,8 +146,8 @@ public class CategoryAdapter extends BaseAdapter {
                 }
 
                 TextView textView = (TextView) convertView.findViewById(R.id.header);
-                String  itemValue = (String) getTitleItem(position);
-                textView.setText( itemValue );
+                String  itemValue = getTitleItem(position);
+                textView.setText(itemValue);
                 break;
 
             case TYPE_ITEM:
@@ -155,18 +155,20 @@ public class CategoryAdapter extends BaseAdapter {
                 ViewHolder viewHolder = null;
                 if (null == convertView) {
 
-                    convertView = mInflater.inflate(R.layout.listview_item, null);
-
+                    convertView = mInflater.inflate(R.layout.fans_list_item, null);
                     viewHolder = new ViewHolder();
-                    viewHolder.content = (TextView) convertView.findViewById(R.id.content);
-                    viewHolder.contentIcon = (ImageView) convertView.findViewById(R.id.content_icon);
-                    convertView.setTag(viewHolder);
+                    viewHolder.nickName = (TextView) convertView.findViewById(R.id.fans_list_name);
+                    viewHolder.photo = (ImageView) convertView.findViewById(R.id.fans_list_photo);
+                    viewHolder.introduction = (TextView) convertView.findViewById(R.id.fans_list_introduction);
                 } else {
                     viewHolder = (ViewHolder) convertView.getTag();
                 }
                 // 绑定数据
-                viewHolder.content.setText((String) fansList.getNickname());
-                viewHolder.contentIcon.setImageResource(R.drawable.ic_launcher);
+                String nickName = fansList.getNickname();
+                viewHolder.nickName.setText(nickName);
+                viewHolder.introduction.setText(fansList.getProfile());
+                viewHolder.photo.setImageBitmap(fansList.getImageBitmap());
+                convertView.setTag(viewHolder);
                 break;
         }
 
@@ -186,8 +188,8 @@ public class CategoryAdapter extends BaseAdapter {
 
 
     private class ViewHolder {
-        TextView content;
-        ImageView contentIcon;
+        TextView nickName;
+        ImageView photo;
+        TextView introduction;
     }
-
 }

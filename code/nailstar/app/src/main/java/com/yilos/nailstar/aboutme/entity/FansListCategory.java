@@ -1,33 +1,45 @@
 package com.yilos.nailstar.aboutme.entity;
 
-import android.widget.Adapter;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Created by sisilai on 15/11/5.
+ * Created by sisilai on 15/11/6.
  */
+
 public class FansListCategory {
-    private String mTitle;
 
-    private Adapter mAdapter;
-    public FansListCategory(String title, Adapter adapter) {
-        mTitle = title;
-        mAdapter = adapter;
+    private String mCategoryName;
+    private List<FansList> mCategoryItem = new ArrayList<>();
+
+    public FansListCategory(String mCategroyName) {
+        mCategoryName = mCategroyName;
     }
 
-    public void setTile(String title) {
-        mTitle = title;
+    public void addItem(FansList fansList) {
+        mCategoryItem.add(fansList);
     }
 
-    public String getTitle() {
-        return mTitle;
+    /**
+     *  获取Item内容
+     *
+     * @param pPosition
+     * @return
+     */
+    public FansList getItem(int pPosition) {
+        return mCategoryItem.get(pPosition - 1);
     }
 
-    public void setAdapter(Adapter adapter) {
-        mAdapter = adapter;
+    public String getTitleItem() {
+        return mCategoryName;
     }
 
-    public Adapter getAdapter() {
-        return mAdapter;
+    /**
+     * 当前类别Item总数。Category也需要占用一个Item
+     * @return
+     */
+    public int getItemCount() {
+        return mCategoryItem.size() + 1;
     }
 
 }

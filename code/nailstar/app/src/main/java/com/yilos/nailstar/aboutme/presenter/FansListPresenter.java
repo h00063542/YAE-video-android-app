@@ -5,7 +5,6 @@ import com.yilos.nailstar.aboutme.entity.FollowList;
 import com.yilos.nailstar.aboutme.model.AboutMeService;
 import com.yilos.nailstar.aboutme.model.AboutMeServiceImpl;
 import com.yilos.nailstar.aboutme.view.FansListActivity;
-import com.yilos.nailstar.aboutme.view.MainActivity;
 import com.yilos.nailstar.framework.exception.NetworkDisconnectException;
 import com.yilos.nailstar.util.TaskManager;
 
@@ -17,9 +16,9 @@ import java.util.ArrayList;
 public class FansListPresenter {
     private AboutMeService aboutMeService = new AboutMeServiceImpl();
     private static FansListPresenter fansListPresenter = new FansListPresenter();
-    private MainActivity mainActivity;
-    public static FansListPresenter getInstance(MainActivity mainActivity) {
-        fansListPresenter.mainActivity = mainActivity;
+    private FansListActivity fansListActivity;
+    public static FansListPresenter getInstance(FansListActivity fansListActivity) {
+        fansListPresenter.fansListActivity = fansListActivity;
         return fansListPresenter;
     }
     //获取粉丝列表
@@ -39,7 +38,7 @@ public class FansListPresenter {
         TaskManager.UITask<ArrayList<FansList>> fansListUITask = new TaskManager.UITask<ArrayList<FansList>>() {
             @Override
             public ArrayList<FollowList> doWork(ArrayList<FansList> data) {
-                mainActivity.initFansList(data);
+                fansListActivity.initFansList(data);
                 return null;
             }
         };

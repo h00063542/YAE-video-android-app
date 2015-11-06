@@ -3,8 +3,8 @@ package com.yilos.nailstar.aboutme.view;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -12,63 +12,58 @@ import android.widget.Toast;
 
 import com.yilos.nailstar.R;
 import com.yilos.nailstar.aboutme.entity.FansList;
+import com.yilos.nailstar.aboutme.entity.FansListCategory;
 import com.yilos.nailstar.aboutme.presenter.FansListPresenter;
 import com.yilos.widget.titlebar.TitleBar;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
- * Created by sisilai on 15/11/5.
+ * Created by sisilai on 15/11/6.
  */
 public class FansListActivity extends Activity {
     private TitleBar titleBar;
     private TextView titleText;
     private ImageView backButton;
 
-    private List<FansList> dataList = new ArrayList<FansList>();
-    private List<FansList> nailArtTeacher = new ArrayList<FansList>();
-    private List<FansList> other = new ArrayList<FansList>();
+    private FansCategoryAdapter mCustomBaseAdapter;
+    ArrayList<FansListCategory> listData = new ArrayList<>();
+    private static int TeacherCount = 0;
+    private static int otherCount = 0;
 
     public void initFansList(ArrayList<FansList> fansLists) {
         if (fansLists == null) {
             return;
         }
-        dataList = fansLists;
-        for (FansList fansList : dataList) {
-            //        1美甲店主
-            //        2美甲师
-            //        3美甲从业者
-            //        4美甲消费者
-            //        5美甲老师
-            //        6其他
+
+        ListView listView = (ListView) findViewById(R.id.fans_list);
+        // 数据
+        for (FansList fansList : fansLists) {
             if (fansList.getType() == 5) {
-                    nailArtTeacher.add(fansList);
+                TeacherCount = TeacherCount + 1;
             } else {
-                other.add(fansList);
+                otherCount = otherCount + 1;
+            }
+        }
+        FansListCategory teacherCategory = new FansListCategory(R.string.teacher + " " + TeacherCount);
+        FansListCategory otherCategory = new FansListCategory(R.string.ka_you + " " + otherCount);
+        for (FansList fansList : fansLists) {
+            if (fansList.getType() == 5) {
+                teacherCategory.addItem(fansList);
+            } else {
+                otherCategory.addItem(fansList);
             }
         }
 
-        if(nailArtTeacher.size() != 0) {
-            mFansListCategoryAdapter.addCategory("老师 " + nailArtTeacher.size(), new FansListAdapter(FansListActivity.this, R.layout.fans_list_item, nailArtTeacher));
-        }
+        listData.add(teacherCategory);
+        listData.add(otherCategory);
 
-        if(other.size() != 0) {
-            mFansListCategoryAdapter.addCategory("普通用户 " + other.size(),new FansListAdapter(FansListActivity.this, R.layout.fans_list_item, other));
-        }
+        mCustomBaseAdapter = new FansCategoryAdapter(getBaseContext(), listData);
 
-        ListView categoryList = (ListView) findViewById(R.id.categoryList);
+        // 适配器与ListView绑定
+        listView.setAdapter(mCustomBaseAdapter);
 
-        categoryList.setAdapter(mFansListCategoryAdapter);
-        categoryList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
-                                    long arg3) {
-                // TODO Auto-generated method stub
-                FansList fansList = dataList.get(arg2);
-                Toast.makeText(FansListActivity.this, fansList.getNickname(), Toast.LENGTH_SHORT).show();
-            }
-        });
+        listView.setOnItemClickListener(new ItemClickListener());
     }
 
     @Override
@@ -85,25 +80,20 @@ public class FansListActivity extends Activity {
                 finish();
             }
         });
-//        FansListPresenter fansListPresenter = FansListPresenter.getInstance(this);
-//        fansListPresenter.getFansList("a8affd60-efe6-11e4-a908-3132fc2abe39");
+        FansListPresenter fansListPresenter = FansListPresenter.getInstance(this);
+        fansListPresenter.getFansList("a8affd60-efe6-11e4-a908-3132fc2abe39");
+
     }
 
-    private FansListCategoryAdapter mFansListCategoryAdapter = new FansListCategoryAdapter() {
+
+    private class ItemClickListener implements OnItemClickListener {
+
         @Override
-        protected View getTitleView(String title, int index, View convertView, ViewGroup parent) {
-            TextView titleView;
-
-            if (convertView == null) {
-                titleView = (TextView)getLayoutInflater().inflate(R.layout.fans_list_item_title, null);
-            } else {
-                titleView = (TextView)convertView;
-            }
-
-            titleView.setText(title);
-
-            return titleView;
+        public void onItemClick(AdapterView<?> parent, View view, int position,
+                                long id) {
+            Toast.makeText(getBaseContext(),mCustomBaseAdapter.getItem(position).getNickname(),
+                    Toast.LENGTH_SHORT).show();
         }
-    };
 
+    }
 }
