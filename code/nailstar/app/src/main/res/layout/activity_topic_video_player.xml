@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:orientation="vertical"
-    tools:context=".player.view.VideoPlayerActivity">
+    tools:context=".topic.view.TopicVideoPlayerActivity">
 
     <!--视频播放界面顶部控件，返回按钮，视频名称，分享按钮-->
     <RelativeLayout
@@ -84,15 +84,6 @@
                             android:background="@color/black"
                             app:layerAttrs="@array/video_layers">
 
-                            <!--<com.melnykov.fab.FloatingActionButton-->
-                            <!--android:id="@+id/fab_video_player"-->
-                            <!--android:layout_width="10dp"-->
-                            <!--android:layout_height="10dp"-->
-                            <!--android:layout_gravity="center_vertical|center_horizontal"-->
-                            <!--android:layout_margin="10dp"-->
-                            <!--android:src="@drawable/play"-->
-                            <!--fab:fab_colorNormal="@color/grey"-->
-                            <!--fab:fab_colorPressed="@color/green" />-->
                         </com.sina.sinavideo.sdk.VDVideoView>
 
                         <ImageView

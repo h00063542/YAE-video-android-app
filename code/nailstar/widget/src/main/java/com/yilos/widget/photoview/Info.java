@@ -26,4 +26,32 @@ public class Info {
         mScaleType = scaleType;
         mDegrees = degrees;
     }
+
+    public RectF getmRect() {
+        return mRect;
+    }
+
+    public RectF getmLocalRect() {
+        return mLocalRect;
+    }
+
+    public RectF getmImgRect() {
+        return mImgRect;
+    }
+
+    public RectF getmWidgetRect() {
+        return mWidgetRect;
+    }
+
+    public float getmScale() {
+        return mScale;
+    }
+
+    public float getmDegrees() {
+        return mDegrees;
+    }
+
+    public ImageView.ScaleType getmScaleType() {
+        return mScaleType;
+    }
 }

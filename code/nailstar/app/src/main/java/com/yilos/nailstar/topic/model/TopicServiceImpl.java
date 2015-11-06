@@ -1,14 +1,14 @@
-package com.yilos.nailstar.player.model;
+package com.yilos.nailstar.topic.model;
 
 import com.yilos.nailstar.framework.entity.NailStarApplicationContext;
 import com.yilos.nailstar.framework.exception.NetworkDisconnectException;
-import com.yilos.nailstar.player.entity.TopicCommentAtInfo;
-import com.yilos.nailstar.player.entity.TopicCommentInfo;
-import com.yilos.nailstar.player.entity.TopicCommentReplyInfo;
-import com.yilos.nailstar.player.entity.TopicImageTextInfo;
-import com.yilos.nailstar.player.entity.TopicInfo;
-import com.yilos.nailstar.player.entity.TopicRelatedInfo;
-import com.yilos.nailstar.player.entity.VideoInfo;
+import com.yilos.nailstar.topic.entity.TopicCommentAtInfo;
+import com.yilos.nailstar.topic.entity.TopicCommentInfo;
+import com.yilos.nailstar.topic.entity.TopicCommentReplyInfo;
+import com.yilos.nailstar.topic.entity.TopicImageTextInfo;
+import com.yilos.nailstar.topic.entity.TopicInfo;
+import com.yilos.nailstar.topic.entity.TopicRelatedInfo;
+import com.yilos.nailstar.topic.entity.TopicVideoInfo;
 import com.yilos.nailstar.util.Constants;
 import com.yilos.nailstar.util.HttpClient;
 import com.yilos.nailstar.util.JsonUtil;
@@ -45,12 +45,12 @@ public class TopicServiceImpl implements ITopicService {
         String url = "/vapi/nailstar/topics/" + topicId;
         try {
             String strResult = HttpClient.getJson(url);
-            if (!isSuccess(strResult)) {
+            JSONObject jsonObject = buildJSONObject(strResult);
+            if (null == jsonObject) {
                 return topicInfo;
             }
             topicInfo = new TopicInfo();
 
-            JSONObject jsonObject = new JSONObject(strResult);
             JSONObject jsonResult = jsonObject.optJSONObject(Constants.RESULT);
 
             ArrayList tags = new ArrayList();
@@ -63,7 +63,7 @@ public class TopicServiceImpl implements ITopicService {
             JSONArray jsonVideos = jsonResult.optJSONArray(Constants.VIDEOS);
             for (int i = 0; i < jsonVideos.length(); i++) {
                 JSONObject jsonVideoObj = jsonVideos.optJSONObject(i);
-                videos.add(new VideoInfo(JsonUtil.optString(jsonVideoObj, Constants.VIDEO_ID), jsonVideoObj.optInt("playTimes", 0), JsonUtil.optString(jsonVideoObj, Constants.CC_URL), JsonUtil.optString(jsonVideoObj, Constants.OSS_URL)));
+                videos.add(new TopicVideoInfo(JsonUtil.optString(jsonVideoObj, Constants.VIDEO_ID), jsonVideoObj.optInt("playTimes", 0), JsonUtil.optString(jsonVideoObj, Constants.CC_URL), JsonUtil.optString(jsonVideoObj, Constants.OSS_URL)));
             }
 
             topicInfo.setId(JsonUtil.optString(jsonResult, Constants.ID));
@@ -103,21 +103,20 @@ public class TopicServiceImpl implements ITopicService {
         String url = "/vapi/nailstar/topics/article/" + topicId;
         try {
             String strResult = HttpClient.getJson(url);
-            if (!isSuccess(strResult)) {
+            JSONObject jsonObject = buildJSONObject(strResult);
+            if (null == jsonObject) {
                 return topicImageTextInfo;
             }
-
             topicImageTextInfo = new TopicImageTextInfo();
-            JSONObject jsonObject = new JSONObject(strResult);
             JSONObject jsonResult = jsonObject.optJSONObject(Constants.RESULT);
 
-            ArrayList pictures = new ArrayList();
+            ArrayList<String> pictures = new ArrayList<String>();
             JSONArray jsonPictures = jsonResult.optJSONArray(Constants.PICTURES);
             for (int i = 0; i < jsonPictures.length(); i++) {
                 pictures.add(JsonUtil.optString(jsonPictures, i));
             }
 
-            ArrayList articles = new ArrayList();
+            ArrayList<String> articles = new ArrayList<String>();
             JSONArray jsonArticles = jsonResult.optJSONArray(Constants.ARTICLES);
             for (int i = 0; i < jsonArticles.length(); i++) {
                 articles.add(JsonUtil.optString(jsonArticles, i));
@@ -153,10 +152,10 @@ public class TopicServiceImpl implements ITopicService {
         String url = "/vapi/nailstar/topics/" + topicId + "/related";
         try {
             String strResult = HttpClient.getJson(url);
-            if (!isSuccess(strResult)) {
+            JSONObject jsonObject = buildJSONObject(strResult);
+            if (null == jsonObject) {
                 return result;
             }
-            JSONObject jsonObject = new JSONObject(strResult);
             JSONObject jsonResult = jsonObject.optJSONObject(Constants.RESULT);
 
             JSONArray jsonRelated = jsonResult.optJSONArray(Constants.RELATED);
@@ -191,10 +190,10 @@ public class TopicServiceImpl implements ITopicService {
         String url = "/vapi/nailstar/topics/" + topicId + "/comments?page=" + page;
         try {
             String strResult = HttpClient.getJson(url);
-            if (!isSuccess(strResult)) {
+            JSONObject jsonObject = buildJSONObject(strResult);
+            if (null == jsonObject) {
                 return result;
             }
-            JSONObject jsonObject = new JSONObject(strResult);
             JSONObject jsonResult = jsonObject.optJSONObject(Constants.RESULT);
             JSONArray jsonComments = jsonResult.optJSONArray(Constants.COMMENTS);
 
@@ -303,7 +302,7 @@ public class TopicServiceImpl implements ITopicService {
             jsonObject.put(Constants.TYPE, Constants.ACTION_TYPE_COLLECTION);
             jsonObject.put(Constants.TOPIC_ID, topicId);
             String strResult = HttpClient.post(url, jsonObject.toString());
-            return isSuccess(strResult);
+            return null != buildJSONObject(strResult);
         } catch (JSONException e) {
             e.printStackTrace();
             LOGGER.error(MessageFormat.format("收藏topic失败，topicId:{0}，url:{1}", topicId, url), e);
@@ -340,7 +339,7 @@ public class TopicServiceImpl implements ITopicService {
             jsonObject.put(Constants.TYPE, Constants.ACTION_TYPE_COLLECTION);
             jsonObject.put(Constants.TOPIC_ID, topicId);
             String strResult = HttpClient.post(url, jsonObject.toString());
-            return isSuccess(strResult);
+            return null != buildJSONObject(strResult);
         } catch (JSONException e) {
             e.printStackTrace();
             LOGGER.error(MessageFormat.format("取消收藏topic失败，topicId:{0}，url:{1}", topicId, url), e);
@@ -378,7 +377,7 @@ public class TopicServiceImpl implements ITopicService {
             jsonObject.put(Constants.CONTENT_PIC, Constants.ACTION_TYPE_COLLECTION);
             jsonObject.put(Constants.REPLY_TO, topicId);
             String strResult = HttpClient.post(url, String.valueOf(jsonObject));
-            return isSuccess(strResult);
+            return null != buildJSONObject(strResult);
         } catch (JSONException e) {
             e.printStackTrace();
             LOGGER.error(MessageFormat.format("评论topic失败，topicId:{0}，url:{1}", topicId, url), e);
@@ -405,7 +404,7 @@ public class TopicServiceImpl implements ITopicService {
         String url = "/vapi/nailstar/videos/" + topicId + "/actions";
         try {
             String strResult = HttpClient.post(url, Constants.EMPTY_JSON_STRING);
-            return isSuccess(strResult);
+            return null != buildJSONObject(strResult);
         } catch (JSONException e) {
             e.printStackTrace();
             LOGGER.error(MessageFormat.format("视频播放次数+1失败，topicId:{0}，url:{1}", topicId, url), e);
@@ -416,12 +415,22 @@ public class TopicServiceImpl implements ITopicService {
         return false;
     }
 
-    private boolean isSuccess(String jsonResultStr) throws JSONException {
+    /**
+     * 根据接口返回的结果构造JSONObject对象，如果接口返回的字符串为空，或者接口返回的code不为0（表示接口调用失败），则方法返回null
+     *
+     * @param jsonResultStr
+     * @return
+     * @throws JSONException
+     */
+    private JSONObject buildJSONObject(String jsonResultStr) throws JSONException {
         if (StringUtil.isEmpty(jsonResultStr)) {
-            return false;
+            return null;
         }
         JSONObject jsonResult = new JSONObject(jsonResultStr);
-        return (null != jsonResult && Constants.CODE_VALUE_SUCCESS == jsonResult.optInt(Constants.CODE, Constants.CODE_VALUE_SUCCESS));
+        if (null == jsonResult || Constants.CODE_VALUE_SUCCESS != jsonResult.optInt(Constants.CODE, Constants.CODE_VALUE_FAIL)) {
+            return null;
+        }
+        return jsonResult;
     }
 
 }

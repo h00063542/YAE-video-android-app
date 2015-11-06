@@ -28,13 +28,10 @@
             android:name=".main.MainActivity"
             android:label="@string/title_activity_main" />
         <activity
-            android:name=".player.view.VideoPlayerActivity"
+            android:name=".topic.view.TopicVideoPlayerActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"></activity>
-        <activity android:name=".aboutme.view.PersonInfoActivity">
-        </activity>
+        <activity android:name=".topic.view.TopicCommentActivity"></activity>
+        <activity android:name=".aboutme.view.PersonInfoActivity"></activity>
     </application>
-
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission>
-    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
 
 </manifest>

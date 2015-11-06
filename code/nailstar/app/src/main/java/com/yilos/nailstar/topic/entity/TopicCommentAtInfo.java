@@ -1,9 +1,11 @@
-package com.yilos.nailstar.player.entity;
+package com.yilos.nailstar.topic.entity;
+
+import java.io.Serializable;
 
 /**
  * Created by yilos on 2015-10-27.
  */
-public class TopicCommentAtInfo {
+public class TopicCommentAtInfo implements Serializable {
     private String userId;
     private String nickName;
 

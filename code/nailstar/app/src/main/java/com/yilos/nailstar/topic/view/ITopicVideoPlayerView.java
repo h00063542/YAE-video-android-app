@@ -1,16 +1,16 @@
-package com.yilos.nailstar.player.view;
+package com.yilos.nailstar.topic.view;
 
-import com.yilos.nailstar.player.entity.TopicCommentInfo;
-import com.yilos.nailstar.player.entity.TopicImageTextInfo;
-import com.yilos.nailstar.player.entity.TopicInfo;
-import com.yilos.nailstar.player.entity.TopicRelatedInfo;
+import com.yilos.nailstar.topic.entity.TopicCommentInfo;
+import com.yilos.nailstar.topic.entity.TopicImageTextInfo;
+import com.yilos.nailstar.topic.entity.TopicInfo;
+import com.yilos.nailstar.topic.entity.TopicRelatedInfo;
 
 import java.util.ArrayList;
 
 /**
  * Created by yilos on 2015-10-22.
  */
-public interface IVideoPlayerView {
+public interface ITopicVideoPlayerView {
 
     /**
      * 初始化topic视频

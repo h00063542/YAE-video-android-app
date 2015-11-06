@@ -1,14 +1,11 @@
-package com.yilos.nailstar.player.model;
+package com.yilos.nailstar.topic.model;
 
 import com.yilos.nailstar.framework.exception.NetworkDisconnectException;
-import com.yilos.nailstar.player.entity.TopicCommentInfo;
-import com.yilos.nailstar.player.entity.TopicImageTextInfo;
-import com.yilos.nailstar.player.entity.TopicInfo;
-import com.yilos.nailstar.player.entity.TopicRelatedInfo;
+import com.yilos.nailstar.topic.entity.TopicCommentInfo;
+import com.yilos.nailstar.topic.entity.TopicImageTextInfo;
+import com.yilos.nailstar.topic.entity.TopicInfo;
+import com.yilos.nailstar.topic.entity.TopicRelatedInfo;
 
-import org.json.JSONException;
-
-import java.io.IOException;
 import java.util.ArrayList;
 
 /**
