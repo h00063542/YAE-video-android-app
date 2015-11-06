@@ -31,7 +31,7 @@ public class FollowListActivity extends Activity implements View.OnClickListener
             return;
         }
         dataList = followLists;
-        FollowListAdapter adapter = new FollowListAdapter(FollowListActivity.this, R.layout.follow_list_item, dataList);
+        FollowListAdapter adapter = new FollowListAdapter(FollowListActivity.this, R.layout.activity_follow_list_item, dataList);
         ListView listView = (ListView) findViewById(R.id.follow_list);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

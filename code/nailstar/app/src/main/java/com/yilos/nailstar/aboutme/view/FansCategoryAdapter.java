@@ -12,8 +12,6 @@ import com.yilos.nailstar.R;
 import com.yilos.nailstar.aboutme.entity.FansList;
 import com.yilos.nailstar.aboutme.entity.FansListCategory;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 
 /**
@@ -142,7 +140,7 @@ public class FansCategoryAdapter extends BaseAdapter {
         switch (itemViewType) {
             case TYPE_CATEGORY_ITEM:
                 if (null == convertView) {
-                    convertView = mInflater.inflate(R.layout.fans_list_item_title, null);
+                    convertView = mInflater.inflate(R.layout.activity_fans_list_item_title, null);
                 }
 
                 TextView textView = (TextView) convertView.findViewById(R.id.head_title);
@@ -155,7 +153,7 @@ public class FansCategoryAdapter extends BaseAdapter {
                 ViewHolder viewHolder = null;
                 if (null == convertView) {
 
-                    convertView = mInflater.inflate(R.layout.fans_list_item, null);
+                    convertView = mInflater.inflate(R.layout.activity_fans_list_item, null);
                     viewHolder = new ViewHolder();
                     viewHolder.nickName = (TextView) convertView.findViewById(R.id.fans_list_name);
                     viewHolder.photo = (ImageView) convertView.findViewById(R.id.fans_list_photo);

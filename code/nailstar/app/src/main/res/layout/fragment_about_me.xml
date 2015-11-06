@@ -220,6 +220,7 @@
                                 android:layout_centerVertical="true"
                                 android:layout_width="@dimen/about_me_list_item_img"
                                 android:layout_height="@dimen/about_me_list_item_img"
+                                android:src="@mipmap/ic_right_button"
                                 android:layout_alignParentRight="true"
                                 android:layout_marginRight="@dimen/about_me_border_padding"/>
                             <TextView
@@ -255,6 +256,7 @@
                                 android:layout_centerVertical="true"
                                 android:layout_width="@dimen/about_me_list_item_img"
                                 android:layout_height="@dimen/about_me_list_item_img"
+                                android:src="@mipmap/ic_right_button"
                                 android:layout_alignParentRight="true"
                                 android:layout_marginRight="@dimen/about_me_border_padding"/>
                             <TextView
@@ -292,6 +294,7 @@
                                 android:layout_centerVertical="true"
                                 android:layout_width="@dimen/about_me_list_item_img"
                                 android:layout_height="@dimen/about_me_list_item_img"
+                                android:src="@mipmap/ic_right_button"
                                 android:layout_alignParentRight="true"
                                 android:layout_marginRight="@dimen/about_me_border_padding"/>
                             <TextView
@@ -328,6 +331,7 @@
                                 android:layout_centerVertical="true"
                                 android:layout_width="@dimen/about_me_list_item_img"
                                 android:layout_height="@dimen/about_me_list_item_img"
+                                android:src="@mipmap/ic_right_button"
                                 android:layout_alignParentRight="true"
                                 android:layout_marginRight="@dimen/about_me_border_padding"/>
                             <TextView
@@ -364,6 +368,7 @@
                                 android:layout_centerVertical="true"
                                 android:layout_width="@dimen/about_me_list_item_img"
                                 android:layout_height="@dimen/about_me_list_item_img"
+                                android:src="@mipmap/ic_right_button"
                                 android:layout_alignParentRight="true"
                                 android:layout_marginRight="@dimen/about_me_border_padding"/>
                             <TextView
@@ -407,6 +412,7 @@
                                 android:layout_centerVertical="true"
                                 android:layout_width="@dimen/about_me_list_item_img"
                                 android:layout_height="@dimen/about_me_list_item_img"
+                                android:src="@mipmap/ic_right_button"
                                 android:layout_alignParentRight="true"
                                 android:layout_marginRight="@dimen/about_me_border_padding"/>
                             <TextView
@@ -443,6 +449,7 @@
                                 android:layout_centerVertical="true"
                                 android:layout_width="@dimen/about_me_list_item_img"
                                 android:layout_height="@dimen/about_me_list_item_img"
+                                android:src="@mipmap/ic_right_button"
                                 android:layout_alignParentRight="true"
                                 android:layout_marginRight="@dimen/about_me_border_padding"/>
                             <TextView
@@ -487,6 +494,7 @@
                                 android:layout_width="@dimen/about_me_list_item_img"
                                 android:layout_height="@dimen/about_me_list_item_img"
                                 android:layout_alignParentRight="true"
+                                android:src="@mipmap/ic_right_button"
                                 android:layout_marginRight="@dimen/about_me_border_padding"/>
                             <TextView
                                 android:layout_width="match_parent"
