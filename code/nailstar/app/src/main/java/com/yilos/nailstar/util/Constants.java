@@ -44,9 +44,26 @@ public class Constants {
     public static final String CC_URL = "ccUrl";
     public static final String OSS_URL = "ossUrl";
 
+    public static final String UID = "uid";
+    public static final int ACTION_TYPE_COLLECTION = 3;
+    public static final String AT_USER = "atUser";
+    public static final String REPLY_TO = "replyTo";
+
     public static final int IS_HOME_WORK_VALUE = 1;
 
     public static final long ONE_MB_SIZE = 1024L * 1024;
 
     public static final String EMPTY_STRING = "";
+    public static final String EMPTY_JSON_STRING = "{}";
+
+
+    public static final int CODE_VALUE_SUCCESS = 0;
+    public static final int CODE_VALUE_FAIL = 1;
+
+    /**
+     * 视频宽高比例
+     */
+    public static final double VIDEO_ASPECT_RATIO = 1.78;
+
+
 }

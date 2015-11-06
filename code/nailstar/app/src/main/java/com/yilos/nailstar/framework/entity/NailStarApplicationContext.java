@@ -26,21 +26,23 @@ public class NailStarApplicationContext {
 
     /**
      * 返回单例
+     *
      * @return
      */
-    public static NailStarApplicationContext getInstance(){
+    public static NailStarApplicationContext getInstance() {
         return context;
     }
 
     /**
      * 返回首页数据
+     *
      * @return
      */
-    public IndexContent getIndexContent(){
+    public IndexContent getIndexContent() {
         return indexContent;
     }
 
-    public void setIndexContent(IndexContent indexContent){
+    public void setIndexContent(IndexContent indexContent) {
         this.indexContent = indexContent;
     }
 
@@ -61,9 +63,21 @@ public class NailStarApplicationContext {
     }
 
     public boolean isNetworkConnected() {
-        ConnectivityManager cm = (ConnectivityManager)NailStarApplication.getApplication().getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager cm = (ConnectivityManager) NailStarApplication.getApplication().getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo info = cm.getActiveNetworkInfo();
 
         return info != null && info.isConnectedOrConnecting();
+    }
+
+    // 判断当前网络是否为wifi
+    public boolean isWifi(Context mContext) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) mContext
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetInfo = connectivityManager.getActiveNetworkInfo();
+        if (activeNetInfo != null
+                && activeNetInfo.getType() == ConnectivityManager.TYPE_WIFI) {
+            return true;
+        }
+        return false;
     }
 }

@@ -2,6 +2,8 @@ package com.yilos.nailstar.aboutme.view;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
@@ -18,7 +20,15 @@ import com.yilos.nailstar.aboutme.entity.MessageCount;
 import com.yilos.nailstar.aboutme.entity.PersonInfo;
 import com.yilos.nailstar.aboutme.presenter.AboutMePresenter;
 import com.yilos.nailstar.main.MainActivity;
+import com.yilos.nailstar.util.ImageUtil;
 import com.yilos.widget.titlebar.TitleBar;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -55,7 +65,7 @@ public class AboutMeFragment extends Fragment implements IAboutMeView{
 
     private ImageView profileImage;//头像
     private TextView nameText;//名字
-    private TextView identity;//身份
+    private TextView identityText;//身份
 
     /**
      * Use this factory method to create a new instance of
@@ -102,7 +112,42 @@ public class AboutMeFragment extends Fragment implements IAboutMeView{
 
     @Override
     public void getPersonInfo(PersonInfo personInfo) {
-
+        String nickName = personInfo.getNickname();
+        Bitmap bitmap = personInfo.getImageBitmap();
+        int type = personInfo.getType();
+        String identity;
+        //        1美甲店主
+        //        2美甲师
+        //        3美甲从业者
+        //        4美甲消费者
+        //        5美甲老师
+        //        6其他
+        switch (type) {
+            case 1:
+                identity = "美甲店主";
+                break;
+            case 2:
+                identity = "美甲师";
+                break;
+            case 3:
+                identity = "美甲从业者";
+                break;
+            case 4:
+                identity = "美甲消费者";
+                break;
+            case 5:
+                identity = "美甲老师";
+                break;
+            case 6:
+                identity = "其他";
+                break;
+            default:
+                identity = "身份";
+                break;
+        }
+        nameText.setText(nickName);
+        identityText.setText(identity);
+        profileImage.setImageBitmap(bitmap);
     }
 
     @Override
@@ -153,6 +198,10 @@ public class AboutMeFragment extends Fragment implements IAboutMeView{
         relativeLayout = (RelativeLayout)view.findViewById(R.id.about_me_message_group);
         messageCountText = (TextView)view.findViewById(R.id.about_me_message_count);
 
+        nameText = (TextView)view.findViewById(R.id.about_me_name);
+        identityText = (TextView)view.findViewById(R.id.about_me_identity);
+        profileImage = (ImageView)view.findViewById(R.id.profile_image);
+
         levelText = (TextView) view.findViewById(R.id.about_me_level);
         attentionText = (TextView) view.findViewById(R.id.about_me_attention_count);
         fansText = (TextView) view.findViewById(R.id.about_me_fans_count);
@@ -164,6 +213,7 @@ public class AboutMeFragment extends Fragment implements IAboutMeView{
         aboutMePresenter = AboutMePresenter.getInstance(this);
         aboutMePresenter.getMessageCount();
         aboutMePresenter.getAboutMeNumber();
+        aboutMePresenter.getPersonInfo();
 
         personInfoLayout = (RelativeLayout)view.findViewById(R.id.about_me_person_info_layout);
         personInfoLayout.setOnClickListener(new View.OnClickListener() {
