@@ -76,6 +76,7 @@ public class TopicServiceImpl implements ITopicService {
             topicInfo.setVideos(videos);
             topicInfo.setAuthorId(JsonUtil.optString(jsonResult, Constants.AUTHOR_ID));
             topicInfo.setAuthor(JsonUtil.optString(jsonResult, Constants.AUTHOR));
+            topicInfo.setCommentCount(jsonResult.optInt(Constants.COMMENT_COUNT,0));
         } catch (IOException e) {
             e.printStackTrace();
             LOGGER.error(MessageFormat.format("获取topic信息失败，topicId:{0}，url:{1}", topicId, url), e);
@@ -173,6 +174,7 @@ public class TopicServiceImpl implements ITopicService {
 
         return result;
     }
+
 
     /**
      * @param topicId

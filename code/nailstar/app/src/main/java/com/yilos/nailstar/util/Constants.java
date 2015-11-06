@@ -97,4 +97,5 @@ public class Constants {
     public static final int TOPIC_COMMENTS_INIT_ORDER_BY_DESC = 2;
 
 
+    public static final String COMMENT_COUNT = "commentCount";
 }

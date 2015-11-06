@@ -19,6 +19,7 @@ public class TopicInfo implements Serializable {
     private ArrayList<TopicVideoInfo> videos;
     private String authorId;
     private String author;
+    private int commentCount;
 
     public String getId() {
         return id;
@@ -99,4 +100,13 @@ public class TopicInfo implements Serializable {
     public void setAuthor(String author) {
         this.author = author;
     }
+
+    public int getCommentCount() {
+        return commentCount;
+    }
+
+    public void setCommentCount(int commentCount) {
+        this.commentCount = commentCount;
+    }
+
 }

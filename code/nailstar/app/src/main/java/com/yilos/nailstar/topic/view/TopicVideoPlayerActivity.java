@@ -14,7 +14,6 @@ import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -23,12 +22,12 @@ import android.view.animation.TranslateAnimation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.melnykov.fab.FloatingActionButton;
 import com.sina.sinavideo.sdk.VDVideoExtListeners;
 import com.sina.sinavideo.sdk.VDVideoView;
 import com.sina.sinavideo.sdk.VDVideoViewController;
@@ -55,6 +54,7 @@ import com.yilos.nailstar.util.UserUtil;
 import com.yilos.widget.circleimageview.CircleImageView;
 import com.yilos.widget.photoview.PhotoView;
 import com.yilos.widget.pullrefresh.PullToRefreshView;
+import com.yilos.widget.titlebar.TitleBar;
 import com.yilos.widget.view.ImageCacheView;
 
 import org.apache.log4j.Logger;
@@ -75,9 +75,11 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
 
 
     // 顶部返回、topic名称、分享
-    private ImageView mBtnVideoPlayerBack;
-    private ImageView mBtnVideoShare;
-    private TextView mTvVideoName;
+    private TitleBar mTbVideoPlayerHead;
+    private ImageView mIvVideoPlayerBack;
+    private ImageView mIvVideoDownload;
+    private ImageView mIvTopicShare;
+    private TextView mTvTopicName;
 
     private PullToRefreshView mTopicPullToRefreshView;
     private ScrollView mSvVideoPlayer;
@@ -121,15 +123,24 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
     private Dialog mZoomInImageTextDialog;
     private int mZoomInTextViewMarginTop = 0;
 
+    private TextView mTvTopicCommentCount;
+
     // topic评论
     private LinearLayout mLayoutTopicComments;
+    private View mZoomInImageLayout;
+    private ImageCacheView mIcvTopicCommentImage;
+    private Dialog mZoomInImageDialog;
 
-    private FloatingActionButton mFabBackTop;
+
+//    private FloatingActionButton mFabBackTop;
 
     // 底部下载、收藏、评论、交作业
-    private RelativeLayout mLayoutBtnVideoDownload;
-    private RelativeLayout mLayoutBtnTopicCollection;
-    private RelativeLayout mLayoutBtnTopicComment;
+//    private RelativeLayout mLayoutBtnVideoDownload;
+//    private RelativeLayout mLayoutBtnTopicCollection;
+//    private RelativeLayout mLayoutBtnTopicComment;
+    private RadioButton mRbTopicTabLike;
+    private RadioButton mRbTopicTabCollection;
+    private RadioButton mRbTopicTabComment;
 
     private TextView mTvTopicSubmittedHomework;
 
@@ -238,9 +249,15 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
 
     private void initControl() {
         // 顶部返回、topic名称、分享
-        mBtnVideoPlayerBack = (ImageView) findViewById(R.id.btn_video_player_back);
-        mBtnVideoShare = (ImageView) findViewById(R.id.btn_video_share);
-        mTvVideoName = (TextView) findViewById(R.id.tv_video_name);
+        mTbVideoPlayerHead = (TitleBar) findViewById(R.id.tb_video_player_head);
+        mIvVideoPlayerBack = mTbVideoPlayerHead.getBackButton();
+        mIvVideoDownload = mTbVideoPlayerHead.getRightImageButtonTwo();
+        mIvTopicShare = mTbVideoPlayerHead.getRightImageButtonOne();
+        mTvTopicName = mTbVideoPlayerHead.getTitleView();
+//        mTvTopicName.setEllipsize(TextUtils.TruncateAt.END);
+//        mTvTopicName.setSingleLine(true);
+//        mTvTopicName.setMaxWidth(getResources().getDimensionPixelSize(R.dimen.topic_author_photo_size));
+        //TextView自带的可以通过 android:ellipsize="end" android:singleLine="true"实现单行省略，  但是当我们需要控制不是正行时需要通过 指定最大宽度实现自动省略 android:maxWidth="90dp"
 
         mTopicPullToRefreshView = (PullToRefreshView) findViewById(R.id.topic_pull_refresh_view);
 //        mTopicPullToRefreshView.setOnHeaderRefreshListener(this);
@@ -292,15 +309,28 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         mZoomInImageTextDialog.setCancelable(true);
         mZoomInImageTextDialog.setCanceledOnTouchOutside(true);
 
+        mZoomInImageLayout = getLayoutInflater().inflate(R.layout.zoomin_topic_comment_image_layout, null);
+        mIcvTopicCommentImage = (ImageCacheView) mZoomInImageLayout.findViewById(R.id.icv_topic_comment_image);
+        mZoomInImageDialog = new Dialog(this, R.style.dialog_fullscreen);
+        mZoomInImageDialog.setContentView(mZoomInImageLayout);
+        mZoomInImageDialog.setCancelable(true);
+        mZoomInImageDialog.getWindow().getAttributes().alpha = 0.6f;
+//        mZoomInImageDialog.setCanceledOnTouchOutside(true);
+
+        mTvTopicCommentCount = (TextView) findViewById(R.id.tv_topic_comment_count);
 
         mLayoutTopicComments = (LinearLayout) findViewById(R.id.layout_topic_comments);
 
-        mFabBackTop = (FloatingActionButton) findViewById(R.id.fab_back_top);
+//        mFabBackTop = (FloatingActionButton) findViewById(R.id.fab_back_top);
 
         // 底部下载、收藏、评论、交作业
-        mLayoutBtnVideoDownload = (RelativeLayout) findViewById(R.id.layout_btn_video_download);
-        mLayoutBtnTopicCollection = (RelativeLayout) findViewById(R.id.layout_btn_topic_collection);
-        mLayoutBtnTopicComment = (RelativeLayout) findViewById(R.id.layout_btn_topic_comment);
+//        mLayoutBtnVideoDownload = (RelativeLayout) findViewById(R.id.layout_btn_video_download);
+//        mLayoutBtnTopicCollection = (RelativeLayout) findViewById(R.id.layout_btn_topic_collection);
+//        mLayoutBtnTopicComment = (RelativeLayout) findViewById(R.id.layout_btn_topic_comment);
+
+        mRbTopicTabLike = (RadioButton) findViewById(R.id.rb_topic_tab_like);
+        mRbTopicTabCollection = (RadioButton) findViewById(R.id.rb_topic_tab_collection);
+        mRbTopicTabComment = (RadioButton) findViewById(R.id.rb_topic_tab_comment);
 
         mTvTopicSubmittedHomework = (TextView) findViewById(R.id.tv_submitted_homework);
     }
@@ -327,7 +357,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         });
 
         // 界面顶部返回按钮
-        mBtnVideoPlayerBack.setOnClickListener(new View.OnClickListener() {
+        mIvVideoPlayerBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(TopicVideoPlayerActivity.this, MainActivity.class);
@@ -337,42 +367,49 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
             }
         });
 
+        mIvVideoDownload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //下载视频
+            }
+        });
+
         // 界面顶部分享按钮
-        mBtnVideoShare.setOnClickListener(new View.OnClickListener() {
+        mIvTopicShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast.makeText(TopicVideoPlayerActivity.this, "分享成功", Toast.LENGTH_SHORT).show();
             }
         });
 
-        // 添加滚动监听
-        mSvVideoPlayer.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_MOVE://移动
-//                        Log.i(TAG, "ScrollView的滚动事件" + (event.getAction() == MotionEvent.ACTION_DOWN));
-                        break;
-                    case MotionEvent.ACTION_UP://向上
-                        View childView = mSvVideoPlayer.getChildAt(0);
-                        Log.i(TAG, "=======================================childView.getMeasuredHeight():" + childView.getMeasuredHeight());
-                        Log.i(TAG, "=======================================mSvVideoPlayer.getScrollY():" + mSvVideoPlayer.getScrollY());
-                        Log.i(TAG, "=======================================mSvVideoPlayer.getHeight():" + mSvVideoPlayer.getHeight());
-                        Log.i(TAG, "=======================================minus:" + (childView.getMeasuredHeight() <= mSvVideoPlayer.getScrollY() + mSvVideoPlayer.getHeight()));
-                        if (childView != null && childView.getMeasuredHeight() <= mSvVideoPlayer.getScrollY() + mSvVideoPlayer.getHeight()) {
-                            mFabBackTop.setVisibility(View.VISIBLE);
-                            Log.i(TAG, "=======================================底部1");
-                        } else {
-                            mFabBackTop.setVisibility(View.GONE);
-                        }
-                        break;
-                    case MotionEvent.ACTION_DOWN://向下
-                        mFabBackTop.setVisibility(View.GONE);
-                        break;
-                }
-                return false;
-            }
-        });
+//        // 添加滚动监听
+//        mSvVideoPlayer.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                switch (event.getAction()) {
+//                    case MotionEvent.ACTION_MOVE://移动
+////                        Log.i(TAG, "ScrollView的滚动事件" + (event.getAction() == MotionEvent.ACTION_DOWN));
+//                        break;
+//                    case MotionEvent.ACTION_UP://向上
+//                        View childView = mSvVideoPlayer.getChildAt(0);
+//                        Log.i(TAG, "=======================================childView.getMeasuredHeight():" + childView.getMeasuredHeight());
+//                        Log.i(TAG, "=======================================mSvVideoPlayer.getScrollY():" + mSvVideoPlayer.getScrollY());
+//                        Log.i(TAG, "=======================================mSvVideoPlayer.getHeight():" + mSvVideoPlayer.getHeight());
+//                        Log.i(TAG, "=======================================minus:" + (childView.getMeasuredHeight() <= mSvVideoPlayer.getScrollY() + mSvVideoPlayer.getHeight()));
+//                        if (childView != null && childView.getMeasuredHeight() <= mSvVideoPlayer.getScrollY() + mSvVideoPlayer.getHeight()) {
+//                            mFabBackTop.setVisibility(View.VISIBLE);
+//                            Log.i(TAG, "=======================================底部1");
+//                        } else {
+//                            mFabBackTop.setVisibility(View.GONE);
+//                        }
+//                        break;
+//                    case MotionEvent.ACTION_DOWN://向下
+//                        mFabBackTop.setVisibility(View.GONE);
+//                        break;
+//                }
+//                return false;
+//            }
+//        });
 
         mIvVideoPlayIcon.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -417,14 +454,14 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         });
 
 
-        mFabBackTop.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mFabBackTop.setVisibility(View.GONE);
-                Log.i(TAG, "==========================================Back top");
-                mSvVideoPlayer.fullScroll(ScrollView.FOCUS_UP);
-            }
-        });
+//        mFabBackTop.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                mFabBackTop.setVisibility(View.GONE);
+//                Log.i(TAG, "==========================================Back top");
+//                mSvVideoPlayer.fullScroll(ScrollView.FOCUS_UP);
+//            }
+//        });
 
         // 下载图文按钮
         mTvDownloadTopicImageTextContent.setOnClickListener(new View.OnClickListener() {
@@ -435,66 +472,97 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
             }
         });
 
-        // 下载视频按钮
-        mLayoutBtnVideoDownload.setOnClickListener(new View.OnClickListener() {
+        mIcvTopicCommentImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(TopicVideoPlayerActivity.this, "正在下载视频", Toast.LENGTH_SHORT).show();
-                mTopicVideoPlayerPresenter.download();
-            }
-        });
-        mLayoutBtnVideoDownload.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                ImageView imageView = (ImageView) mLayoutBtnVideoDownload.getChildAt(0);
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    imageView.setImageResource(R.drawable.collection);
-
-                } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                    imageView.setImageResource(R.drawable.message);
+                if (null != mZoomInImageDialog && mZoomInImageDialog.isShowing()) {
+                    mZoomInImageDialog.hide();
                 }
-                return false;
             }
         });
 
-        // 收藏按钮
-        mLayoutBtnTopicCollection.setOnClickListener(new View.OnClickListener() {
+//        // 下载视频按钮
+//        mLayoutBtnVideoDownload.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Toast.makeText(TopicVideoPlayerActivity.this, "正在下载视频", Toast.LENGTH_SHORT).show();
+//                mTopicVideoPlayerPresenter.download();
+//            }
+//        });
+//        mLayoutBtnVideoDownload.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                ImageView imageView = (ImageView) mLayoutBtnVideoDownload.getChildAt(0);
+//                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+//                    imageView.setImageResource(R.drawable.collection);
+//
+//                } else if (event.getAction() == MotionEvent.ACTION_UP) {
+//                    imageView.setImageResource(R.drawable.message);
+//                }
+//                return false;
+//            }
+//        });
+//
+//        // 收藏按钮
+//        mLayoutBtnTopicCollection.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Toast.makeText(TopicVideoPlayerActivity.this, "收藏视频成功", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//        mLayoutBtnTopicCollection.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                ImageView imageView = (ImageView) mLayoutBtnTopicCollection.getChildAt(0);
+//                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+//                    imageView.setImageResource(R.drawable.message);
+//
+//                } else if (event.getAction() == MotionEvent.ACTION_UP) {
+//                    imageView.setImageResource(R.drawable.collection);
+//                }
+//                return false;
+//            }
+//        });
+//
+//        // 评论按钮
+//        mLayoutBtnTopicComment.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                addTopicComment();
+//            }
+//        });
+//        mLayoutBtnTopicComment.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                ImageView imageView = (ImageView) mLayoutBtnTopicComment.getChildAt(0);
+//                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+//                    imageView.setImageResource(R.drawable.collection);
+//                } else if (event.getAction() == MotionEvent.ACTION_UP) {
+//                    imageView.setImageResource(R.drawable.message);
+//                }
+//                return false;
+//            }
+//        });
+
+        // 喜欢
+        mRbTopicTabLike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(TopicVideoPlayerActivity.this, "收藏视频成功", Toast.LENGTH_SHORT).show();
+                mRbTopicTabLike.setChecked(!mRbTopicTabLike.isChecked());
             }
         });
-        mLayoutBtnTopicCollection.setOnTouchListener(new View.OnTouchListener() {
+        //收藏
+        mRbTopicTabCollection.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                ImageView imageView = (ImageView) mLayoutBtnTopicCollection.getChildAt(0);
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    imageView.setImageResource(R.drawable.message);
-
-                } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                    imageView.setImageResource(R.drawable.collection);
-                }
-                return false;
+            public void onClick(View v) {
+                mRbTopicTabCollection.setChecked(!mRbTopicTabCollection.isChecked());
             }
         });
-
         // 评论按钮
-        mLayoutBtnTopicComment.setOnClickListener(new View.OnClickListener() {
+        mRbTopicTabComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 addTopicComment();
-            }
-        });
-        mLayoutBtnTopicComment.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                ImageView imageView = (ImageView) mLayoutBtnTopicComment.getChildAt(0);
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    imageView.setImageResource(R.drawable.collection);
-                } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                    imageView.setImageResource(R.drawable.message);
-                }
-                return false;
             }
         });
 
@@ -615,7 +683,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
      */
     private void showTopicInfo2Page(TopicInfo topicInfo) {
         // 视频名称
-        mTvVideoName.setText(topicInfo.getTitle());
+        mTvTopicName.setText(topicInfo.getTitle());
         // 作者照片
         mIvVideoAuthorPhoto.setImageSrc(topicInfo.getAuthorPhoto());
         // 作者名称
@@ -641,6 +709,12 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
                 mIvTopicAuthorTag3Icon.setVisibility(View.VISIBLE);
             }
         }
+
+        StringBuilder stringBuild = new StringBuilder();
+        stringBuild.append(getString(R.string.topic_comment_count));
+        stringBuild.append(" ");
+        stringBuild.append(topicInfo.getCommentCount());
+        mTvTopicCommentCount.setText(stringBuild);
     }
 
 
@@ -947,7 +1021,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
             StringBuilder contentText = new StringBuilder();
             if (topicCommentInfo.getIsHomework() == Constants.IS_HOME_WORK_VALUE) {
                 contentText.append("<font color=\"#555657\">#")
-                        .append(getResources().getString(R.string.submitted_homework))
+                        .append(getString(R.string.submitted_homework))
                         .append("#    </font>");
             }
             contentText.append("<font color=\"#adafb0\">")
@@ -988,7 +1062,8 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
                 topicCommentHomeWorkIv.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Toast.makeText(TopicVideoPlayerActivity.this, "显示大图", Toast.LENGTH_SHORT).show();
+                        mIcvTopicCommentImage.setImageSrc(topicCommentInfo.getContentPic());
+                        mZoomInImageDialog.show();
                     }
                 });
             }
@@ -1029,7 +1104,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
                 .append("</font>");
 
         replyText.append("<font color=\"#555657\"> ")
-                .append(getResources().getString(R.string.reply) + " " + topicCommentReplyInfo.getAt().getNickName())
+                .append(getString(R.string.reply) + " " + topicCommentReplyInfo.getAt().getNickName())
                 .append(": </font>");
 
         replyText.append("<font color=\"#000000\">")
@@ -1064,7 +1139,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
             @Override
             public void run() {
                 if (mIsTopicsCommentLastPage) {
-                    mTopicPullToRefreshView.setFooterLastUpdate(getResources().getString(R.string.loading_finish));
+                    mTopicPullToRefreshView.setFooterLastUpdate(getString(R.string.loading_finish));
                 } else {
                     mTopicVideoPlayerPresenter.initTopicComments(mTopicId, ++mPage);
                 }
