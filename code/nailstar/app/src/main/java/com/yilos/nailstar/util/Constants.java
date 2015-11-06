@@ -93,6 +93,8 @@ public class Constants {
     public static final String TOPIC_COMMENT_REPLY_AUTHOR = "topicCommentReplyAuthor";
 
     public static final String USER_INFO = "user_info";
+    public static final int TOPIC_COMMENTS_INIT_ORDER_BY_ASC = 1;
+    public static final int TOPIC_COMMENTS_INIT_ORDER_BY_DESC = 2;
 
 
 }

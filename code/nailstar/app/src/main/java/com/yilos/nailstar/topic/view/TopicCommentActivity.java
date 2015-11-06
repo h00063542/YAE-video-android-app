@@ -52,7 +52,7 @@ public class TopicCommentActivity extends BaseActivity implements ITopicCommentV
         mCommentId = data.getString(Constants.TOPIC_COMMENT_ID, Constants.EMPTY_STRING);
         mCommentUserId = data.getString(Constants.TOPIC_COMMENT_USER_ID, Constants.EMPTY_STRING);
         mCommentAuthor = data.getString(Constants.TOPIC_COMMENT_AUTHOR, Constants.EMPTY_STRING);
-        if (mCommentType == Constants.TOPIC_COMMENT_TYPE_REPLY) {
+        if (mCommentType == Constants.TOPIC_COMMENT_TYPE_REPLY_AGAIN) {
             mCommentReplyId = data.getString(Constants.TOPIC_COMMENT_REPLY_ID, Constants.EMPTY_STRING);
             mCommentReplyUserId = data.getString(Constants.TOPIC_COMMENT_REPLY_USER_ID, Constants.EMPTY_STRING);
             mCommentReplyAuthor = data.getString(Constants.TOPIC_COMMENT_REPLY_AUTHOR, Constants.EMPTY_STRING);
@@ -127,7 +127,7 @@ public class TopicCommentActivity extends BaseActivity implements ITopicCommentV
         if (StringUtil.isEmpty(newCommentId)) {
 
         }
-        Intent intent = new Intent(TopicCommentActivity.this, TopicVideoPlayerActivity.class);
+        Intent intent = new Intent(this, TopicVideoPlayerActivity.class);
         //设置返回数据
         intent.putExtra(Constants.TOPIC_ID, mTopicId);
         intent.putExtra(Constants.TYPE, mCommentType);
@@ -136,13 +136,13 @@ public class TopicCommentActivity extends BaseActivity implements ITopicCommentV
         intent.putExtra(Constants.TOPIC_COMMENT_USER_ID, mCommentUserId);
         intent.putExtra(Constants.TOPIC_COMMENT_AUTHOR, mCommentAuthor);
         intent.putExtra(Constants.CONTENT, mContent);
-        if (mCommentType == Constants.TOPIC_COMMENT_TYPE_REPLY) {
+        if (mCommentType == Constants.TOPIC_COMMENT_TYPE_REPLY_AGAIN) {
             intent.putExtra(Constants.TOPIC_COMMENT_REPLY_ID, mCommentReplyId);
             intent.putExtra(Constants.TOPIC_COMMENT_REPLY_USER_ID, mCommentReplyUserId);
             intent.putExtra(Constants.TOPIC_COMMENT_REPLY_AUTHOR, mCommentReplyAuthor);
         }
         setResult(RESULT_OK, intent);
-        startActivity(intent);
+//        startActivity(intent);
         finish();
     }
 }

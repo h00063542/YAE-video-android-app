@@ -31,7 +31,7 @@ public interface ITopicVideoPlayerView {
      *
      * @param topicComments
      */
-    void initTopicCommentsInfo(ArrayList<TopicCommentInfo> topicComments);
+    void initTopicCommentsInfo(ArrayList<TopicCommentInfo> topicComments, int orderBy);
 
     /**
      * 初始化topic关联的topic信息

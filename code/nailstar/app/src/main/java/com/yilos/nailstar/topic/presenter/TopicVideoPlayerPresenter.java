@@ -9,13 +9,13 @@ import com.yilos.nailstar.topic.entity.TopicRelatedInfo;
 import com.yilos.nailstar.topic.model.ITopicService;
 import com.yilos.nailstar.topic.model.TopicServiceImpl;
 import com.yilos.nailstar.topic.view.ITopicVideoPlayerView;
+import com.yilos.nailstar.util.Constants;
 import com.yilos.nailstar.util.LoggerFactory;
 import com.yilos.nailstar.util.TaskManager;
 
 import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
-
 
 
 /**
@@ -138,7 +138,7 @@ public class TopicVideoPlayerPresenter {
         TaskManager.UITask<ArrayList<TopicCommentInfo>> updateUi = new TaskManager.UITask<ArrayList<TopicCommentInfo>>() {
             @Override
             public Object doWork(ArrayList<TopicCommentInfo> topicComments) {
-                videoPlayerView.initTopicCommentsInfo(topicComments);
+                videoPlayerView.initTopicCommentsInfo(topicComments, Constants.TOPIC_COMMENTS_INIT_ORDER_BY_ASC);
                 return null;
             }
         };
@@ -149,7 +149,7 @@ public class TopicVideoPlayerPresenter {
                 .start();
     }
 
-    public void download(){
+    public void download() {
 
     }
 

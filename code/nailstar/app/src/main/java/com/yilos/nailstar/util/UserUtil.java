@@ -21,8 +21,8 @@ public final class UserUtil {
         SharedPreferences sharedPreferences = context.getSharedPreferences(Constants.USER_INFO, context.MODE_WORLD_WRITEABLE);
         SharedPreferences.Editor edit = sharedPreferences.edit();
         edit.putString(Constants.USER_ID, userInfo.getUserId());
-        edit.putString(Constants.NICKNAME, userInfo.getUserId());
-        edit.putString(Constants.PHOTO, userInfo.getUserId());
+        edit.putString(Constants.NICKNAME, userInfo.getNickName());
+        edit.putString(Constants.PHOTO, userInfo.getPhoto());
         edit.commit();
     }
 
