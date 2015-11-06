@@ -32,6 +32,10 @@ import com.yilos.widget.view.ImageCacheView;
 
 import java.util.List;
 
+import in.srain.cube.views.ptr.PtrClassicFrameLayout;
+import in.srain.cube.views.ptr.PtrFrameLayout;
+import in.srain.cube.views.ptr.PtrHandler;
+
 /**
  * 求教程Fragment
  */
@@ -39,6 +43,9 @@ public class RequireLessionFragment extends Fragment implements LessionView {
 
     // 屏幕宽度
     private int screenWidth;
+
+    // 下拉刷新
+    PtrClassicFrameLayout lessionPullRefresh;
 
     // 求教程页面
     private View view;
@@ -137,9 +144,41 @@ public class RequireLessionFragment extends Fragment implements LessionView {
         // 页面头部悬浮效果
         lessionViewHeadFloat = view.findViewById(R.id.lessionListViewHeadFloat);
 
+        // 求教程榜首，因为是放在listview的header中，必须放在listview初始化之后
+        lessionBackground = view.findViewById(R.id.lessionBackground);
+        candidateBackground = view.findViewById(R.id.candidateBackground);
+
+        // 页头的按钮
+        switchLessionView = (RadioGroup) lessionViewHead1.findViewById(R.id.switchLessionView);
+        goVotingBtn = (RadioButton) lessionViewHead1.findViewById(R.id.goVotingBtn);
+        goRankingBtn = (RadioButton) lessionViewHead1.findViewById(R.id.goRankingBtn);
+
+        // 悬浮页头的按钮
+        switchLessionViewFloat = (RadioGroup) view.findViewById(R.id.switchLessionViewFloat);
+        goVotingBtnFloat = (RadioButton) view.findViewById(R.id.goVotingBtnFloat);
+        goRankingBtnFloat = (RadioButton) view.findViewById(R.id.goRankingBtnFloat);
+
+        lessionCountDownText = (TextView) view.findViewById(R.id.lessionCountDownText);
+        lessionCountDownValue = (TextView) view.findViewById(R.id.lessionCountDownValue);
+
+        requireLessionBtn = (Button) view.findViewById(R.id.requireLessionBtn);
+        requireLessionBtnFloat = (Button) view.findViewById(R.id.requireLessionBtnFloat);
+
+        lessionPullRefresh = (PtrClassicFrameLayout) view.findViewById(R.id.lessionPullRefresh);
+    }
+
+    private void initData() {
+        // 查询数据
+        lessionPresenter.queryAndRefreshActivityTopic();
+        lessionPresenter.queryAndRefreshVoteLession();
+    }
+
+    private void bindControl() {
+
         // 悬浮头部截住点击事件，防止传到下面的listview
         lessionViewHeadFloat.setOnClickListener(null);
 
+        // ListView头部悬浮效果
         lessionVoteView.setOnScrollListener(new AbsListView.OnScrollListener() {
 
             @Override
@@ -157,35 +196,6 @@ public class RequireLessionFragment extends Fragment implements LessionView {
                 }
             }
         });
-
-        // 求教程榜首，因为是放在listview的header中，必须放在listview初始化之后
-        lessionBackground = view.findViewById(R.id.lessionBackground);
-        candidateBackground = view.findViewById(R.id.candidateBackground);
-
-        lessionCountDownText = (TextView) view.findViewById(R.id.lessionCountDownText);
-        lessionCountDownValue = (TextView) view.findViewById(R.id.lessionCountDownValue);
-
-        requireLessionBtn = (Button) view.findViewById(R.id.requireLessionBtn);
-        requireLessionBtnFloat = (Button) view.findViewById(R.id.requireLessionBtnFloat);
-    }
-
-    private void initData() {
-        // 查询数据
-        lessionPresenter.queryAndRefreshActivityTopic();
-        lessionPresenter.queryAndRefreshVoteLession();
-    }
-
-    private void bindControl() {
-
-        // 页头的按钮
-        switchLessionView = (RadioGroup) lessionViewHead1.findViewById(R.id.switchLessionView);
-        goVotingBtn = (RadioButton) lessionViewHead1.findViewById(R.id.goVotingBtn);
-        goRankingBtn = (RadioButton) lessionViewHead1.findViewById(R.id.goRankingBtn);
-
-        // 悬浮页头的按钮
-        switchLessionViewFloat = (RadioGroup) view.findViewById(R.id.switchLessionViewFloat);
-        goVotingBtnFloat = (RadioButton) view.findViewById(R.id.goVotingBtnFloat);
-        goRankingBtnFloat = (RadioButton) view.findViewById(R.id.goRankingBtnFloat);
 
         // 点击页头的列表切换
         switchLessionView.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -239,6 +249,7 @@ public class RequireLessionFragment extends Fragment implements LessionView {
             }
         });
 
+        // 上传照片
         takeImage = new TakeImage.Builder().context(this).uri(Constants.YILOS_PATH).callback(new TakeImageCallback() {
             @Override
             public void callback(Uri uri) {
@@ -255,6 +266,38 @@ public class RequireLessionFragment extends Fragment implements LessionView {
 
         requireLessionBtn.setOnClickListener(requireLessionBtnListener);
         requireLessionBtnFloat.setOnClickListener(requireLessionBtnListener);
+
+        // 下拉刷新绑定
+        lessionPullRefresh.setLastUpdateTimeRelateObject(this);
+        lessionPullRefresh.setPtrHandler(new PtrHandler() {
+
+            @Override
+            public void onRefreshBegin(PtrFrameLayout frame) {
+
+                // 刷新页头
+                lessionPresenter.queryAndRefreshActivityTopic();
+
+                // 刷新列表
+                if (goVotingBtn.isChecked()) {
+
+                    lessionPresenter.queryAndRefreshVoteLession();
+
+                } else if (goRankingBtn.isChecked()) {
+
+                    lessionPresenter.queryAndRefreshRankingLession();
+
+                }
+
+            }
+
+            @Override
+            public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
+                // 滑动到顶部才允许刷新
+                boolean canScrollUp = lessionVoteView.getChildCount() > 0 && (lessionVoteView.getFirstVisiblePosition() > 0
+                        || lessionVoteView.getChildAt(0).getTop() < lessionVoteView.getPaddingTop());
+                return !canScrollUp;
+            }
+        });
     }
 
     @Override
@@ -265,10 +308,12 @@ public class RequireLessionFragment extends Fragment implements LessionView {
 
     @Override
     public void refreshFailed() {
+
     }
 
     @Override
     public void refreshActivityTopic(LessionActivity lessionActivity) {
+
         if (lessionActivity.getStage() == 1) {
             handleLessionTopic(lessionActivity);
         } else if (lessionActivity.getStage() == 2) {
@@ -276,6 +321,9 @@ public class RequireLessionFragment extends Fragment implements LessionView {
         }
         // 列表需要获取当前阶段以决定是否显示投票按钮
         voteListViewAdapter.setStage(lessionActivity.getStage());
+
+        // 通知下拉组件更新刷新时间
+        lessionPullRefresh.refreshComplete();
     }
 
 

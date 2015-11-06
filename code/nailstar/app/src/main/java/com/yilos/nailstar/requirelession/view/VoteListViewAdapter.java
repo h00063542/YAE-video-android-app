@@ -63,11 +63,13 @@ public class VoteListViewAdapter extends BaseAdapter {
 
     @Override
     public boolean areAllItemsEnabled() {
+        // 所有的item不可点击
         return false;
     }
 
     @Override
     public boolean isEnabled(int position) {
+        // 所有的item不可点击
         return false;
     }
 
