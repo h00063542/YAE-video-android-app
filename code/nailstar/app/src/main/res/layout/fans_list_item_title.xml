@@ -5,4 +5,5 @@
     android:background="@color/white"
     android:gravity="center_vertical"
     android:minHeight="30dp"
+    android:id="@+id/head_title"
     android:paddingLeft="10dp" />

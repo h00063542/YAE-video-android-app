@@ -45,8 +45,8 @@ public class FansListActivity extends Activity {
                 otherCount = otherCount + 1;
             }
         }
-        FansListCategory teacherCategory = new FansListCategory(R.string.teacher + " " + TeacherCount);
-        FansListCategory otherCategory = new FansListCategory(R.string.ka_you + " " + otherCount);
+        FansListCategory teacherCategory = new FansListCategory("老师" + " " + TeacherCount);
+        FansListCategory otherCategory = new FansListCategory("咖友" + " " + otherCount);
         for (FansList fansList : fansLists) {
             if (fansList.getType() == 5) {
                 teacherCategory.addItem(fansList);

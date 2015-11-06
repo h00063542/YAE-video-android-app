@@ -142,10 +142,10 @@ public class FansCategoryAdapter extends BaseAdapter {
         switch (itemViewType) {
             case TYPE_CATEGORY_ITEM:
                 if (null == convertView) {
-                    convertView = mInflater.inflate(R.layout.listview_item_header, null);
+                    convertView = mInflater.inflate(R.layout.fans_list_item_title, null);
                 }
 
-                TextView textView = (TextView) convertView.findViewById(R.id.header);
+                TextView textView = (TextView) convertView.findViewById(R.id.head_title);
                 String  itemValue = getTitleItem(position);
                 textView.setText(itemValue);
                 break;
