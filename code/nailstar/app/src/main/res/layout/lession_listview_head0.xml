@@ -23,7 +23,7 @@
             android:layout_width="0px"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_weight="23">
+            android:layout_weight="28">
             <com.yilos.widget.view.ImageCacheView
                 android:id="@+id/lessionCandidatePic"
                 android:layout_width="match_parent"
@@ -39,29 +39,28 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center"
-            android:layout_weight="27">
+            android:layout_weight="22">
             <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:id="@+id/crownImage"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:adjustViewBounds="true"
                 android:src="@mipmap/crown2"
                 android:scaleType="fitCenter" />
             <com.yilos.widget.circleimageview.CircleImageView
-                android:layout_marginTop="-13dp"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_marginTop="-10dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:id="@+id/lessionUserPhoto"
                 android:src="@mipmap/ic_default_photo" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="3dp"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:text="用户名称"
                 android:id="@+id/lessionUserName" />
             <LinearLayout
                 android:orientation="horizontal"
-                android:layout_marginTop="3dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
                 <TextView
@@ -95,7 +94,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/lessionBackground">
 
-        <LinearLayout
+        <FrameLayout
             android:orientation="vertical"
             android:layout_width="0px"
             android:layout_height="wrap_content"
@@ -109,7 +108,24 @@
                 android:src="@mipmap/ic_default_photo"
                 android:id="@+id/lessionPhoto"
                 android:scaleType="fitCenter" />
-        </LinearLayout>
+            <ImageView
+                android:id="@+id/newVideoIcon"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/new_video"/>
+            <ImageView
+                android:id="@+id/playVideoIcon"
+                android:scaleType="fitCenter"
+                android:adjustViewBounds="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|right"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="5dp"
+                android:src="@mipmap/play_video"/>
+        </FrameLayout>
 
         <LinearLayout
             android:orientation="vertical"

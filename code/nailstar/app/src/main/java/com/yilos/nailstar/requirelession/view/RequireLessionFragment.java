@@ -5,17 +5,22 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.util.DisplayMetrics;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.yilos.nailstar.R;
+import com.yilos.nailstar.player.view.VideoPlayerActivity;
 import com.yilos.nailstar.requirelession.Presenter.LessionPresenter;
 import com.yilos.nailstar.requirelession.entity.CandidateLession;
 import com.yilos.nailstar.requirelession.entity.LessionActivity;
@@ -27,10 +32,20 @@ import com.yilos.widget.view.ImageCacheView;
 
 import java.util.List;
 
+import in.srain.cube.views.ptr.PtrClassicFrameLayout;
+import in.srain.cube.views.ptr.PtrFrameLayout;
+import in.srain.cube.views.ptr.PtrHandler;
+
 /**
  * 求教程Fragment
  */
 public class RequireLessionFragment extends Fragment implements LessionView {
+
+    // 屏幕宽度
+    private int screenWidth;
+
+    // 下拉刷新
+    PtrClassicFrameLayout lessionPullRefresh;
 
     // 求教程页面
     private View view;
@@ -38,38 +53,26 @@ public class RequireLessionFragment extends Fragment implements LessionView {
     // 页面头部（求教程榜首）
     private View lessionViewHead0;
 
+    // 页面头部（求教程按钮）
+    private View lessionViewHead1;
+
+    // 候选款式列表
+    private ListView lessionVoteView;
+
+    // 投票候选列表Adapter
+    private VoteListViewAdapter voteListViewAdapter;
+
     // 求教程榜首（第一阶段：求教程阶段）
     private View lessionBackground;
 
-    // 视频图片（第一阶段：求教程阶段）
-    private ImageCacheView lessionPhoto;
-
-    // 老师头像（第一阶段：求教程阶段）
-    private CircleImageView lessionAuthorPhoto;
-
     // 求教程榜首（第二阶段：视频制作阶段）
     private View candidateBackground;
-
-    // 榜首图片（视频制作阶段）
-    private ImageCacheView lessionCandidatePic;
-
-    // 榜首作者（视频制作阶段）
-    private CircleImageView lessionUserPhoto;
-
-    // 教程名称
-    private TextView lessionTopic;
-
-    // 教程讲师
-    private TextView lessionAuthorName;
 
     // 倒计时描述
     private TextView lessionCountDownText;
 
     // 剩余时间
     private TextView lessionCountDownValue;
-
-    // 页面头部（求教程按钮）
-    private View lessionViewHead1;
 
     // 页面悬浮部分（求教程按钮）
     private View lessionViewHeadFloat;
@@ -79,12 +82,6 @@ public class RequireLessionFragment extends Fragment implements LessionView {
 
     // 悬浮页头的求教程按钮
     private Button requireLessionBtnFloat;
-
-    // 候选款式列表
-    private ListView lessionVoteView;
-
-    // 投票候选列表Adapter
-    private VoteListViewAdapter voteListViewAdapter;
 
     // 单选按钮group
     private RadioGroup switchLessionView;
@@ -120,6 +117,10 @@ public class RequireLessionFragment extends Fragment implements LessionView {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        DisplayMetrics metric = new DisplayMetrics();
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(metric);
+        screenWidth = metric.widthPixels;
+
         view = inflater.inflate(R.layout.fragment_require_lession, container, false);
         lessionViewHead0 = inflater.inflate(R.layout.lession_listview_head0, null);
         lessionViewHead1 = inflater.inflate(R.layout.lession_listview_head1, null);
@@ -143,9 +144,45 @@ public class RequireLessionFragment extends Fragment implements LessionView {
         // 页面头部悬浮效果
         lessionViewHeadFloat = view.findViewById(R.id.lessionListViewHeadFloat);
 
+        // 求教程榜首，因为是放在listview的header中，必须放在listview初始化之后
+        lessionBackground = view.findViewById(R.id.lessionBackground);
+        candidateBackground = view.findViewById(R.id.candidateBackground);
+
+        // 页头的按钮
+        switchLessionView = (RadioGroup) lessionViewHead1.findViewById(R.id.switchLessionView);
+        goVotingBtn = (RadioButton) lessionViewHead1.findViewById(R.id.goVotingBtn);
+        goRankingBtn = (RadioButton) lessionViewHead1.findViewById(R.id.goRankingBtn);
+
+        // 悬浮页头的按钮
+        switchLessionViewFloat = (RadioGroup) view.findViewById(R.id.switchLessionViewFloat);
+        goVotingBtnFloat = (RadioButton) view.findViewById(R.id.goVotingBtnFloat);
+        goRankingBtnFloat = (RadioButton) view.findViewById(R.id.goRankingBtnFloat);
+
+        // 倒计时
+        lessionCountDownText = (TextView) view.findViewById(R.id.lessionCountDownText);
+        lessionCountDownValue = (TextView) view.findViewById(R.id.lessionCountDownValue);
+
+        // 求教程按钮
+        requireLessionBtn = (Button) view.findViewById(R.id.requireLessionBtn);
+        requireLessionBtnFloat = (Button) view.findViewById(R.id.requireLessionBtnFloat);
+
+        // 下拉刷新
+        lessionPullRefresh = (PtrClassicFrameLayout) view.findViewById(R.id.lessionPullRefresh);
+
+    }
+
+    private void initData() {
+        // 查询数据
+        lessionPresenter.queryAndRefreshActivityTopic();
+        lessionPresenter.queryAndRefreshVoteLession();
+    }
+
+    private void bindControl() {
+
         // 悬浮头部截住点击事件，防止传到下面的listview
         lessionViewHeadFloat.setOnClickListener(null);
 
+        // ListView头部悬浮效果
         lessionVoteView.setOnScrollListener(new AbsListView.OnScrollListener() {
 
             @Override
@@ -163,36 +200,6 @@ public class RequireLessionFragment extends Fragment implements LessionView {
                 }
             }
         });
-
-        // 求教程榜首，因为是放在listview的header中，必须放在listview初始化之后
-        lessionBackground = view.findViewById(R.id.lessionBackground);
-        candidateBackground = view.findViewById(R.id.candidateBackground);
-        lessionTopic = (TextView) view.findViewById(R.id.lessionTopic);
-        lessionAuthorName = (TextView) view.findViewById(R.id.lessionAuthorName);
-        lessionCountDownText = (TextView) view.findViewById(R.id.lessionCountDownText);
-        lessionCountDownValue = (TextView) view.findViewById(R.id.lessionCountDownValue);
-
-        requireLessionBtn = (Button) view.findViewById(R.id.requireLessionBtn);
-        requireLessionBtnFloat = (Button) view.findViewById(R.id.requireLessionBtnFloat);
-    }
-
-    private void initData() {
-        // 查询数据
-        lessionPresenter.queryAndRefreshActivityTopic();
-        lessionPresenter.queryAndRefreshVoteLession();
-    }
-
-    private void bindControl() {
-
-        // 页头的按钮
-        switchLessionView = (RadioGroup) lessionViewHead1.findViewById(R.id.switchLessionView);
-        goVotingBtn = (RadioButton) lessionViewHead1.findViewById(R.id.goVotingBtn);
-        goRankingBtn = (RadioButton) lessionViewHead1.findViewById(R.id.goRankingBtn);
-
-        // 悬浮页头的按钮
-        switchLessionViewFloat = (RadioGroup) view.findViewById(R.id.switchLessionViewFloat);
-        goVotingBtnFloat = (RadioButton) view.findViewById(R.id.goVotingBtnFloat);
-        goRankingBtnFloat = (RadioButton) view.findViewById(R.id.goRankingBtnFloat);
 
         // 点击页头的列表切换
         switchLessionView.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -246,6 +253,7 @@ public class RequireLessionFragment extends Fragment implements LessionView {
             }
         });
 
+        // 上传照片
         takeImage = new TakeImage.Builder().context(this).uri(Constants.YILOS_PATH).callback(new TakeImageCallback() {
             @Override
             public void callback(Uri uri) {
@@ -262,6 +270,38 @@ public class RequireLessionFragment extends Fragment implements LessionView {
 
         requireLessionBtn.setOnClickListener(requireLessionBtnListener);
         requireLessionBtnFloat.setOnClickListener(requireLessionBtnListener);
+
+        // 下拉刷新绑定
+        lessionPullRefresh.setLastUpdateTimeRelateObject(this);
+        lessionPullRefresh.setPtrHandler(new PtrHandler() {
+
+            @Override
+            public void onRefreshBegin(PtrFrameLayout frame) {
+
+                // 刷新页头
+                lessionPresenter.queryAndRefreshActivityTopic();
+
+                // 刷新列表
+                if (goVotingBtn.isChecked()) {
+
+                    lessionPresenter.queryAndRefreshVoteLession();
+
+                } else if (goRankingBtn.isChecked()) {
+
+                    lessionPresenter.queryAndRefreshRankingLession();
+
+                }
+
+            }
+
+            @Override
+            public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
+                // 滑动到顶部才允许刷新
+                boolean canScrollUp = lessionVoteView.getChildCount() > 0 && (lessionVoteView.getFirstVisiblePosition() > 0
+                        || lessionVoteView.getChildAt(0).getTop() < lessionVoteView.getPaddingTop());
+                return !canScrollUp;
+            }
+        });
     }
 
     @Override
@@ -272,10 +312,12 @@ public class RequireLessionFragment extends Fragment implements LessionView {
 
     @Override
     public void refreshFailed() {
+
     }
 
     @Override
     public void refreshActivityTopic(LessionActivity lessionActivity) {
+
         if (lessionActivity.getStage() == 1) {
             handleLessionTopic(lessionActivity);
         } else if (lessionActivity.getStage() == 2) {
@@ -283,21 +325,53 @@ public class RequireLessionFragment extends Fragment implements LessionView {
         }
         // 列表需要获取当前阶段以决定是否显示投票按钮
         voteListViewAdapter.setStage(lessionActivity.getStage());
+
+        // 通知下拉组件更新刷新时间
+        lessionPullRefresh.refreshComplete();
     }
 
 
     // 求教程第一阶段（求教程阶段）
-    private void handleLessionTopic(LessionActivity lessionActivity) {
+    private void handleLessionTopic(final LessionActivity lessionActivity) {
 
-        lessionPhoto = (ImageCacheView) view.findViewById(R.id.lessionPhoto);
-        lessionAuthorPhoto = (CircleImageView) view.findViewById(R.id.lessionAuthorPhoto);
+        // 设置图片
+        ImageCacheView lessionPhoto = (ImageCacheView) view.findViewById(R.id.lessionPhoto);
+        CircleImageView lessionAuthorPhoto = (CircleImageView) view.findViewById(R.id.lessionAuthorPhoto);
 
         lessionPhoto.setImageSrc(lessionActivity.getPrevious().getPicUrl());
         lessionAuthorPhoto.setImageSrc(lessionActivity.getPrevious().getAuthorPhoto());
 
+        // 设置图片大小（按照屏幕大小的百分比计算）
+        lessionAuthorPhoto.getLayoutParams().width = screenWidth / 15;
+        lessionAuthorPhoto.getLayoutParams().height = screenWidth / 15;
+
+        ImageView newVideoIcon = (ImageView) view.findViewById(R.id.newVideoIcon);
+        newVideoIcon.getLayoutParams().width = screenWidth / 12;
+        newVideoIcon.getLayoutParams().height = screenWidth / 12;
+        ImageView playVideoIcon = (ImageView) view.findViewById(R.id.playVideoIcon);
+        playVideoIcon.getLayoutParams().width = screenWidth / 18;
+        playVideoIcon.getLayoutParams().height = screenWidth / 18;
+        FrameLayout.LayoutParams playVideoIconLayoutLp = new FrameLayout.LayoutParams(playVideoIcon.getLayoutParams());
+        playVideoIconLayoutLp.setMargins(0, 0, screenWidth / 50, screenWidth / 50);
+        playVideoIconLayoutLp.gravity = Gravity.RIGHT | Gravity.BOTTOM;
+        playVideoIcon.setLayoutParams(playVideoIconLayoutLp);
+
+        // 设置文字
+        TextView lessionTopic = (TextView) view.findViewById(R.id.lessionTopic);
+        TextView lessionAuthorName = (TextView) view.findViewById(R.id.lessionAuthorName);
         lessionTopic.setText(lessionActivity.getPrevious().getTitle());
         lessionAuthorName.setText(lessionActivity.getPrevious().getAuthorName());
         lessionCountDownText.setText(getResources().getString(R.string.stage1_count_down));
+
+        // 绑定播放按钮
+        lessionPhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), VideoPlayerActivity.class);
+                intent.putExtra(Constants.TOPIC_ID, lessionActivity.getPrevious().getTopicId());
+                startActivity(intent);
+            }
+        });
 
         // 显示现阶段的页头，隐藏其它阶段页头
         candidateBackground.setVisibility(View.GONE);
@@ -308,17 +382,25 @@ public class RequireLessionFragment extends Fragment implements LessionView {
     // 求教程第二阶段（视频制作阶段）
     private void handleCandidateTopic(LessionActivity lessionActivity) {
 
-        lessionCandidatePic = (ImageCacheView) view.findViewById(R.id.lessionCandidatePic);
-        lessionUserPhoto = (CircleImageView) view.findViewById(R.id.lessionUserPhoto);
+        ImageCacheView lessionCandidatePic = (ImageCacheView) view.findViewById(R.id.lessionCandidatePic);
+        CircleImageView lessionUserPhoto = (CircleImageView) view.findViewById(R.id.lessionUserPhoto);
 
         lessionCandidatePic.setImageSrc(lessionActivity.getCurrent().getPicUrl());
         lessionUserPhoto.setImageSrc(lessionActivity.getCurrent().getAuthorPhoto());
         lessionCountDownText.setText(getResources().getString(R.string.stage2_count_down));
 
         //根据背景图片的比例设置头部高度
-        DisplayMetrics metric = new DisplayMetrics();
-        getActivity().getWindowManager().getDefaultDisplay().getMetrics(metric);
-        candidateBackground.getLayoutParams().height = metric.widthPixels * 3 / 11;
+        candidateBackground.getLayoutParams().height = screenWidth / 3;
+
+        ImageView crownImage = (ImageView) view.findViewById(R.id.crownImage);
+
+        LinearLayout.LayoutParams crownImageLayoutLp = new LinearLayout.LayoutParams(screenWidth / 15, screenWidth / 15, 1);
+        crownImageLayoutLp.setMargins(0, 0, 0, 0);
+        crownImage.setLayoutParams(crownImageLayoutLp);
+
+        LinearLayout.LayoutParams userPhotoLayoutLp = new LinearLayout.LayoutParams(screenWidth / 15, screenWidth / 15, 1);
+        userPhotoLayoutLp.setMargins(0, -(screenWidth / 52), 0, 0);
+        lessionUserPhoto.setLayoutParams(userPhotoLayoutLp);
 
         // 显示现阶段的页头，隐藏其它阶段页头
         lessionBackground.setVisibility(View.GONE);

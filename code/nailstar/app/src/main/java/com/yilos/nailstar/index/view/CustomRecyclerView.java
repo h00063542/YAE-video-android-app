@@ -46,6 +46,7 @@ public class CustomRecyclerView extends RecyclerView {
     public void requestDisallowParentInterceptTouchEvent(boolean disallow){
         ViewParent parent = getParent();
         while (null != parent) {
+            if(parent instanceof NestedScrollingScrollView)
             parent.requestDisallowInterceptTouchEvent(disallow);
             parent = parent.getParent();
         }
