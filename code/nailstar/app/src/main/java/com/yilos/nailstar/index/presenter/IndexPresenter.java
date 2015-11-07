@@ -106,7 +106,7 @@ public class IndexPresenter {
                     //e.printStackTrace();
                 }
 
-                return indexContentCache.getPosters();
+                return indexContentCache.getCategories();
             }
         };
 

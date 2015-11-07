@@ -7,47 +7,53 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:orientation="vertical"
-    tools:context=".player.view.VideoPlayerActivity">
+    tools:context=".topic.view.TopicVideoPlayerActivity">
+
+    <!--视频播放界面顶部控件，返回按钮，视频名称，下载按钮,分享按钮-->
+    <com.yilos.widget.titlebar.TitleBar
+        android:id="@+id/tb_video_player_head"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
     <!--视频播放界面顶部控件，返回按钮，视频名称，分享按钮-->
-    <RelativeLayout
-        android:id="@+id/layout_video_player_head"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:background="@drawable/bottom_border">
+    <!--<RelativeLayout-->
+    <!--android:id="@+id/layout_video_player_head"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="60dp"-->
+    <!--android:background="@drawable/bottom_border">-->
 
-        <ImageView
-            android:id="@+id/btn_video_player_back"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="10dp"
-            android:layout_marginStart="10dp"
-            android:src="@drawable/share" />
+    <!--<ImageView-->
+    <!--android:id="@+id/btn_video_player_back"-->
+    <!--android:layout_width="30dp"-->
+    <!--android:layout_height="30dp"-->
+    <!--android:layout_alignParentLeft="true"-->
+    <!--android:layout_alignParentStart="true"-->
+    <!--android:layout_centerVertical="true"-->
+    <!--android:layout_marginLeft="10dp"-->
+    <!--android:layout_marginStart="10dp"-->
+    <!--android:src="@drawable/share" />-->
 
 
-        <TextView
-            android:id="@+id/tv_video_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:textSize="20sp" />
+    <!--<TextView-->
+    <!--android:id="@+id/tv_video_name"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_centerHorizontal="true"-->
+    <!--android:layout_centerVertical="true"-->
+    <!--android:textSize="20sp" />-->
 
-        <ImageView
-            android:id="@+id/btn_video_share"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="10dp"
-            android:layout_marginRight="10dp"
-            android:src="@drawable/share" />
+    <!--<ImageView-->
+    <!--android:id="@+id/btn_video_share"-->
+    <!--android:layout_width="30dp"-->
+    <!--android:layout_height="30dp"-->
+    <!--android:layout_alignParentEnd="true"-->
+    <!--android:layout_alignParentRight="true"-->
+    <!--android:layout_centerVertical="true"-->
+    <!--android:layout_marginEnd="10dp"-->
+    <!--android:layout_marginRight="10dp"-->
+    <!--android:src="@drawable/share" />-->
 
-    </RelativeLayout>
+    <!--</RelativeLayout>-->
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -84,15 +90,6 @@
                             android:background="@color/black"
                             app:layerAttrs="@array/video_layers">
 
-                            <!--<com.melnykov.fab.FloatingActionButton-->
-                            <!--android:id="@+id/fab_video_player"-->
-                            <!--android:layout_width="10dp"-->
-                            <!--android:layout_height="10dp"-->
-                            <!--android:layout_gravity="center_vertical|center_horizontal"-->
-                            <!--android:layout_margin="10dp"-->
-                            <!--android:src="@drawable/play"-->
-                            <!--fab:fab_colorNormal="@color/grey"-->
-                            <!--fab:fab_colorPressed="@color/green" />-->
                         </com.sina.sinavideo.sdk.VDVideoView>
 
                         <ImageView
@@ -123,7 +120,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/topic_author_photo_size"
                             android:layout_gravity="center_vertical"
-                            android:layout_weight="1">
+                            android:layout_weight="1"
+                            android:gravity="center_vertical">
 
                             <TextView
                                 android:id="@+id/tv_video_author_name"
@@ -151,6 +149,7 @@
                                 android:textSize="@dimen/topic_video_playing_time_font_size" />
 
                             <LinearLayout
+                                android:id="@+id/layout_topic_author_tags"
                                 android:layout_width="match_parent"
                                 android:layout_height="30dp"
                                 android:layout_below="@id/tv_video_author_name"
@@ -165,7 +164,6 @@
                                     android:gravity="center_vertical"
                                     android:paddingLeft="5dp"
                                     android:paddingRight="5dp"
-                                    android:text="可爱"
                                     android:textSize="@dimen/topic_tags_font_size"
                                     android:visibility="gone" />
 
@@ -347,7 +345,7 @@
                         </LinearLayout>
                     </RelativeLayout>
 
-                    <!--更多视频与评论之间的分割线-->
+                    <!--更多视频与评论数之间的分割线-->
                     <LinearLayout
                         android:id="@+id/layout_more_videos_line"
                         android:layout_width="match_parent"
@@ -356,12 +354,22 @@
                         android:background="@color/line_color"
                         android:orientation="horizontal"></LinearLayout>
 
+                    <!--总评论数-->
+                    <TextView
+                        android:id="@+id/tv_topic_comment_count"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_below="@id/layout_more_videos_line"
+                        android:background="@drawable/bottom_border"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="10dp" />
+
                     <!--视频评论-->
                     <LinearLayout
                         android:id="@+id/layout_topic_comments"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/layout_more_videos_line"
+                        android:layout_below="@id/tv_topic_comment_count"
                         android:orientation="vertical"></LinearLayout>
 
                 </RelativeLayout>
@@ -369,123 +377,59 @@
         </com.yilos.widget.pullrefresh.PullToRefreshView>
 
         <!--评论区域置顶按钮-->
-        <com.melnykov.fab.FloatingActionButton
-            android:id="@+id/fab_back_top"
-            android:layout_width="10dp"
-            android:layout_height="10dp"
-            android:layout_gravity="bottom|right"
-            android:layout_margin="10dp"
-            android:src="@drawable/back_up"
-            android:visibility="gone"
-            fab:fab_colorNormal="@color/grey"
-            fab:fab_colorPressed="@color/green" />
+        <!--<com.melnykov.fab.FloatingActionButton-->
+        <!--android:id="@+id/fab_back_top"-->
+        <!--android:layout_width="10dp"-->
+        <!--android:layout_height="10dp"-->
+        <!--android:layout_gravity="bottom|right"-->
+        <!--android:layout_margin="10dp"-->
+        <!--android:src="@drawable/back_up"-->
+        <!--android:visibility="gone"-->
+        <!--fab:fab_colorNormal="@color/grey"-->
+        <!--fab:fab_colorPressed="@color/green" />-->
     </FrameLayout>
 
     <!--视频播放界面底部，下载，收藏，评论，交作业-->
     <LinearLayout
         android:id="@+id/layout_video_player_footer"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/topic_footer_layout_height"
+        android:layout_height="wrap_content"
         android:background="@drawable/top_border"
         android:orientation="horizontal">
 
-        <!--下载-->
-        <RelativeLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
+        <CheckBox
+            android:id="@+id/cb_topic_tab_like"
+            style="@style/MMTabButton"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
             android:layout_weight="1"
-            android:gravity="center_horizontal|center_vertical">
+            android:drawableTop="@drawable/topic_tab_like_menus"
+            android:text="@string/like"
+            android:textColor="@drawable/main_tab_text_color" />
 
-            <RelativeLayout
-                android:id="@+id/layout_btn_video_download"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-                <ImageView
-                    android:id="@+id/iv_video_download_icon"
-                    android:layout_width="@dimen/topic_footer_icon_size"
-                    android:layout_height="@dimen/topic_footer_icon_size"
-                    android:layout_centerVertical="true"
-                    android:src="@drawable/message" />
-
-                <TextView
-                    android:id="@+id/tv_video_download_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:layout_toRightOf="@id/iv_video_download_icon"
-                    android:text="@string/download"
-                    android:textColor="@color/black" />
-            </RelativeLayout>
-
-
-        </RelativeLayout>
-
-        <!--收藏-->
-        <RelativeLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
+        <CheckBox
+            android:id="@+id/cb_topic_tab_collection"
+            style="@style/MMTabButton"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="center_horizontal|center_vertical">
+            android:drawableTop="@drawable/topic_tab_collection_menus"
+            android:text="@string/collection"
+            android:textColor="@drawable/main_tab_text_color" />
 
-            <RelativeLayout
-                android:id="@+id/layout_btn_topic_collection"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-                <ImageView
-                    android:id="@+id/iv_topic_collection_icon"
-                    android:layout_width="@dimen/topic_footer_icon_size"
-                    android:layout_height="@dimen/topic_footer_icon_size"
-                    android:layout_centerVertical="true"
-                    android:src="@drawable/collection" />
-
-                <TextView
-                    android:id="@+id/tv_topic_collection_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_toRightOf="@id/iv_topic_collection_icon"
-                    android:text="@string/collection"
-                    android:textColor="@color/black" />
-            </RelativeLayout>
-        </RelativeLayout>
-
-        <!--评论-->
-        <RelativeLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
+        <TextView
+            android:id="@+id/tv_topic_tab_comment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="center_horizontal|center_vertical">
-
-            <RelativeLayout
-                android:id="@+id/layout_btn_topic_comment"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-                <ImageView
-                    android:id="@+id/iv_topic_comment_icon"
-                    android:layout_width="@dimen/topic_footer_icon_size"
-                    android:layout_height="@dimen/topic_footer_icon_size"
-                    android:layout_centerVertical="true"
-                    android:src="@drawable/message" />
+            android:drawableTop="@drawable/topic_tab_comment_menus"
+            android:gravity="center_horizontal"
+            android:text="@string/comment"
+            android:textColor="@drawable/main_tab_text_color" />
 
 
-                <TextView
-                    android:id="@+id/tv_topic_comment_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:layout_toRightOf="@id/iv_topic_comment_icon"
-                    android:text="@string/comment"
-                    android:textColor="@color/black" />
-            </RelativeLayout>
-        </RelativeLayout>
-
-        <!--交作业-->
         <TextView
             android:id="@+id/tv_submitted_homework"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center_horizontal|center_vertical"
             android:layout_marginTop="2px"
@@ -494,6 +438,7 @@
             android:gravity="center_horizontal|center_vertical"
             android:text="@string/submitted_homework"
             android:textColor="@color/white" />
+
     </LinearLayout>
 
 

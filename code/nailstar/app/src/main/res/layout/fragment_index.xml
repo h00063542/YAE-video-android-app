@@ -3,8 +3,15 @@
     tools:context="com.yilos.nailstar.index.view.IndexFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/grey"
     android:id="@+id/fragment_index"
     android:orientation="vertical">
+
+    <com.yilos.widget.titlebar.TitleBar
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/common_tool_bar_height">
+
+    </com.yilos.widget.titlebar.TitleBar>
 
     <com.yilos.widget.pullrefresh.PullRefreshLayout
         android:id="@+id/fragment_home_ptr_frame"
@@ -19,63 +26,88 @@
         cube_ptr:ptr_ratio_of_header_height_to_refresh="1.2"
         cube_ptr:ptr_resistance="1.7">
 
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:tools="http://schemas.android.com/tools"
-            tools:context="com.yilos.nailstar.index.view.IndexFragment"
+        <com.yilos.nailstar.index.view.NestedScrollingScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/fragment_index_content"
-            android:orientation="vertical"
-            android:weightSum="1">
+            android:layout_height="wrap_content"
+            android:fillViewport="true"
+            android:id="@+id/indexScrollView">
 
-            <RelativeLayout
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                tools:context="com.yilos.nailstar.index.view.IndexFragment"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <com.yilos.widget.banner.Banner
+                android:layout_height="match_parent"
+                android:id="@+id/fragment_index_content"
+                android:orientation="vertical"
+                android:weightSum="1">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <com.yilos.widget.banner.Banner
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/posterBanner"
+                        android:clickable="true"
+                        android:layout_gravity="center_horizontal">
+                    </com.yilos.widget.banner.Banner>
+                    <com.yilos.widget.pageindicator.CirclePageIndicator xmlns:CirclePageIndicator="http://schemas.android.com/apk/res-auto"
+                        android:layout_width="match_parent"
+                        android:layout_height="10dp"
+                        android:layout_alignBottom="@+id/posterBanner"
+                        android:layout_marginBottom="5dp"
+                        android:id="@+id/indicator"
+                        CirclePageIndicator:ci_background="@android:color/white"
+                        CirclePageIndicator:ci_selected_background="0xffe6454a"
+                        CirclePageIndicator:ci_mode="solo"
+                        CirclePageIndicator:ci_gravity="center"
+                        CirclePageIndicator:ci_radius="5dp"
+                        CirclePageIndicator:ci_margin="5dp" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <com.yilos.widget.banner.Banner
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/categoryBanner"
+                        android:clickable="true"
+                        android:background="@color/white">
+                    </com.yilos.widget.banner.Banner>
+                    <com.yilos.widget.pageindicator.CirclePageIndicator xmlns:CirclePageIndicator="http://schemas.android.com/apk/res-auto"
+                        android:layout_width="match_parent"
+                        android:layout_height="10dp"
+                        android:layout_alignBottom="@+id/categoryBanner"
+                        android:layout_marginBottom="5dp"
+                        android:id="@+id/categoryBannerIndicator"
+                        CirclePageIndicator:ci_background="@android:color/white"
+                        CirclePageIndicator:ci_selected_background="0xffe6454a"
+                        CirclePageIndicator:ci_mode="solo"
+                        CirclePageIndicator:ci_gravity="center"
+                        CirclePageIndicator:ci_radius="5dp"
+                        CirclePageIndicator:ci_margin="5dp" />
+                </RelativeLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/index_content_padding"
+                    android:text=" "
+                    android:background="@color/grey"/>
+
+                <com.yilos.widget.pageindicator.TabPageIndicator
+                    android:id="@+id/videoListPagerIndicator"
+                    android:layout_height="@dimen/index_tab_height"
+                    android:layout_width="fill_parent"/>
+
+                <com.yilos.widget.view.MViewPager
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/posterBanner"
-                    android:clickable="true"
-                    android:layout_gravity="center_horizontal">
-                </com.yilos.widget.banner.Banner>
-                <com.yilos.widget.pageindicator.CirclePageIndicator xmlns:CirclePageIndicator="http://schemas.android.com/apk/res-auto"
-                    android:layout_width="match_parent"
-                    android:layout_height="10dp"
-                    android:layout_alignBottom="@+id/posterBanner"
-                    android:layout_marginBottom="5dp"
-                    android:id="@+id/indicator"
-                    CirclePageIndicator:ci_background="@android:color/white"
-                    CirclePageIndicator:ci_selected_background="0xffe6454a"
-                    CirclePageIndicator:ci_mode="solo"
-                    CirclePageIndicator:ci_gravity="center"
-                    CirclePageIndicator:ci_radius="5dp"
-                    CirclePageIndicator:ci_margin="5dp" />
-            </RelativeLayout>
+                    android:layout_marginTop="10dp"
+                    android:id="@+id/videoListPager">
+                </com.yilos.widget.view.MViewPager>
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <com.yilos.widget.banner.Banner
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/categoryBanner"
-                    android:clickable="true"
-                    android:background="@color/green">
-                </com.yilos.widget.banner.Banner>
-                <!--<com.yilos.widget.pageindicator.CirclePageIndicator xmlns:CirclePageIndicator="http://schemas.android.com/apk/res-auto"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="10dp"-->
-                    <!--android:layout_alignBottom="@+id/categoryBanner"-->
-                    <!--android:layout_marginBottom="5dp"-->
-                    <!--android:id="@+id/categoryBannerIndicator"-->
-                    <!--CirclePageIndicator:ci_background="@android:color/white"-->
-                    <!--CirclePageIndicator:ci_selected_background="0xffe6454a"-->
-                    <!--CirclePageIndicator:ci_mode="solo"-->
-                    <!--CirclePageIndicator:ci_gravity="center"-->
-                    <!--CirclePageIndicator:ci_radius="5dp"-->
-                    <!--CirclePageIndicator:ci_margin="5dp" />-->
-            </RelativeLayout>
-
-        </LinearLayout>
+            </LinearLayout>
+        </com.yilos.nailstar.index.view.NestedScrollingScrollView>
     </com.yilos.widget.pullrefresh.PullRefreshLayout>
 </LinearLayout>

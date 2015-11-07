@@ -1,11 +1,12 @@
-package com.yilos.nailstar.player.entity;
+package com.yilos.nailstar.topic.entity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by yilos on 2015-10-22.
  */
-public class TopicInfo {
+public class TopicInfo implements Serializable {
     // 视频Id
     private String id;
     // 视频title
@@ -15,9 +16,10 @@ public class TopicInfo {
     private String thumbUrl;
     private long createDate;
     private ArrayList tags;
-    private ArrayList<VideoInfo> videos;
+    private ArrayList<TopicVideoInfo> videos;
     private String authorId;
     private String author;
+    private int commentCount;
 
     public String getId() {
         return id;
@@ -75,11 +77,11 @@ public class TopicInfo {
         this.tags = tags;
     }
 
-    public ArrayList<VideoInfo> getVideos() {
+    public ArrayList<TopicVideoInfo> getVideos() {
         return videos;
     }
 
-    public void setVideos(ArrayList<VideoInfo> videos) {
+    public void setVideos(ArrayList<TopicVideoInfo> videos) {
         this.videos = videos;
     }
 
@@ -98,4 +100,13 @@ public class TopicInfo {
     public void setAuthor(String author) {
         this.author = author;
     }
+
+    public int getCommentCount() {
+        return commentCount;
+    }
+
+    public void setCommentCount(int commentCount) {
+        this.commentCount = commentCount;
+    }
+
 }

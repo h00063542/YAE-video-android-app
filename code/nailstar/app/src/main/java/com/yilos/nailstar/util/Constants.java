@@ -38,6 +38,7 @@ public class Constants {
     public static final String AT = "at";
     public static final String USER_ID = "userId";
     public static final String NICKNAME = "nickname";
+    public static final String PHOTO = "photo";
     public static final String REPLIES = "replys";
 
     public static final String PLAY_TIMES = "playTimes";
@@ -50,6 +51,7 @@ public class Constants {
     public static final String REPLY_TO = "replyTo";
 
     public static final int IS_HOME_WORK_VALUE = 1;
+    public static final int NOT_HOME_WORK_VALUE = 0;
 
     public static final long ONE_MB_SIZE = 1024L * 1024;
 
@@ -66,4 +68,39 @@ public class Constants {
     public static final double VIDEO_ASPECT_RATIO = 1.78;
 
 
+    /**
+     * 评论
+     */
+    public static final int TOPIC_COMMENT_TYPE_COMMENT = 1;
+
+    /**
+     * 回复
+     */
+    public static final int TOPIC_COMMENT_TYPE_REPLY = 2;
+
+    /**
+     * 回复评论中的回复
+     */
+    public static final int TOPIC_COMMENT_TYPE_REPLY_AGAIN = 3;
+
+    public static final String TOPIC_COMMENT_ID = "topicCommentId";
+    public static final String TOPIC_NEW_COMMENT_ID = "topicNewCommentId";
+    public static final String TOPIC_COMMENT_USER_ID = "topicCommentUserId";
+    public static final String TOPIC_COMMENT_AUTHOR = "topicCommentAuthor";
+
+    public static final String TOPIC_COMMENT_REPLY_ID = "topicCommentReplyId";
+    public static final String TOPIC_COMMENT_REPLY_USER_ID = "topicCommentUserId";
+    public static final String TOPIC_COMMENT_REPLY_AUTHOR = "topicCommentReplyAuthor";
+
+    public static final String USER_INFO = "user_info";
+    public static final int TOPIC_COMMENTS_INIT_ORDER_BY_ASC = 1;
+    public static final int TOPIC_COMMENTS_INIT_ORDER_BY_DESC = 2;
+
+
+    public static final String COMMENT_COUNT = "commentCount";
+
+    /**
+     * 显示更多视频数量
+     */
+    public static final int MORE_VIDEOS_COUNT = 3;
 }
