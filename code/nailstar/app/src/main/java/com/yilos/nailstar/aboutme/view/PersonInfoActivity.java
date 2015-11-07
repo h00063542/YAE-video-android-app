@@ -31,7 +31,7 @@ public class PersonInfoActivity extends Activity implements View.OnClickListener
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                finish();
             }
         });
         titleBarTitle = titleBar.getTitleView();

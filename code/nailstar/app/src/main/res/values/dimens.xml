@@ -54,7 +54,7 @@
 
 
     <!-- fragment_about_me -->
-    <dimen name="about_me_header_nav">50dp</dimen>
+    <dimen name="about_me_header_nav">55dp</dimen>
     <dimen name="about_me_header_nav_title">20dp</dimen>
     <dimen name="about_me_left_back">40dp</dimen>
     <dimen name="about_me_border_padding">10dp</dimen>
@@ -65,7 +65,7 @@
     <dimen name="about_me_other_padding">10dp</dimen>
     <dimen name="about_me_level_padding">2dp</dimen>
     <dimen name="about_me_number_count_height">60dp</dimen>
-    <dimen name="about_me_list_item_height">42dp</dimen>
+    <dimen name="about_me_list_item_height">45dp</dimen>
     <dimen name="about_me_list_item_img">20dp</dimen>
     <dimen name="about_me_text_gray_line">1dp</dimen>
     <dimen name="about_me_message_count_border_padding">40dp</dimen>

@@ -29,7 +29,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
-                android:src="@mipmap/default_photo"
+                android:src="@mipmap/ic_default_photo"
                 android:scaleType="fitCenter" />
         </LinearLayout>
 
@@ -51,7 +51,7 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:id="@+id/lessionUserPhoto"
-                android:src="@mipmap/default_photo" />
+                android:src="@mipmap/ic_default_photo" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -106,8 +106,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
+                android:src="@mipmap/ic_default_photo"
                 android:id="@+id/lessionPhoto"
-                android:src="@mipmap/default_photo"
                 android:scaleType="fitCenter" />
         </LinearLayout>
 
@@ -129,10 +129,10 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical">
                 <com.yilos.widget.circleimageview.CircleImageView
+                    android:src="@mipmap/ic_default_photo"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:id="@+id/lessionAuthorPhoto"
-                    android:src="@mipmap/default_photo" />
+                    android:id="@+id/lessionAuthorPhoto" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
