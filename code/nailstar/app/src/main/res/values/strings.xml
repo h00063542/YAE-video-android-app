@@ -105,6 +105,7 @@
 
     <string name="from_camera">拍照</string>
     <string name="from_library">从手机相册中挑选</string>
+    <string name="save_to_library">保存到相册</string>
     <string name="cancel">取消</string>
 
     <!-- DLNA -->

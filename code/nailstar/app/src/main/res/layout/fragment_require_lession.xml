@@ -1,125 +1,126 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".requirelession.view.RequireLessionFragment">
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:padding="15dp"
-            android:background="@drawable/bottom_border" >
+            android:background="@drawable/bottom_border"
+            android:padding="15dp">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="求教程"
                 android:id="@+id/lessionTitle"
-                android:layout_centerVertical="true"
-                android:layout_centerHorizontal="true" />
-
-            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="合辑"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:text="求教程"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <TextView
                 android:id="@+id/goLessionList"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_centerVertical="true" />
+                android:layout_centerVertical="true"
+                android:text="合辑"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
         </RelativeLayout>
 
-    <in.srain.cube.views.ptr.PtrClassicFrameLayout
-        android:id="@+id/lessionPullRefresh"
-        xmlns:cube_ptr="http://schemas.android.com/apk/res-auto"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/white"
-        cube_ptr:ptr_duration_to_close="200"
-        cube_ptr:ptr_duration_to_close_header="1000"
-        cube_ptr:ptr_keep_header_when_refresh="true"
-        cube_ptr:ptr_pull_to_fresh="false"
-        cube_ptr:ptr_ratio_of_header_height_to_refresh="1.2"
-        cube_ptr:ptr_resistance="1.7">
-
-        <FrameLayout
+        <in.srain.cube.views.ptr.PtrClassicFrameLayout
+            xmlns:cube_ptr="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/lessionPullRefresh"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            cube_ptr:ptr_duration_to_close="200"
+            cube_ptr:ptr_duration_to_close_header="1000"
+            cube_ptr:ptr_keep_header_when_refresh="true"
+            cube_ptr:ptr_pull_to_fresh="false"
+            cube_ptr:ptr_ratio_of_header_height_to_refresh="1.2"
+            cube_ptr:ptr_resistance="1.7">
 
-            <ListView
-                android:id="@+id/lessionVoteView"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content">
 
-            <!-- 里面的内容与fragment_listview_head1.xml的内容一致，id不一样，用于页头的悬浮显示-->
-            <LinearLayout
-                android:id="@+id/lessionListViewHeadFloat"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+                <ListView
+                    android:id="@+id/lessionVoteView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
 
-                <RelativeLayout
+                <!-- 里面的内容与fragment_listview_head1.xml的内容一致，id不一样，用于页头的悬浮显示-->
+                <LinearLayout
+                    android:id="@+id/lessionListViewHeadFloat"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/bottom_border"
-                    android:orientation="horizontal"
-                    android:padding="15dp">
+                    android:orientation="vertical">
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <RelativeLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentStart="true"
-                        android:layout_centerVertical="true"
-                        android:layout_toLeftOf="@+id/requireLessionBtnFloat"
-                        android:layout_toStartOf="@+id/requireLessionBtnFloat"
-                        android:text="上传想要学习的作品，截止之前票数最高的则由老师录制视频教你学哦~！"
-                        android:textAppearance="?android:attr/textAppearanceSmall" />
+                        android:background="@drawable/bottom_border"
+                        android:orientation="horizontal"
+                        android:padding="15dp">
 
-                    <Button
-                        android:id="@+id/requireLessionBtnFloat"
-                        android:layout_width="wrap_content"
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+                            android:layout_toLeftOf="@+id/requireLessionBtnFloat"
+                            android:layout_toStartOf="@+id/requireLessionBtnFloat"
+                            android:text="上传想要学习的作品，截止之前票数最高的则由老师录制视频教你学哦~！"
+                            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+                        <Button
+                            android:id="@+id/requireLessionBtnFloat"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginLeft="15dp"
+                            android:drawableLeft="@mipmap/cross"
+                            android:text="求教程" />
+                    </RelativeLayout>
+
+                    <RadioGroup
+                        android:id="@+id/switchLessionViewFloat"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginLeft="15dp"
-                        android:drawableLeft="@mipmap/cross"
-                        android:text="  求教程" />
-                </RelativeLayout>
+                        android:background="@drawable/bottom_border"
+                        android:orientation="horizontal">
 
-                <RadioGroup
-                    android:id="@+id/switchLessionViewFloat"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/bottom_border"
-                    android:orientation="horizontal">
+                        <RadioButton
+                            android:id="@+id/goVotingBtnFloat"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:checked="true"
+                            android:gravity="center"
+                            android:text="投票" />
 
-                    <RadioButton
-                        android:id="@+id/goVotingBtnFloat"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:checked="true"
-                        android:text="投票" />
+                        <RadioButton
+                            android:id="@+id/goRankingBtnFloat"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="排行榜" />
 
-                    <RadioButton
-                        android:id="@+id/goRankingBtnFloat"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="排行榜" />
+                    </RadioGroup>
 
-                </RadioGroup>
+                </LinearLayout>
+            </FrameLayout>
 
-            </LinearLayout>
-        </FrameLayout>
-
-    </in.srain.cube.views.ptr.PtrClassicFrameLayout>
+        </in.srain.cube.views.ptr.PtrClassicFrameLayout>
     </LinearLayout>
 
 </FrameLayout>

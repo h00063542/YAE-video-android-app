@@ -31,21 +31,30 @@ public class VoteListViewAdapter extends BaseAdapter {
     private LayoutInflater layoutInflater;
     private LessionPresenter lessionPresenter;
 
+    // 当前显示的页面（投票页或者排行榜）
     private ViewType viewType = ViewType.VOTE_LIST;
 
+    // 投票页或者排行榜的数据
     private List<CandidateLession> voteLessionList;
 
+    // 当前活动阶段（求教程阶段或者视频制作阶段）
     private int stage;
 
+    // 屏幕宽度
     private int screenWidth;
 
     private ViewGroup decorView;
 
+    // 点击显示大图的view
     private View lessionImageView;
 
+    // 显示大图时的ViewPager
     private ViewPager lessionImageViewPager;
 
     private PagerAdapter pagerAdapter;
+
+    // 当前图片对应的数据
+    private CandidateLession currentImage;
 
     public VoteListViewAdapter(Activity context, LayoutInflater layoutInflater, LessionPresenter lessionPresenter) {
         this.context = context;
@@ -72,7 +81,7 @@ public class VoteListViewAdapter extends BaseAdapter {
         lessionImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                decorView.removeView(lessionImageView);
+                dismissImageActionDialog();
             }
         });
 
@@ -127,7 +136,7 @@ public class VoteListViewAdapter extends BaseAdapter {
 
             @Override
             public void onPageSelected(int position) {
-
+                currentImage = voteLessionList.get(position);
             }
 
             @Override
@@ -402,6 +411,12 @@ public class VoteListViewAdapter extends BaseAdapter {
         pagerAdapter.notifyDataSetChanged();
         lessionImageViewPager.setCurrentItem(position);
         decorView.addView(lessionImageView);
+    }
+
+    private void dismissImageActionDialog() {
+
+        decorView.removeView(lessionImageView);
+
     }
 
     class ViewHolder {
