@@ -67,6 +67,9 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
 
     private TextView aboutMeLevel;//进入等级页面按钮
 
+    private static int experience;
+    private static Bitmap myImageBitmap;
+
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
@@ -115,8 +118,12 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
 
     @Override
     public void getPersonInfo(PersonInfo personInfo) {
+        if (personInfo == null) {
+            return;
+        }
         String nickName = personInfo.getNickname();
         Bitmap bitmap = personInfo.getImageBitmap();
+        myImageBitmap = bitmap;
         int type = personInfo.getType();
         String identity;
         //        1美甲店主
@@ -158,6 +165,7 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
         if (aboutMeNumber == null) {
             return;
         }
+        experience = aboutMeNumber.getExp();
         kaBiText.setText(String.valueOf(aboutMeNumber.getDakaCoin()));
         int level = 1;
         Level exp = calcLevel(aboutMeNumber.getExp());
@@ -237,6 +245,8 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
                 break;
             case R.id.about_me_level:
                 Intent myLevel = new Intent(getActivity(),LevelActivity.class);
+                myLevel.putExtra("experience",experience);
+                myLevel.putExtra("myImageBitmap",myImageBitmap);
                 startActivity(myLevel);
                 break;
             default:
@@ -247,12 +257,12 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
     private void initEvents() {
         titleText = titleBar.getTitleView();
         titleText.setText(R.string.about_me_my);
-//        rightButtonTwo = titleBar.getRightImageButtonTwo();
-//        rightButtonTwo.setImageResource(R.drawable.ic_head_download);
-//        rightButtonOne = titleBar.getRightImageButtonOne();
-//        rightButtonOne.setImageResource(R.drawable.ic_head_share);
-//        backButton = titleBar.getBackButton();
-//        backButton.setImageResource(R.drawable.ic_head_back);
+        rightButtonTwo = titleBar.getRightImageButtonTwo();
+        rightButtonTwo.setImageResource(R.drawable.ic_head_download);
+        rightButtonOne = titleBar.getRightImageButtonOne();
+        rightButtonOne.setImageResource(R.drawable.ic_head_share);
+        backButton = titleBar.getBackButton();
+        backButton.setImageResource(R.drawable.ic_head_back);
 
         aboutMePresenter = AboutMePresenter.getInstance(this);
         aboutMePresenter.getMessageCount();
