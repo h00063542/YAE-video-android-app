@@ -23,7 +23,7 @@
             android:layout_width="0px"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_weight="23">
+            android:layout_weight="28">
             <com.yilos.widget.view.ImageCacheView
                 android:id="@+id/lessionCandidatePic"
                 android:layout_width="match_parent"
@@ -39,7 +39,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center"
-            android:layout_weight="27">
+            android:layout_weight="22">
             <ImageView
                 android:id="@+id/crownImage"
                 android:layout_width="30dp"
@@ -87,7 +87,7 @@
     </LinearLayout>
 
     <LinearLayout
-
+        android:visibility="gone"
         android:orientation="horizontal"
         android:padding="15dp"
         android:layout_width="match_parent"

@@ -158,13 +158,17 @@ public class RequireLessionFragment extends Fragment implements LessionView {
         goVotingBtnFloat = (RadioButton) view.findViewById(R.id.goVotingBtnFloat);
         goRankingBtnFloat = (RadioButton) view.findViewById(R.id.goRankingBtnFloat);
 
+        // 倒计时
         lessionCountDownText = (TextView) view.findViewById(R.id.lessionCountDownText);
         lessionCountDownValue = (TextView) view.findViewById(R.id.lessionCountDownValue);
 
+        // 求教程按钮
         requireLessionBtn = (Button) view.findViewById(R.id.requireLessionBtn);
         requireLessionBtnFloat = (Button) view.findViewById(R.id.requireLessionBtnFloat);
 
+        // 下拉刷新
         lessionPullRefresh = (PtrClassicFrameLayout) view.findViewById(R.id.lessionPullRefresh);
+
     }
 
     private void initData() {
@@ -337,6 +341,7 @@ public class RequireLessionFragment extends Fragment implements LessionView {
         lessionPhoto.setImageSrc(lessionActivity.getPrevious().getPicUrl());
         lessionAuthorPhoto.setImageSrc(lessionActivity.getPrevious().getAuthorPhoto());
 
+        // 设置图片大小（按照屏幕大小的百分比计算）
         lessionAuthorPhoto.getLayoutParams().width = screenWidth / 15;
         lessionAuthorPhoto.getLayoutParams().height = screenWidth / 15;
 
@@ -385,16 +390,16 @@ public class RequireLessionFragment extends Fragment implements LessionView {
         lessionCountDownText.setText(getResources().getString(R.string.stage2_count_down));
 
         //根据背景图片的比例设置头部高度
-        candidateBackground.getLayoutParams().height = screenWidth * 3 / 11;
+        candidateBackground.getLayoutParams().height = screenWidth / 3;
 
         ImageView crownImage = (ImageView) view.findViewById(R.id.crownImage);
 
-        LinearLayout.LayoutParams crownImageLayoutLp = new LinearLayout.LayoutParams(screenWidth / 15, screenWidth / 10, 1);
+        LinearLayout.LayoutParams crownImageLayoutLp = new LinearLayout.LayoutParams(screenWidth / 15, screenWidth / 15, 1);
         crownImageLayoutLp.setMargins(0, 0, 0, 0);
         crownImage.setLayoutParams(crownImageLayoutLp);
 
-        LinearLayout.LayoutParams userPhotoLayoutLp = new LinearLayout.LayoutParams(screenWidth / 15, screenWidth / 10, 1);
-        userPhotoLayoutLp.setMargins(0, -screenWidth / 52, 0, 0);
+        LinearLayout.LayoutParams userPhotoLayoutLp = new LinearLayout.LayoutParams(screenWidth / 15, screenWidth / 15, 1);
+        userPhotoLayoutLp.setMargins(0, -(screenWidth / 52), 0, 0);
         lessionUserPhoto.setLayoutParams(userPhotoLayoutLp);
 
         // 显示现阶段的页头，隐藏其它阶段页头

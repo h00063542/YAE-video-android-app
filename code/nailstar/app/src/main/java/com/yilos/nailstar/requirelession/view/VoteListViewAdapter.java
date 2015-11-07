@@ -2,6 +2,8 @@ package com.yilos.nailstar.requirelession.view;
 
 import android.app.Activity;
 import android.support.annotation.NonNull;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,6 +39,14 @@ public class VoteListViewAdapter extends BaseAdapter {
 
     private int screenWidth;
 
+    private ViewGroup decorView;
+
+    private View lessionImageView;
+
+    private ViewPager lessionImageViewPager;
+
+    private PagerAdapter pagerAdapter;
+
     public VoteListViewAdapter(Activity context, LayoutInflater layoutInflater, LessionPresenter lessionPresenter) {
         this.context = context;
         this.layoutInflater = layoutInflater;
@@ -45,6 +55,87 @@ public class VoteListViewAdapter extends BaseAdapter {
         DisplayMetrics metric = new DisplayMetrics();
         context.getWindowManager().getDefaultDisplay().getMetrics(metric);
         screenWidth = metric.widthPixels;
+
+        // 点击图片的时候弹出大图
+        initLessionImageView();
+
+    }
+
+    private void initLessionImageView() {
+
+        lessionImageView = layoutInflater.inflate(R.layout.lession_image_action, null);
+        lessionImageView.setBackgroundColor(0xa0000000);
+
+        decorView = (ViewGroup) context.getWindow().getDecorView().findViewById(android.R.id.content);
+
+        // 点击空白区域，弹框消失
+        lessionImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                decorView.removeView(lessionImageView);
+            }
+        });
+
+        // ViewPager实现图片左右滑动
+        lessionImageViewPager = (ViewPager) lessionImageView.findViewById(R.id.lessionImageViewPager);
+
+        pagerAdapter = new PagerAdapter() {
+
+            @Override
+            public int getCount() {
+                int count = 0;
+                if (voteLessionList != null) {
+                    count = voteLessionList.size();
+                }
+                return count;
+            }
+
+            @Override
+            public boolean isViewFromObject(View view, Object object) {
+                return view == object;
+            }
+
+            @Override
+            public void destroyItem(ViewGroup container, int position, Object object) {
+                container.removeView((View) object);
+            }
+
+            @Override
+            public Object instantiateItem(ViewGroup container, int position) {
+
+                if (position > getCount()) {
+                    return null;
+                }
+
+                View lessionImageItem = layoutInflater.inflate(R.layout.lession_image_item, null);
+                ImageCacheView lessionLargeImage = (ImageCacheView) lessionImageItem.findViewById(R.id.lessionLargeImage);
+                lessionLargeImage.setImageSrc(voteLessionList.get(position).getPicUrl());
+                lessionLargeImage.setBackgroundColor(0x00000000);
+                container.addView(lessionImageItem);
+
+                return lessionImageItem;
+            }
+        };
+
+        lessionImageViewPager.setAdapter(pagerAdapter);
+
+        lessionImageViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
     }
 
     public void setViewType(ViewType viewType) {
@@ -101,6 +192,10 @@ public class VoteListViewAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+
+        if (position > getCount()) {
+            return null;
+        }
 
         if (viewType.equals(ViewType.RANKING_LIST)) {
 
@@ -198,7 +293,7 @@ public class VoteListViewAdapter extends BaseAdapter {
     }
 
     @NonNull
-    private View handleVoteList(int position, View convertView) {
+    private View handleVoteList(final int position, View convertView) {
 
         ViewHolder holder;
 
@@ -246,14 +341,22 @@ public class VoteListViewAdapter extends BaseAdapter {
 
             VoteItem voteItem = holder.voteItemList.get(i);
 
-            if (position * 3 + i < voteLessionList.size()) {
+            final int realPosition = position * 3 + i;
+            if (realPosition < voteLessionList.size()) {
 
                 voteItem.voteItem.setVisibility(View.VISIBLE);
 
-                CandidateLession candidateLession = voteLessionList.get(position * 3 + i);
+                CandidateLession candidateLession = voteLessionList.get(realPosition);
 
                 voteItem.lessionvoteCount.setText(String.valueOf(candidateLession.getVoteCount()));
                 voteItem.lessionVoteImg.setImageSrc(candidateLession.getPicUrl());
+
+                voteItem.lessionVoteImg.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showImageActionDialog(realPosition);
+                    }
+                });
 
                 String lessionTime = "";
                 if ((now - candidateLession.getCreateDate()) / 1000 < 60) {
@@ -292,6 +395,13 @@ public class VoteListViewAdapter extends BaseAdapter {
         }
 
         return convertView;
+    }
+
+    private void showImageActionDialog(int position) {
+
+        pagerAdapter.notifyDataSetChanged();
+        lessionImageViewPager.setCurrentItem(position);
+        decorView.addView(lessionImageView);
     }
 
     class ViewHolder {
