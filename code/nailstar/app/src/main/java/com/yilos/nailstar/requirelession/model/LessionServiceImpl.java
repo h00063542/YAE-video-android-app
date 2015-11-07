@@ -109,4 +109,18 @@ public class LessionServiceImpl implements LessionService {
 
         return history;
     }
+
+    @Override
+    public void vote(String id) throws IOException, JSONException {
+
+        String url = "/vapi/nailstar/qjc/candidate/" + id + "/vote";
+        String stringResult = HttpClient.post(url, "{}");
+
+        JSONObject jsonResult = new JSONObject(stringResult);
+
+        if (jsonResult.getInt("code") != 0) {
+            throw new IOException("Unexpected code");
+        }
+
+    }
 }

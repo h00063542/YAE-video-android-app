@@ -3,8 +3,8 @@ package com.yilos.nailstar.aboutme.presenter;
 import com.yilos.nailstar.aboutme.entity.AboutMeNumber;
 import com.yilos.nailstar.aboutme.entity.MessageCount;
 import com.yilos.nailstar.aboutme.entity.PersonInfo;
-import com.yilos.nailstar.aboutme.model.AboutMeService;
 import com.yilos.nailstar.aboutme.model.AboutMeServiceImpl;
+import com.yilos.nailstar.aboutme.model.AboutMeService;
 import com.yilos.nailstar.aboutme.view.IAboutMeView;
 import com.yilos.nailstar.framework.exception.NetworkDisconnectException;
 import com.yilos.nailstar.util.TaskManager;
@@ -18,7 +18,7 @@ import org.json.JSONException;
 public class AboutMePresenter {
     private static AboutMePresenter aboutMePresenter =new AboutMePresenter();
     private IAboutMeView aboutMeFragment;
-    private AboutMeServiceImpl aboutMeService = new AboutMeService();
+    private AboutMeService aboutMeService = new AboutMeServiceImpl();
     public static AboutMePresenter getInstance(IAboutMeView aboutMeFragment) {
         aboutMePresenter.aboutMeFragment = aboutMeFragment;
         return aboutMePresenter;

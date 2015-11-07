@@ -2,6 +2,7 @@ package com.yilos.nailstar.aboutme.view;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
@@ -9,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -17,7 +19,6 @@ import com.yilos.nailstar.aboutme.entity.AboutMeNumber;
 import com.yilos.nailstar.aboutme.entity.MessageCount;
 import com.yilos.nailstar.aboutme.entity.PersonInfo;
 import com.yilos.nailstar.aboutme.presenter.AboutMePresenter;
-import com.yilos.nailstar.main.MainActivity;
 import com.yilos.widget.titlebar.TitleBar;
 
 /**
@@ -28,7 +29,7 @@ import com.yilos.widget.titlebar.TitleBar;
  * Use the {@link AboutMeFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class AboutMeFragment extends Fragment implements IAboutMeView{
+public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnClickListener {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -45,6 +46,10 @@ public class AboutMeFragment extends Fragment implements IAboutMeView{
     private TextView messageCountText;//信息数
     private TitleBar titleBar;//标题栏
     private TextView titleText;//标题栏标题
+    private ImageView backButton;
+    private ImageView rightTwoButton;
+    private ImageView rightOneButton;
+
     private AboutMePresenter aboutMePresenter;
     private RelativeLayout personInfoLayout;
 
@@ -55,7 +60,10 @@ public class AboutMeFragment extends Fragment implements IAboutMeView{
 
     private ImageView profileImage;//头像
     private TextView nameText;//名字
-    private TextView identity;//身份
+    private TextView identityText;//身份
+
+    private LinearLayout myFollowList;
+    private LinearLayout myFansList;
 
     /**
      * Use this factory method to create a new instance of
@@ -81,6 +89,9 @@ public class AboutMeFragment extends Fragment implements IAboutMeView{
 
     @Override
     public void initMessageCount(MessageCount messageCount) {
+        if (messageCount == null) {
+            return;
+        }
         messageCountText.setText(String.valueOf(messageCount.getCount()));
     }
 
@@ -102,11 +113,49 @@ public class AboutMeFragment extends Fragment implements IAboutMeView{
 
     @Override
     public void getPersonInfo(PersonInfo personInfo) {
-
+        String nickName = personInfo.getNickname();
+        Bitmap bitmap = personInfo.getImageBitmap();
+        int type = personInfo.getType();
+        String identity;
+        //        1美甲店主
+        //        2美甲师
+        //        3美甲从业者
+        //        4美甲消费者
+        //        5美甲老师
+        //        6其他
+        switch (type) {
+            case 1:
+                identity = "美甲店主";
+                break;
+            case 2:
+                identity = "美甲师";
+                break;
+            case 3:
+                identity = "美甲从业者";
+                break;
+            case 4:
+                identity = "美甲消费者";
+                break;
+            case 5:
+                identity = "美甲老师";
+                break;
+            case 6:
+                identity = "其他";
+                break;
+            default:
+                identity = "身份";
+                break;
+        }
+        nameText.setText(nickName);
+        identityText.setText(identity);
+        profileImage.setImageBitmap(bitmap);
     }
 
     @Override
     public void getAboutMeNumber(AboutMeNumber aboutMeNumber) {
+        if (aboutMeNumber == null) {
+            return;
+        }
         kaBiText.setText(String.valueOf(aboutMeNumber.getDakaCoin()));
         int level = 1;
         Level exp = calcLevel(aboutMeNumber.getExp());
@@ -147,11 +196,17 @@ public class AboutMeFragment extends Fragment implements IAboutMeView{
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_about_me, container, false);
         initViews(view);
+        initEvents();
         return view;
     }
+
     private void initViews(View view){
         relativeLayout = (RelativeLayout)view.findViewById(R.id.about_me_message_group);
         messageCountText = (TextView)view.findViewById(R.id.about_me_message_count);
+
+        nameText = (TextView)view.findViewById(R.id.about_me_name);
+        identityText = (TextView)view.findViewById(R.id.about_me_identity);
+        profileImage = (ImageView)view.findViewById(R.id.profile_image);
 
         levelText = (TextView) view.findViewById(R.id.about_me_level);
         attentionText = (TextView) view.findViewById(R.id.about_me_attention_count);
@@ -159,13 +214,40 @@ public class AboutMeFragment extends Fragment implements IAboutMeView{
         kaBiText = (TextView) view.findViewById(R.id.about_me_ka_bi_count);
 
         titleBar = (TitleBar)view.findViewById(R.id.about_me_header_nav);
+        personInfoLayout = (RelativeLayout)view.findViewById(R.id.about_me_person_info_layout);
+
+        myFollowList = (LinearLayout)view.findViewById(R.id.my_follow_list);
+        myFansList = (LinearLayout)view.findViewById(R.id.my_fans_list);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.my_follow_list:
+                Intent myFollowListIntent = new Intent(getActivity(),FollowListActivity.class);
+                startActivity(myFollowListIntent);
+                break;
+            case R.id.my_fans_list:
+                Intent myFansListIntent = new Intent(getActivity(),FansListActivity.class);
+                startActivity(myFansListIntent);
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void initEvents() {
         titleText = titleBar.getTitleView();
         titleText.setText(R.string.about_me_my);
+
         aboutMePresenter = AboutMePresenter.getInstance(this);
         aboutMePresenter.getMessageCount();
         aboutMePresenter.getAboutMeNumber();
+        aboutMePresenter.getPersonInfo();
 
-        personInfoLayout = (RelativeLayout)view.findViewById(R.id.about_me_person_info_layout);
+        myFollowList.setOnClickListener(this);
+        myFansList.setOnClickListener(this);
+
         personInfoLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -173,7 +255,6 @@ public class AboutMeFragment extends Fragment implements IAboutMeView{
                 startActivity(intent);
             }
         });
-
     }
 
     // TODO: Rename method, update argument and hook method into UI event

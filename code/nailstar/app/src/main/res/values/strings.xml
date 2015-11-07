@@ -24,15 +24,17 @@
 
     <!-- about me -->
     <string name="about_me_my">我的</string>
-    <string name="about_me_name">莉莉</string>
-    <string name="about_me_identity">初级美甲师</string>
-    <string name="about_me_level">lv8</string>
+    <string name="about_me_name">昵称</string>
+    <string name="about_me_identity">身份</string>
+    <string name="about_me_level">lv0</string>
     <string name="about_me_attention">关注</string>
-    <string name="about_me_attention_count">191</string>
+    <string name="my_follow_list">我的关注</string>
+    <string name="about_me_attention_count">0</string>
     <string name="about_me_fans">粉丝</string>
-    <string name="about_me_fans_count">23070</string>
+    <string name="my_fans_list">我的粉丝</string>
+    <string name="about_me_fans_count">0</string>
     <string name="about_me_ka_bi">咖币</string>
-    <string name="about_me_ka_bi_count">120</string>
+    <string name="about_me_ka_bi_count">0</string>
     <string name="about_me_message">消息</string>
     <string name="about_me_message_count">0</string>
     <string name="about_me_person_info">个人资料</string>
@@ -42,6 +44,8 @@
     <string name="about_me_give_us_advice">给我们提意见</string>
     <string name="about_me_share">分享美甲大咖给朋友</string>
     <string name="about_me_setting">设置</string>
+    <string name="teacher">老师</string>
+    <string name="ka_you">咖友</string>
 
     <!-- 修改资料界面-->
     <string name="edit_person_info">修改资料</string>
@@ -83,6 +87,26 @@
     <string name="switch_player">切换播放器</string>
     <string name="play_list">选集</string>
 
+    <!-- 求教程-->
+    <string name="just_now">刚刚</string>
+    <string name="minute">分钟</string>
+    <string name="hour">小时</string>
+    <string name="day">天</string>
+    <string name="before">前</string>
+    <string name="stage1_count_down">本期求教程结束时间还剩</string>
+    <string name="stage2_count_down">大咖视频制作中，离出炉时间还剩</string>
+    <string name="upload_description">上传想要学习的作品，截止之前票数最高的则由老师录制视频教你学哦~！</string>
+    <string name="upload_candidate_btn">求教程</string>
+    <string name="vote">投票</string>
+    <string name="voted">已投</string>
+    <string name="ranking">排行榜</string>
+    <string name="vote_count">票数:</string>
+    <string name="canvass">拉票</string>
+
+    <string name="from_camera">拍照</string>
+    <string name="from_library">从手机相册中挑选</string>
+    <string name="cancel">取消</string>
+
     <!-- DLNA -->
     <string name="dlna_switch_to_mobile">切回手机播放</string>
     <string name="dlna_connect_to_device">已连接至设备:</string>
@@ -95,4 +119,8 @@
     <string name="back">返回</string>
     <string name="share">分享</string>
     <string name="loading_finish">已经全部加载完毕</string>
+    <string name="submitted">提交</string>
+    <string name="write_down_your_learning_experience">写下你的学习心得</string>
+    <string name="like">喜欢</string>
+    <string name="topic_comment_count">评论数</string>
 </resources>

@@ -13,14 +13,14 @@
         android:text="0"
         android:id="@+id/lessionRankingNo" />
 
-    <ImageView
+    <com.yilos.widget.view.ImageCacheView
         android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_weight="3"
         android:adjustViewBounds="true"
         android:scaleType="fitCenter"
         android:gravity="center_vertical"
-        android:src="@mipmap/default_photo"
+        android:src="@mipmap/ic_default_photo"
         android:id="@+id/lessionRankingImg" />
 
     <LinearLayout
@@ -39,14 +39,13 @@
             <com.yilos.widget.circleimageview.CircleImageView
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:src="@mipmap/default_photo"
+                android:src="@mipmap/ic_default_photo"
                 android:id="@+id/lessionAuthorPhoto"/>
             <TextView
                 android:layout_marginLeft="5dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/lessionAuthorName"
-                android:text="作者"/>
+                android:id="@+id/lessionAuthorName" />
         </LinearLayout>
 
         <LinearLayout
@@ -57,7 +56,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="票数:  " />
+                android:paddingRight="5dp"
+                android:text="@string/vote_count" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -77,12 +77,12 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="投票"
+                    android:text="@string/vote"
                     android:id="@+id/lessionVote"  />
                 <Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="拉票"
+                    android:text="@string/canvass"
                     android:id="@+id/lessionCanvass" />
             </LinearLayout>
         </LinearLayout>

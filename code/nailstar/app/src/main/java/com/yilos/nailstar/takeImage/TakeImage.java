@@ -11,6 +11,9 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 
+import com.yilos.nailstar.R;
+import com.yilos.nailstar.util.Constants;
+
 import java.io.File;
 
 public class TakeImage {
@@ -210,22 +213,23 @@ public class TakeImage {
         outputY = builder.outputY;
     }
 
-    private String YILOS_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/yilos";
-
-    private File tempImage = new File(YILOS_PATH + "/temp.jpg");
+    private File tempImage = new File(Constants.YILOS_PATH + "/temp");
 
     /**
      * 弹出对话框以供选择拍照或者从图库中选图
      */
     public void initTakeImage() {
-        final CharSequence[] items = { "Take Photo", "Choose from Library", "Cancel" };
+
+        final CharSequence[] items = {activity.getResources().getString(R.string.from_camera),
+                activity.getResources().getString(R.string.from_library),
+                activity.getResources().getString(R.string.cancel)};
 
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         builder.setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int item) {
                 if (0 == item) {
-                    File yilosDir = new File(YILOS_PATH);
+                    File yilosDir = new File(Constants.YILOS_PATH);
                     if (!yilosDir.exists()) {
                         yilosDir.mkdirs();
                     }
