@@ -120,7 +120,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/topic_author_photo_size"
                             android:layout_gravity="center_vertical"
-                            android:layout_weight="1">
+                            android:layout_weight="1"
+                            android:gravity="center_vertical">
 
                             <TextView
                                 android:id="@+id/tv_video_author_name"
@@ -148,6 +149,7 @@
                                 android:textSize="@dimen/topic_video_playing_time_font_size" />
 
                             <LinearLayout
+                                android:id="@+id/layout_topic_author_tags"
                                 android:layout_width="match_parent"
                                 android:layout_height="30dp"
                                 android:layout_below="@id/tv_video_author_name"
@@ -162,7 +164,6 @@
                                     android:gravity="center_vertical"
                                     android:paddingLeft="5dp"
                                     android:paddingRight="5dp"
-                                    android:text="可爱"
                                     android:textSize="@dimen/topic_tags_font_size"
                                     android:visibility="gone" />
 
@@ -396,60 +397,35 @@
         android:background="@drawable/top_border"
         android:orientation="horizontal">
 
-        <RadioGroup
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+        <CheckBox
+            android:id="@+id/cb_topic_tab_like"
+            style="@style/MMTabButton"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
-            android:orientation="horizontal">
+            android:drawableTop="@drawable/topic_tab_like_menus"
+            android:text="@string/like"
+            android:textColor="@drawable/main_tab_text_color" />
 
-            <RadioButton
-                android:id="@+id/rb_topic_tab_like"
-                style="@style/MMTabButton"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:drawableTop="@drawable/topic_tab_like_menus"
-                android:text="@string/like"
-                android:textColor="@drawable/main_tab_text_color" />
-
-        </RadioGroup>
-
-        <RadioGroup
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_vertical"
+        <CheckBox
+            android:id="@+id/cb_topic_tab_collection"
+            style="@style/MMTabButton"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:drawableTop="@drawable/topic_tab_collection_menus"
+            android:text="@string/collection"
+            android:textColor="@drawable/main_tab_text_color" />
 
-            <RadioButton
-                android:id="@+id/rb_topic_tab_collection"
-                style="@style/MMTabButton"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:drawableTop="@drawable/topic_tab_collection_menus"
-                android:text="@string/collection"
-                android:textColor="@drawable/main_tab_text_color" />
-        </RadioGroup>
-
-        <RadioGroup
+        <TextView
+            android:id="@+id/tv_topic_tab_comment"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_vertical"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:drawableTop="@drawable/topic_tab_comment_menus"
+            android:gravity="center_horizontal"
+            android:text="@string/comment"
+            android:textColor="@drawable/main_tab_text_color" />
 
-            <RadioButton
-                android:id="@+id/rb_topic_tab_comment"
-                style="@style/MMTabButton"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:drawableTop="@drawable/topic_tab_comment_menus"
-                android:text="@string/comment"
-                android:textColor="@drawable/main_tab_text_color" />
-        </RadioGroup>
 
         <TextView
             android:id="@+id/tv_submitted_homework"
