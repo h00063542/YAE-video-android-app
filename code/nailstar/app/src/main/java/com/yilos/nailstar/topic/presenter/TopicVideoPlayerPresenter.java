@@ -1,21 +1,25 @@
 package com.yilos.nailstar.topic.presenter;
 
+import com.sina.sinavideo.coreplayer.util.StringUtils;
 import com.yilos.nailstar.framework.exception.NetworkDisconnectException;
 import com.yilos.nailstar.topic.entity.TopicCommentInfo;
-import com.yilos.nailstar.topic.entity.TopicCommentReplyInfo;
 import com.yilos.nailstar.topic.entity.TopicImageTextInfo;
 import com.yilos.nailstar.topic.entity.TopicInfo;
 import com.yilos.nailstar.topic.entity.TopicRelatedInfo;
+import com.yilos.nailstar.topic.entity.TopicVideoInfo;
 import com.yilos.nailstar.topic.model.ITopicService;
 import com.yilos.nailstar.topic.model.TopicServiceImpl;
 import com.yilos.nailstar.topic.view.ITopicVideoPlayerView;
 import com.yilos.nailstar.util.Constants;
 import com.yilos.nailstar.util.LoggerFactory;
+import com.yilos.nailstar.util.StringUtil;
 import com.yilos.nailstar.util.TaskManager;
 
 import org.apache.log4j.Logger;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 
 
 /**
@@ -34,7 +38,7 @@ public class TopicVideoPlayerPresenter {
         return topicPresenter;
     }
 
-    public void initTopicVideo(final String topicId) {
+    public void initTopicInfo(final String topicId) {
         TaskManager.Task loadTopicInfo = new TaskManager.BackgroundTask() {
             @Override
             public Object doWork(Object data) {
@@ -42,7 +46,7 @@ public class TopicVideoPlayerPresenter {
                     return topicsService.getTopicInfo(topicId);
                 } catch (NetworkDisconnectException e) {
                     e.printStackTrace();
-                    LOGGER.error("获取topic信息失败，topicId:" + topicId, e);
+                    LOGGER.error("获取topic信息失败，topicId：" + topicId, e);
                 }
                 return null;
             }
@@ -51,7 +55,7 @@ public class TopicVideoPlayerPresenter {
         TaskManager.UITask<TopicInfo> updateUi = new TaskManager.UITask<TopicInfo>() {
             @Override
             public Object doWork(TopicInfo topicInfo) {
-                videoPlayerView.initTopicVideo(topicInfo);
+                videoPlayerView.initTopicInfo(topicInfo);
 
                 return null;
             }
@@ -71,7 +75,7 @@ public class TopicVideoPlayerPresenter {
                     return topicsService.getTopicRelatedInfoList(topicId);
                 } catch (NetworkDisconnectException e) {
                     e.printStackTrace();
-                    LOGGER.error("获取topic图文信息失败，topicId:" + topicId, e);
+                    LOGGER.error("获取topic图文信息失败，topicId：" + topicId, e);
                 }
                 return null;
             }
@@ -100,7 +104,7 @@ public class TopicVideoPlayerPresenter {
                     return topicsService.getTopicImageTextInfo(topicId);
                 } catch (NetworkDisconnectException e) {
                     e.printStackTrace();
-                    LOGGER.error("获取topic图文信息失败，topicId:" + topicId, e);
+                    LOGGER.error("获取topic图文信息失败，topicId：" + topicId, e);
                 }
                 return null;
             }
@@ -121,33 +125,6 @@ public class TopicVideoPlayerPresenter {
 
     }
 
-    public void initTopicCommentCount(final String topicId) {
-        TaskManager.Task loadTopicImageTextInfo = new TaskManager.BackgroundTask() {
-            @Override
-            public Object doWork(Object data) {
-                try {
-                    return topicsService.getTopicCommentCount(topicId);
-                } catch (NetworkDisconnectException e) {
-                    e.printStackTrace();
-                    LOGGER.error("获取topic图文信息失败，topicId:" + topicId, e);
-                }
-                return null;
-            }
-        };
-
-        TaskManager.UITask<Integer> updateUi = new TaskManager.UITask<Integer>() {
-            @Override
-            public Object doWork(Integer count) {
-                videoPlayerView.initTopicCommentCount(count);
-                return null;
-            }
-        };
-
-        new TaskManager()
-                .next(loadTopicImageTextInfo)
-                .next(updateUi)
-                .start();
-    }
 
     public void initTopicComments(final String topicId, final int page) {
         TaskManager.Task loadTopicComments = new TaskManager.BackgroundTask() {
@@ -157,7 +134,7 @@ public class TopicVideoPlayerPresenter {
                     return topicsService.getTopicComments(topicId, page);
                 } catch (NetworkDisconnectException e) {
                     e.printStackTrace();
-                    LOGGER.error("获取topic评论信息失败，topicId:" + topicId, e);
+                    LOGGER.error("获取topic评论信息失败，topicId：" + topicId, e);
                 }
                 return null;
             }
@@ -177,14 +154,134 @@ public class TopicVideoPlayerPresenter {
                 .start();
     }
 
-    public void download() {
+    public void download(final String url, final String filePath) {
+        TaskManager.Task loadTopicComments = new TaskManager.BackgroundTask() {
+            @Override
+            public Object doWork(Object data) {
+                try {
+                    return topicsService.download(url, filePath);
+                } catch (NetworkDisconnectException e) {
+                    e.printStackTrace();
+                    LOGGER.error("下载文件失败，url：" + url + "，filePath：" + filePath, e);
+                }
+                return null;
+            }
+        };
+
+        TaskManager.UITask<Boolean> updateUi = new TaskManager.UITask<Boolean>() {
+            @Override
+            public Object doWork(Boolean isSuccess) {
+                videoPlayerView.showDownloadStatus(isSuccess);
+                return null;
+            }
+        };
+
+        new TaskManager()
+                .next(loadTopicComments)
+                .next(updateUi)
+                .start();
 
     }
 
-    public void addTopicComment(TopicCommentInfo topicCommentInfo) {
+    public void shareTopic(String topicId) {
+
 
     }
 
-    public void addTopicCommentReply(String topicCommentId, TopicCommentReplyInfo topicCommentReplyInfo) {
+    public void setTopicLikeStatus(final String topicId, final boolean isLike) {
+        TaskManager.Task loadTopicComments = new TaskManager.BackgroundTask() {
+            @Override
+            public Object doWork(Object data) {
+                try {
+                    return topicsService.setTopicLikeStatus(topicId, isLike);
+                } catch (NetworkDisconnectException e) {
+                    e.printStackTrace();
+                    LOGGER.error("设置topic喜欢状态失败，topicId：" + topicId + "，isLike：" + isLike, e);
+                }
+                return null;
+            }
+        };
+
+        TaskManager.UITask<Boolean> updateUi = new TaskManager.UITask<Boolean>() {
+            @Override
+            public Object doWork(Boolean isSuccess) {
+                videoPlayerView.showTopicLikeStatus(isLike, isSuccess);
+                return null;
+            }
+        };
+
+        new TaskManager()
+                .next(loadTopicComments)
+                .next(updateUi)
+                .start();
+    }
+
+    public void setTopicCollectionStatus(final String topicId, final boolean isCollection) {
+        TaskManager.Task loadTopicComments = new TaskManager.BackgroundTask() {
+            @Override
+            public Object doWork(Object data) {
+                try {
+                    return topicsService.setTopicCollectionStatus(topicId, isCollection);
+                } catch (NetworkDisconnectException e) {
+                    e.printStackTrace();
+                    LOGGER.error("设置topic收藏状态失败，topicId：" + topicId, e);
+                }
+                return null;
+            }
+        };
+
+        TaskManager.UITask<Boolean> updateUi = new TaskManager.UITask<Boolean>() {
+            @Override
+            public Object doWork(Boolean isSuccess) {
+                videoPlayerView.showTopicCollectionStatus(isCollection, isSuccess);
+                return null;
+            }
+        };
+
+        new TaskManager()
+                .next(loadTopicComments)
+                .next(updateUi)
+                .start();
+    }
+
+    public String buildVideoRemoteUrl(final TopicVideoInfo topicVideoInfo) {
+        if (null == topicVideoInfo) {
+            return Constants.EMPTY_STRING;
+        }
+        return !StringUtil.isEmpty(topicVideoInfo.getOssUrl()) ? topicVideoInfo.getOssUrl() : topicVideoInfo.getCcUrl();
+    }
+
+
+    public String buildVideoLocalFilePath(final TopicVideoInfo topicVideoInfo) {
+        if (null == topicVideoInfo) {
+            return Constants.EMPTY_STRING;
+        }
+        String videoRemoteUrl = buildVideoRemoteUrl(topicVideoInfo);
+        if (StringUtil.isEmpty(videoRemoteUrl)) {
+            return Constants.EMPTY_STRING;
+        }
+        String videoSuffix = videoRemoteUrl.substring(videoRemoteUrl.lastIndexOf(Constants.POINT), videoRemoteUrl.length());
+
+        return new StringBuffer().append(Constants.YILOS_NAILSTAR_VIDEOS_PATH).append(topicVideoInfo.getVideoId()).append(videoSuffix).toString();
+    }
+
+    public String getTopicCommentDateStr(long time) {
+        Date date = new Date(time);
+        Date today = new Date();
+        long result = today.getTime() - time;
+        if (result / 1000 <= 60) {
+            return "刚刚";
+        } else if (result / 1000 > 60 && result / 1000 <= 3600) {
+            return (int) Math.floor((result / 1000) / 60) + "分钟前";
+        } else if (result / 1000 > 3600 && result / 1000 <= 86400) {
+            return date.getHours() + "点" + date.getMinutes() + "分";
+        } else {
+            return (date.getMonth() + 1) + "月" + date.getDate() + "日";
+        }
+
+    }
+
+    public boolean checkHasLocalVideo(String filePath) {
+        return StringUtil.isEmpty(filePath) ? false : new File(filePath).exists();
     }
 }

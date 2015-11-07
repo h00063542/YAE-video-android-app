@@ -54,7 +54,6 @@
     <!--android:textSize="20sp" />-->
 
     <!--</RelativeLayout>-->
-
     <EditText
         android:id="@+id/et_topic_comment_content"
         android:layout_width="match_parent"

@@ -20,10 +20,22 @@ public final class UserUtil {
     public static void saveUserInfo(Context context, UserInfo userInfo) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(Constants.USER_INFO, context.MODE_WORLD_WRITEABLE);
         SharedPreferences.Editor edit = sharedPreferences.edit();
-        edit.putString(Constants.USER_ID, userInfo.getUserId());
-        edit.putString(Constants.NICKNAME, userInfo.getNickName());
-        edit.putString(Constants.PHOTO, userInfo.getPhoto());
+        if (!StringUtil.isEmpty(userInfo.getUserId())) {
+            edit.putString(Constants.USER_ID, userInfo.getUserId());
+        }
+        if (!StringUtil.isEmpty(userInfo.getNickName())) {
+            edit.putString(Constants.NICKNAME, userInfo.getNickName());
+        }
+        if (!StringUtil.isEmpty(userInfo.getPhoto())) {
+            edit.putString(Constants.PHOTO, userInfo.getPhoto());
+        }
         edit.commit();
+    }
+
+    public static boolean isLogin(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(Constants.USER_INFO, context.MODE_WORLD_READABLE);
+        return !StringUtil.isEmpty(sharedPreferences.getString(Constants.USER_ID, Constants.EMPTY_STRING));
+
     }
 
 }
