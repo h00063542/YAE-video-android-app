@@ -1,14 +1,15 @@
-package com.yilos.nailstar.player.presenter;
+package com.yilos.nailstar.topic.presenter;
 
 import com.yilos.nailstar.framework.exception.NetworkDisconnectException;
-import com.yilos.nailstar.player.entity.TopicCommentInfo;
-import com.yilos.nailstar.player.entity.TopicCommentReplyInfo;
-import com.yilos.nailstar.player.entity.TopicImageTextInfo;
-import com.yilos.nailstar.player.entity.TopicInfo;
-import com.yilos.nailstar.player.entity.TopicRelatedInfo;
-import com.yilos.nailstar.player.model.ITopicService;
-import com.yilos.nailstar.player.model.TopicServiceImpl;
-import com.yilos.nailstar.player.view.IVideoPlayerView;
+import com.yilos.nailstar.topic.entity.TopicCommentInfo;
+import com.yilos.nailstar.topic.entity.TopicCommentReplyInfo;
+import com.yilos.nailstar.topic.entity.TopicImageTextInfo;
+import com.yilos.nailstar.topic.entity.TopicInfo;
+import com.yilos.nailstar.topic.entity.TopicRelatedInfo;
+import com.yilos.nailstar.topic.model.ITopicService;
+import com.yilos.nailstar.topic.model.TopicServiceImpl;
+import com.yilos.nailstar.topic.view.ITopicVideoPlayerView;
+import com.yilos.nailstar.util.Constants;
 import com.yilos.nailstar.util.LoggerFactory;
 import com.yilos.nailstar.util.TaskManager;
 
@@ -17,19 +18,18 @@ import org.apache.log4j.Logger;
 import java.util.ArrayList;
 
 
-
 /**
  * Created by yilos on 2015-10-22.
  */
-public class TopicPresenter {
-    private static final Logger LOGGER = LoggerFactory.getLogger(TopicPresenter.class);
+public class TopicVideoPlayerPresenter {
+    private static final Logger LOGGER = LoggerFactory.getLogger(TopicVideoPlayerPresenter.class);
 
-    private static TopicPresenter topicPresenter = new TopicPresenter();
+    private static TopicVideoPlayerPresenter topicPresenter = new TopicVideoPlayerPresenter();
 
-    private IVideoPlayerView videoPlayerView;
+    private ITopicVideoPlayerView videoPlayerView;
     private ITopicService topicsService = new TopicServiceImpl();
 
-    public static TopicPresenter getInstance(IVideoPlayerView videoPlayerView) {
+    public static TopicVideoPlayerPresenter getInstance(ITopicVideoPlayerView videoPlayerView) {
         topicPresenter.videoPlayerView = videoPlayerView;
         return topicPresenter;
     }
@@ -92,7 +92,6 @@ public class TopicPresenter {
 
     }
 
-
     public void initTopicImageTextInfo(final String topicId) {
         TaskManager.Task loadTopicImageTextInfo = new TaskManager.BackgroundTask() {
             @Override
@@ -122,6 +121,34 @@ public class TopicPresenter {
 
     }
 
+    public void initTopicCommentCount(final String topicId) {
+        TaskManager.Task loadTopicImageTextInfo = new TaskManager.BackgroundTask() {
+            @Override
+            public Object doWork(Object data) {
+                try {
+                    return topicsService.getTopicCommentCount(topicId);
+                } catch (NetworkDisconnectException e) {
+                    e.printStackTrace();
+                    LOGGER.error("获取topic图文信息失败，topicId:" + topicId, e);
+                }
+                return null;
+            }
+        };
+
+        TaskManager.UITask<Integer> updateUi = new TaskManager.UITask<Integer>() {
+            @Override
+            public Object doWork(Integer count) {
+                videoPlayerView.initTopicCommentCount(count);
+                return null;
+            }
+        };
+
+        new TaskManager()
+                .next(loadTopicImageTextInfo)
+                .next(updateUi)
+                .start();
+    }
+
     public void initTopicComments(final String topicId, final int page) {
         TaskManager.Task loadTopicComments = new TaskManager.BackgroundTask() {
             @Override
@@ -139,7 +166,7 @@ public class TopicPresenter {
         TaskManager.UITask<ArrayList<TopicCommentInfo>> updateUi = new TaskManager.UITask<ArrayList<TopicCommentInfo>>() {
             @Override
             public Object doWork(ArrayList<TopicCommentInfo> topicComments) {
-                videoPlayerView.initTopicCommentsInfo(topicComments);
+                videoPlayerView.initTopicCommentsInfo(topicComments, Constants.TOPIC_COMMENTS_INIT_ORDER_BY_ASC);
                 return null;
             }
         };
@@ -148,6 +175,10 @@ public class TopicPresenter {
                 .next(loadTopicComments)
                 .next(updateUi)
                 .start();
+    }
+
+    public void download() {
+
     }
 
     public void addTopicComment(TopicCommentInfo topicCommentInfo) {

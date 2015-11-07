@@ -1,19 +1,24 @@
-package com.yilos.nailstar.player.entity;
+package com.yilos.nailstar.topic.entity;
+
+import java.io.Serializable;
+import java.util.List;
 
 /**
  * Created by yilos on 2015-10-27.
  */
-public class TopicCommentReplyInfo {
+public class TopicCommentInfo implements Serializable {
     private String id;
     private String userId;
-    private String nickname;
     private String author;
+    private String authorPhoto;
     private String content;
     private String contentPic;
     private long createDate;
     private int isHomework;
+    private int isMine;
     private int status;
     private TopicCommentAtInfo at;
+    private List<TopicCommentReplyInfo> replies;
 
     public String getId() {
         return id;
@@ -31,20 +36,20 @@ public class TopicCommentReplyInfo {
         this.userId = userId;
     }
 
-    public String getNickname() {
-        return nickname;
-    }
-
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
-    }
-
     public String getAuthor() {
         return author;
     }
 
     public void setAuthor(String author) {
         this.author = author;
+    }
+
+    public String getAuthorPhoto() {
+        return authorPhoto;
+    }
+
+    public void setAuthorPhoto(String authorPhoto) {
+        this.authorPhoto = authorPhoto;
     }
 
     public String getContent() {
@@ -79,6 +84,14 @@ public class TopicCommentReplyInfo {
         this.isHomework = isHomework;
     }
 
+    public int getIsMine() {
+        return isMine;
+    }
+
+    public void setIsMine(int isMine) {
+        this.isMine = isMine;
+    }
+
     public int getStatus() {
         return status;
     }
@@ -93,5 +106,13 @@ public class TopicCommentReplyInfo {
 
     public void setAt(TopicCommentAtInfo at) {
         this.at = at;
+    }
+
+    public List<TopicCommentReplyInfo> getReplies() {
+        return replies;
+    }
+
+    public void setReplies(List<TopicCommentReplyInfo> replies) {
+        this.replies = replies;
     }
 }

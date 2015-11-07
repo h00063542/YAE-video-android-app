@@ -1,19 +1,21 @@
-package com.yilos.nailstar.player.entity;
+package com.yilos.nailstar.topic.entity;
+
+import java.io.Serializable;
 
 /**
  * Created by yilos on 2015-10-22.
  */
-public class VideoInfo {
+public class TopicVideoInfo implements Serializable {
 
     private String videoId;
     private int playTimes;
     private String ccUrl;
     private String ossUrl;
 
-    public VideoInfo() {
+    public TopicVideoInfo() {
     }
 
-    public VideoInfo(String videoId, int playTimes, String ccUrl, String ossUrl) {
+    public TopicVideoInfo(String videoId, int playTimes, String ccUrl, String ossUrl) {
         this.videoId = videoId;
         this.playTimes = playTimes;
         this.ccUrl = ccUrl;

@@ -15,7 +15,7 @@ import com.yilos.nailstar.index.entity.Category;
 import com.yilos.nailstar.index.entity.IndexContent;
 import com.yilos.nailstar.index.entity.Poster;
 import com.yilos.nailstar.index.presenter.IndexPresenter;
-import com.yilos.nailstar.player.view.VideoPlayerActivity;
+import com.yilos.nailstar.topic.view.TopicVideoPlayerActivity;
 import com.yilos.nailstar.util.CollectionUtil;
 import com.yilos.nailstar.util.Constants;
 import com.yilos.widget.banner.Banner;
@@ -150,7 +150,7 @@ public class IndexFragment extends Fragment implements IIndexView {
                         imageCacheView.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                Intent intent = new Intent(getActivity(), VideoPlayerActivity.class);
+                                Intent intent = new Intent(getActivity(), TopicVideoPlayerActivity.class);
                                 intent.putExtra(Constants.TOPIC_ID, poster.getTopicId());
                                 startActivity(intent);
                             }

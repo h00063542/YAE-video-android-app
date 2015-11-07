@@ -1,9 +1,11 @@
-package com.yilos.nailstar.player.entity;
+package com.yilos.nailstar.topic.entity;
+
+import java.io.Serializable;
 
 /**
  * Created by yilos on 2015-10-27.
  */
-public class TopicRelatedInfo {
+public class TopicRelatedInfo implements Serializable {
     private String topicId;
     private String thumbUrl;
 
