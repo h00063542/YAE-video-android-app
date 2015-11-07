@@ -19,10 +19,11 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.view.animation.TranslateAnimation;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -97,6 +98,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
     private TextView mTvTopicAuthorTag2;
     private TextView mTvTopicAuthorTag3;
 
+    private LinearLayout mLayoutTopicAuthorTags;
     private ImageView mIvTopicAuthorTag1Icon;
     private ImageView mIvTopicAuthorTag2Icon;
     private ImageView mIvTopicAuthorTag3Icon;
@@ -138,9 +140,9 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
 //    private RelativeLayout mLayoutBtnVideoDownload;
 //    private RelativeLayout mLayoutBtnTopicCollection;
 //    private RelativeLayout mLayoutBtnTopicComment;
-    private RadioButton mRbTopicTabLike;
-    private RadioButton mRbTopicTabCollection;
-    private RadioButton mRbTopicTabComment;
+    private CheckBox mCbTopicTabLike;
+    private CheckBox mCbTopicTabCollection;
+    private TextView mTvTopicTabComment;
 
     private TextView mTvTopicSubmittedHomework;
 
@@ -278,6 +280,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         mTvVideoAuthorName = (TextView) findViewById(R.id.tv_video_author_name);
         mTvVideoPlayingTimes = (TextView) findViewById(R.id.tv_video_playing_times);
         mIvVideoImageTextIcon = (ImageView) findViewById(R.id.iv_video_image_text_icon);
+        mLayoutTopicAuthorTags = (LinearLayout) findViewById(R.id.layout_topic_author_tags);
         mTvTopicAuthorTag1 = (TextView) findViewById(R.id.tv_topic_author_tag_1);
         mTvTopicAuthorTag2 = (TextView) findViewById(R.id.tv_topic_author_tag_2);
         mTvTopicAuthorTag3 = (TextView) findViewById(R.id.tv_topic_author_tag_3);
@@ -324,14 +327,9 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
 //        mFabBackTop = (FloatingActionButton) findViewById(R.id.fab_back_top);
 
         // 底部下载、收藏、评论、交作业
-//        mLayoutBtnVideoDownload = (RelativeLayout) findViewById(R.id.layout_btn_video_download);
-//        mLayoutBtnTopicCollection = (RelativeLayout) findViewById(R.id.layout_btn_topic_collection);
-//        mLayoutBtnTopicComment = (RelativeLayout) findViewById(R.id.layout_btn_topic_comment);
-
-        mRbTopicTabLike = (RadioButton) findViewById(R.id.rb_topic_tab_like);
-        mRbTopicTabCollection = (RadioButton) findViewById(R.id.rb_topic_tab_collection);
-        mRbTopicTabComment = (RadioButton) findViewById(R.id.rb_topic_tab_comment);
-
+        mCbTopicTabLike = (CheckBox) findViewById(R.id.cb_topic_tab_like);
+        mCbTopicTabCollection = (CheckBox) findViewById(R.id.cb_topic_tab_collection);
+        mTvTopicTabComment = (TextView) findViewById(R.id.tv_topic_tab_comment);
         mTvTopicSubmittedHomework = (TextView) findViewById(R.id.tv_submitted_homework);
     }
 
@@ -361,9 +359,8 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(TopicVideoPlayerActivity.this, MainActivity.class);
-                startActivity(intent);
+                setResult(RESULT_OK, intent);
                 TopicVideoPlayerActivity.this.finish();
-//                VideoPlayerActivity.this.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
             }
         });
 
@@ -371,6 +368,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
             @Override
             public void onClick(View v) {
                 //下载视频
+                Toast.makeText(TopicVideoPlayerActivity.this, "下载视频", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -481,85 +479,25 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
             }
         });
 
-//        // 下载视频按钮
-//        mLayoutBtnVideoDownload.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Toast.makeText(TopicVideoPlayerActivity.this, "正在下载视频", Toast.LENGTH_SHORT).show();
-//                mTopicVideoPlayerPresenter.download();
-//            }
-//        });
-//        mLayoutBtnVideoDownload.setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event) {
-//                ImageView imageView = (ImageView) mLayoutBtnVideoDownload.getChildAt(0);
-//                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-//                    imageView.setImageResource(R.drawable.collection);
-//
-//                } else if (event.getAction() == MotionEvent.ACTION_UP) {
-//                    imageView.setImageResource(R.drawable.message);
-//                }
-//                return false;
-//            }
-//        });
-//
-//        // 收藏按钮
-//        mLayoutBtnTopicCollection.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Toast.makeText(TopicVideoPlayerActivity.this, "收藏视频成功", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//        mLayoutBtnTopicCollection.setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event) {
-//                ImageView imageView = (ImageView) mLayoutBtnTopicCollection.getChildAt(0);
-//                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-//                    imageView.setImageResource(R.drawable.message);
-//
-//                } else if (event.getAction() == MotionEvent.ACTION_UP) {
-//                    imageView.setImageResource(R.drawable.collection);
-//                }
-//                return false;
-//            }
-//        });
-//
-//        // 评论按钮
-//        mLayoutBtnTopicComment.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                addTopicComment();
-//            }
-//        });
-//        mLayoutBtnTopicComment.setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event) {
-//                ImageView imageView = (ImageView) mLayoutBtnTopicComment.getChildAt(0);
-//                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-//                    imageView.setImageResource(R.drawable.collection);
-//                } else if (event.getAction() == MotionEvent.ACTION_UP) {
-//                    imageView.setImageResource(R.drawable.message);
-//                }
-//                return false;
-//            }
-//        });
 
         // 喜欢
-        mRbTopicTabLike.setOnClickListener(new View.OnClickListener() {
+        mCbTopicTabLike.setOnCheckedChangeListener(new CheckBox.OnCheckedChangeListener() {
+
             @Override
-            public void onClick(View v) {
-                mRbTopicTabLike.setChecked(!mRbTopicTabLike.isChecked());
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                Log.i(TAG, "mCbTopicTabLike isChecked:" + isChecked);
             }
         });
         //收藏
-        mRbTopicTabCollection.setOnClickListener(new View.OnClickListener() {
+        mCbTopicTabCollection.setOnCheckedChangeListener(new CheckBox.OnCheckedChangeListener() {
+
             @Override
-            public void onClick(View v) {
-                mRbTopicTabCollection.setChecked(!mRbTopicTabCollection.isChecked());
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                Log.i(TAG, "mCbTopicTabCollection isChecked:" + isChecked);
             }
         });
         // 评论按钮
-        mRbTopicTabComment.setOnClickListener(new View.OnClickListener() {
+        mTvTopicTabComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 addTopicComment();
@@ -692,7 +630,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         mTvVideoPlayingTimes.setText(String.valueOf(topicInfo.getVideos().get(0).getPlayTimes()));
 
         ArrayList tags = topicInfo.getTags();
-        if (null != tags && !tags.isEmpty()) {
+        if (!CollectionUtil.isEmpty(tags)) {
             if (tags.size() > 0 && null != tags.get(0)) {
                 mTvTopicAuthorTag1.setText(tags.get(0).toString());
                 mTvTopicAuthorTag1.setVisibility(View.VISIBLE);
@@ -708,6 +646,15 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
                 mTvTopicAuthorTag3.setVisibility(View.VISIBLE);
                 mIvTopicAuthorTag3Icon.setVisibility(View.VISIBLE);
             }
+        } else {
+            // 从布局文件中删除tags区域
+            if (null != mLayoutTopicAuthorTags) {
+                RelativeLayout topicAuthorTagsParent = (RelativeLayout) mLayoutTopicAuthorTags.getParent();
+                if (null != topicAuthorTagsParent) {
+                    topicAuthorTagsParent.removeView(mLayoutTopicAuthorTags);
+                }
+            }
+
         }
 
         StringBuilder stringBuild = new StringBuilder();
@@ -894,7 +841,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         playTopicRelateIvLp.gravity = Gravity.RIGHT | Gravity.BOTTOM;
         playTopicRelateIvLp.setMargins(0, 0, mAuthorPhotoMargin, mAuthorPhotoMargin);
 
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < Constants.MORE_VIDEOS_COUNT; i++) {
             FrameLayout topicRelateLayout = new FrameLayout(this);
             topicRelateLayout.setLayoutParams(layoutLp);
 
@@ -1103,7 +1050,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         LinearLayout.LayoutParams topicCommentContentReplyLp = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         // 设置主题评论回复之间的上下间隔
-        topicCommentContentReplyLp.setMargins(0, 0, 0, mCommentReplyMarginBottom);
+        topicCommentContentReplyLp.setMargins(0, 0, 0, 0);
 
         TextView topicCommentReplyTv = new TextView(this);
         topicCommentReplyTv.setLayoutParams(topicCommentContentReplyLp);

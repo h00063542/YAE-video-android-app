@@ -98,4 +98,9 @@ public class Constants {
 
 
     public static final String COMMENT_COUNT = "commentCount";
+
+    /**
+     * 显示更多视频数量
+     */
+    public static final int MORE_VIDEOS_COUNT = 3;
 }
