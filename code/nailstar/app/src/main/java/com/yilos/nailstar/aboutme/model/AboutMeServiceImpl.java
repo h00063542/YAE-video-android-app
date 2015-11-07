@@ -12,7 +12,6 @@ import com.yilos.nailstar.aboutme.entity.MessageCount;
 import com.yilos.nailstar.aboutme.entity.PersonInfo;
 import com.yilos.nailstar.framework.entity.NailStarApplicationContext;
 import com.yilos.nailstar.framework.exception.NetworkDisconnectException;
-import com.yilos.nailstar.player.presenter.TopicPresenter;
 import com.yilos.nailstar.util.HttpClient;
 import com.yilos.nailstar.util.ImageUtil;
 import com.yilos.nailstar.util.JsonUtil;
