@@ -30,7 +30,10 @@
         <activity
             android:name=".player.view.VideoPlayerActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"></activity>
-        <activity android:name=".aboutme.view.PersonInfoActivity">
+        <activity android:name=".aboutme.view.PersonInfoActivity"></activity>
+        <activity android:name=".aboutme.view.FollowListActivity"></activity>
+        <activity android:name=".aboutme.view.FansListActivity"></activity>
+        <activity android:name=".aboutme.view.progressBarActivity">
         </activity>
     </application>
 

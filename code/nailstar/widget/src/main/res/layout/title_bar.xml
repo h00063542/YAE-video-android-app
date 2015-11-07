@@ -8,54 +8,52 @@
 
     <!--android:background="@drawable/title_bar_back_button"-->
     <ImageView
-        android:visibility="invisible"
+        android:visibility="gone"
         android:id="@+id/title_bar_left_back"
         android:layout_width="@dimen/title_bar_icon"
         android:layout_height="@dimen/title_bar_icon"
-        android:src="@drawable/title_bar_left_back"
         android:layout_centerVertical="true"
         android:clickable="true"
+        android:src="@drawable/ic_head_back"
         android:padding="@dimen/title_bar_icon_padding"/>
     <TextView
-        android:visibility="invisible"
+        android:visibility="gone"
         android:id="@+id/title_bar_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:text="@string/titleBarTitle"
         android:textColor="@color/white"
         android:textSize="@dimen/title_bar_title"/>
     <TextView
-        android:visibility="invisible"
+        android:visibility="gone"
         android:id="@+id/title_bar_right_text_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:text="@string/titleBarSure"
         android:textColor="@color/white"
         android:textSize="@dimen/title_bar_title"
         android:clickable="true"
         android:padding="@dimen/title_bar_icon_padding"/>
     <ImageView
-        android:visibility="invisible"
+        android:visibility="gone"
         android:id="@+id/title_bar_right_image_button_one"
         android:layout_width="@dimen/title_bar_icon"
         android:layout_height="@dimen/title_bar_icon"
-        android:src="@drawable/title_bar_share"
         android:layout_centerVertical="true"
         android:clickable="true"
         android:layout_alignParentRight="true"
+        android:src="@drawable/ic_head_download"
         android:padding="@dimen/title_bar_icon_padding"/>
     <ImageView
-        android:visibility="invisible"
+        android:visibility="gone"
         android:id="@+id/title_bar_right_image_button_two"
         android:layout_width="@dimen/title_bar_icon"
         android:layout_height="@dimen/title_bar_icon"
-        android:src="@drawable/title_bar_download"
         android:layout_centerVertical="true"
         android:clickable="true"
         android:layout_alignParentRight="true"
+        android:src="@drawable/ic_head_share"
         android:layout_marginRight="@dimen/title_bar_icon_margin_right"
         android:padding="@dimen/title_bar_icon_padding"/>
 </RelativeLayout>
