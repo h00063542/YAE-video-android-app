@@ -207,7 +207,8 @@ public class CirclePageIndicator extends View {
     }
     private void layoutMovingItem(int position,final float positionOffset){
         if(movingItem == null){
-            throw new IllegalStateException("forget to create movingItem?");
+            //throw new IllegalStateException("forget to create movingItem?");
+            return;
         }
         position = position % tabItems.size();
         ShapeHolder item = tabItems.get(position);

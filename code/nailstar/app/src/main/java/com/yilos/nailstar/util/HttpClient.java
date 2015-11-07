@@ -18,7 +18,7 @@ public class HttpClient {
 
     private static final OkHttpClient okHttpClient = new OkHttpClient();
 
-    private static final String serviceBaseUrl = "http://api2.naildaka.com";
+    private static final String serviceBaseUrl = "http://api3.naildaka.com";
 
     static {
         okHttpClient.setConnectTimeout(10, TimeUnit.SECONDS);
