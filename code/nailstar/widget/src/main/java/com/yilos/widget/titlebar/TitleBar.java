@@ -1,14 +1,17 @@
 package com.yilos.widget.titlebar;
+import android.view.ViewTreeObserver;
+import android.widget.RelativeLayout;
 
-import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.sina.sinavideo.sdk.dlna.MRContent;
 import com.yilos.widget.R;
 
 /**
@@ -63,8 +66,43 @@ public class TitleBar extends RelativeLayout {
         layoutInflater.inflate(R.layout.title_bar, this);
         backButton = (ImageView)findViewById(R.id.title_bar_left_back);
         rightTextButton = (TextView)findViewById(R.id.title_bar_right_text_button);
-        titleView= (TextView)findViewById(R.id.title_bar_title);
+        titleView = (TextView)findViewById(R.id.title_bar_title);
         rightImageButtonOne = (ImageView)findViewById(R.id.title_bar_right_image_button_one);
         rightImageButtonTwo = (ImageView)findViewById(R.id.title_bar_right_image_button_two);
+        titleView.setMaxWidth(setTitleWidthPixels());
+    }
+
+    private int setTitleWidthPixels() {
+        DisplayMetrics dm =getResources().getDisplayMetrics();
+        int w_screen = dm.widthPixels;
+        int backButtonWidth = getBackButtonWidth();
+        int rightImageButtonTwoWidth = getRightImageButtonTwoWidth();
+        int rightImageButtonOneWidth = getRightImageButtonOneWidth();
+        w_screen = w_screen - backButtonWidth - rightImageButtonTwoWidth - rightImageButtonOneWidth - 100;
+        return w_screen;
+    }
+
+    private int getBackButtonWidth() {
+        int w = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+        int h = View.MeasureSpec.makeMeasureSpec(0,View.MeasureSpec.UNSPECIFIED);
+        backButton.measure(w, h);
+        int width =backButton.getMeasuredWidth();
+        return width;
+    }
+
+    private int getRightImageButtonTwoWidth() {
+        int w = View.MeasureSpec.makeMeasureSpec(0,View.MeasureSpec.UNSPECIFIED);
+        int h = View.MeasureSpec.makeMeasureSpec(0,View.MeasureSpec.UNSPECIFIED);
+        rightImageButtonTwo.measure(w, h);
+        int width =rightImageButtonTwo.getMeasuredWidth();
+        return width;
+    }
+
+    private int getRightImageButtonOneWidth() {
+        int w = View.MeasureSpec.makeMeasureSpec(0,View.MeasureSpec.UNSPECIFIED);
+        int h = View.MeasureSpec.makeMeasureSpec(0,View.MeasureSpec.UNSPECIFIED);
+        rightImageButtonOne.measure(w, h);
+        int width =rightImageButtonOne.getMeasuredWidth();
+        return width;
     }
 }

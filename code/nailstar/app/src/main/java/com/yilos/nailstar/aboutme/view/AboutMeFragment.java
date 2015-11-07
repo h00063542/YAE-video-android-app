@@ -46,6 +46,9 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
     private TextView messageCountText;//信息数
     private TitleBar titleBar;//标题栏
     private TextView titleText;//标题栏标题
+    private ImageView rightButtonTwo;
+    private ImageView rightButtonOne;
+    private ImageView backButton;
 
     private AboutMePresenter aboutMePresenter;
     private RelativeLayout personInfoLayout;
@@ -62,7 +65,7 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
     private LinearLayout myFollowList;//关注列表
     private LinearLayout myFansList;//粉丝列表
 
-    private TextView aboutMeLevel;
+    private TextView aboutMeLevel;//进入等级页面按钮
 
     /**
      * Use this factory method to create a new instance of
@@ -244,6 +247,12 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
     private void initEvents() {
         titleText = titleBar.getTitleView();
         titleText.setText(R.string.about_me_my);
+//        rightButtonTwo = titleBar.getRightImageButtonTwo();
+//        rightButtonTwo.setImageResource(R.drawable.ic_head_download);
+//        rightButtonOne = titleBar.getRightImageButtonOne();
+//        rightButtonOne.setImageResource(R.drawable.ic_head_share);
+//        backButton = titleBar.getBackButton();
+//        backButton.setImageResource(R.drawable.ic_head_back);
 
         aboutMePresenter = AboutMePresenter.getInstance(this);
         aboutMePresenter.getMessageCount();
