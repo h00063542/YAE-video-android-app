@@ -30,6 +30,7 @@ public class LevelActivity extends Activity {
     private void initViews() {
         titleBar = (TitleBar)findViewById(R.id.level_title_bar);
         backButton = titleBar.getBackButton();
+        backButton.setImageResource(R.drawable.ic_head_back);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
