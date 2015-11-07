@@ -46,9 +46,6 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
     private TextView messageCountText;//信息数
     private TitleBar titleBar;//标题栏
     private TextView titleText;//标题栏标题
-    private ImageView backButton;
-    private ImageView rightTwoButton;
-    private ImageView rightOneButton;
 
     private AboutMePresenter aboutMePresenter;
     private RelativeLayout personInfoLayout;
@@ -62,8 +59,10 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
     private TextView nameText;//名字
     private TextView identityText;//身份
 
-    private LinearLayout myFollowList;
-    private LinearLayout myFansList;
+    private LinearLayout myFollowList;//关注列表
+    private LinearLayout myFansList;//粉丝列表
+
+    private TextView aboutMeLevel;
 
     /**
      * Use this factory method to create a new instance of
@@ -218,6 +217,8 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
 
         myFollowList = (LinearLayout)view.findViewById(R.id.my_follow_list);
         myFansList = (LinearLayout)view.findViewById(R.id.my_fans_list);
+
+        aboutMeLevel = (TextView)view.findViewById(R.id.about_me_level);
     }
 
     @Override
@@ -230,6 +231,10 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
             case R.id.my_fans_list:
                 Intent myFansListIntent = new Intent(getActivity(),FansListActivity.class);
                 startActivity(myFansListIntent);
+                break;
+            case R.id.about_me_level:
+                Intent myLevel = new Intent(getActivity(),LevelActivity.class);
+                startActivity(myLevel);
                 break;
             default:
                 break;
@@ -247,6 +252,7 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
 
         myFollowList.setOnClickListener(this);
         myFansList.setOnClickListener(this);
+        aboutMeLevel.setOnClickListener(this);
 
         personInfoLayout.setOnClickListener(new View.OnClickListener() {
             @Override
