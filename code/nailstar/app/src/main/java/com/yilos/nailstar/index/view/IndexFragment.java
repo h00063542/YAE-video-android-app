@@ -1,6 +1,7 @@
 package com.yilos.nailstar.index.view;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
@@ -23,8 +24,9 @@ import com.yilos.nailstar.index.entity.IndexContent;
 import com.yilos.nailstar.index.entity.Poster;
 import com.yilos.nailstar.index.entity.Topic;
 import com.yilos.nailstar.index.presenter.IndexPresenter;
-import com.yilos.nailstar.util.ActivityUtil;
+import com.yilos.nailstar.topic.view.TopicVideoPlayerActivity;
 import com.yilos.nailstar.util.CollectionUtil;
+import com.yilos.nailstar.util.Constants;
 import com.yilos.widget.banner.Banner;
 import com.yilos.widget.circleimageview.CircleImageView;
 import com.yilos.widget.pageindicator.CirclePageIndicator;
@@ -267,7 +269,9 @@ public class IndexFragment extends Fragment implements IIndexView {
                         imageCacheView.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                ActivityUtil.toVideoPlayerPage(getActivity(), poster.getTopicId());
+                                Intent intent = new Intent(getActivity(), TopicVideoPlayerActivity.class);
+                                intent.putExtra(Constants.TOPIC_ID, poster.getTopicId());
+                                startActivityForResult(intent, 1);
                             }
                         });
                         views.add(imageCacheView);
