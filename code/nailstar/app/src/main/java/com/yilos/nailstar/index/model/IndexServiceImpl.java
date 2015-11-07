@@ -191,7 +191,7 @@ public class IndexServiceImpl implements IndexService{
                 Category category = new Category();
                 category.setId(categoryObj.getString("id"));
                 category.setName(categoryObj.getString("name"));
-                category.setPicUrl(categoryObj.getString("pic_url"));
+                category.setPicUrl(categoryObj.getString("home_menu_icon"));
                 result.add(category);
             }
 

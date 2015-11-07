@@ -1,6 +1,7 @@
 <resources>
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="vpiTabPageIndicatorStyle">@style/CustomTabPageIndicator</item>
     </style>
 
     <style name="MMTabButton">
@@ -24,5 +25,31 @@
         <item name="android:layout_marginLeft">10dp</item>
         <item name="android:layout_marginRight">10dp</item>
         <item name="android:background">@drawable/author_photo_style</item>
+    </style>
+
+    <!-- tab的 style -->
+    <style name="CustomTabPageIndicator">
+        <item name="android:gravity">center</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:background">@color/white</item>
+
+        <item name="android:paddingTop">4dp</item>
+        <item name="android:paddingLeft">8dp</item>
+        <item name="android:paddingBottom">4dp</item>
+        <item name="android:paddingRight">8dp</item>
+
+        <item name="android:textAppearance">@style/CustomTabPageIndicator_text</item>
+        <!--<item name="android:textColor">@color/selector_tab</item>-->
+        <item name="android:textSize">18sp</item>
+
+        <!-- 分割线，可有可无的 -->
+        <item name="android:divider">@mipmap/vote_black</item>
+        <item name="android:dividerPadding">10dip</item>
+        <item name="android:showDividers">middle</item>
+        <item name="android:fadingEdge">horizontal</item>
+        <item name="android:fadingEdgeLength">8dp</item>
+    </style>
+    <style name="CustomTabPageIndicator_text" parent="android:TextAppearance.Medium">
+        <item name="android:typeface">monospace</item>
     </style>
 </resources>

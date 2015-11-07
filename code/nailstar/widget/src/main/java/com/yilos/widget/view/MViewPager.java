@@ -14,7 +14,7 @@ import com.yilos.widget.banner.BannerAdapter;
  * 1、ViewPager设置WRAP_CONTENT后不生效的问题
  * 2、配合MPagerAdapter实现循环播放
  */
-public class MViewPager extends ViewPager {
+public class MViewPager extends ViewPager{
     public MViewPager(Context context) {
         super(context);
     }
