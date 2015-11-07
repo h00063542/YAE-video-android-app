@@ -6,7 +6,12 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 
+import java.io.BufferedReader;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -81,5 +86,20 @@ public class HttpClient {
             throw new IOException("Unexpected code " + response);
         }
         return response.body().string();
+    }
+
+    public static void download(String url, String filePath) throws IOException {
+        Request request = new Request.Builder().url(url)
+//                .addHeader("X-CSRFToken", csrftoken)
+                .addHeader("Content-Type", "application/json").build();
+        Response response = okHttpClient.newCall(request).execute();
+
+        InputStream in = response.body().byteStream();
+        FileOutputStream out = new FileOutputStream(filePath);
+        byte b[] = new byte[1024];
+        int j = 0;
+        while ((j = in.read(b)) != -1) {
+            out.write(b, 0, j);
+        }
     }
 }

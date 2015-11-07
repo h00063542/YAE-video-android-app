@@ -17,7 +17,7 @@ public interface ITopicVideoPlayerView {
      *
      * @param topicInfo
      */
-    void initTopicVideo(TopicInfo topicInfo);
+    void initTopicInfo(TopicInfo topicInfo);
 
     /**
      * 初始化topic图文分解信息
@@ -26,12 +26,6 @@ public interface ITopicVideoPlayerView {
      */
     void initTopicImageTextInfo(TopicImageTextInfo topicImageTextInfo);
 
-    /**
-     * 主题评论数
-     *
-     * @param count
-     */
-    void initTopicCommentCount(int count);
 
     /**
      * 初始化topic评论信息
@@ -50,6 +44,8 @@ public interface ITopicVideoPlayerView {
     void showTopicLikeStatus(boolean isLike, boolean isSuccess);
 
     void showTopicCollectionStatus(boolean isCollection, boolean isSuccess);
+
+    void showDownloadStatus(boolean isSuccess);
 
 
 }

@@ -76,7 +76,7 @@ public class TopicServiceImpl implements ITopicService {
             topicInfo.setVideos(videos);
             topicInfo.setAuthorId(JsonUtil.optString(jsonResult, Constants.AUTHOR_ID));
             topicInfo.setAuthor(JsonUtil.optString(jsonResult, Constants.AUTHOR));
-            topicInfo.setCommentCount(jsonResult.optInt(Constants.COMMENT_COUNT,0));
+            topicInfo.setCommentCount(jsonResult.optInt(Constants.COMMENT_COUNT, 0));
         } catch (IOException e) {
             e.printStackTrace();
             LOGGER.error(MessageFormat.format("获取topic信息失败，topicId:{0}，url:{1}", topicId, url), e);
@@ -301,12 +301,20 @@ public class TopicServiceImpl implements ITopicService {
     }
 
     /**
-     * @param topicId
-     * @return
+     * 下载
+     *
+     * @param url
+     * @param filePath
      * @throws NetworkDisconnectException
      */
     @Override
-    public boolean downloadVideo(String topicId) throws NetworkDisconnectException {
+    public boolean download(String url, String filePath) throws NetworkDisconnectException {
+        try {
+            HttpClient.download(url, filePath);
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return false;
     }
 

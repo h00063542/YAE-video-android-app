@@ -1,20 +1,25 @@
 package com.yilos.nailstar.topic.presenter;
 
+import com.sina.sinavideo.coreplayer.util.StringUtils;
 import com.yilos.nailstar.framework.exception.NetworkDisconnectException;
 import com.yilos.nailstar.topic.entity.TopicCommentInfo;
 import com.yilos.nailstar.topic.entity.TopicImageTextInfo;
 import com.yilos.nailstar.topic.entity.TopicInfo;
 import com.yilos.nailstar.topic.entity.TopicRelatedInfo;
+import com.yilos.nailstar.topic.entity.TopicVideoInfo;
 import com.yilos.nailstar.topic.model.ITopicService;
 import com.yilos.nailstar.topic.model.TopicServiceImpl;
 import com.yilos.nailstar.topic.view.ITopicVideoPlayerView;
 import com.yilos.nailstar.util.Constants;
 import com.yilos.nailstar.util.LoggerFactory;
+import com.yilos.nailstar.util.StringUtil;
 import com.yilos.nailstar.util.TaskManager;
 
 import org.apache.log4j.Logger;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 
 
 /**
@@ -33,7 +38,7 @@ public class TopicVideoPlayerPresenter {
         return topicPresenter;
     }
 
-    public void initTopicVideo(final String topicId) {
+    public void initTopicInfo(final String topicId) {
         TaskManager.Task loadTopicInfo = new TaskManager.BackgroundTask() {
             @Override
             public Object doWork(Object data) {
@@ -50,7 +55,7 @@ public class TopicVideoPlayerPresenter {
         TaskManager.UITask<TopicInfo> updateUi = new TaskManager.UITask<TopicInfo>() {
             @Override
             public Object doWork(TopicInfo topicInfo) {
-                videoPlayerView.initTopicVideo(topicInfo);
+                videoPlayerView.initTopicInfo(topicInfo);
 
                 return null;
             }
@@ -149,11 +154,37 @@ public class TopicVideoPlayerPresenter {
                 .start();
     }
 
-    public void download() {
+    public void download(final String url, final String filePath) {
+        TaskManager.Task loadTopicComments = new TaskManager.BackgroundTask() {
+            @Override
+            public Object doWork(Object data) {
+                try {
+                    return topicsService.download(url, filePath);
+                } catch (NetworkDisconnectException e) {
+                    e.printStackTrace();
+                    LOGGER.error("下载文件失败，url：" + url + "，filePath：" + filePath, e);
+                }
+                return null;
+            }
+        };
+
+        TaskManager.UITask<Boolean> updateUi = new TaskManager.UITask<Boolean>() {
+            @Override
+            public Object doWork(Boolean isSuccess) {
+                videoPlayerView.showDownloadStatus(isSuccess);
+                return null;
+            }
+        };
+
+        new TaskManager()
+                .next(loadTopicComments)
+                .next(updateUi)
+                .start();
 
     }
 
     public void shareTopic(String topicId) {
+
 
     }
 
@@ -211,5 +242,46 @@ public class TopicVideoPlayerPresenter {
                 .next(loadTopicComments)
                 .next(updateUi)
                 .start();
+    }
+
+    public String buildVideoRemoteUrl(final TopicVideoInfo topicVideoInfo) {
+        if (null == topicVideoInfo) {
+            return Constants.EMPTY_STRING;
+        }
+        return !StringUtil.isEmpty(topicVideoInfo.getOssUrl()) ? topicVideoInfo.getOssUrl() : topicVideoInfo.getCcUrl();
+    }
+
+
+    public String buildVideoLocalFilePath(final TopicVideoInfo topicVideoInfo) {
+        if (null == topicVideoInfo) {
+            return Constants.EMPTY_STRING;
+        }
+        String videoRemoteUrl = buildVideoRemoteUrl(topicVideoInfo);
+        if (StringUtil.isEmpty(videoRemoteUrl)) {
+            return Constants.EMPTY_STRING;
+        }
+        String videoSuffix = videoRemoteUrl.substring(videoRemoteUrl.lastIndexOf(Constants.POINT), videoRemoteUrl.length());
+
+        return new StringBuffer().append(Constants.YILOS_NAILSTAR_VIDEOS_PATH).append(topicVideoInfo.getVideoId()).append(videoSuffix).toString();
+    }
+
+    public String getTopicCommentDateStr(long time) {
+        Date date = new Date(time);
+        Date today = new Date();
+        long result = today.getTime() - time;
+        if (result / 1000 <= 60) {
+            return "刚刚";
+        } else if (result / 1000 > 60 && result / 1000 <= 3600) {
+            return (int) Math.floor((result / 1000) / 60) + "分钟前";
+        } else if (result / 1000 > 3600 && result / 1000 <= 86400) {
+            return date.getHours() + "点" + date.getMinutes() + "分";
+        } else {
+            return (date.getMonth() + 1) + "月" + date.getDate() + "日";
+        }
+
+    }
+
+    public boolean checkHasLocalVideo(String filePath) {
+        return StringUtil.isEmpty(filePath) ? false : new File(filePath).exists();
     }
 }

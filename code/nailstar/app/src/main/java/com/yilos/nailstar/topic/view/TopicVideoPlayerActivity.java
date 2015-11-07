@@ -1,6 +1,5 @@
 package com.yilos.nailstar.topic.view;
 
-import android.app.Dialog;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -37,7 +36,6 @@ import com.sina.sinavideo.sdk.data.VDVideoListInfo;
 import com.sina.sinavideo.sdk.utils.VDVideoFullModeController;
 import com.yilos.nailstar.R;
 import com.yilos.nailstar.framework.view.BaseActivity;
-import com.yilos.nailstar.index.entity.Topic;
 import com.yilos.nailstar.main.MainActivity;
 import com.yilos.nailstar.topic.entity.TopicCommentAtInfo;
 import com.yilos.nailstar.topic.entity.TopicCommentInfo;
@@ -62,7 +60,6 @@ import com.yilos.widget.view.ImageCacheView;
 import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 public class TopicVideoPlayerActivity extends BaseActivity implements
         ITopicVideoPlayerView,
@@ -75,6 +72,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
 
     private static final int TOPIC_COMMENT_REQUEST_CODE = 1;
     private ViewGroup mDecorView;
+    private TopicInfo mTopicInfo;
 
     // 顶部返回、topic名称、分享
     private TitleBar mTbVideoPlayerHead;
@@ -90,7 +88,6 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
     private ImageView mIvVideoPlayIcon;
 
     // 作者信息
-//    private LinearLayout mLayoutTopicsImageTextHead;
     private CircleImageView mIvVideoAuthorPhoto;
     private TextView mTvVideoAuthorName;
     private TextView mTvVideoPlayingTimes;
@@ -104,10 +101,8 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
     private ImageView mIvTopicAuthorTag2Icon;
     private ImageView mIvTopicAuthorTag3Icon;
 
-
     // 更多视频
     private LinearLayout mLayoutMoreVideosContent;
-
 
     // 图文分解
     private LinearLayout mLayoutTopicImageTextContent;
@@ -116,7 +111,6 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
 
     private LinearLayout mLayoutShowTopicImageTextContent;
     private LinearLayout mLayoutTopicImageTextContentParent;
-
 
     private View mZoomInImageTextLayout;
     private TextView mTvZoomInImageTextIndex;
@@ -132,15 +126,11 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
     private LinearLayout mLayoutTopicComments;
     private View mZoomInImageLayout;
     private ImageCacheView mIcvTopicCommentImage;
-//    private Dialog mZoomInImageDialog;
 
 
 //    private FloatingActionButton mFabBackTop;
 
     // 底部下载、收藏、评论、交作业
-//    private RelativeLayout mLayoutBtnVideoDownload;
-//    private RelativeLayout mLayoutBtnTopicCollection;
-//    private RelativeLayout mLayoutBtnTopicComment;
     private CheckBox mCbTopicTabLike;
     private CheckBox mCbTopicTabCollection;
     private TextView mTvTopicTabComment;
@@ -148,16 +138,14 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
     private TextView mTvTopicSubmittedHomework;
 
     private String mTopicId;
+    private String mVideoLocalFilePath;
+    private String mVideoRemoteUrl;
     private int mPage = 1;
     // 是否最后一页评论
     private boolean mIsTopicsCommentLastPage = false;
 
 
     private TopicVideoPlayerPresenter mTopicVideoPlayerPresenter;
-
-//    private float mTopicAuthorFontSize;
-//    private float mTopicVideoPlayingTimeFontSize;
-//    private float mTopicImageTextFontSize;
 
     private float mCommentAuthorFontSize;
     private float mCommentIsHomeWorkFontSize;
@@ -244,7 +232,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         mCommentReplyBackgroundColor = getResources().getColor(R.color.topic_comment_reply_background_color);
 
 
-        mTopicVideoPlayerPresenter.initTopicVideo(mTopicId);
+        mTopicVideoPlayerPresenter.initTopicInfo(mTopicId);
         mTopicVideoPlayerPresenter.initTopicRelatedInfo(mTopicId);
         mTopicVideoPlayerPresenter.initTopicImageTextInfo(mTopicId);
         mTopicVideoPlayerPresenter.initTopicComments(mTopicId, mPage);
@@ -259,10 +247,6 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         mTvTopicName = mTbVideoPlayerHead.getTitleView();
         mIvVideoDownload.setImageResource(R.mipmap.icon_download_white);
         mIvTopicShare.setImageResource(R.mipmap.icon_share_white);
-//        mTvTopicName.setEllipsize(TextUtils.TruncateAt.END);
-//        mTvTopicName.setSingleLine(true);
-//        mTvTopicName.setMaxWidth(getResources().getDimensionPixelSize(R.dimen.topic_author_photo_size));
-        //TextView自带的可以通过 android:ellipsize="end" android:singleLine="true"实现单行省略，  但是当我们需要控制不是正行时需要通过 指定最大宽度实现自动省略 android:maxWidth="90dp"
 
         mTopicPullToRefreshView = (PullToRefreshView) findViewById(R.id.topic_pull_refresh_view);
 //        mTopicPullToRefreshView.setOnHeaderRefreshListener(this);
@@ -278,7 +262,6 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         mVDVideoView.getLayoutParams().height = (int) (getResources().getDisplayMetrics().widthPixels / Constants.VIDEO_ASPECT_RATIO);
 
         // 作者信息
-//        mLayoutTopicsImageTextHead = (LinearLayout) findViewById(R.id.layout_topic_image_text_head);
         mIvVideoAuthorPhoto = (CircleImageView) findViewById(R.id.iv_video_author_photo);
         mTvVideoAuthorName = (TextView) findViewById(R.id.tv_video_author_name);
         mTvVideoPlayingTimes = (TextView) findViewById(R.id.tv_video_playing_times);
@@ -321,14 +304,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         mDecorView = (ViewGroup) getWindow().getDecorView().findViewById(android.R.id.content);
 
         mIcvTopicCommentImage = (ImageCacheView) mZoomInImageLayout.findViewById(R.id.icv_topic_comment_image);
-//        mZoomInImageDialog = new Dialog(this, R.style.dialog_fullscreen);
-//        mZoomInImageDialog.setContentView(mZoomInImageLayout);
-//        mZoomInImageDialog.setCancelable(true);
         mZoomInImageLayout.setBackgroundColor(0x80000000);
-        //mZoomInImageDialog.getWindow().getAttributes().alpha = 0.6f;
-//        mDecorView.addView(mZoomInImageLayout);
-//        mZoomInImageDialog.setBackGroundColor(0x80000000);
-//        mZoomInImageDialog.setCanceledOnTouchOutside(true);
 
         mTvTopicCommentCount = (TextView) findViewById(R.id.tv_topic_comment_count);
 
@@ -344,26 +320,6 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
     }
 
     private void initControlEvent() {
-        // 设置播放结束监听
-//        VDVideoViewController.getInstance(this).getExtListener().setOnVDVideoCompletionListener(new VDVideoExtListeners.OnVDVideoCompletionListener() {
-//            @Override
-//            public void onVDVideoCompletion(VDVideoInfo info, int status) {
-//                Log.i(TAG, "视频播放结束了1");
-//            }
-//        });
-        mVDVideoView.setCompletionListener(new VDVideoExtListeners.OnVDVideoCompletionListener() {
-            @Override
-            public void onVDVideoCompletion(VDVideoInfo info, int status) {
-                Log.i(TAG, "视频播放结束了2");
-            }
-        });
-        mVDVideoView.setPlayerChangeListener(new VDVideoExtListeners.OnVDVideoPlayerChangeListener() {
-            @Override
-            public void OnVDVideoPlayerChangeSwitch(int index, long position) {
-                //Log.i(TAG, "视频播放结束了");
-            }
-        });
-
         // 界面顶部返回按钮
         mIvVideoPlayerBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -378,7 +334,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
             @Override
             public void onClick(View v) {
                 //下载视频
-                Toast.makeText(TopicVideoPlayerActivity.this, "下载视频", Toast.LENGTH_SHORT).show();
+                mTopicVideoPlayerPresenter.download(mVideoRemoteUrl, mVideoLocalFilePath);
             }
         });
 
@@ -386,6 +342,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         mIvTopicShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mTopicVideoPlayerPresenter.shareTopic(mTopicId);
                 Toast.makeText(TopicVideoPlayerActivity.this, "分享成功", Toast.LENGTH_SHORT).show();
             }
         });
@@ -464,7 +421,6 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
             @Override
             public void onClick(View v) {
                 Toast.makeText(TopicVideoPlayerActivity.this, "保存成功", Toast.LENGTH_SHORT).show();
-                mTopicVideoPlayerPresenter.download();
                 //TODO 保存单张图片
             }
         });
@@ -474,7 +430,6 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
 //            @Override
 //            public void onClick(View v) {
 //                mFabBackTop.setVisibility(View.GONE);
-//                Log.i(TAG, "==========================================Back top");
 //                mSvVideoPlayer.fullScroll(ScrollView.FOCUS_UP);
 //            }
 //        });
@@ -499,9 +454,6 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
             @Override
             public void onClick(View v) {
                 mDecorView.removeView(mZoomInImageLayout);
-//                if (null != mZoomInImageDialog && mZoomInImageDialog.isShowing()) {
-//                    mZoomInImageDialog.hide();
-//                }
             }
         });
 
@@ -634,18 +586,21 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
 
 
     @Override
-    public void initTopicVideo(TopicInfo topicInfo) {
+    public void initTopicInfo(TopicInfo topicInfo) {
         //TODO 提示获取视频信息失败
         if (null == topicInfo) {
             LOGGER.error(TAG + " 获取topic信息为null，topicId:" + mTopicId);
             return;
         }
+        mTopicInfo = topicInfo;
         showTopicInfo2Page(topicInfo);
         VDVideoListInfo mVDVideoListInfo = new VDVideoListInfo();
         VDVideoInfo info = new VDVideoInfo();
-        TopicVideoInfo mVideoEntity = topicInfo.getVideos().get(0);
+        TopicVideoInfo topicVideoInfo = topicInfo.getVideos().get(0);
+        mVideoRemoteUrl = mTopicVideoPlayerPresenter.buildVideoRemoteUrl(topicVideoInfo);
+        mVideoLocalFilePath = mTopicVideoPlayerPresenter.buildVideoLocalFilePath(topicVideoInfo);
         info.mTitle = topicInfo.getTitle();
-        info.mPlayUrl = mVideoEntity.getOssUrl();
+        info.mPlayUrl = !mTopicVideoPlayerPresenter.checkHasLocalVideo(mVideoLocalFilePath) ? mVideoRemoteUrl : mVideoLocalFilePath;
         mVDVideoListInfo.addVideoInfo(info);
         mVDVideoView.open(TopicVideoPlayerActivity.this, mVDVideoListInfo);
     }
@@ -690,7 +645,6 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
                     topicAuthorTagsParent.removeView(mLayoutTopicAuthorTags);
                 }
             }
-
         }
 
         StringBuilder stringBuild = new StringBuilder();
@@ -731,7 +685,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    // TODO 显示大图
+                    // 显示大图
                     zoomInTopicImageText((ImageCacheView) v, topicImageTextInfo);
                 }
             });
@@ -919,19 +873,9 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
     private void showTopicRelated(TopicRelatedInfo topicRelatedInfo) {
         Intent intent = new Intent(this, TopicVideoPlayerActivity.class);
         intent.putExtra(Constants.TOPIC_ID, topicRelatedInfo.getTopicId());
-        this.startActivity(intent);
-        this.finish();
+        startActivity(intent);
+        finish();
     }
-
-    @Override
-    public void initTopicCommentCount(int count) {
-        StringBuilder stringBuild = new StringBuilder();
-        stringBuild.append(getString(R.string.topic_comment_count));
-        stringBuild.append(" ");
-        stringBuild.append(count);
-        mTvTopicCommentCount.setText(stringBuild);
-    }
-
 
     @Override
     public void initTopicCommentsInfo(ArrayList<TopicCommentInfo> topicComments, int orderBy) {
@@ -1020,7 +964,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
                         .append("#    </font>");
             }
             contentText.append("<font color=\"#adafb0\">")
-                    .append(getTopicCommentDateStr(topicCommentInfo.getCreateDate()))
+                    .append(mTopicVideoPlayerPresenter.getTopicCommentDateStr(topicCommentInfo.getCreateDate()))
                     .append("</font>");
 
 
@@ -1059,7 +1003,6 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
                     public void onClick(View v) {
                         mIcvTopicCommentImage.setImageSrc(topicCommentInfo.getContentPic());
                         mDecorView.addView(mZoomInImageLayout);
-                        //mZoomInImageDialog.show();
                     }
                 });
             }
@@ -1176,6 +1119,11 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         } else {
             Toast.makeText(this, isCollection ? "收藏失败" : "取消收藏失败", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    public void showDownloadStatus(boolean isSuccess) {
+        Toast.makeText(this, isSuccess ? "下载视频成功" : "下载视频失败", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -1324,28 +1272,5 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
             Log.e(TAG, "info is null");
         }
         mVDVideoView.play(p);
-    }
-
-    private String getTopicCommentDateStr(long time) {
-        Date date = new Date(time);
-        Date today = new Date();
-        long result = today.getTime() - time;
-        if (result / 1000 <= 60) {
-            return "刚刚";
-        } else if (result / 1000 > 60 && result / 1000 <= 3600) {
-            return (int) Math.floor((result / 1000) / 60) + "分钟前";
-        } else if (result / 1000 > 3600 && result / 1000 <= 86400) {
-            return date.getHours() + "点" + date.getMinutes() + "分";
-        }
-//        else if (result / 1000 > 3600 && result / 1000 <= 86400) {
-//            return Math.floor((result / 1000) / 3600) + "小时前";
-//        }
-//        else if (result / 1000 > 86400 && result / 1000 <= 86400 * 30) {
-//            return Math.floor((result / 1000) / 86400) + "天前";
-//        }
-        else {
-            return (date.getMonth() + 1) + "月" + date.getDate() + "日";
-        }
-
     }
 }

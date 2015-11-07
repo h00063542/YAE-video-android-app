@@ -70,12 +70,13 @@ public interface ITopicService {
     boolean addComment(String topicId) throws NetworkDisconnectException;
 
     /**
-     * 下载主题视频
+     * 下载
      *
-     * @param topicId
+     * @param url
+     * @param filePath
      * @throws NetworkDisconnectException
      */
-    boolean downloadVideo(String topicId) throws NetworkDisconnectException;
+    boolean download(String url, String filePath) throws NetworkDisconnectException;
 
     /**
      * 设置topic喜欢状态

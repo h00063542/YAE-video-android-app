@@ -6,9 +6,10 @@ import android.os.Environment;
  * Created by yilos on 2015-10-28.
  */
 public class Constants {
-    public static final String YILOS_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/yilos";
-    public static final String YILOS_NAILSTAR_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/yilos/nailstar";
-    public static final String YILOS_NAILSTAR_LOGS_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/yilos/nailstar/logs";
+    public static final String YILOS_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/yilos/";
+    public static final String YILOS_NAILSTAR_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/yilos/nailstar/";
+    public static final String YILOS_NAILSTAR_VIDEOS_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/yilos/nailstar/videos/";
+    public static final String YILOS_NAILSTAR_LOGS_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/yilos/nailstar/logs/";
 
     public static final String TOPIC_ID = "topicId";
     public static final String CODE = "code";
@@ -103,4 +104,6 @@ public class Constants {
      * 显示更多视频数量
      */
     public static final int MORE_VIDEOS_COUNT = 3;
+
+    public static final String POINT = ".";
 }
