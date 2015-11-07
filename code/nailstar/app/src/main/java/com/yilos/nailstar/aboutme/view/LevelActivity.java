@@ -3,6 +3,7 @@ package com.yilos.nailstar.aboutme.view;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -18,6 +19,7 @@ public class LevelActivity extends Activity {
     private TitleBar titleBar;
     private ImageView backButton;
     private TextView titleView;
+    private WebView webView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,5 +39,7 @@ public class LevelActivity extends Activity {
         titleView = titleBar.getTitleView();
         titleView.setText(R.string.level);
         progressBar = (ProgressBar)findViewById(R.id.level_progressbar);
+        webView = (WebView) findViewById(R.id.webView);
+        webView.loadUrl("file:///android_asset/experience.html");
     }
 }
