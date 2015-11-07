@@ -59,6 +59,16 @@ public interface ITopicService {
      */
     ArrayList<TopicCommentInfo> getTopicComments(String topicId, int page) throws NetworkDisconnectException;
 
+
+    /**
+     * 评论
+     *
+     * @param topicId
+     * @return
+     * @throws NetworkDisconnectException
+     */
+    boolean addComment(String topicId) throws NetworkDisconnectException;
+
     /**
      * 下载主题视频
      *
@@ -68,28 +78,20 @@ public interface ITopicService {
     boolean downloadVideo(String topicId) throws NetworkDisconnectException;
 
     /**
-     * 收藏
+     * 设置topic喜欢状态
      *
      * @param topicId
      * @throws NetworkDisconnectException
      */
-    boolean collection(String topicId) throws NetworkDisconnectException;
+    boolean setTopicLikeStatus(String topicId, boolean isLike) throws NetworkDisconnectException;
 
     /**
-     * 取消收藏
+     * 设置topic收藏状态
      *
      * @param topicId
      * @throws NetworkDisconnectException
      */
-    boolean cancelCollection(String topicId) throws NetworkDisconnectException;
-
-    /**
-     * 评论
-     *
-     * @param topicId
-     * @throws NetworkDisconnectException
-     */
-    boolean addComment(String topicId) throws NetworkDisconnectException;
+    boolean setTopicCollectionStatus(String topicId, boolean isCollection) throws NetworkDisconnectException;
 
     /**
      * 交作业

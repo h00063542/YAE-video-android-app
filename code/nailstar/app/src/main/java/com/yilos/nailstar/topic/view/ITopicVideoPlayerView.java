@@ -47,5 +47,9 @@ public interface ITopicVideoPlayerView {
      */
     void initTopicRelatedInfo(ArrayList<TopicRelatedInfo> topicRelatedList);
 
+    void showTopicLikeStatus(boolean isLike, boolean isSuccess);
+
+    void showTopicCollectionStatus(boolean isCollection, boolean isSuccess);
+
 
 }

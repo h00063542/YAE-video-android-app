@@ -37,6 +37,7 @@ import com.sina.sinavideo.sdk.data.VDVideoListInfo;
 import com.sina.sinavideo.sdk.utils.VDVideoFullModeController;
 import com.yilos.nailstar.R;
 import com.yilos.nailstar.framework.view.BaseActivity;
+import com.yilos.nailstar.index.entity.Topic;
 import com.yilos.nailstar.main.MainActivity;
 import com.yilos.nailstar.topic.entity.TopicCommentAtInfo;
 import com.yilos.nailstar.topic.entity.TopicCommentInfo;
@@ -73,7 +74,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
     private static final String TAG = "VideoPlayerActivity";
 
     private static final int TOPIC_COMMENT_REQUEST_CODE = 1;
-
+    private ViewGroup mDecorView;
 
     // 顶部返回、topic名称、分享
     private TitleBar mTbVideoPlayerHead;
@@ -122,7 +123,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
     private TextView mTvZoomInImageSave;
     private ViewPager mZoomInImageTextViewPager;
 
-    private Dialog mZoomInImageTextDialog;
+    //    private Dialog mZoomInImageTextDialog;
     private int mZoomInTextViewMarginTop = 0;
 
     private TextView mTvTopicCommentCount;
@@ -131,7 +132,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
     private LinearLayout mLayoutTopicComments;
     private View mZoomInImageLayout;
     private ImageCacheView mIcvTopicCommentImage;
-    private Dialog mZoomInImageDialog;
+//    private Dialog mZoomInImageDialog;
 
 
 //    private FloatingActionButton mFabBackTop;
@@ -256,6 +257,8 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         mIvVideoDownload = mTbVideoPlayerHead.getRightImageButtonTwo();
         mIvTopicShare = mTbVideoPlayerHead.getRightImageButtonOne();
         mTvTopicName = mTbVideoPlayerHead.getTitleView();
+        mIvVideoDownload.setImageResource(R.mipmap.icon_download_white);
+        mIvTopicShare.setImageResource(R.mipmap.icon_share_white);
 //        mTvTopicName.setEllipsize(TextUtils.TruncateAt.END);
 //        mTvTopicName.setSingleLine(true);
 //        mTvTopicName.setMaxWidth(getResources().getDimensionPixelSize(R.dimen.topic_author_photo_size));
@@ -306,18 +309,25 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         mTvZoomInImageTextIndex = (TextView) mZoomInImageTextLayout.findViewById(R.id.tv_zoomIn_topic_image_text_index);
         mTvZoomInImageSave = (TextView) mZoomInImageTextLayout.findViewById(R.id.tv_zoomIn_topic_image_text_save);
         mZoomInImageTextViewPager = (ViewPager) mZoomInImageTextLayout.findViewById(R.id.vp_zoomIn_topic_image_text);
+        mZoomInImageTextLayout.setBackgroundColor(getResources().getColor(R.color.black));
 
-        mZoomInImageTextDialog = new Dialog(this, R.style.dialog_fullscreen);
-        mZoomInImageTextDialog.setContentView(mZoomInImageTextLayout);
-        mZoomInImageTextDialog.setCancelable(true);
-        mZoomInImageTextDialog.setCanceledOnTouchOutside(true);
+
+//        mZoomInImageTextDialog = new Dialog(this, R.style.dialog_fullscreen);
+//        mZoomInImageTextDialog.setContentView(mZoomInImageTextLayout);
+//        mZoomInImageTextDialog.setCancelable(true);
+//        mZoomInImageTextDialog.setCanceledOnTouchOutside(true);
 
         mZoomInImageLayout = getLayoutInflater().inflate(R.layout.zoomin_topic_comment_image_layout, null);
+        mDecorView = (ViewGroup) getWindow().getDecorView().findViewById(android.R.id.content);
+
         mIcvTopicCommentImage = (ImageCacheView) mZoomInImageLayout.findViewById(R.id.icv_topic_comment_image);
-        mZoomInImageDialog = new Dialog(this, R.style.dialog_fullscreen);
-        mZoomInImageDialog.setContentView(mZoomInImageLayout);
-        mZoomInImageDialog.setCancelable(true);
-        mZoomInImageDialog.getWindow().getAttributes().alpha = 0.6f;
+//        mZoomInImageDialog = new Dialog(this, R.style.dialog_fullscreen);
+//        mZoomInImageDialog.setContentView(mZoomInImageLayout);
+//        mZoomInImageDialog.setCancelable(true);
+        mZoomInImageLayout.setBackgroundColor(0x80000000);
+        //mZoomInImageDialog.getWindow().getAttributes().alpha = 0.6f;
+//        mDecorView.addView(mZoomInImageLayout);
+//        mZoomInImageDialog.setBackGroundColor(0x80000000);
 //        mZoomInImageDialog.setCanceledOnTouchOutside(true);
 
         mTvTopicCommentCount = (TextView) findViewById(R.id.tv_topic_comment_count);
@@ -433,12 +443,20 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
             }
         });
 
+        mZoomInImageTextLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDecorView.removeView(mZoomInImageTextLayout);
+            }
+        });
         mTvZoomInImageTextIndex.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mZoomInImageTextDialog.isShowing()) {
-                    mZoomInImageTextDialog.dismiss();
-                }
+                mDecorView.removeView(mZoomInImageTextLayout);
+
+//                if (mZoomInImageTextDialog.isShowing()) {
+//                    mZoomInImageTextDialog.dismiss();
+//                }
             }
         });
 
@@ -470,12 +488,20 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
             }
         });
 
+        mZoomInImageLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
         mIcvTopicCommentImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (null != mZoomInImageDialog && mZoomInImageDialog.isShowing()) {
-                    mZoomInImageDialog.hide();
-                }
+                mDecorView.removeView(mZoomInImageLayout);
+//                if (null != mZoomInImageDialog && mZoomInImageDialog.isShowing()) {
+//                    mZoomInImageDialog.hide();
+//                }
             }
         });
 
@@ -486,6 +512,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 Log.i(TAG, "mCbTopicTabLike isChecked:" + isChecked);
+                mTopicVideoPlayerPresenter.setTopicLikeStatus(mTopicId, isChecked);
             }
         });
         //收藏
@@ -494,6 +521,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 Log.i(TAG, "mCbTopicTabCollection isChecked:" + isChecked);
+                mTopicVideoPlayerPresenter.setTopicCollectionStatus(mTopicId, isChecked);
             }
         });
         // 评论按钮
@@ -567,6 +595,10 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
      * 评论
      */
     private void addTopicComment() {
+        if (!UserUtil.isLogin(this)) {
+            // TODO 调用到登录界面
+            return;
+        }
         Intent intent = new Intent(this, TopicCommentActivity.class);
         intent.putExtra(Constants.TOPIC_ID, mTopicId);
         intent.putExtra(Constants.TYPE, Constants.TOPIC_COMMENT_TYPE_COMMENT);
@@ -580,6 +612,10 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
      * @param replyInfo
      */
     private void addTopicCommentReply(TopicCommentInfo commentInfo, TopicCommentReplyInfo replyInfo, int type) {
+        if (!UserUtil.isLogin(this)) {
+            // TODO 调用到登录界面
+            return;
+        }
         Intent intent = new Intent(this, TopicCommentActivity.class);
         intent.putExtra(Constants.TOPIC_ID, mTopicId);
         if (null != commentInfo) {
@@ -739,9 +775,10 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
             pvImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (mZoomInImageTextDialog.isShowing()) {
-                        mZoomInImageTextDialog.dismiss();
-                    }
+                    mDecorView.removeView(mZoomInImageTextLayout);
+//                    if (mZoomInImageTextDialog.isShowing()) {
+//                        mZoomInImageTextDialog.dismiss();
+//                    }
                 }
             });
             tvText.setText(articles.get(i));
@@ -817,11 +854,13 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
                 @Override
                 public void run() {
                     mZoomInImageTextViewPager.setCurrentItem(index);
-                    mZoomInImageTextDialog.show();
+                    mDecorView.addView(mZoomInImageTextLayout);
+//                    mZoomInImageTextDialog.show();
                 }
             });
         } else {
-            mZoomInImageTextDialog.show();
+            mDecorView.addView(mZoomInImageTextLayout);
+//            mZoomInImageTextDialog.show();
         }
 
     }
@@ -1019,7 +1058,8 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
                     @Override
                     public void onClick(View v) {
                         mIcvTopicCommentImage.setImageSrc(topicCommentInfo.getContentPic());
-                        mZoomInImageDialog.show();
+                        mDecorView.addView(mZoomInImageLayout);
+                        //mZoomInImageDialog.show();
                     }
                 });
             }
@@ -1118,6 +1158,24 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
                 mTopicPullToRefreshView.onHeaderRefreshComplete();
             }
         }, 1000);
+    }
+
+    @Override
+    public void showTopicLikeStatus(boolean isLike, boolean isSuccess) {
+        if (isSuccess) {
+            Toast.makeText(this, isLike ? "设置喜欢成功" : "取消喜欢成功", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, isLike ? "设置喜欢失败" : "取消喜欢失败", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void showTopicCollectionStatus(boolean isCollection, boolean isSuccess) {
+        if (isSuccess) {
+            Toast.makeText(this, isCollection ? "收藏成功" : "取消收藏成功", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, isCollection ? "收藏失败" : "取消收藏失败", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
