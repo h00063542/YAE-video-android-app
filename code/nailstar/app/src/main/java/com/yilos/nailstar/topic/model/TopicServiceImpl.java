@@ -87,7 +87,10 @@ public class TopicServiceImpl implements ITopicService {
             JSONArray jsonVideos = jsonResult.optJSONArray(Constants.VIDEOS);
             for (int i = 0; i < jsonVideos.length(); i++) {
                 JSONObject jsonVideoObj = jsonVideos.optJSONObject(i);
-                videos.add(new TopicVideoInfo(JsonUtil.optString(jsonVideoObj, Constants.VIDEO_ID), jsonVideoObj.optInt("playTimes", 0), JsonUtil.optString(jsonVideoObj, Constants.CC_URL), JsonUtil.optString(jsonVideoObj, Constants.OSS_URL)));
+                videos.add(new TopicVideoInfo(JsonUtil.optString(jsonVideoObj, Constants.VIDEO_ID)
+                        , jsonVideoObj.optInt(Constants.PLAY_TIMES, 0)
+                        , JsonUtil.optString(jsonVideoObj, Constants.CC_URL)
+                        , JsonUtil.optString(jsonVideoObj, Constants.OSS_URL)));
             }
 
             topicInfo.setId(JsonUtil.optString(jsonResult, Constants.ID));
