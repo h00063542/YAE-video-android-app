@@ -19,6 +19,7 @@ import com.yilos.nailstar.aboutme.entity.AboutMeNumber;
 import com.yilos.nailstar.aboutme.entity.MessageCount;
 import com.yilos.nailstar.aboutme.entity.PersonInfo;
 import com.yilos.nailstar.aboutme.presenter.AboutMePresenter;
+import com.yilos.nailstar.util.LevelUtil;
 import com.yilos.widget.titlebar.TitleBar;
 
 /**
@@ -99,22 +100,22 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
         }
         messageCountText.setText(String.valueOf(messageCount.getCount()));
     }
-
-    private enum Level{lv1,lv2,lv3,lv4,lv5};
-    public Level calcLevel (int exp) {
-        if (exp >= 0 && exp < 50) {
-            return Level.lv1;
-        } else if (exp >= 50 && exp < 100) {
-            return Level.lv2;
-        } else if (exp >= 100 && exp < 200) {
-            return Level.lv3;
-        } else if (exp >= 200 && exp < 1000) {
-            return Level.lv4;
-        } else if (exp >= 1000) {
-            return Level.lv5;
-        }
-        return Level.lv1;
-    }
+//
+//    private enum Level{lv1,lv2,lv3,lv4,lv5};
+//    public Level calcLevel (int exp) {
+//        if (exp >= 0 && exp < 50) {
+//            return Level.lv1;
+//        } else if (exp >= 50 && exp < 100) {
+//            return Level.lv2;
+//        } else if (exp >= 100 && exp < 200) {
+//            return Level.lv3;
+//        } else if (exp >= 200 && exp < 1000) {
+//            return Level.lv4;
+//        } else if (exp >= 1000) {
+//            return Level.lv5;
+//        }
+//        return Level.lv1;
+//    }
 
     @Override
     public void getPersonInfo(PersonInfo personInfo) {
@@ -168,7 +169,7 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
         experience = aboutMeNumber.getExp();
         kaBiText.setText(String.valueOf(aboutMeNumber.getDakaCoin()));
         int level = 1;
-        Level exp = calcLevel(aboutMeNumber.getExp());
+        LevelUtil.Level exp = LevelUtil.calcLevel(aboutMeNumber.getExp());
         switch (exp) {
             case lv1 :
                 level = 1;
