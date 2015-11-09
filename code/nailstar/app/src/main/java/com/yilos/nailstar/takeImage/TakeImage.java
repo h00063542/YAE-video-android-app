@@ -237,21 +237,21 @@ public class TakeImage {
                     Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                     intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
                     if (context instanceof Activity) {
-                        ((Activity)context).startActivityForResult(intent, requestCamera);
+                        ((Activity) context).startActivityForResult(intent, requestCamera);
                     }
                     if (context instanceof Fragment) {
-                        ((Fragment)context).startActivityForResult(intent, requestCamera);
+                        ((Fragment) context).startActivityForResult(intent, requestCamera);
                     }
                 } else if (1 == item) {
                     Intent intent = new Intent();
                     intent.setType("image/*");
                     intent.setAction(Intent.ACTION_GET_CONTENT);
                     if (context instanceof Activity) {
-                        ((Activity)context).startActivityForResult(Intent.createChooser(intent, "Select File"),
+                        ((Activity) context).startActivityForResult(Intent.createChooser(intent, "Select File"),
                                 requestSelectFile);
                     }
                     if (context instanceof Fragment) {
-                        ((Fragment)context).startActivityForResult(Intent.createChooser(intent, "Select File"),
+                        ((Fragment) context).startActivityForResult(Intent.createChooser(intent, "Select File"),
                                 requestSelectFile);
                     }
 
@@ -261,7 +261,7 @@ public class TakeImage {
             }
         });
 
-        builder.show();
+        builder.create().show();
     }
 
     /**

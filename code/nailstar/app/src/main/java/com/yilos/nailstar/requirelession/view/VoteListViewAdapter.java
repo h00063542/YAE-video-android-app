@@ -13,9 +13,12 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.yilos.nailstar.R;
 import com.yilos.nailstar.requirelession.Presenter.LessionPresenter;
 import com.yilos.nailstar.requirelession.entity.CandidateLession;
+import com.yilos.nailstar.util.Constants;
+import com.yilos.nailstar.util.FileUtils;
 import com.yilos.widget.circleimageview.CircleImageView;
 import com.yilos.widget.view.ImageCacheView;
 
@@ -53,7 +56,22 @@ public class VoteListViewAdapter extends BaseAdapter {
 
     private PagerAdapter pagerAdapter;
 
-    // 当前图片对应的数据
+    // 显示大图时候的投票按钮
+    private TextView lessionVoteBtn;
+
+    // 显示大图时的拉票按钮
+    private TextView lessionCanvassBtn;
+
+    // 显示大图时的保存到相册按钮
+    private TextView saveImageBtn;
+
+    // 显示大图时的举报按钮
+    private TextView reportIllegalBtn;
+
+    // 显示大图时的取消按钮
+    private TextView cancelBtn;
+
+    // 当前大图对应的数据
     private CandidateLession currentImage;
 
     public VoteListViewAdapter(Activity context, LayoutInflater layoutInflater, LessionPresenter lessionPresenter) {
@@ -67,7 +85,8 @@ public class VoteListViewAdapter extends BaseAdapter {
 
         // 点击图片的时候弹出大图
         initLessionImageView();
-
+        // 绑定按钮
+        bindLessionImageBtn();
     }
 
     private void initLessionImageView() {
@@ -142,6 +161,26 @@ public class VoteListViewAdapter extends BaseAdapter {
             @Override
             public void onPageScrollStateChanged(int state) {
 
+            }
+        });
+
+        // 显示大图时候显示的按钮
+        lessionVoteBtn = (TextView) lessionImageView.findViewById(R.id.lessionVoteBtn);
+        lessionCanvassBtn = (TextView) lessionImageView.findViewById(R.id.lessionCanvassBtn);
+        saveImageBtn = (TextView) lessionImageView.findViewById(R.id.saveImageBtn);
+        reportIllegalBtn = (TextView) lessionImageView.findViewById(R.id.reportIllegalBtn);
+        cancelBtn = (TextView) lessionImageView.findViewById(R.id.cancelBtn);
+
+    }
+
+    // 绑定大图下方的按钮
+    private void bindLessionImageBtn() {
+
+        saveImageBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                lessionPresenter.saveImage(currentImage.getPicUrl(), Constants.YILOS_PATH, currentImage.getCandidateId() + ".jpg");
+                FileUtils.mediaRefresh(context, Constants.YILOS_PATH + currentImage.getCandidateId() + ".jpg");
             }
         });
 
@@ -261,7 +300,12 @@ public class VoteListViewAdapter extends BaseAdapter {
         holder.rankingItem.lessionAuthorName.setText(candidateLession.getAuthorName());
         holder.rankingItem.lessionVoteCount.setText(String.valueOf(candidateLession.getVoteCount()));
         holder.rankingItem.lessionRankingImg.setImageSrc(candidateLession.getPicUrl());
-        holder.rankingItem.lessionAuthorPhoto.setImageSrc(candidateLession.getAuthorPhoto());
+        if (candidateLession.getAuthorPhoto() != null) {
+            holder.rankingItem.lessionAuthorPhoto.setImageSrc(candidateLession.getAuthorPhoto());
+        } else {
+            holder.rankingItem.lessionAuthorPhoto.setImageResource(R.mipmap.ic_default_photo);
+        }
+
 
         // 是否已投票
         if (candidateLession.getVoted() > 0) {
@@ -360,9 +404,13 @@ public class VoteListViewAdapter extends BaseAdapter {
                 voteItem.lessionvoteCount.setText(String.valueOf(candidateLession.getVoteCount()));
                 voteItem.lessionVoteImg.setImageSrc(candidateLession.getPicUrl());
 
+                // 点击图片显示大图
                 voteItem.lessionVoteImg.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        // 点击的时候记录当前打开的图，以便保存或者举报的时候用
+                        currentImage = voteLessionList.get(realPosition);
+                        // 显示大图
                         showImageActionDialog(realPosition);
                     }
                 });
