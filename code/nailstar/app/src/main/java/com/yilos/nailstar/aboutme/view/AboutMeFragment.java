@@ -20,6 +20,7 @@ import com.yilos.nailstar.aboutme.entity.MessageCount;
 import com.yilos.nailstar.aboutme.entity.PersonInfo;
 import com.yilos.nailstar.aboutme.presenter.AboutMePresenter;
 import com.yilos.nailstar.util.LevelUtil;
+import com.yilos.widget.circleimageview.CircleImageView;
 import com.yilos.widget.titlebar.TitleBar;
 
 /**
@@ -60,7 +61,7 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
     private TextView fansText;//粉丝
     private TextView kaBiText;//咖币
 
-    private ImageView profileImage;//头像
+    private CircleImageView profileImage;//头像
     private TextView nameText;//名字
     private TextView identityText;//身份
 
@@ -144,6 +145,7 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
         nameText.setText(nickName);
         identityText.setText(identity);
         profileImage.setImageBitmap(bitmap);
+        profileImage.setImageSrc(personInfo.getPhotoUrl());
     }
 
     @Override
@@ -184,7 +186,7 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
 
         nameText = (TextView)view.findViewById(R.id.about_me_name);
         identityText = (TextView)view.findViewById(R.id.about_me_identity);
-        profileImage = (ImageView)view.findViewById(R.id.profile_image);
+        profileImage = (CircleImageView)view.findViewById(R.id.profile_image);
 
         levelText = (TextView) view.findViewById(R.id.about_me_level);
         attentionText = (TextView) view.findViewById(R.id.about_me_attention_count);
@@ -234,7 +236,6 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
 //        rightButtonOne.setImageResource(R.drawable.ic_head_share);
 //        backButton = titleBar.getBackButton();
 //        backButton.setImageResource(R.drawable.ic_head_back);
-
         aboutMePresenter = AboutMePresenter.getInstance(this);
         aboutMePresenter.getMessageCount();
         aboutMePresenter.getAboutMeNumber();
