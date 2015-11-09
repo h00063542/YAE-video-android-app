@@ -19,6 +19,8 @@ import com.yilos.nailstar.aboutme.entity.AboutMeNumber;
 import com.yilos.nailstar.aboutme.entity.MessageCount;
 import com.yilos.nailstar.aboutme.entity.PersonInfo;
 import com.yilos.nailstar.aboutme.presenter.AboutMePresenter;
+import com.yilos.nailstar.util.LevelUtil;
+import com.yilos.widget.circleimageview.CircleImageView;
 import com.yilos.widget.titlebar.TitleBar;
 
 /**
@@ -46,9 +48,10 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
     private TextView messageCountText;//信息数
     private TitleBar titleBar;//标题栏
     private TextView titleText;//标题栏标题
+    private TextView leftTitleText;//靠左标题栏标题
+    private ImageView rightButtonTwo;
+    private ImageView rightButtonOne;
     private ImageView backButton;
-    private ImageView rightTwoButton;
-    private ImageView rightOneButton;
 
     private AboutMePresenter aboutMePresenter;
     private RelativeLayout personInfoLayout;
@@ -58,12 +61,17 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
     private TextView fansText;//粉丝
     private TextView kaBiText;//咖币
 
-    private ImageView profileImage;//头像
+    private CircleImageView profileImage;//头像
     private TextView nameText;//名字
     private TextView identityText;//身份
 
-    private LinearLayout myFollowList;
-    private LinearLayout myFansList;
+    private LinearLayout myFollowList;//关注列表
+    private LinearLayout myFansList;//粉丝列表
+
+    private TextView aboutMeLevel;//进入等级页面按钮
+
+    private static int experience;
+    private static String myImageUrl;
 
     /**
      * Use this factory method to create a new instance of
@@ -95,26 +103,14 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
         messageCountText.setText(String.valueOf(messageCount.getCount()));
     }
 
-    private enum Level{lv1,lv2,lv3,lv4,lv5};
-    public Level calcLevel (int exp) {
-        if (exp >= 0 && exp < 50) {
-            return Level.lv1;
-        } else if (exp >= 50 && exp < 100) {
-            return Level.lv2;
-        } else if (exp >= 100 && exp < 200) {
-            return Level.lv3;
-        } else if (exp >= 200 && exp < 1000) {
-            return Level.lv4;
-        } else if (exp >= 1000) {
-            return Level.lv5;
-        }
-        return Level.lv1;
-    }
-
     @Override
     public void getPersonInfo(PersonInfo personInfo) {
+        if (personInfo == null) {
+            return;
+        }
         String nickName = personInfo.getNickname();
         Bitmap bitmap = personInfo.getImageBitmap();
+        myImageUrl = personInfo.getPhotoUrl();
         int type = personInfo.getType();
         String identity;
         //        1美甲店主
@@ -149,6 +145,7 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
         nameText.setText(nickName);
         identityText.setText(identity);
         profileImage.setImageBitmap(bitmap);
+        profileImage.setImageSrc(personInfo.getPhotoUrl());
     }
 
     @Override
@@ -156,26 +153,9 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
         if (aboutMeNumber == null) {
             return;
         }
+        experience = aboutMeNumber.getExp();
         kaBiText.setText(String.valueOf(aboutMeNumber.getDakaCoin()));
-        int level = 1;
-        Level exp = calcLevel(aboutMeNumber.getExp());
-        switch (exp) {
-            case lv1 :
-                level = 1;
-                break;
-            case lv2 :
-                level = 2;
-                break;
-            case lv3 :
-                level = 3;
-                break;
-            case lv4 :
-                level = 4;
-                break;
-            case lv5 :
-                level = 5;
-                break;
-        }
+        int level =  LevelUtil.calcLevel(aboutMeNumber.getExp());
         levelText.setText("lv" + String.valueOf(level));
         fansText.setText(String.valueOf(aboutMeNumber.getFansNumber()));
         attentionText.setText(String.valueOf(aboutMeNumber.getFocusNumber()));
@@ -206,7 +186,7 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
 
         nameText = (TextView)view.findViewById(R.id.about_me_name);
         identityText = (TextView)view.findViewById(R.id.about_me_identity);
-        profileImage = (ImageView)view.findViewById(R.id.profile_image);
+        profileImage = (CircleImageView)view.findViewById(R.id.profile_image);
 
         levelText = (TextView) view.findViewById(R.id.about_me_level);
         attentionText = (TextView) view.findViewById(R.id.about_me_attention_count);
@@ -218,6 +198,8 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
 
         myFollowList = (LinearLayout)view.findViewById(R.id.my_follow_list);
         myFansList = (LinearLayout)view.findViewById(R.id.my_fans_list);
+
+        aboutMeLevel = (TextView)view.findViewById(R.id.about_me_level);
     }
 
     @Override
@@ -231,6 +213,12 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
                 Intent myFansListIntent = new Intent(getActivity(),FansListActivity.class);
                 startActivity(myFansListIntent);
                 break;
+            case R.id.about_me_level:
+                Intent myLevelIntent = new Intent(getActivity(),LevelActivity.class);
+                myLevelIntent.putExtra("experience",experience);
+                myLevelIntent.putExtra("myImageUrl", myImageUrl);
+                startActivity(myLevelIntent);
+                break;
             default:
                 break;
         }
@@ -238,8 +226,16 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
 
     private void initEvents() {
         titleText = titleBar.getTitleView();
+        //leftTitleText = titleBar.getLeftTitleView();
         titleText.setText(R.string.about_me_my);
-
+        //titleText.setText("我的我的我的我的我的我的我的我的我的我的我的我的我的我的v");//R.string.about_me_my
+//        leftTitleText.setText("我的我的我的我的我的我的我的我的我的我的我的我的我的我的v");
+//        rightButtonTwo = titleBar.getRightImageButtonTwo();
+//        rightButtonTwo.setImageResource(R.drawable.ic_head_download);
+//        rightButtonOne = titleBar.getRightImageButtonOne();
+//        rightButtonOne.setImageResource(R.drawable.ic_head_share);
+//        backButton = titleBar.getBackButton();
+//        backButton.setImageResource(R.drawable.ic_head_back);
         aboutMePresenter = AboutMePresenter.getInstance(this);
         aboutMePresenter.getMessageCount();
         aboutMePresenter.getAboutMeNumber();
@@ -247,6 +243,7 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
 
         myFollowList.setOnClickListener(this);
         myFansList.setOnClickListener(this);
+        aboutMeLevel.setOnClickListener(this);
 
         personInfoLayout.setOnClickListener(new View.OnClickListener() {
             @Override

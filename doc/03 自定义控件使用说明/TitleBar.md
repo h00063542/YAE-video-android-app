@@ -18,6 +18,10 @@
 获取标题控件
 
     public TextView getTitleView()
+
+获取靠右对齐标题控件
+
+    public TextView getLeftTitleView()
     
 获取最右边第一个按钮  
   

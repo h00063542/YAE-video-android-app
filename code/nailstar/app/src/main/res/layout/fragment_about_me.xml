@@ -49,8 +49,8 @@
                     <TextView
                         android:id="@+id/about_me_level"
                         android:layout_marginLeft="@dimen/about_me_other_padding"
-                        android:paddingLeft="@dimen/about_me_level_padding"
-                        android:paddingRight="@dimen/about_me_level_padding"
+                        android:padding="@dimen/about_me_level_padding"
+                        android:clickable="true"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/about_me_level"

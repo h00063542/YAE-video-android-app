@@ -20,7 +20,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.yilos.nailstar.R;
-import com.yilos.nailstar.player.view.VideoPlayerActivity;
+import com.yilos.nailstar.topic.view.TopicVideoPlayerActivity;
 import com.yilos.nailstar.requirelession.Presenter.LessionPresenter;
 import com.yilos.nailstar.requirelession.entity.CandidateLession;
 import com.yilos.nailstar.requirelession.entity.LessionActivity;
@@ -367,7 +367,7 @@ public class RequireLessionFragment extends Fragment implements LessionView {
         lessionPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), VideoPlayerActivity.class);
+                Intent intent = new Intent(getActivity(), TopicVideoPlayerActivity.class);
                 intent.putExtra(Constants.TOPIC_ID, lessionActivity.getPrevious().getTopicId());
                 startActivity(intent);
             }
