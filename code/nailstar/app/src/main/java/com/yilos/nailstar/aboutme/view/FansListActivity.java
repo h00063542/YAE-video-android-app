@@ -74,6 +74,7 @@ public class FansListActivity extends Activity {
         titleText = titleBar.getTitleView();
         titleText.setText(R.string.my_fans_list);
         backButton = titleBar.getBackButton();
+        backButton.setImageResource(R.drawable.ic_head_back);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
