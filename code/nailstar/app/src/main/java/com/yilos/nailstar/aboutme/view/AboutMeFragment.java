@@ -168,25 +168,7 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
         }
         experience = aboutMeNumber.getExp();
         kaBiText.setText(String.valueOf(aboutMeNumber.getDakaCoin()));
-        int level = 1;
-        LevelUtil.Level exp = LevelUtil.calcLevel(aboutMeNumber.getExp());
-        switch (exp) {
-            case lv1 :
-                level = 1;
-                break;
-            case lv2 :
-                level = 2;
-                break;
-            case lv3 :
-                level = 3;
-                break;
-            case lv4 :
-                level = 4;
-                break;
-            case lv5 :
-                level = 5;
-                break;
-        }
+        int level =  LevelUtil.calcLevel(aboutMeNumber.getExp());
         levelText.setText("lv" + String.valueOf(level));
         fansText.setText(String.valueOf(aboutMeNumber.getFansNumber()));
         attentionText.setText(String.valueOf(aboutMeNumber.getFocusNumber()));
