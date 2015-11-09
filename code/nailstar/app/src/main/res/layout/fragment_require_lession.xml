@@ -56,7 +56,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
-                <!-- 里面的内容与fragment_listview_head1.xml的内容一致，id不一样，用于页头的悬浮显示-->
+                <!-- 里面的内容与fragment_listview_head1.xml的内容一致，用于页头的悬浮显示-->
                 <LinearLayout
                     android:id="@+id/lessionListViewHeadFloat"
                     android:layout_width="match_parent"
