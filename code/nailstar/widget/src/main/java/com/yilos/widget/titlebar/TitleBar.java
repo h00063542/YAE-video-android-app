@@ -21,8 +21,9 @@ public class TitleBar extends RelativeLayout {
     private ImageView backButton;//返回按钮
     private TextView rightTextButton;//右边确定按钮
     private ImageView rightImageButtonOne;//从右边算起的第一个图片按钮
-    private ImageView rightImageButtonTwo;//从右边算起的第一个图片按钮
-    private TextView titleView;//顶部标题
+    private ImageView rightImageButtonTwo;//从右边算起的第二个图片按钮
+    private TextView titleView;//顶部居中标题
+    private TextView leftTitleView;//顶部居左标题
 
     private Context mContext;
 
@@ -51,6 +52,11 @@ public class TitleBar extends RelativeLayout {
         return titleView;
     }
 
+    public TextView getLeftTitleView() {
+        showWidget(leftTitleView);
+        return leftTitleView;
+    }
+
     public ImageView getRightImageButtonOne() {
         showWidget(rightImageButtonOne);
         return rightImageButtonOne;
@@ -67,9 +73,11 @@ public class TitleBar extends RelativeLayout {
         backButton = (ImageView)findViewById(R.id.title_bar_left_back);
         rightTextButton = (TextView)findViewById(R.id.title_bar_right_text_button);
         titleView = (TextView)findViewById(R.id.title_bar_title);
+        leftTitleView = (TextView)findViewById(R.id.left_title_bar_title);
         rightImageButtonOne = (ImageView)findViewById(R.id.title_bar_right_image_button_one);
         rightImageButtonTwo = (ImageView)findViewById(R.id.title_bar_right_image_button_two);
         titleView.setMaxWidth(setTitleWidthPixels());
+        leftTitleView.setMaxWidth(setTitleWidthPixels());
     }
 
     private int setTitleWidthPixels() {

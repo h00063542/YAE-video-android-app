@@ -47,6 +47,7 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
     private TextView messageCountText;//信息数
     private TitleBar titleBar;//标题栏
     private TextView titleText;//标题栏标题
+    private TextView leftTitleText;//靠左标题栏标题
     private ImageView rightButtonTwo;
     private ImageView rightButtonOne;
     private ImageView backButton;
@@ -100,22 +101,6 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
         }
         messageCountText.setText(String.valueOf(messageCount.getCount()));
     }
-//
-//    private enum Level{lv1,lv2,lv3,lv4,lv5};
-//    public Level calcLevel (int exp) {
-//        if (exp >= 0 && exp < 50) {
-//            return Level.lv1;
-//        } else if (exp >= 50 && exp < 100) {
-//            return Level.lv2;
-//        } else if (exp >= 100 && exp < 200) {
-//            return Level.lv3;
-//        } else if (exp >= 200 && exp < 1000) {
-//            return Level.lv4;
-//        } else if (exp >= 1000) {
-//            return Level.lv5;
-//        }
-//        return Level.lv1;
-//    }
 
     @Override
     public void getPersonInfo(PersonInfo personInfo) {
@@ -239,13 +224,16 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
 
     private void initEvents() {
         titleText = titleBar.getTitleView();
+        //leftTitleText = titleBar.getLeftTitleView();
         titleText.setText(R.string.about_me_my);
-        rightButtonTwo = titleBar.getRightImageButtonTwo();
-        rightButtonTwo.setImageResource(R.drawable.ic_head_download);
-        rightButtonOne = titleBar.getRightImageButtonOne();
-        rightButtonOne.setImageResource(R.drawable.ic_head_share);
-        backButton = titleBar.getBackButton();
-        backButton.setImageResource(R.drawable.ic_head_back);
+        //titleText.setText("我的我的我的我的我的我的我的我的我的我的我的我的我的我的v");//R.string.about_me_my
+//        leftTitleText.setText("我的我的我的我的我的我的我的我的我的我的我的我的我的我的v");
+//        rightButtonTwo = titleBar.getRightImageButtonTwo();
+//        rightButtonTwo.setImageResource(R.drawable.ic_head_download);
+//        rightButtonOne = titleBar.getRightImageButtonOne();
+//        rightButtonOne.setImageResource(R.drawable.ic_head_share);
+//        backButton = titleBar.getBackButton();
+//        backButton.setImageResource(R.drawable.ic_head_back);
 
         aboutMePresenter = AboutMePresenter.getInstance(this);
         aboutMePresenter.getMessageCount();
