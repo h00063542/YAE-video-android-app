@@ -122,8 +122,7 @@ public class RequireLessionFragment extends Fragment implements LessionView {
         screenWidth = metric.widthPixels;
 
         view = inflater.inflate(R.layout.fragment_require_lession, container, false);
-        lessionViewHead0 = inflater.inflate(R.layout.lession_listview_head0, null);
-        lessionViewHead1 = inflater.inflate(R.layout.lession_listview_head1, null);
+
         initView(inflater);
         initData();
         bindControl();
@@ -134,6 +133,9 @@ public class RequireLessionFragment extends Fragment implements LessionView {
 
         // 初始化ListView
         lessionVoteView = (ListView) view.findViewById(R.id.lessionVoteView);
+
+        lessionViewHead0 = inflater.inflate(R.layout.lession_listview_head0, null);
+        lessionViewHead1 = inflater.inflate(R.layout.lession_listview_head1, null);
 
         lessionVoteView.addHeaderView(lessionViewHead0, null, false);
         lessionVoteView.addHeaderView(lessionViewHead1, null, false);
@@ -154,17 +156,17 @@ public class RequireLessionFragment extends Fragment implements LessionView {
         goRankingBtn = (RadioButton) lessionViewHead1.findViewById(R.id.goRankingBtn);
 
         // 悬浮页头的按钮
-        switchLessionViewFloat = (RadioGroup) view.findViewById(R.id.switchLessionViewFloat);
-        goVotingBtnFloat = (RadioButton) view.findViewById(R.id.goVotingBtnFloat);
-        goRankingBtnFloat = (RadioButton) view.findViewById(R.id.goRankingBtnFloat);
+        switchLessionViewFloat = (RadioGroup) lessionViewHeadFloat.findViewById(R.id.switchLessionView);
+        goVotingBtnFloat = (RadioButton) lessionViewHeadFloat.findViewById(R.id.goVotingBtn);
+        goRankingBtnFloat = (RadioButton) lessionViewHeadFloat.findViewById(R.id.goRankingBtn);
 
         // 倒计时
         lessionCountDownText = (TextView) view.findViewById(R.id.lessionCountDownText);
         lessionCountDownValue = (TextView) view.findViewById(R.id.lessionCountDownValue);
 
         // 求教程按钮
-        requireLessionBtn = (Button) view.findViewById(R.id.requireLessionBtn);
-        requireLessionBtnFloat = (Button) view.findViewById(R.id.requireLessionBtnFloat);
+        requireLessionBtn = (Button) lessionViewHead1.findViewById(R.id.requireLessionBtn);
+        requireLessionBtnFloat = (Button) lessionViewHeadFloat.findViewById(R.id.requireLessionBtn);
 
         // 下拉刷新
         lessionPullRefresh = (PtrClassicFrameLayout) view.findViewById(R.id.lessionPullRefresh);
