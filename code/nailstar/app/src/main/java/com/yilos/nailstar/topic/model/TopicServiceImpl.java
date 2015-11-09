@@ -76,7 +76,7 @@ public class TopicServiceImpl implements ITopicService {
             topicInfo.setVideos(videos);
             topicInfo.setAuthorId(JsonUtil.optString(jsonResult, Constants.AUTHOR_ID));
             topicInfo.setAuthor(JsonUtil.optString(jsonResult, Constants.AUTHOR));
-            topicInfo.setCommentCount(jsonResult.optInt(Constants.COMMENT_COUNT,0));
+            topicInfo.setCommentCount(jsonResult.optInt(Constants.COMMENT_COUNT, 0));
         } catch (IOException e) {
             e.printStackTrace();
             LOGGER.error(MessageFormat.format("获取topic信息失败，topicId:{0}，url:{1}", topicId, url), e);
@@ -301,12 +301,25 @@ public class TopicServiceImpl implements ITopicService {
     }
 
     /**
-     * @param topicId
-     * @return
+     * 下载
+     *
+     * @param url
+     * @param filePath
      * @throws NetworkDisconnectException
      */
     @Override
-    public boolean downloadVideo(String topicId) throws NetworkDisconnectException {
+    public boolean download(String url, String filePath) throws NetworkDisconnectException {
+        try {
+            HttpClient.download(url, filePath);
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    @Override
+    public boolean setTopicLikeStatus(String topicId, boolean isLike) throws NetworkDisconnectException {
         return false;
     }
 
@@ -322,66 +335,66 @@ public class TopicServiceImpl implements ITopicService {
      * @throws NetworkDisconnectException
      */
     @Override
-    public boolean collection(String topicId) throws NetworkDisconnectException {
-        if (!NailStarApplicationContext.getInstance().isNetworkConnected()) {
-            throw new NetworkDisconnectException("网络没有连接");
-        }
-        String url = "/vapi/nailstar/topics/" + topicId + "/actions";
-
-        try {
-
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put(Constants.UID, "");
-            jsonObject.put(Constants.TYPE, Constants.ACTION_TYPE_COLLECTION);
-            jsonObject.put(Constants.TOPIC_ID, topicId);
-            String strResult = HttpClient.post(url, jsonObject.toString());
-            return null != buildJSONObject(strResult);
-        } catch (JSONException e) {
-            e.printStackTrace();
-            LOGGER.error(MessageFormat.format("收藏topic失败，topicId:{0}，url:{1}", topicId, url), e);
-        } catch (IOException e) {
-            e.printStackTrace();
-            LOGGER.error(MessageFormat.format("收藏topic失败，topicId:{0}，url:{1}", topicId, url), e);
-        }
+    public boolean setTopicCollectionStatus(String topicId, boolean isCollection) throws NetworkDisconnectException {
+//        if (!NailStarApplicationContext.getInstance().isNetworkConnected()) {
+//            throw new NetworkDisconnectException("网络没有连接");
+//        }
+//        String url = "/vapi/nailstar/topics/" + topicId + "/actions";
+//
+//        try {
+//
+//            JSONObject jsonObject = new JSONObject();
+//            jsonObject.put(Constants.UID, "");
+//            jsonObject.put(Constants.TYPE, Constants.ACTION_TYPE_COLLECTION);
+//            jsonObject.put(Constants.TOPIC_ID, topicId);
+//            String strResult = HttpClient.post(url, jsonObject.toString());
+//            return null != buildJSONObject(strResult);
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//            LOGGER.error(MessageFormat.format("收藏topic失败，topicId:{0}，url:{1}", topicId, url), e);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            LOGGER.error(MessageFormat.format("收藏topic失败，topicId:{0}，url:{1}", topicId, url), e);
+//        }
         return false;
     }
 
 
-    /**
-     * {
-     * uid: “daskfjafjafd”,
-     * type: 1, // 2赞，3收藏
-     * topicId: “rerjkdfkajfafdaf222”
-     * }
-     *
-     * @param topicId
-     * @return
-     * @throws NetworkDisconnectException
-     */
-    @Override
-    public boolean cancelCollection(String topicId) throws NetworkDisconnectException {
-        if (!NailStarApplicationContext.getInstance().isNetworkConnected()) {
-            throw new NetworkDisconnectException("网络没有连接");
-        }
-        String url = "/vapi/nailstar/topics/" + topicId + "/cancel";
-
-        try {
-
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put(Constants.UID, "");
-            jsonObject.put(Constants.TYPE, Constants.ACTION_TYPE_COLLECTION);
-            jsonObject.put(Constants.TOPIC_ID, topicId);
-            String strResult = HttpClient.post(url, jsonObject.toString());
-            return null != buildJSONObject(strResult);
-        } catch (JSONException e) {
-            e.printStackTrace();
-            LOGGER.error(MessageFormat.format("取消收藏topic失败，topicId:{0}，url:{1}", topicId, url), e);
-        } catch (IOException e) {
-            e.printStackTrace();
-            LOGGER.error(MessageFormat.format("取消收藏topic失败，topicId:{0}，url:{1}", topicId, url), e);
-        }
-        return false;
-    }
+//    /**
+//     * {
+//     * uid: “daskfjafjafd”,
+//     * type: 1, // 2赞，3收藏
+//     * topicId: “rerjkdfkajfafdaf222”
+//     * }
+//     *
+//     * @param topicId
+//     * @return
+//     * @throws NetworkDisconnectException
+//     */
+//    @Override
+//    public boolean cancelCollection(String topicId) throws NetworkDisconnectException {
+//        if (!NailStarApplicationContext.getInstance().isNetworkConnected()) {
+//            throw new NetworkDisconnectException("网络没有连接");
+//        }
+//        String url = "/vapi/nailstar/topics/" + topicId + "/cancel";
+//
+//        try {
+//
+//            JSONObject jsonObject = new JSONObject();
+//            jsonObject.put(Constants.UID, "");
+//            jsonObject.put(Constants.TYPE, Constants.ACTION_TYPE_COLLECTION);
+//            jsonObject.put(Constants.TOPIC_ID, topicId);
+//            String strResult = HttpClient.post(url, jsonObject.toString());
+//            return null != buildJSONObject(strResult);
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//            LOGGER.error(MessageFormat.format("取消收藏topic失败，topicId:{0}，url:{1}", topicId, url), e);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            LOGGER.error(MessageFormat.format("取消收藏topic失败，topicId:{0}，url:{1}", topicId, url), e);
+//        }
+//        return false;
+//    }
 
     /**
      * {

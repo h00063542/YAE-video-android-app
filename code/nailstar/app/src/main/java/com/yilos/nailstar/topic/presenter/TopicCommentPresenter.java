@@ -12,6 +12,7 @@ import com.yilos.nailstar.topic.view.ITopicCommentView;
 import com.yilos.nailstar.topic.view.ITopicVideoPlayerView;
 import com.yilos.nailstar.util.LoggerFactory;
 import com.yilos.nailstar.util.TaskManager;
+import com.yilos.nailstar.util.UserUtil;
 
 import org.apache.log4j.Logger;
 
