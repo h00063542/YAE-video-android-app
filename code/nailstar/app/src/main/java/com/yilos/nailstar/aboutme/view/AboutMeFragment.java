@@ -68,7 +68,7 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
     private TextView aboutMeLevel;//进入等级页面按钮
 
     private static int experience;
-    private static Bitmap myImageBitmap;
+    private static String myImageUrl;
 
     /**
      * Use this factory method to create a new instance of
@@ -123,7 +123,7 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
         }
         String nickName = personInfo.getNickname();
         Bitmap bitmap = personInfo.getImageBitmap();
-        myImageBitmap = bitmap;
+        myImageUrl = personInfo.getPhotoUrl();
         int type = personInfo.getType();
         String identity;
         //        1美甲店主
@@ -244,10 +244,10 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
                 startActivity(myFansListIntent);
                 break;
             case R.id.about_me_level:
-                Intent myLevel = new Intent(getActivity(),LevelActivity.class);
-                myLevel.putExtra("experience",experience);
-                myLevel.putExtra("myImageBitmap",myImageBitmap);
-                startActivity(myLevel);
+                Intent myLevelIntent = new Intent(getActivity(),LevelActivity.class);
+                myLevelIntent.putExtra("experience",experience);
+                myLevelIntent.putExtra("myImageUrl", myImageUrl);
+                startActivity(myLevelIntent);
                 break;
             default:
                 break;

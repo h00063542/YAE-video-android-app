@@ -12,6 +12,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.yilos.nailstar.R;
+import com.yilos.nailstar.aboutme.presenter.FansListPresenter;
+import com.yilos.nailstar.aboutme.presenter.LevelPresenter;
+import com.yilos.nailstar.framework.exception.NetworkDisconnectException;
 import com.yilos.nailstar.util.ImageUtil;
 import com.yilos.widget.circleimageview.CircleImageView;
 import com.yilos.widget.titlebar.TitleBar;
@@ -29,23 +32,28 @@ public class LevelActivity extends Activity {
     private TextView titleView;
     private WebView webView;
     private static int experience;
-    private static Bitmap myImageBitmap;
+    private static String myImageUrl;
     private CircleImageView circleImageView;
+
+    public void getImage(Bitmap bitmap) {
+        circleImageView.setImageBitmap(bitmap);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_level);
         Intent intent = getIntent();
         experience = intent.getIntExtra("experience",0);
-        myImageBitmap = intent.getParcelableExtra("myImageBitmap");
+        myImageUrl = intent.getStringExtra("myImageUrl");
+
+        LevelPresenter levelPresenter = LevelPresenter.getInstance(this);
+        levelPresenter.getImage(myImageUrl);
         initViews();
     }
 
     private void initViews() {
         circleImageView = (CircleImageView)findViewById(R.id.level_my_image);
-        if (myImageBitmap != null) {
-            circleImageView.setImageBitmap(myImageBitmap);
-        }
         titleBar = (TitleBar)findViewById(R.id.level_title_bar);
         backButton = titleBar.getBackButton();
         backButton.setImageResource(R.drawable.ic_head_back);
