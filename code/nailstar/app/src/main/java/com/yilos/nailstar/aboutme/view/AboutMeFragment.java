@@ -144,7 +144,11 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
         }
         nameText.setText(nickName);
         identityText.setText(identity);
-        profileImage.setImageBitmap(bitmap);
+        if(bitmap != null) {
+            profileImage.setImageBitmap(bitmap);
+        } else {
+            profileImage.setImageResource(R.mipmap.ic_default_photo);
+        }
         profileImage.setImageSrc(personInfo.getPhotoUrl());
     }
 
