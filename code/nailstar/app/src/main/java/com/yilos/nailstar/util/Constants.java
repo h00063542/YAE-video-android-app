@@ -9,6 +9,7 @@ public class Constants {
     public static final String YILOS_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/yilos/";
     public static final String YILOS_NAILSTAR_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/yilos/nailstar/";
     public static final String YILOS_NAILSTAR_VIDEOS_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/yilos/nailstar/videos/";
+    public static final String YILOS_NAILSTAR_PICTURE_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/yilos/nailstar/picture/";
     public static final String YILOS_NAILSTAR_LOGS_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/yilos/nailstar/logs/";
 
     public static final String TOPIC_ID = "topicId";
@@ -114,6 +115,7 @@ public class Constants {
 
     public static final String UNDERLINE = "_";
     public static final String JSON_SUFFIX = ".json";
+    public static final String PNG_SUFFIX = ".png";
 
 
 }

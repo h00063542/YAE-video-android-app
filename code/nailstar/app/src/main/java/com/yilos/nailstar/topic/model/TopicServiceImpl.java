@@ -119,7 +119,6 @@ public class TopicServiceImpl implements ITopicService {
     @Override
     public TopicImageTextInfo getTopicImageTextInfo(String topicId) throws NetworkDisconnectException {
         if (!NailStarApplicationContext.getInstance().isNetworkConnected()) {
-//            throw new NetworkDisconnectException("网络没有连接");
             String strResult = getLocalJsonResult(topicId, Constants.FILE_TYPE_TOPIC_IMAGE_TEXT_INFO);
             return buildTopicImageTextInfo(topicId, strResult);
         }
@@ -180,7 +179,6 @@ public class TopicServiceImpl implements ITopicService {
         if (!NailStarApplicationContext.getInstance().isNetworkConnected()) {
             String strResult = getLocalJsonResult(topicId, Constants.FILE_TYPE_TOPIC_RELATE_INFO);
             return buildTopicRelatedInfo(topicId, strResult);
-            //throw new NetworkDisconnectException("网络没有连接");
         }
         String url = "/vapi/nailstar/topics/" + topicId + "/related";
         try {
@@ -231,7 +229,6 @@ public class TopicServiceImpl implements ITopicService {
     @Override
     public ArrayList<TopicCommentInfo> getTopicComments(String topicId, int page) throws NetworkDisconnectException {
         if (!NailStarApplicationContext.getInstance().isNetworkConnected()) {
-//            throw new NetworkDisconnectException("网络没有连接");
             if (page != 1) {
                 return new ArrayList<TopicCommentInfo>();
             }
@@ -514,21 +511,24 @@ public class TopicServiceImpl implements ITopicService {
     private boolean writeLocalJsonResult(String topicId, String result, String fileType) {
         File cacheDir = NailStarApplicationContext.getInstance().getCacheDir();
         String fileName = fileType + Constants.UNDERLINE + topicId + Constants.JSON_SUFFIX;
-        File topicInfoFile = new File(cacheDir + "/" + fileName);
+        File topicInfoFile = new File(cacheDir.getAbsolutePath() + "/" + fileName);
         FileWriter writer = null;
         try {
             writer = new FileWriter(topicInfoFile);
             writer.write(result);
             return true;
         } catch (FileNotFoundException e) {
+            LOGGER.error(MessageFormat.format("写缓存文件失败，topicId：{0}，result：{1}，fileType：{2}", topicId, result, fileType), e);
             e.printStackTrace();
         } catch (IOException e) {
+            LOGGER.error(MessageFormat.format("写缓存文件失败，topicId：{0}，result：{1}，fileType：{2}", topicId, result, fileType), e);
             e.printStackTrace();
         } finally {
             if (null != writer) {
                 try {
                     writer.close();
                 } catch (IOException e) {
+                    LOGGER.error(MessageFormat.format("写缓存文件关闭流失败，topicId：{0}，result：{1}，fileType：{2}", topicId, result, fileType), e);
                     e.printStackTrace();
                 }
             }
@@ -539,33 +539,35 @@ public class TopicServiceImpl implements ITopicService {
     private String getLocalJsonResult(String topicId, String fileType) {
         File cacheDir = NailStarApplicationContext.getInstance().getCacheDir();
         String fileName = fileType + Constants.UNDERLINE + topicId + Constants.JSON_SUFFIX;
-        File topicInfoFile = new File(cacheDir + "/" + fileName);
+        File topicInfoFile = new File(cacheDir.getAbsolutePath() + "/" + fileName);
+        if (topicInfoFile.exists()) {
+            return Constants.EMPTY_JSON_STRING;
+        }
         BufferedReader reader = null;
         InputStreamReader inputStreamReader = null;
         FileInputStream fileInputStream = null;
         try {
             StringBuilder result = new StringBuilder();
-            if (topicInfoFile.exists()) {
-                fileInputStream = new FileInputStream(topicInfoFile);
-                inputStreamReader = new InputStreamReader(fileInputStream);
-                reader = new BufferedReader(inputStreamReader);
-            }
-            if (null != reader) {
-                String line = null;
-                while ((line = reader.readLine()) != null) {
-                    result.append(line);
-                }
+            fileInputStream = new FileInputStream(topicInfoFile);
+            inputStreamReader = new InputStreamReader(fileInputStream);
+            reader = new BufferedReader(inputStreamReader);
+            String line = null;
+            while ((line = reader.readLine()) != null) {
+                result.append(line);
             }
             return StringUtil.isEmpty(result.toString()) ? Constants.EMPTY_JSON_STRING : result.toString();
         } catch (FileNotFoundException e) {
+            LOGGER.error(MessageFormat.format("读缓存文件失败，topicId：{0}，fileType：{1}", topicId, fileType), e);
             e.printStackTrace();
         } catch (IOException e) {
+            LOGGER.error(MessageFormat.format("读缓存文件失败，topicId：{0}，fileType：{1}", topicId, fileType), e);
             e.printStackTrace();
         } finally {
             if (null != reader) {
                 try {
                     reader.close();
                 } catch (IOException e) {
+                    LOGGER.error(MessageFormat.format("写缓存文件关闭流失败，topicId：{0}，fileType：{1}", topicId, fileType), e);
                     e.printStackTrace();
                 }
             }
@@ -573,6 +575,7 @@ public class TopicServiceImpl implements ITopicService {
                 try {
                     inputStreamReader.close();
                 } catch (IOException e) {
+                    LOGGER.error(MessageFormat.format("写缓存文件关闭流失败，topicId：{0}，fileType：{1}", topicId, fileType), e);
                     e.printStackTrace();
                 }
             }
@@ -580,6 +583,7 @@ public class TopicServiceImpl implements ITopicService {
                 try {
                     fileInputStream.close();
                 } catch (IOException e) {
+                    LOGGER.error(MessageFormat.format("写缓存文件关闭流失败，topicId：{0}，fileType：{1}", topicId, fileType), e);
                     e.printStackTrace();
                 }
             }

@@ -420,8 +420,10 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         mTvZoomInImageSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(TopicVideoPlayerActivity.this, "保存成功", Toast.LENGTH_SHORT).show();
-                //TODO 保存单张图片
+                // 保存单张图片
+                String imageSrc = ((PhotoView) ((FrameLayout) mZoomInImageTextViewPager.getChildAt(0)).getChildAt(0)).getImageSrc();
+                String filePath = mTopicVideoPlayerPresenter.buildPictureLocalFilePath(mTopicId, imageSrc);
+                mTopicVideoPlayerPresenter.download(imageSrc, filePath);
             }
         });
 
@@ -808,11 +810,13 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
                 @Override
                 public void run() {
                     mZoomInImageTextViewPager.setCurrentItem(index);
+                    mDecorView.removeView(mZoomInImageTextLayout);
                     mDecorView.addView(mZoomInImageTextLayout);
 //                    mZoomInImageTextDialog.show();
                 }
             });
         } else {
+            mDecorView.removeView(mZoomInImageTextLayout);
             mDecorView.addView(mZoomInImageTextLayout);
 //            mZoomInImageTextDialog.show();
         }
@@ -1002,6 +1006,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
                     @Override
                     public void onClick(View v) {
                         mIcvTopicCommentImage.setImageSrc(topicCommentInfo.getContentPic());
+                        mDecorView.removeView(mZoomInImageLayout);
                         mDecorView.addView(mZoomInImageLayout);
                     }
                 });
