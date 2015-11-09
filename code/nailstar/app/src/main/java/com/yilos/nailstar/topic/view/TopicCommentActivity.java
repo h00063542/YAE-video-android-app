@@ -14,6 +14,7 @@ import com.yilos.nailstar.framework.view.BaseActivity;
 import com.yilos.nailstar.topic.presenter.TopicCommentPresenter;
 import com.yilos.nailstar.util.Constants;
 import com.yilos.nailstar.util.StringUtil;
+import com.yilos.nailstar.util.UserUtil;
 import com.yilos.widget.titlebar.TitleBar;
 
 /**
@@ -44,6 +45,10 @@ public class TopicCommentActivity extends BaseActivity implements ITopicCommentV
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        if (!UserUtil.isLogin(this)) {
+            // TODO 调用到登录界面
+            return;
+        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_topic_comment);
         init();
@@ -153,7 +158,6 @@ public class TopicCommentActivity extends BaseActivity implements ITopicCommentV
             intent.putExtra(Constants.TOPIC_COMMENT_REPLY_AUTHOR, mCommentReplyAuthor);
         }
         setResult(RESULT_OK, intent);
-//        startActivity(intent);
         finish();
     }
 }
