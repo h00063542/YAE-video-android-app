@@ -30,18 +30,20 @@
         <activity
             android:name=".topic.view.TopicVideoPlayerActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"></activity>
-        <activity android:name=".topic.view.TopicCommentActivity"></activity>
+        <activity
+            android:name=".topic.view.TopicCommentActivity"
+            android:windowSoftInputMode="stateVisible"></activity>
         <activity android:name=".aboutme.view.FollowListActivity"></activity>
         <activity android:name=".aboutme.view.FansListActivity"></activity>
-        <activity android:name=".aboutme.view.progressBarActivity">
-        </activity>
+        <activity android:name=".aboutme.view.LevelActivity"></activity>
+        <activity android:name=".aboutme.view.PersonInfoActivity"></activity>
     </application>
 
     <supports-screens
         android:anyDensity="true"
         android:largeScreens="true"
         android:normalScreens="true"
+        android:resizeable="true"
         android:smallScreens="true"
-        android:xlargeScreens="true"
-        android:resizeable="true"/>
+        android:xlargeScreens="true" />
 </manifest>

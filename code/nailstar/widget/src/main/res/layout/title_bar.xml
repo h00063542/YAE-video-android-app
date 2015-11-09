@@ -3,10 +3,8 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="@dimen/title_bar"
-    android:background="@color/tab_font_orange_color"
+    android:background="@color/title_bar_background_color"
     android:gravity="center_vertical">
-
-    <!--android:background="@drawable/title_bar_back_button"-->
     <ImageView
         android:visibility="gone"
         android:id="@+id/title_bar_left_back"
@@ -14,15 +12,29 @@
         android:layout_height="@dimen/title_bar_icon"
         android:layout_centerVertical="true"
         android:clickable="true"
-        android:src="@drawable/ic_head_back"
         android:padding="@dimen/title_bar_icon_padding"/>
     <TextView
         android:visibility="gone"
+        android:layout_centerVertical="true"
         android:id="@+id/title_bar_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:textColor="@color/white"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:textSize="@dimen/title_bar_title"/>
+    <TextView
+        android:layout_toRightOf="@id/title_bar_left_back"
+        android:visibility="gone"
+        android:layout_centerVertical="true"
+        android:id="@+id/left_title_bar_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:textColor="@color/white"
+        android:ellipsize="end"
+        android:singleLine="true"
         android:textSize="@dimen/title_bar_title"/>
     <TextView
         android:visibility="gone"
@@ -43,7 +55,6 @@
         android:layout_centerVertical="true"
         android:clickable="true"
         android:layout_alignParentRight="true"
-        android:src="@drawable/ic_head_download"
         android:padding="@dimen/title_bar_icon_padding"/>
     <ImageView
         android:visibility="gone"
@@ -53,7 +64,6 @@
         android:layout_centerVertical="true"
         android:clickable="true"
         android:layout_alignParentRight="true"
-        android:src="@drawable/ic_head_share"
         android:layout_marginRight="@dimen/title_bar_icon_margin_right"
         android:padding="@dimen/title_bar_icon_padding"/>
 </RelativeLayout>

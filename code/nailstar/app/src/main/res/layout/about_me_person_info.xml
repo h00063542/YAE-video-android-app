@@ -6,7 +6,7 @@
     <com.yilos.widget.titlebar.TitleBar
         android:id="@+id/edit_person_info_title_bar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/title_bar">
+        android:layout_height="wrap_content">
     </com.yilos.widget.titlebar.TitleBar>
     <RelativeLayout
         android:id="@+id/person_info_photo_layout"

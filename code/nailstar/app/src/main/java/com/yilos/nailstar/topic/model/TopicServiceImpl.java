@@ -1,5 +1,8 @@
 package com.yilos.nailstar.topic.model;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 import com.yilos.nailstar.framework.entity.NailStarApplicationContext;
 import com.yilos.nailstar.framework.exception.NetworkDisconnectException;
 import com.yilos.nailstar.topic.entity.TopicCommentAtInfo;
@@ -9,6 +12,7 @@ import com.yilos.nailstar.topic.entity.TopicImageTextInfo;
 import com.yilos.nailstar.topic.entity.TopicInfo;
 import com.yilos.nailstar.topic.entity.TopicRelatedInfo;
 import com.yilos.nailstar.topic.entity.TopicVideoInfo;
+import com.yilos.nailstar.util.CollectionUtil;
 import com.yilos.nailstar.util.Constants;
 import com.yilos.nailstar.util.HttpClient;
 import com.yilos.nailstar.util.JsonUtil;
@@ -20,7 +24,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 
@@ -38,13 +48,27 @@ public class TopicServiceImpl implements ITopicService {
     @Override
     public TopicInfo getTopicInfo(String topicId) throws NetworkDisconnectException {
         if (!NailStarApplicationContext.getInstance().isNetworkConnected()) {
-            throw new NetworkDisconnectException("网络没有连接");
+            String strResult = getLocalJsonResult(topicId, Constants.FILE_TYPE_TOPIC_INFO);
+            return buildTopicInfo(topicId, strResult);
         }
-        TopicInfo topicInfo = null;
-
         String url = "/vapi/nailstar/topics/" + topicId;
         try {
             String strResult = HttpClient.getJson(url);
+            TopicInfo topicInfo = buildTopicInfo(topicId, strResult);
+            if (null != topicInfo) {
+                writeLocalJsonResult(topicId, strResult, Constants.FILE_TYPE_TOPIC_INFO);
+            }
+            return topicInfo;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Nullable
+    private TopicInfo buildTopicInfo(String topicId, String strResult) {
+        TopicInfo topicInfo = null;
+        try {
             JSONObject jsonObject = buildJSONObject(strResult);
             if (null == jsonObject) {
                 return topicInfo;
@@ -63,7 +87,10 @@ public class TopicServiceImpl implements ITopicService {
             JSONArray jsonVideos = jsonResult.optJSONArray(Constants.VIDEOS);
             for (int i = 0; i < jsonVideos.length(); i++) {
                 JSONObject jsonVideoObj = jsonVideos.optJSONObject(i);
-                videos.add(new TopicVideoInfo(JsonUtil.optString(jsonVideoObj, Constants.VIDEO_ID), jsonVideoObj.optInt("playTimes", 0), JsonUtil.optString(jsonVideoObj, Constants.CC_URL), JsonUtil.optString(jsonVideoObj, Constants.OSS_URL)));
+                videos.add(new TopicVideoInfo(JsonUtil.optString(jsonVideoObj, Constants.VIDEO_ID)
+                        , jsonVideoObj.optInt(Constants.PLAY_TIMES, 0)
+                        , JsonUtil.optString(jsonVideoObj, Constants.CC_URL)
+                        , JsonUtil.optString(jsonVideoObj, Constants.OSS_URL)));
             }
 
             topicInfo.setId(JsonUtil.optString(jsonResult, Constants.ID));
@@ -77,15 +104,10 @@ public class TopicServiceImpl implements ITopicService {
             topicInfo.setAuthorId(JsonUtil.optString(jsonResult, Constants.AUTHOR_ID));
             topicInfo.setAuthor(JsonUtil.optString(jsonResult, Constants.AUTHOR));
             topicInfo.setCommentCount(jsonResult.optInt(Constants.COMMENT_COUNT, 0));
-        } catch (IOException e) {
-            e.printStackTrace();
-            LOGGER.error(MessageFormat.format("获取topic信息失败，topicId:{0}，url:{1}", topicId, url), e);
         } catch (JSONException e) {
             e.printStackTrace();
-            LOGGER.error(MessageFormat.format("获取topic信息失败，topicId:{0}，url:{1}", topicId, url), e);
+            LOGGER.error(MessageFormat.format("获取topic信息失败，topicId:{0}，strResult:{1}", topicId, strResult), e);
         }
-
-
         return topicInfo;
     }
 
@@ -97,13 +119,27 @@ public class TopicServiceImpl implements ITopicService {
     @Override
     public TopicImageTextInfo getTopicImageTextInfo(String topicId) throws NetworkDisconnectException {
         if (!NailStarApplicationContext.getInstance().isNetworkConnected()) {
-            throw new NetworkDisconnectException("网络没有连接");
+            String strResult = getLocalJsonResult(topicId, Constants.FILE_TYPE_TOPIC_IMAGE_TEXT_INFO);
+            return buildTopicImageTextInfo(topicId, strResult);
         }
-        TopicImageTextInfo topicImageTextInfo = null;
-
-        String url = "/vapi/nailstar/topics/article/" + topicId;
         try {
+            String url = "/vapi/nailstar/topics/article/" + topicId;
             String strResult = HttpClient.getJson(url);
+            TopicImageTextInfo topicImageTextInfo = buildTopicImageTextInfo(topicId, strResult);
+            if (null != topicImageTextInfo) {
+                writeLocalJsonResult(topicId, strResult, Constants.FILE_TYPE_TOPIC_IMAGE_TEXT_INFO);
+            }
+            return topicImageTextInfo;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Nullable
+    private TopicImageTextInfo buildTopicImageTextInfo(String topicId, String strResult) {
+        TopicImageTextInfo topicImageTextInfo = null;
+        try {
             JSONObject jsonObject = buildJSONObject(strResult);
             if (null == jsonObject) {
                 return topicImageTextInfo;
@@ -126,15 +162,10 @@ public class TopicServiceImpl implements ITopicService {
             topicImageTextInfo.setId(JsonUtil.optString(jsonResult, Constants.ID));
             topicImageTextInfo.setArticles(articles);
             topicImageTextInfo.setPictures(pictures);
-        } catch (IOException e) {
-            e.printStackTrace();
-            LOGGER.error(MessageFormat.format("获取topic图文信息失败，topicId:{0}，url:{1}", topicId, url), e);
         } catch (JSONException e) {
             e.printStackTrace();
-            LOGGER.error(MessageFormat.format("获取topic图文信息失败，topicId:{0}，url:{1}", topicId, url), e);
+            LOGGER.error(MessageFormat.format("获取topic图文信息失败，topicId:{0}，strResult:{1}", topicId, strResult), e);
         }
-
-
         return topicImageTextInfo;
     }
 
@@ -146,13 +177,29 @@ public class TopicServiceImpl implements ITopicService {
     @Override
     public ArrayList<TopicRelatedInfo> getTopicRelatedInfoList(String topicId) throws NetworkDisconnectException {
         if (!NailStarApplicationContext.getInstance().isNetworkConnected()) {
-            throw new NetworkDisconnectException("网络没有连接");
+            String strResult = getLocalJsonResult(topicId, Constants.FILE_TYPE_TOPIC_RELATE_INFO);
+            return buildTopicRelatedInfo(topicId, strResult);
         }
-        ArrayList<TopicRelatedInfo> result = new ArrayList<TopicRelatedInfo>();
-
         String url = "/vapi/nailstar/topics/" + topicId + "/related";
         try {
             String strResult = HttpClient.getJson(url);
+            ArrayList<TopicRelatedInfo> result = buildTopicRelatedInfo(topicId, strResult);
+            if (!CollectionUtil.isEmpty(result)) {
+                writeLocalJsonResult(topicId, strResult, Constants.FILE_TYPE_TOPIC_RELATE_INFO);
+            }
+            return result;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return new ArrayList<TopicRelatedInfo>();
+    }
+
+    @NonNull
+    private ArrayList<TopicRelatedInfo> buildTopicRelatedInfo(String topicId, String strResult) {
+        ArrayList<TopicRelatedInfo> result = new ArrayList<TopicRelatedInfo>();
+
+        try {
             JSONObject jsonObject = buildJSONObject(strResult);
             if (null == jsonObject) {
                 return result;
@@ -164,45 +211,11 @@ public class TopicServiceImpl implements ITopicService {
                 result.add(new TopicRelatedInfo(JsonUtil.optString(jsonRelated.optJSONObject(i), Constants.TOPIC_ID)
                         , JsonUtil.optString(jsonRelated.optJSONObject(i), Constants.THUMB_URL)));
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-            LOGGER.error(MessageFormat.format("获取topic关联信息失败，topicId:{0}，url:{1}", topicId, url), e);
         } catch (JSONException e) {
             e.printStackTrace();
-            LOGGER.error(MessageFormat.format("获取topic关联信息失败，topicId:{0}，url:{1}", topicId, url), e);
+            LOGGER.error(MessageFormat.format("获取topic关联信息失败，topicId:{0}，strResult:{1}", topicId, strResult), e);
         }
 
-        return result;
-    }
-
-
-    /**
-     * @param topicId
-     * @return
-     * @throws NetworkDisconnectException
-     */
-    public int getTopicCommentCount(String topicId) throws NetworkDisconnectException {
-        if (!NailStarApplicationContext.getInstance().isNetworkConnected()) {
-            throw new NetworkDisconnectException("网络没有连接");
-        }
-        int result = 0;
-
-        String url = "/vapi/nailstar/topics/" + topicId + "/";
-        try {
-            String strResult = HttpClient.getJson(url);
-            JSONObject jsonObject = buildJSONObject(strResult);
-            if (null == jsonObject) {
-                return result;
-            }
-            JSONObject jsonResult = jsonObject.optJSONObject(Constants.RESULT);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            LOGGER.error(MessageFormat.format("获取topic评论数失败，topicId:{0}，url:{1}", topicId, url), e);
-        } catch (JSONException e) {
-            e.printStackTrace();
-            LOGGER.error(MessageFormat.format("获取topic评论数失败，topicId:{0}，url:{1}", topicId, url), e);
-        }
         return result;
     }
 
@@ -216,13 +229,31 @@ public class TopicServiceImpl implements ITopicService {
     @Override
     public ArrayList<TopicCommentInfo> getTopicComments(String topicId, int page) throws NetworkDisconnectException {
         if (!NailStarApplicationContext.getInstance().isNetworkConnected()) {
-            throw new NetworkDisconnectException("网络没有连接");
+            if (page != 1) {
+                return new ArrayList<TopicCommentInfo>();
+            }
+            String strResult = getLocalJsonResult(topicId, Constants.FILE_TYPE_TOPIC_COMMENT_INFO);
+            return buildTopicCommentInfo(topicId, strResult);
         }
-        ArrayList<TopicCommentInfo> result = new ArrayList<TopicCommentInfo>();
-
         String url = "/vapi/nailstar/topics/" + topicId + "/comments?page=" + page;
         try {
             String strResult = HttpClient.getJson(url);
+            ArrayList<TopicCommentInfo> result = buildTopicCommentInfo(topicId, strResult);
+            if (page == 1 && !CollectionUtil.isEmpty(result)) {
+                writeLocalJsonResult(topicId, strResult, Constants.FILE_TYPE_TOPIC_COMMENT_INFO);
+            }
+            return result;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return new ArrayList<TopicCommentInfo>();
+    }
+
+    @NonNull
+    private ArrayList<TopicCommentInfo> buildTopicCommentInfo(String topicId, String strResult) {
+        ArrayList<TopicCommentInfo> result = new ArrayList<TopicCommentInfo>();
+        try {
             JSONObject jsonObject = buildJSONObject(strResult);
             if (null == jsonObject) {
                 return result;
@@ -257,12 +288,9 @@ public class TopicServiceImpl implements ITopicService {
 
                 result.add(topicCommentInfo);
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-            LOGGER.error(MessageFormat.format("获取topic评论信息失败，topicId:{0}，url:{1}", topicId, url), e);
         } catch (JSONException e) {
             e.printStackTrace();
-            LOGGER.error(MessageFormat.format("获取topic评论信息失败，topicId:{0}，url:{1}", topicId, url), e);
+            LOGGER.error(MessageFormat.format("获取topic评论信息失败，topicId:{0}，strResult:{1}", topicId, strResult), e);
         }
         return result;
     }
@@ -479,4 +507,87 @@ public class TopicServiceImpl implements ITopicService {
         return jsonResult;
     }
 
+
+    private boolean writeLocalJsonResult(String topicId, String result, String fileType) {
+        File cacheDir = NailStarApplicationContext.getInstance().getCacheDir();
+        String fileName = fileType + Constants.UNDERLINE + topicId + Constants.JSON_SUFFIX;
+        File topicInfoFile = new File(cacheDir.getAbsolutePath() + "/" + fileName);
+        FileWriter writer = null;
+        try {
+            writer = new FileWriter(topicInfoFile);
+            writer.write(result);
+            return true;
+        } catch (FileNotFoundException e) {
+            LOGGER.error(MessageFormat.format("写缓存文件失败，topicId：{0}，result：{1}，fileType：{2}", topicId, result, fileType), e);
+            e.printStackTrace();
+        } catch (IOException e) {
+            LOGGER.error(MessageFormat.format("写缓存文件失败，topicId：{0}，result：{1}，fileType：{2}", topicId, result, fileType), e);
+            e.printStackTrace();
+        } finally {
+            if (null != writer) {
+                try {
+                    writer.close();
+                } catch (IOException e) {
+                    LOGGER.error(MessageFormat.format("写缓存文件关闭流失败，topicId：{0}，result：{1}，fileType：{2}", topicId, result, fileType), e);
+                    e.printStackTrace();
+                }
+            }
+        }
+        return false;
+    }
+
+    private String getLocalJsonResult(String topicId, String fileType) {
+        File cacheDir = NailStarApplicationContext.getInstance().getCacheDir();
+        String fileName = fileType + Constants.UNDERLINE + topicId + Constants.JSON_SUFFIX;
+        File topicInfoFile = new File(cacheDir.getAbsolutePath() + "/" + fileName);
+        if (topicInfoFile.exists()) {
+            return Constants.EMPTY_JSON_STRING;
+        }
+        BufferedReader reader = null;
+        InputStreamReader inputStreamReader = null;
+        FileInputStream fileInputStream = null;
+        try {
+            StringBuilder result = new StringBuilder();
+            fileInputStream = new FileInputStream(topicInfoFile);
+            inputStreamReader = new InputStreamReader(fileInputStream);
+            reader = new BufferedReader(inputStreamReader);
+            String line = null;
+            while ((line = reader.readLine()) != null) {
+                result.append(line);
+            }
+            return StringUtil.isEmpty(result.toString()) ? Constants.EMPTY_JSON_STRING : result.toString();
+        } catch (FileNotFoundException e) {
+            LOGGER.error(MessageFormat.format("读缓存文件失败，topicId：{0}，fileType：{1}", topicId, fileType), e);
+            e.printStackTrace();
+        } catch (IOException e) {
+            LOGGER.error(MessageFormat.format("读缓存文件失败，topicId：{0}，fileType：{1}", topicId, fileType), e);
+            e.printStackTrace();
+        } finally {
+            if (null != reader) {
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    LOGGER.error(MessageFormat.format("写缓存文件关闭流失败，topicId：{0}，fileType：{1}", topicId, fileType), e);
+                    e.printStackTrace();
+                }
+            }
+            if (null != inputStreamReader) {
+                try {
+                    inputStreamReader.close();
+                } catch (IOException e) {
+                    LOGGER.error(MessageFormat.format("写缓存文件关闭流失败，topicId：{0}，fileType：{1}", topicId, fileType), e);
+                    e.printStackTrace();
+                }
+            }
+            if (null != fileInputStream) {
+                try {
+                    fileInputStream.close();
+                } catch (IOException e) {
+                    LOGGER.error(MessageFormat.format("写缓存文件关闭流失败，topicId：{0}，fileType：{1}", topicId, fileType), e);
+                    e.printStackTrace();
+                }
+            }
+        }
+        return Constants.EMPTY_JSON_STRING;
+    }
 }

@@ -186,6 +186,14 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         mTopicVideoPlayerPresenter = TopicVideoPlayerPresenter.getInstance(this);
         init();
         UserUtil.saveUserInfo(this, new UserInfo("001", "text", "http://pic.yilos.com/162b73dc3f69af2dc8a79a1b9da7591e"));
+//        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+//        Log.e(TAG, "displayMetrics.density:" + displayMetrics.density);
+//        Log.e(TAG, "displayMetrics.densityDpi:" + displayMetrics.densityDpi);
+//        Log.e(TAG, "displayMetrics.widthPixels:" + displayMetrics.widthPixels);
+//        Log.e(TAG, "displayMetrics.heightPixels:" + displayMetrics.heightPixels);
+//        Log.e(TAG, "displayMetrics.scaledDensity:" + displayMetrics.scaledDensity);
+//        Log.e(TAG, "displayMetrics.xdpi:" + displayMetrics.xdpi);
+//        Log.e(TAG, "displayMetrics.ydpi:" + displayMetrics.ydpi);
     }
 
 
@@ -420,8 +428,10 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         mTvZoomInImageSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(TopicVideoPlayerActivity.this, "保存成功", Toast.LENGTH_SHORT).show();
-                //TODO 保存单张图片
+                // 保存单张图片
+                String imageSrc = ((PhotoView) ((FrameLayout) mZoomInImageTextViewPager.getChildAt(0)).getChildAt(0)).getImageSrc();
+                String filePath = mTopicVideoPlayerPresenter.buildPictureLocalFilePath(mTopicId, imageSrc);
+                mTopicVideoPlayerPresenter.download(imageSrc, filePath);
             }
         });
 
@@ -583,7 +593,6 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         intent.putExtra(Constants.TYPE, type);
         startActivityForResult(intent, TOPIC_COMMENT_REQUEST_CODE);
     }
-
 
     @Override
     public void initTopicInfo(TopicInfo topicInfo) {
@@ -808,11 +817,13 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
                 @Override
                 public void run() {
                     mZoomInImageTextViewPager.setCurrentItem(index);
+                    mDecorView.removeView(mZoomInImageTextLayout);
                     mDecorView.addView(mZoomInImageTextLayout);
 //                    mZoomInImageTextDialog.show();
                 }
             });
         } else {
+            mDecorView.removeView(mZoomInImageTextLayout);
             mDecorView.addView(mZoomInImageTextLayout);
 //            mZoomInImageTextDialog.show();
         }
@@ -958,13 +969,17 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
             topicCommentCreateDateTv.setLayoutParams(tvTopicCommentCreateDateLp);
 
             StringBuilder contentText = new StringBuilder();
+            contentText.append("<font color=\"#adafb0\">");
+
             if (topicCommentInfo.getIsHomework() == Constants.IS_HOME_WORK_VALUE) {
-                contentText.append("<font color=\"#555657\">#")
+//                contentText.append("<font color=\"#555657\">#")
+//                        .append(getString(R.string.submitted_homework))
+//                        .append("#    </font>");
+                contentText.append("#")
                         .append(getString(R.string.submitted_homework))
-                        .append("#    </font>");
+                        .append("#    ");
             }
-            contentText.append("<font color=\"#adafb0\">")
-                    .append(mTopicVideoPlayerPresenter.getTopicCommentDateStr(topicCommentInfo.getCreateDate()))
+            contentText.append(mTopicVideoPlayerPresenter.getTopicCommentDateStr(topicCommentInfo.getCreateDate()))
                     .append("</font>");
 
 
@@ -1002,6 +1017,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
                     @Override
                     public void onClick(View v) {
                         mIcvTopicCommentImage.setImageSrc(topicCommentInfo.getContentPic());
+                        mDecorView.removeView(mZoomInImageLayout);
                         mDecorView.addView(mZoomInImageLayout);
                     }
                 });
