@@ -33,6 +33,9 @@
         <activity
             android:name=".topic.view.TopicCommentActivity"
             android:windowSoftInputMode="stateVisible"></activity>
+        <activity
+            android:name=".topic.view.TopicHomeworkActivity"
+            android:windowSoftInputMode="stateVisible"></activity>
         <activity android:name=".aboutme.view.FollowListActivity"></activity>
         <activity android:name=".aboutme.view.FansListActivity"></activity>
         <activity android:name=".aboutme.view.LevelActivity"></activity>
