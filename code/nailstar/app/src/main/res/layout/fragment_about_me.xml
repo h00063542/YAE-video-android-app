@@ -15,6 +15,7 @@
 
         <!-- 我的信息 -->
         <LinearLayout
+            android:clickable="true"
             android:background="@color/white"
             android:id="@+id/about_me_my_info"
             android:orientation="horizontal"
@@ -470,6 +471,7 @@
 
                         <!-- 设置 -->
                         <RelativeLayout
+                            android:id="@+id/about_me_setting_group"
                             android:background="@drawable/selector"
                             android:clickable="true"
                             android:layout_width="fill_parent"

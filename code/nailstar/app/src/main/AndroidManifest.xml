@@ -50,6 +50,6 @@
             android:name=".aboutme.view.LoginActivity"
             android:label="@string/title_activity_login" >
         </activity>
+        <activity android:name=".aboutme.view.SettingActivity"></activity>
     </application>
-
 </manifest>
