@@ -110,6 +110,17 @@
     <string name="report_illegal">举报</string>
     <string name="cancel">取消</string>
 
+    <!-- 登录注册 -->
+    <string name="title_activity_login">账号登录</string>
+    <string name="login_user_name_text">"  账号"</string>
+    <string name="login_password_text">"  密码"</string>
+    <string name="login_button">"登 录"</string>
+    <string name="login_forget_password">忘记密码 ？</string>
+    <string name="login_use_3rd_account">使用第三方账号登录</string>
+    <string name="qq_title">QQ</string>
+    <string name="weibo_title">微博</string>
+    <string name="weixin_title">微信</string>
+
     <!-- DLNA -->
     <string name="dlna_switch_to_mobile">切回手机播放</string>
     <string name="dlna_connect_to_device">已连接至设备:</string>
@@ -126,5 +137,5 @@
     <string name="write_down_your_learning_experience">写下你的学习心得</string>
     <string name="like">喜欢</string>
     <string name="topic_comment_count">评论数</string>
-    <string name="title_activity_login">账号登录</string>
+
 </resources>
