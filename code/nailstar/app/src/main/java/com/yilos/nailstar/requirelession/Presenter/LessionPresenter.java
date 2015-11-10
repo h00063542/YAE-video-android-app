@@ -1,12 +1,15 @@
 package com.yilos.nailstar.requirelession.Presenter;
 
+import android.graphics.Bitmap;
 import android.os.Handler;
 
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.yilos.nailstar.requirelession.entity.CandidateLession;
 import com.yilos.nailstar.requirelession.entity.LessionActivity;
 import com.yilos.nailstar.requirelession.model.LessionService;
 import com.yilos.nailstar.requirelession.model.LessionServiceImpl;
 import com.yilos.nailstar.requirelession.view.LessionView;
+import com.yilos.nailstar.util.FileUtils;
 
 import java.util.List;
 import java.util.Timer;
@@ -28,6 +31,7 @@ public class LessionPresenter {
     private Timer timer = new Timer();
     private boolean stopCountDown;
     private TimerTask countDownTask;
+    private ImageLoader imageLoader = ImageLoader.getInstance();
 
     public LessionPresenter(LessionView view) {
 
@@ -222,6 +226,7 @@ public class LessionPresenter {
      * @param candidateLession
      */
     public void vote(final CandidateLession candidateLession) {
+
         new Thread() {
             @Override
             public void run() {
@@ -247,6 +252,76 @@ public class LessionPresenter {
                         }
                     });
                 } catch (Exception e) {
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            // TODO
+                        }
+                    });
+                }
+            }
+        }.start();
+    }
+
+    /**
+     * 保存图片
+     * @param bitmap
+     * @param path
+     * @param fileName
+     */
+    public void saveImage(final Bitmap bitmap, final String path, final String fileName) {
+
+        new Thread() {
+            @Override
+            public void run() {
+
+                final String result = FileUtils.saveBitMap(bitmap, path, fileName);
+                if (result != null) {
+                    // 保存成功
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            view.mediaRefresh(result);
+                            // TODO
+                        }
+                    });
+                } else {
+                    // 保存失败
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            // TODO
+                        }
+                    });
+                }
+            }
+        }.start();
+    }
+
+    /**
+     * 保存图片
+     * @param url
+     * @param path
+     * @param fileName
+     */
+    public void saveImage(final String url, final String path, final String fileName) {
+
+        new Thread() {
+            @Override
+            public void run() {
+                Bitmap bitmap = imageLoader.loadImageSync(url);
+                final String result = FileUtils.saveBitMap(bitmap, path, fileName);
+                if (result != null) {
+                    // 保存成功
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            view.mediaRefresh(result);
+                            // TODO
+                        }
+                    });
+                } else {
+                    // 保存失败
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {

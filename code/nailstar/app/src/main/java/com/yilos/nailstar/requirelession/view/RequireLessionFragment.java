@@ -1,9 +1,9 @@
 package com.yilos.nailstar.requirelession.view;
 
-import android.app.Fragment;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.app.Fragment;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -20,13 +20,14 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.yilos.nailstar.R;
-import com.yilos.nailstar.topic.view.TopicVideoPlayerActivity;
 import com.yilos.nailstar.requirelession.Presenter.LessionPresenter;
 import com.yilos.nailstar.requirelession.entity.CandidateLession;
 import com.yilos.nailstar.requirelession.entity.LessionActivity;
 import com.yilos.nailstar.takeImage.TakeImage;
 import com.yilos.nailstar.takeImage.TakeImageCallback;
+import com.yilos.nailstar.topic.view.TopicVideoPlayerActivity;
 import com.yilos.nailstar.util.Constants;
+import com.yilos.nailstar.util.FileUtils;
 import com.yilos.widget.circleimageview.CircleImageView;
 import com.yilos.widget.view.ImageCacheView;
 
@@ -122,8 +123,7 @@ public class RequireLessionFragment extends Fragment implements LessionView {
         screenWidth = metric.widthPixels;
 
         view = inflater.inflate(R.layout.fragment_require_lession, container, false);
-        lessionViewHead0 = inflater.inflate(R.layout.lession_listview_head0, null);
-        lessionViewHead1 = inflater.inflate(R.layout.lession_listview_head1, null);
+
         initView(inflater);
         initData();
         bindControl();
@@ -134,6 +134,9 @@ public class RequireLessionFragment extends Fragment implements LessionView {
 
         // 初始化ListView
         lessionVoteView = (ListView) view.findViewById(R.id.lessionVoteView);
+
+        lessionViewHead0 = inflater.inflate(R.layout.lession_listview_head0, null);
+        lessionViewHead1 = inflater.inflate(R.layout.lession_listview_head1, null);
 
         lessionVoteView.addHeaderView(lessionViewHead0, null, false);
         lessionVoteView.addHeaderView(lessionViewHead1, null, false);
@@ -154,17 +157,17 @@ public class RequireLessionFragment extends Fragment implements LessionView {
         goRankingBtn = (RadioButton) lessionViewHead1.findViewById(R.id.goRankingBtn);
 
         // 悬浮页头的按钮
-        switchLessionViewFloat = (RadioGroup) view.findViewById(R.id.switchLessionViewFloat);
-        goVotingBtnFloat = (RadioButton) view.findViewById(R.id.goVotingBtnFloat);
-        goRankingBtnFloat = (RadioButton) view.findViewById(R.id.goRankingBtnFloat);
+        switchLessionViewFloat = (RadioGroup) lessionViewHeadFloat.findViewById(R.id.switchLessionView);
+        goVotingBtnFloat = (RadioButton) lessionViewHeadFloat.findViewById(R.id.goVotingBtn);
+        goRankingBtnFloat = (RadioButton) lessionViewHeadFloat.findViewById(R.id.goRankingBtn);
 
         // 倒计时
         lessionCountDownText = (TextView) view.findViewById(R.id.lessionCountDownText);
         lessionCountDownValue = (TextView) view.findViewById(R.id.lessionCountDownValue);
 
         // 求教程按钮
-        requireLessionBtn = (Button) view.findViewById(R.id.requireLessionBtn);
-        requireLessionBtnFloat = (Button) view.findViewById(R.id.requireLessionBtnFloat);
+        requireLessionBtn = (Button) lessionViewHead1.findViewById(R.id.requireLessionBtn);
+        requireLessionBtnFloat = (Button) lessionViewHeadFloat.findViewById(R.id.requireLessionBtn);
 
         // 下拉刷新
         lessionPullRefresh = (PtrClassicFrameLayout) view.findViewById(R.id.lessionPullRefresh);
@@ -312,7 +315,7 @@ public class RequireLessionFragment extends Fragment implements LessionView {
 
     @Override
     public void refreshFailed() {
-
+        // TODO
     }
 
     @Override
@@ -436,6 +439,11 @@ public class RequireLessionFragment extends Fragment implements LessionView {
     @Override
     public void refreshCountDown(String time) {
         lessionCountDownValue.setText(time);
+    }
+
+    @Override
+    public void mediaRefresh(String filePath) {
+        FileUtils.mediaRefresh(this.getActivity(), filePath);
     }
 
 }
