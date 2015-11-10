@@ -57,4 +57,12 @@ public interface LessionService {
      */
     void vote(String id) throws IOException, JSONException;
 
+    /**
+     * 举报
+     * @param id
+     * @throws IOException
+     * @throws JSONException
+     */
+    void reportIllegal(String id) throws IOException, JSONException;
+
 }
