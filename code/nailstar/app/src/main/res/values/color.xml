@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- 系统的基本颜色 -->
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
+    <color name="orange_red">#F45D49</color>
+    <color name="font_dark">#191a1a</color>
+    <color name="font_basic">#555657</color>
+    <color name="font_grey">#adafb0</color>
+    <color name="border_dark">#d4d8da</color>
+    <color name="border_basic">#ebeeef</color>
+    <color name="border_grey">#f8fafb</color>
+
     <!--<color name="tab_font_orange_color">#FF0000</color>-->
     <color name="tab_border">#999999</color>
 
