@@ -212,6 +212,7 @@ public class VoteListViewAdapter extends BaseAdapter {
             }
         });
 
+        // 举报按钮
         reportIllegalBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -219,6 +220,13 @@ public class VoteListViewAdapter extends BaseAdapter {
             }
         });
 
+        // 投票按钮
+        lessionVoteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                lessionPresenter.vote(currentImage);
+            }
+        });
     }
 
     public void setViewType(ViewType viewType) {
