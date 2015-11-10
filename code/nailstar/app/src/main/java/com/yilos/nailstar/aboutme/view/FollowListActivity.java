@@ -52,6 +52,7 @@ public class FollowListActivity extends Activity implements View.OnClickListener
         setContentView(R.layout.activity_follow_list);
         titleBar = (TitleBar) findViewById(R.id.follow_list_title_bar);
         backButton = titleBar.getBackButton();
+        backButton.setImageResource(R.drawable.ic_head_back);
         titleText = titleBar.getTitleView();
         titleText.setText(R.string.my_follow_list);
         backButton.setOnClickListener(new View.OnClickListener() {

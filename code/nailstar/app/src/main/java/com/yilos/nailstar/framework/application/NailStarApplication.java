@@ -19,6 +19,7 @@ import com.yilos.nailstar.framework.entity.NailStarApplicationContext;
 import com.yilos.nailstar.framework.exception.JSONParseException;
 import com.yilos.nailstar.framework.exception.NetworkDisconnectException;
 import com.yilos.nailstar.index.model.IndexServiceImpl;
+import com.yilos.nailstar.util.Constants;
 import com.yilos.nailstar.util.CrashHandler;
 
 import java.io.File;
@@ -44,6 +45,8 @@ public class NailStarApplication extends android.app.Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        initDir();
 
         CrashHandler.getInstance().init(this);
 
@@ -99,5 +102,20 @@ public class NailStarApplication extends android.app.Application {
         VDApplication.getInstance().initPlayer(this);
         VDResolutionManager.getInstance(this).init(
                 VDResolutionManager.RESOLUTION_SOLUTION_NONE);
+    }
+
+    private void initDir() {
+        File sdPath = new File(Constants.YILOS_NAILSTAR_LOGS_PATH);
+        if (!sdPath.exists()) {
+            sdPath.mkdirs();
+        }
+        sdPath = new File(Constants.YILOS_NAILSTAR_VIDEOS_PATH);
+        if (!sdPath.exists()) {
+            sdPath.mkdirs();
+        }
+        sdPath = new File(Constants.YILOS_NAILSTAR_PICTURE_PATH);
+        if (!sdPath.exists()) {
+            sdPath.mkdirs();
+        }
     }
 }

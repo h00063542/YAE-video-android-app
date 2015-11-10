@@ -28,6 +28,7 @@ public class PersonInfoActivity extends Activity implements View.OnClickListener
         personInfoIdentityLayout = (RelativeLayout)findViewById(R.id.person_info_identity_layout);
         personInfoIdentityPopup = (RelativeLayout)findViewById(R.id.person_info_identity_popup);
         backButton = titleBar.getBackButton();
+        backButton.setImageResource(R.drawable.ic_head_back);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -265,6 +265,15 @@ public class TopicVideoPlayerPresenter {
         return new StringBuffer().append(Constants.YILOS_NAILSTAR_VIDEOS_PATH).append(topicVideoInfo.getVideoId()).append(videoSuffix).toString();
     }
 
+    public String buildPictureLocalFilePath(final String topicId, final String imageSrc) {
+        if (StringUtil.isEmpty(topicId) || StringUtil.isEmpty(imageSrc)) {
+            return Constants.EMPTY_STRING;
+        }
+        String fileName = imageSrc.substring(imageSrc.lastIndexOf("/"), imageSrc.length());
+
+        return new StringBuffer().append(Constants.YILOS_NAILSTAR_PICTURE_PATH).append(fileName).append(Constants.PNG_SUFFIX).toString();
+    }
+
     public String getTopicCommentDateStr(long time) {
         Date date = new Date(time);
         Date today = new Date();

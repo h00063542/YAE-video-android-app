@@ -26,6 +26,7 @@
     <string name="about_me_my">我的</string>
     <string name="about_me_name">昵称</string>
     <string name="about_me_identity">身份</string>
+    <string name="level">等级</string>
     <string name="about_me_level">lv0</string>
     <string name="about_me_attention">关注</string>
     <string name="my_follow_list">我的关注</string>
