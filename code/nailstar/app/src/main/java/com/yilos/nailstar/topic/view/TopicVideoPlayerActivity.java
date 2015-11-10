@@ -1,6 +1,7 @@
 package com.yilos.nailstar.topic.view;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -620,8 +621,9 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
                 }
             }
         });
-
-        builder.show();
+        AlertDialog alert = builder.create();
+        alert.setCanceledOnTouchOutside(true);
+        alert.show();
     }
 
     @Override
@@ -1169,7 +1171,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
 
     @Override
     public void showDownloadStatus(boolean isSuccess) {
-        Toast.makeText(this, isSuccess ? "下载视频成功" : "下载视频失败", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, isSuccess ? "保存成功" : "保存成功", Toast.LENGTH_SHORT).show();
     }
 
     @Override
