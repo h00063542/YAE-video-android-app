@@ -46,6 +46,7 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
     private OnFragmentInteractionListener mListener;
 
     private RelativeLayout relativeLayout;
+    private RelativeLayout aboutMeSetting;
     private LinearLayout aboutMeMyInfo;
     private TextView messageCountText;//信息数
     private TitleBar titleBar;//标题栏
@@ -187,6 +188,7 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
     }
 
     private void initViews(View view){
+        aboutMeSetting = (RelativeLayout)view.findViewById(R.id.about_me_setting_group);
         aboutMeMyInfo = (LinearLayout)view.findViewById(R.id.about_me_my_info);
         relativeLayout = (RelativeLayout)view.findViewById(R.id.about_me_message_group);
         messageCountText = (TextView)view.findViewById(R.id.about_me_message_count);
@@ -226,6 +228,10 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
                 myLevelIntent.putExtra("myImageUrl", myImageUrl);
                 startActivity(myLevelIntent);
                 break;
+            case R.id.about_me_setting_group:
+                Intent settingIntent = new Intent(getActivity(),SettingActivity.class);
+                startActivity(settingIntent);
+                break;
             case R.id.about_me_my_info:
                 LoginAPI loginAPI = LoginAPI.getInstance();
                 if (loginAPI.isLogin() == false) {
@@ -264,6 +270,7 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
         myFansList.setOnClickListener(this);
         aboutMeLevel.setOnClickListener(this);
         aboutMeMyInfo.setOnClickListener(this);
+        aboutMeSetting.setOnClickListener(this);
 
         personInfoLayout.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -471,6 +471,7 @@
 
                         <!-- 设置 -->
                         <RelativeLayout
+                            android:id="@+id/about_me_setting_group"
                             android:background="@drawable/selector"
                             android:clickable="true"
                             android:layout_width="fill_parent"
