@@ -126,4 +126,5 @@
     <string name="write_down_your_learning_experience">写下你的学习心得</string>
     <string name="like">喜欢</string>
     <string name="topic_comment_count">评论数</string>
+    <string name="title_activity_login">账号登录</string>
 </resources>
