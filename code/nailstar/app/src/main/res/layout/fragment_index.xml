@@ -9,7 +9,7 @@
 
     <com.yilos.widget.titlebar.TitleBar
         android:layout_width="match_parent"
-        android:layout_height="@dimen/common_tool_bar_height">
+        android:layout_height="@dimen/common_title_bar_height">
 
     </com.yilos.widget.titlebar.TitleBar>
 
