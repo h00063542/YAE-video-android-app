@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
+    android:id="@+id/title_bar_group"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/title_bar"
-    android:background="@color/orange"
+    android:layout_height="@dimen/common_title_bar_height"
     android:gravity="center_vertical">
     <ImageView
-        android:visibility="visible"
+        android:visibility="gone"
         android:id="@+id/title_bar_left_back"
         android:layout_width="@dimen/title_bar_icon"
         android:layout_height="@dimen/title_bar_icon"
         android:clickable="true"
+        android:src="@drawable/ic_head_back"
         android:layout_centerVertical="true"
         android:padding="@dimen/title_bar_icon_padding"/>
     <ImageView
@@ -19,6 +20,7 @@
         android:layout_width="@dimen/title_bar_icon"
         android:layout_height="@dimen/title_bar_icon"
         android:layout_centerVertical="true"
+        android:src="@drawable/ic_head_search"
         android:clickable="true"
         android:padding="@dimen/title_bar_icon_padding"/>
     <TextView
