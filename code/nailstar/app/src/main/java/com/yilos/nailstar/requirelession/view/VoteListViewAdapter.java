@@ -477,9 +477,7 @@ public class VoteListViewAdapter extends BaseAdapter {
                     voteItem.lessionVoteImg.setImageResource(R.mipmap.ic_default_image);
                 }
 
-
-                // 点击图片显示大图
-                voteItem.lessionVoteImg.setOnClickListener(new View.OnClickListener() {
+                View.OnClickListener onClickListener = new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         // 点击的时候记录当前打开的图，以便保存或者举报的时候用
@@ -487,7 +485,11 @@ public class VoteListViewAdapter extends BaseAdapter {
                         // 显示大图
                         showImageActionDialog(realPosition);
                     }
-                });
+                };
+                // 点击图片显示大图
+                voteItem.lessionVoteImg.setOnClickListener(onClickListener);
+                // 点击投票按钮也显示大图
+                voteItem.lessionVotePic.setOnClickListener(onClickListener);
 
                 String lessionTime = "";
                 if ((now - candidateLession.getCreateDate()) / 1000 < 60) {
