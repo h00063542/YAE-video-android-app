@@ -36,4 +36,19 @@
     <color name="user_at_color">#693012</color>
     <color name="submitted_homework_label_color">#555657</color>
     <color name="topic_comment_create_date_label_color">#adafb0</color>
+
+    <!--橘色-->
+    <color name="orange">#f45d49</color>
+    <!--字最深-->
+    <color name="z1">#191a1a</color>
+    <!--字基本-->
+    <color name="z2">#555657</color>
+    <!--字浅色-->
+    <color name="z3">#adafb0</color>
+    <!--线，块最深（一般是线）-->
+    <color name="xk1">#d4d8da</color>
+    <!--线，块基本（背景）-->
+    <color name="xk2">#ebeeef</color>
+    <!--最浅（出现在顶部或底部）-->
+    <color name="xk3">#f8fafb</color>
 </resources>

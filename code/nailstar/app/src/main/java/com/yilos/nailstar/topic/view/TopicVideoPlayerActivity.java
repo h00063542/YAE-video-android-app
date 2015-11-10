@@ -1,5 +1,8 @@
 package com.yilos.nailstar.topic.view;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -183,17 +186,9 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_topic_video_player);
+        UserUtil.saveUserInfo(this, new UserInfo("001", "text", "http://pic.yilos.com/162b73dc3f69af2dc8a79a1b9da7591e"));
         mTopicVideoPlayerPresenter = TopicVideoPlayerPresenter.getInstance(this);
         init();
-        UserUtil.saveUserInfo(this, new UserInfo("001", "text", "http://pic.yilos.com/162b73dc3f69af2dc8a79a1b9da7591e"));
-//        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
-//        Log.e(TAG, "displayMetrics.density:" + displayMetrics.density);
-//        Log.e(TAG, "displayMetrics.densityDpi:" + displayMetrics.densityDpi);
-//        Log.e(TAG, "displayMetrics.widthPixels:" + displayMetrics.widthPixels);
-//        Log.e(TAG, "displayMetrics.heightPixels:" + displayMetrics.heightPixels);
-//        Log.e(TAG, "displayMetrics.scaledDensity:" + displayMetrics.scaledDensity);
-//        Log.e(TAG, "displayMetrics.xdpi:" + displayMetrics.xdpi);
-//        Log.e(TAG, "displayMetrics.ydpi:" + displayMetrics.ydpi);
     }
 
 
@@ -253,6 +248,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         mIvVideoDownload = mTbVideoPlayerHead.getRightImageButtonTwo();
         mIvTopicShare = mTbVideoPlayerHead.getRightImageButtonOne();
         mTvTopicName = mTbVideoPlayerHead.getTitleView();
+        mIvVideoPlayerBack.setImageResource(R.mipmap.icon_back_white);
         mIvVideoDownload.setImageResource(R.mipmap.icon_download_white);
         mIvTopicShare.setImageResource(R.mipmap.icon_share_white);
 
@@ -578,6 +574,10 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
             // TODO 调用到登录界面
             return;
         }
+        if (type == Constants.TOPIC_COMMENT_TYPE_REPLY_AGAIN) {
+            showTopicCommentReplayAgainDialog(commentInfo, replyInfo, type);
+            return;
+        }
         Intent intent = new Intent(this, TopicCommentActivity.class);
         intent.putExtra(Constants.TOPIC_ID, mTopicId);
         if (null != commentInfo) {
@@ -585,13 +585,45 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
             intent.putExtra(Constants.TOPIC_COMMENT_USER_ID, commentInfo.getUserId());
             intent.putExtra(Constants.TOPIC_COMMENT_AUTHOR, commentInfo.getAuthor());
         }
-        if (null != replyInfo && type == Constants.TOPIC_COMMENT_TYPE_REPLY_AGAIN) {
-            intent.putExtra(Constants.TOPIC_COMMENT_REPLY_ID, replyInfo.getId());
-            intent.putExtra(Constants.TOPIC_COMMENT_REPLY_USER_ID, replyInfo.getUserId());
-            intent.putExtra(Constants.TOPIC_COMMENT_REPLY_AUTHOR, replyInfo.getAuthor());
-        }
+//        if (null != replyInfo && type == Constants.TOPIC_COMMENT_TYPE_REPLY_AGAIN) {
+//            intent.putExtra(Constants.TOPIC_COMMENT_REPLY_ID, replyInfo.getId());
+//            intent.putExtra(Constants.TOPIC_COMMENT_REPLY_USER_ID, replyInfo.getUserId());
+//            intent.putExtra(Constants.TOPIC_COMMENT_REPLY_AUTHOR, replyInfo.getAuthor());
+//        }
         intent.putExtra(Constants.TYPE, type);
         startActivityForResult(intent, TOPIC_COMMENT_REQUEST_CODE);
+    }
+
+    private void showTopicCommentReplayAgainDialog(final TopicCommentInfo commentInfo, final TopicCommentReplyInfo replyInfo, final int type) {
+        final CharSequence[] items = {getString(R.string.reply), getString(R.string.cancel)};
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int item) {
+                if (0 == item) {
+                    Intent intent = new Intent(TopicVideoPlayerActivity.this, TopicCommentActivity.class);
+                    intent.putExtra(Constants.TOPIC_ID, mTopicId);
+                    if (null != commentInfo) {
+                        intent.putExtra(Constants.TOPIC_COMMENT_ID, commentInfo.getId());
+                        intent.putExtra(Constants.TOPIC_COMMENT_USER_ID, commentInfo.getUserId());
+                        intent.putExtra(Constants.TOPIC_COMMENT_AUTHOR, commentInfo.getAuthor());
+                    }
+                    if (null != replyInfo && type == Constants.TOPIC_COMMENT_TYPE_REPLY_AGAIN) {
+                        intent.putExtra(Constants.TOPIC_COMMENT_REPLY_ID, replyInfo.getId());
+                        intent.putExtra(Constants.TOPIC_COMMENT_REPLY_USER_ID, replyInfo.getUserId());
+                        intent.putExtra(Constants.TOPIC_COMMENT_REPLY_AUTHOR, replyInfo.getAuthor());
+                    }
+                    intent.putExtra(Constants.TYPE, type);
+                    startActivityForResult(intent, TOPIC_COMMENT_REQUEST_CODE);
+                } else if (1 == item) {
+                    dialog.dismiss();
+                }
+            }
+        });
+        AlertDialog alert = builder.create();
+        alert.setCanceledOnTouchOutside(true);
+        alert.show();
     }
 
     @Override
@@ -1139,7 +1171,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
 
     @Override
     public void showDownloadStatus(boolean isSuccess) {
-        Toast.makeText(this, isSuccess ? "下载视频成功" : "下载视频失败", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, isSuccess ? "保存成功" : "保存成功", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -1165,7 +1197,6 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
     @Override
     protected void onStop() {
         super.onStop();
-        mVDVideoView.onStop();
     }
 
     @Override
