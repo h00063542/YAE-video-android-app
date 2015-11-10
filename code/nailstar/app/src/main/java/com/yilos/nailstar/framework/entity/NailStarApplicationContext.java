@@ -62,6 +62,10 @@ public class NailStarApplicationContext {
         return NailStarApplication.getApplication().getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_MOVIES);
     }
 
+    /**
+     * 判断当前网络是否连通
+     * @return
+     */
     public boolean isNetworkConnected() {
         ConnectivityManager cm = (ConnectivityManager) NailStarApplication.getApplication().getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo info = cm.getActiveNetworkInfo();
