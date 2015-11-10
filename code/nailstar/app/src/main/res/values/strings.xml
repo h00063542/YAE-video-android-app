@@ -109,6 +109,7 @@
     <string name="save_to_library">保存到相册</string>
     <string name="report_illegal">举报</string>
     <string name="cancel">取消</string>
+    <string name="select_image">选择图片</string>
 
     <!-- DLNA -->
     <string name="dlna_switch_to_mobile">切回手机播放</string>
