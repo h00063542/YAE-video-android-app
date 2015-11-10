@@ -3,7 +3,7 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="@dimen/title_bar"
-    android:background="@color/title_bar_background_color"
+    android:background="@color/orange"
     android:gravity="center_vertical">
     <ImageView
         android:visibility="visible"

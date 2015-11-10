@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- 系统的基本颜色 -->
     <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="orange">#f45d49</color><!--橘色-->
+    <color name="z1">#191a1a</color><!--字最深-->
+    <color name="z2">#555657</color><!--字基本-->
+    <color name="z3">#adafb0</color><!--字浅色-->
+    <color name="xk1">#d4d8da</color><!--线，块最深（一般是线）-->
+    <color name="xk2">#ebeeef</color><!--线，块基本（背景）-->
+    <color name="xk3">#f8fafb</color><!--最浅（出现在顶部或底部）-->
+
     <color name="tab_font_orange_color">#FF0000</color>
     <color name="title_bar_background_color">#F45D49</color>
     <color name="tab_background">#999999</color>
