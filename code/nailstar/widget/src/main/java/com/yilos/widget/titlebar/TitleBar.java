@@ -19,11 +19,13 @@ import com.yilos.widget.R;
  */
 public class TitleBar extends RelativeLayout {
     private ImageView backButton;//返回按钮
+    private ImageView leftSearchButton;//左边搜索按钮
     private TextView rightTextButton;//右边确定按钮
     private ImageView rightImageButtonOne;//从右边算起的第一个图片按钮
     private ImageView rightImageButtonTwo;//从右边算起的第二个图片按钮
     private TextView titleView;//顶部居中标题
     private TextView leftTitleView;//顶部居左标题
+    private ImageView imageTitleView;//顶部图片标题
 
     private Context mContext;
 
@@ -42,6 +44,11 @@ public class TitleBar extends RelativeLayout {
         return backButton;
     }
 
+    public ImageView getLeftSearchButton() {
+        showWidget(leftSearchButton);
+        return leftSearchButton;
+    }
+
     public TextView getRightTextButton() {
         showWidget(rightTextButton);
         return rightTextButton;
@@ -57,6 +64,11 @@ public class TitleBar extends RelativeLayout {
         return leftTitleView;
     }
 
+    public ImageView getImageTitleView() {
+        showWidget(imageTitleView);
+        return imageTitleView;
+    }
+
     public ImageView getRightImageButtonOne() {
         showWidget(rightImageButtonOne);
         return rightImageButtonOne;
@@ -70,6 +82,8 @@ public class TitleBar extends RelativeLayout {
     private void init() {
         LayoutInflater layoutInflater = LayoutInflater.from(mContext);
         layoutInflater.inflate(R.layout.title_bar, this);
+        leftSearchButton = (ImageView)findViewById(R.id.title_bar_left_search);
+        imageTitleView = (ImageView)findViewById(R.id.title_bar_image_title);
         backButton = (ImageView)findViewById(R.id.title_bar_left_back);
         rightTextButton = (TextView)findViewById(R.id.title_bar_right_text_button);
         titleView = (TextView)findViewById(R.id.title_bar_title);

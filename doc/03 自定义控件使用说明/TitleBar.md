@@ -22,7 +22,11 @@
 获取靠右对齐标题控件
 
     public TextView getLeftTitleView()
-    
+
+获取图片标题控件
+   
+    public ImageView getImageTitleView()
+   
 获取最右边第一个按钮  
   
     public ImageView getRightImageButtonOne()
