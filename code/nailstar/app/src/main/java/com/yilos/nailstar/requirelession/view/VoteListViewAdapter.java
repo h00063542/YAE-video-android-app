@@ -9,6 +9,8 @@ import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -74,6 +76,13 @@ public class VoteListViewAdapter extends BaseAdapter {
     // 当前大图对应的数据
     private CandidateLession currentImage;
 
+    private Animation slideInBottom;
+
+    private Animation slideOutBottom;
+
+    // 弹出框正在消失
+    private boolean isDismissing;
+
     public VoteListViewAdapter(Activity context, LayoutInflater layoutInflater, LessionPresenter lessionPresenter) {
         this.context = context;
         this.layoutInflater = layoutInflater;
@@ -83,6 +92,8 @@ public class VoteListViewAdapter extends BaseAdapter {
         context.getWindowManager().getDefaultDisplay().getMetrics(metric);
         screenWidth = metric.widthPixels;
 
+        isDismissing = false;
+
         // 点击图片的时候弹出大图
         initLessionImageView();
         // 绑定按钮
@@ -90,6 +101,9 @@ public class VoteListViewAdapter extends BaseAdapter {
     }
 
     private void initLessionImageView() {
+
+        slideInBottom = AnimationUtils.loadAnimation(context, R.anim.slide_in_bottom);
+        slideOutBottom = AnimationUtils.loadAnimation(context, R.anim.slide_out_bottom);
 
         lessionImageView = layoutInflater.inflate(R.layout.lession_image_action, null);
         lessionImageView.setBackgroundColor(0xa0000000);
@@ -509,11 +523,42 @@ public class VoteListViewAdapter extends BaseAdapter {
         lessionImageViewPager.setCurrentItem(position);
         decorView.addView(lessionImageView);
 
+        lessionImageView.startAnimation(slideInBottom);
+
     }
 
     private void dismissImageActionDialog() {
 
-        decorView.removeView(lessionImageView);
+        if (isDismissing) {
+            return;
+        }
+
+        //消失动画
+        slideOutBottom.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                decorView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        decorView.removeView(lessionImageView);
+                        isDismissing = false;
+                    }
+                });
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
+        isDismissing = true;
+        lessionImageView.startAnimation(slideOutBottom);
 
     }
 
