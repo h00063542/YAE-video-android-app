@@ -18,6 +18,7 @@ import com.yilos.nailstar.R;
 import com.yilos.nailstar.aboutme.entity.AboutMeNumber;
 import com.yilos.nailstar.aboutme.entity.MessageCount;
 import com.yilos.nailstar.aboutme.entity.PersonInfo;
+import com.yilos.nailstar.aboutme.model.LoginAPI;
 import com.yilos.nailstar.aboutme.presenter.AboutMePresenter;
 import com.yilos.nailstar.util.LevelUtil;
 import com.yilos.widget.circleimageview.CircleImageView;
@@ -45,6 +46,7 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
     private OnFragmentInteractionListener mListener;
 
     private RelativeLayout relativeLayout;
+    private LinearLayout aboutMeMyInfo;
     private TextView messageCountText;//信息数
     private TitleBar titleBar;//标题栏
     private TextView titleText;//标题栏标题
@@ -185,6 +187,7 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
     }
 
     private void initViews(View view){
+        aboutMeMyInfo = (LinearLayout)view.findViewById(R.id.about_me_my_info);
         relativeLayout = (RelativeLayout)view.findViewById(R.id.about_me_message_group);
         messageCountText = (TextView)view.findViewById(R.id.about_me_message_count);
 
@@ -223,6 +226,13 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
                 myLevelIntent.putExtra("myImageUrl", myImageUrl);
                 startActivity(myLevelIntent);
                 break;
+            case R.id.about_me_my_info:
+                LoginAPI loginAPI = LoginAPI.getInstance();
+                if (loginAPI.isLogin() == false) {
+                    Intent goToLoginIntent = new Intent(getActivity(),LoginActivity.class);
+                    startActivity(goToLoginIntent);
+                }
+                break;
             default:
                 break;
         }
@@ -248,6 +258,7 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
         myFollowList.setOnClickListener(this);
         myFansList.setOnClickListener(this);
         aboutMeLevel.setOnClickListener(this);
+        aboutMeMyInfo.setOnClickListener(this);
 
         personInfoLayout.setOnClickListener(new View.OnClickListener() {
             @Override

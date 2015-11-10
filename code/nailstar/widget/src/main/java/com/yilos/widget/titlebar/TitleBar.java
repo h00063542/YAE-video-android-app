@@ -1,4 +1,5 @@
 package com.yilos.widget.titlebar;
+import android.app.Activity;
 import android.view.ViewTreeObserver;
 import android.widget.RelativeLayout;
 
@@ -37,6 +38,17 @@ public class TitleBar extends RelativeLayout {
 
     public void showWidget(View view) {
         view.setVisibility(VISIBLE);
+    }
+
+    public ImageView getBackButton(final Activity activity) {
+        showWidget(backButton);
+        backButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                activity.finish();
+            }
+        });
+        return backButton;
     }
 
     public ImageView getBackButton() {
@@ -78,10 +90,11 @@ public class TitleBar extends RelativeLayout {
         showWidget(rightImageButtonTwo);
         return rightImageButtonTwo;
     }
-
+    private LayoutInflater layoutInflater;
     private void init() {
-        LayoutInflater layoutInflater = LayoutInflater.from(mContext);
+        layoutInflater = LayoutInflater.from(mContext);
         layoutInflater.inflate(R.layout.title_bar, this);
+
         leftSearchButton = (ImageView)findViewById(R.id.title_bar_left_search);
         imageTitleView = (ImageView)findViewById(R.id.title_bar_image_title);
         backButton = (ImageView)findViewById(R.id.title_bar_left_back);

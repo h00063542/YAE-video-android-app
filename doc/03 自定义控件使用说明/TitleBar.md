@@ -10,6 +10,10 @@
 获取左边返回按钮
 
     public ImageView getBackButton()
+    
+获取左边返回按钮（已经写好了关闭Activity事件）
+
+    public ImageView getBackButton(final Activity activity)
 
 获取右边文字按钮
 
