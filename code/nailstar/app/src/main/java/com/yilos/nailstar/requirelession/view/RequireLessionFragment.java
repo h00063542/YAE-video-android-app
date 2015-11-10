@@ -27,6 +27,7 @@ import com.yilos.nailstar.takeImage.TakeImage;
 import com.yilos.nailstar.takeImage.TakeImageCallback;
 import com.yilos.nailstar.topic.view.TopicVideoPlayerActivity;
 import com.yilos.nailstar.util.Constants;
+import com.yilos.nailstar.util.FileUtils;
 import com.yilos.widget.circleimageview.CircleImageView;
 import com.yilos.widget.view.ImageCacheView;
 
@@ -314,7 +315,7 @@ public class RequireLessionFragment extends Fragment implements LessionView {
 
     @Override
     public void refreshFailed() {
-
+        // TODO
     }
 
     @Override
@@ -438,6 +439,11 @@ public class RequireLessionFragment extends Fragment implements LessionView {
     @Override
     public void refreshCountDown(String time) {
         lessionCountDownValue.setText(time);
+    }
+
+    @Override
+    public void mediaRefresh(String filePath) {
+        FileUtils.mediaRefresh(this.getActivity(), filePath);
     }
 
 }

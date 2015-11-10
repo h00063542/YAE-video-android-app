@@ -33,8 +33,27 @@ public class FileUtils {
         }
 
         File storePath = new File(path);
-        if (!storePath.exists()) {
-            if(!storePath.mkdirs()) {
+
+        String result = saveBitMap(bitmap, storePath, fileName);
+
+        return result;
+    }
+
+    /**
+     * 保存图片到本地
+     * @param bitmap
+     * @param path
+     * @param fileName
+     * @return
+     */
+    public static String saveBitMap(Bitmap bitmap, File path, String fileName) {
+
+        if (bitmap == null || path == null || fileName == null ) {
+            return null;
+        }
+
+        if (!path.exists()) {
+            if(!path.mkdirs()) {
                 return null;
             }
         }
@@ -62,6 +81,11 @@ public class FileUtils {
         return result;
     }
 
+    /**
+     * 刷新图片到相册中
+     * @param context
+     * @param path
+     */
     public static void mediaRefresh (Activity context, File path) {
         Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
         Uri uri = Uri.fromFile(path);
@@ -69,6 +93,11 @@ public class FileUtils {
         context.sendBroadcast(intent);
     }
 
+    /**
+     * 刷新图片到相册中
+     * @param context
+     * @param path
+     */
     public static void mediaRefresh(Activity context, String path) {
         File file = new File(path);
         mediaRefresh(context, file);

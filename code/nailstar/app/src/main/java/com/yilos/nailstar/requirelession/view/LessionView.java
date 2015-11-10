@@ -43,4 +43,10 @@ public interface LessionView {
      * @param time
      */
     void refreshCountDown(String time);
+
+    /**
+     * 刷新图片到图库中
+     * @param filePath
+     */
+    void mediaRefresh(String filePath);
 }

@@ -176,11 +176,18 @@ public class VoteListViewAdapter extends BaseAdapter {
     // 绑定大图下方的按钮
     private void bindLessionImageBtn() {
 
+        cancelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismissImageActionDialog();
+            }
+        });
+
         saveImageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                dismissImageActionDialog();
                 lessionPresenter.saveImage(currentImage.getPicUrl(), Constants.YILOS_PATH, currentImage.getCandidateId() + ".jpg");
-                FileUtils.mediaRefresh(context, Constants.YILOS_PATH + currentImage.getCandidateId() + ".jpg");
             }
         });
 

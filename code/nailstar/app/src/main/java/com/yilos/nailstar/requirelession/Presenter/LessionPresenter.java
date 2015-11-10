@@ -226,6 +226,7 @@ public class LessionPresenter {
      * @param candidateLession
      */
     public void vote(final CandidateLession candidateLession) {
+
         new Thread() {
             @Override
             public void run() {
@@ -269,16 +270,18 @@ public class LessionPresenter {
      * @param fileName
      */
     public void saveImage(final Bitmap bitmap, final String path, final String fileName) {
+
         new Thread() {
             @Override
             public void run() {
 
-                String result = FileUtils.saveBitMap(bitmap, path, fileName);
+                final String result = FileUtils.saveBitMap(bitmap, path, fileName);
                 if (result != null) {
                     // 保存成功
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
+                            view.mediaRefresh(result);
                             // TODO
                         }
                     });
@@ -302,16 +305,18 @@ public class LessionPresenter {
      * @param fileName
      */
     public void saveImage(final String url, final String path, final String fileName) {
+
         new Thread() {
             @Override
             public void run() {
                 Bitmap bitmap = imageLoader.loadImageSync(url);
-                String result = FileUtils.saveBitMap(bitmap, path, fileName);
+                final String result = FileUtils.saveBitMap(bitmap, path, fileName);
                 if (result != null) {
                     // 保存成功
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
+                            view.mediaRefresh(result);
                             // TODO
                         }
                     });
