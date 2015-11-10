@@ -231,6 +231,8 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
                 if (loginAPI.isLogin() == false) {
                     Intent goToLoginIntent = new Intent(getActivity(),LoginActivity.class);
                     startActivity(goToLoginIntent);
+                } else {
+
                 }
                 break;
             default:
@@ -250,10 +252,13 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
 //        rightButtonOne.setImageResource(R.drawable.ic_head_share);
 //        backButton = titleBar.getBackButton();
 //        backButton.setImageResource(R.drawable.ic_head_back);
-        aboutMePresenter = AboutMePresenter.getInstance(this);
-        aboutMePresenter.getMessageCount();
-        aboutMePresenter.getAboutMeNumber();
-        aboutMePresenter.getPersonInfo();
+        LoginAPI loginAPI = LoginAPI.getInstance();
+        if (loginAPI.isLogin()) {
+            aboutMePresenter = AboutMePresenter.getInstance(this);
+            aboutMePresenter.getMessageCount();
+            aboutMePresenter.getAboutMeNumber();
+            aboutMePresenter.getPersonInfo();
+        }
 
         myFollowList.setOnClickListener(this);
         myFansList.setOnClickListener(this);
