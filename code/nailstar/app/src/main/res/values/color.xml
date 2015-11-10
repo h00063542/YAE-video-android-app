@@ -3,13 +3,13 @@
     <!-- 系统的基本颜色 -->
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
-    <color name="orange_red">#F45D49</color>
-    <color name="font_dark">#191a1a</color>
-    <color name="font_basic">#555657</color>
-    <color name="font_grey">#adafb0</color>
-    <color name="border_dark">#d4d8da</color>
-    <color name="border_basic">#ebeeef</color>
-    <color name="border_grey">#f8fafb</color>
+    <color name="orange">#f45d49</color><!--橘色-->
+    <color name="z1">#191a1a</color><!--字最深-->
+    <color name="z2">#555657</color><!--字基本-->
+    <color name="z3">#adafb0</color><!--字浅色-->
+    <color name="xk1">#d4d8da</color><!--线，块最深（一般是线）-->
+    <color name="xk2">#ebeeef</color><!--线，块基本（背景）-->
+    <color name="xk3">#f8fafb</color><!--最浅（出现在顶部或底部）-->
 
     <!--<color name="tab_font_orange_color">#FF0000</color>-->
     <color name="tab_border">#999999</color>
@@ -45,19 +45,4 @@
     <color name="user_at_color">#693012</color>
     <color name="submitted_homework_label_color">#555657</color>
     <color name="topic_comment_create_date_label_color">#adafb0</color>
-
-    <!--橘色-->
-    <color name="orange">#f45d49</color>
-    <!--字最深-->
-    <color name="z1">#191a1a</color>
-    <!--字基本-->
-    <color name="z2">#555657</color>
-    <!--字浅色-->
-    <color name="z3">#adafb0</color>
-    <!--线，块最深（一般是线）-->
-    <color name="xk1">#d4d8da</color>
-    <!--线，块基本（背景）-->
-    <color name="xk2">#ebeeef</color>
-    <!--最浅（出现在顶部或底部）-->
-    <color name="xk3">#f8fafb</color>
 </resources>
