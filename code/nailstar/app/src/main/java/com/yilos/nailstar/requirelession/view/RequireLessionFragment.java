@@ -387,6 +387,11 @@ public class RequireLessionFragment extends Fragment implements LessionView {
 
         ImageCacheView lessionCandidatePic = (ImageCacheView) view.findViewById(R.id.lessionCandidatePic);
         CircleImageView lessionUserPhoto = (CircleImageView) view.findViewById(R.id.lessionUserPhoto);
+        TextView lessionUserName = (TextView) view.findViewById(R.id.lessionUserName);
+        TextView lessionVoteCount = (TextView) view.findViewById(R.id.lessionVoteCount);
+
+        lessionUserName.setText(lessionActivity.getCurrent().getAuthorName());
+        lessionVoteCount.setText(String.valueOf(lessionActivity.getCurrent().getVoteCount()));
 
         lessionCandidatePic.setImageSrc(lessionActivity.getCurrent().getPicUrl());
         lessionUserPhoto.setImageSrc(lessionActivity.getCurrent().getAuthorPhoto());

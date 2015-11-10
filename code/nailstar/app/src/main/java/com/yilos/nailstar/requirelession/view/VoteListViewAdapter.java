@@ -53,6 +53,8 @@ public class VoteListViewAdapter extends BaseAdapter {
     // 点击显示大图的view
     private View lessionImageView;
 
+    private View lessionImageContainer;
+
     // 显示大图时的ViewPager
     private ViewPager lessionImageViewPager;
 
@@ -106,12 +108,12 @@ public class VoteListViewAdapter extends BaseAdapter {
         slideOutBottom = AnimationUtils.loadAnimation(context, R.anim.slide_out_bottom);
 
         lessionImageView = layoutInflater.inflate(R.layout.lession_image_action, null);
-        lessionImageView.setBackgroundColor(0xa0000000);
+        lessionImageContainer = lessionImageView.findViewById(R.id.lessionImageContainer);
 
         decorView = (ViewGroup) context.getWindow().getDecorView().findViewById(android.R.id.content);
 
         // 点击空白区域，弹框消失
-        lessionImageView.setOnClickListener(new View.OnClickListener() {
+        lessionImageContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dismissImageActionDialog();
@@ -151,7 +153,12 @@ public class VoteListViewAdapter extends BaseAdapter {
 
                 View lessionImageItem = layoutInflater.inflate(R.layout.lession_image_item, null);
                 ImageCacheView lessionLargeImage = (ImageCacheView) lessionImageItem.findViewById(R.id.lessionLargeImage);
-                lessionLargeImage.setImageSrc(voteLessionList.get(position).getPicUrl());
+                if (voteLessionList.get(position).getPicUrl() != null && !"".equals(voteLessionList.get(position).getPicUrl())) {
+                    lessionLargeImage.setImageSrc(voteLessionList.get(position).getPicUrl());
+                } else {
+                    lessionLargeImage.setImageURI(null);
+                }
+
                 lessionLargeImage.setBackgroundColor(0x00000000);
                 container.addView(lessionImageItem);
 
@@ -304,7 +311,7 @@ public class VoteListViewAdapter extends BaseAdapter {
     }
 
     @NonNull
-    private View handleRankingList(int position, View convertView) {
+    private View handleRankingList(final int position, View convertView) {
 
         ViewHolder holder;
 
@@ -353,6 +360,16 @@ public class VoteListViewAdapter extends BaseAdapter {
             holder.rankingItem.lessionAuthorPhoto.setImageResource(R.mipmap.ic_default_photo);
         }
 
+        // 点击图片显示大图
+        holder.rankingItem.lessionRankingImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 点击的时候记录当前打开的图，以便保存或者举报的时候用
+                currentImage = candidateLession;
+                // 显示大图
+                showImageActionDialog(position);
+            }
+        });
 
         // 是否已投票
         if (candidateLession.getVoted() > 0) {
@@ -523,7 +540,7 @@ public class VoteListViewAdapter extends BaseAdapter {
         lessionImageViewPager.setCurrentItem(position);
         decorView.addView(lessionImageView);
 
-        lessionImageView.startAnimation(slideInBottom);
+        lessionImageContainer.startAnimation(slideInBottom);
 
     }
 
@@ -558,7 +575,7 @@ public class VoteListViewAdapter extends BaseAdapter {
         });
 
         isDismissing = true;
-        lessionImageView.startAnimation(slideOutBottom);
+        lessionImageContainer.startAnimation(slideOutBottom);
 
     }
 

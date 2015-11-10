@@ -1,76 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:gravity="center_horizontal|center_vertical"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/lessionImageContainer" >
-
-    <android.support.v4.view.ViewPager
-        android:id="@+id/lessionImageViewPager"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:layout_gravity="center_horizontal|center_vertical" />
+    android:layout_gravity="center_horizontal"
+    android:background="#A0000000">
 
     <LinearLayout
-        android:layout_margin="15dp"
-        android:orientation="vertical"
+        android:id="@+id/lessionImageContainer"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:layout_gravity="center_horizontal">
-        <TextView
-            android:id="@+id/lessionVoteBtn"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
-            android:layout_width="match_parent"
-            android:layout_height="64dp"
-            android:text="@string/vote"
-            android:textSize="20sp"
-            android:background="@drawable/bottom_border"
-            android:gravity="center_vertical" />
-        <TextView
-            android:id="@+id/lessionCanvassBtn"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
-            android:layout_width="match_parent"
-            android:layout_height="64dp"
-            android:text="@string/canvass"
-            android:textSize="20sp"
-            android:background="@drawable/bottom_border"
-            android:gravity="center_vertical" />
-        <TextView
-            android:id="@+id/saveImageBtn"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
-            android:layout_width="match_parent"
-            android:layout_height="64dp"
-            android:text="@string/save_to_library"
-            android:textSize="20sp"
-            android:background="@drawable/bottom_border"
-            android:gravity="center_vertical" />
-        <TextView
-            android:id="@+id/reportIllegalBtn"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
-            android:layout_width="match_parent"
-            android:layout_height="64dp"
-            android:text="@string/report_illegal"
-            android:textColor="@color/submitted_homework_background_color"
-            android:textSize="20sp"
-            android:background="@drawable/bottom_border"
-            android:gravity="center_vertical" />
-        <TextView
-            android:id="@+id/cancelBtn"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
-            android:layout_width="match_parent"
-            android:layout_height="64dp"
-            android:text="@string/cancel"
-            android:textSize="20sp"
-            android:background="@drawable/bottom_border"
-            android:gravity="center_vertical" />
-    </LinearLayout>
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal|center_vertical"
+        android:orientation="vertical">
 
-</LinearLayout>
+        <android.support.v4.view.ViewPager
+            android:id="@+id/lessionImageViewPager"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|center_vertical"
+            android:layout_weight="1" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="15dp"
+            android:background="@color/white"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/lessionVoteBtn"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@drawable/bottom_border"
+                android:gravity="center_vertical"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:text="@string/vote"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/lessionCanvassBtn"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@drawable/bottom_border"
+                android:gravity="center_vertical"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:text="@string/canvass"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/saveImageBtn"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@drawable/bottom_border"
+                android:gravity="center_vertical"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:text="@string/save_to_library"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/reportIllegalBtn"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@drawable/bottom_border"
+                android:gravity="center_vertical"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:text="@string/report_illegal"
+                android:textColor="@color/submitted_homework_background_color"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/cancelBtn"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@drawable/bottom_border"
+                android:gravity="center_vertical"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:text="@string/cancel"
+                android:textSize="20sp" />
+        </LinearLayout>
+
+    </LinearLayout>
+</FrameLayout>
