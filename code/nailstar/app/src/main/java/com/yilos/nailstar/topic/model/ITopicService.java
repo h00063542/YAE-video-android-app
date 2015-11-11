@@ -1,6 +1,8 @@
 package com.yilos.nailstar.topic.model;
 
 import com.yilos.nailstar.framework.exception.NetworkDisconnectException;
+import com.yilos.nailstar.topic.entity.AddCommentInfo;
+import com.yilos.nailstar.topic.entity.SubmittedHomeworkInfo;
 import com.yilos.nailstar.topic.entity.TopicCommentInfo;
 import com.yilos.nailstar.topic.entity.TopicImageTextInfo;
 import com.yilos.nailstar.topic.entity.TopicInfo;
@@ -52,13 +54,13 @@ public interface ITopicService {
 
 
     /**
-     * 评论
+     * 新增评论
      *
-     * @param topicId
+     * @param info
      * @return
      * @throws NetworkDisconnectException
      */
-    boolean addComment(String topicId) throws NetworkDisconnectException;
+    String addComment(AddCommentInfo info) throws NetworkDisconnectException;
 
     /**
      * 下载
@@ -87,13 +89,15 @@ public interface ITopicService {
 
     boolean cancelCollection(String topicId) throws NetworkDisconnectException;
 
+
     /**
      * 交作业
      *
-     * @param topicId
+     * @param info
+     * @return
      * @throws NetworkDisconnectException
      */
-    boolean submittedHomework(String topicId) throws NetworkDisconnectException;
+    String submittedHomework(SubmittedHomeworkInfo info) throws NetworkDisconnectException;
 
 
     /**
@@ -103,4 +107,14 @@ public interface ITopicService {
      * @throws NetworkDisconnectException
      */
     boolean addVideoPlayCount(String topicId) throws NetworkDisconnectException;
+
+
+    /**
+     * 获取交作业人数
+     *
+     * @param topicId
+     * @return
+     * @throws NetworkDisconnectException
+     */
+    int getSubmittedHomeworkCount(String topicId) throws NetworkDisconnectException;
 }

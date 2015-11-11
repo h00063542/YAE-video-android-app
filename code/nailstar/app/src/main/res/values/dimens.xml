@@ -88,6 +88,7 @@
     <dimen name="my_slide_switch_height">23dp</dimen>
     <dimen name="my_version_number_margin_border_width">25dp</dimen>
     <dimen name="my_horizontal_bar_space_height">9dp</dimen>
+    <dimen name="zoomIn_layout_margin_bottom">50dp</dimen>
 </resources>
 
 
