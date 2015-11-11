@@ -90,4 +90,16 @@
     <string name="download_topic_image_text_index">保存了第%1$s张</string>
     <string name="save_topic_image_text_success">整套图片已保存到相册</string>
     <string name="homework_waiting_for_reviews">已有%1$s名同学提交了作业等待大咖点评</string>
+
+
+    <!-- 登录注册 -->
+    <string name="title_activity_login">账号登录</string>
+    <string name="login_user_name_text">"  账号"</string>
+    <string name="login_password_text">"  密码"</string>
+    <string name="login_button">"登 录"</string>
+    <string name="login_forget_password">忘记密码 ？</string>
+    <string name="login_use_3rd_account">使用第三方账号登录</string>
+    <string name="qq_title">QQ</string>
+    <string name="weibo_title">微博</string>
+    <string name="weixin_title">微信</string>
 </resources>
