@@ -20,7 +20,6 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.view.animation.TranslateAnimation;
@@ -79,7 +78,6 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
 
     private static final String TAG = "VideoPlayerActivity";
 
-    private static final int TOPIC_TAKE_IMAGE_REQUEST_CODE = 0;
     private static final int TOPIC_COMMENT_REQUEST_CODE = 3;
     private static final int TOPIC_HOMEWORK_REQUEST_CODE = 4;
 
@@ -199,7 +197,6 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
 
     private int mCommentReplyBackgroundColor;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -304,8 +301,8 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
 
         mTvHideTopicImageTextContent = (TextView) findViewById(R.id.tv_hide_topic_image_text_content);
         mTvDownloadTopicImageTextContent = (TextView) findViewById(R.id.tv_download_topic_image_text_content);
-        mDownloadTopicImageTextDialog = new Dialog(this, android.R.style.Theme_Light);
-        mDownloadTopicImageTextDialog.requestWindowFeature(Window.FEATURE_NO_TITLE); //before
+        mDownloadTopicImageTextDialog = new Dialog(this);
+//        mDownloadTopicImageTextDialog.requestWindowFeature(Window.FEATURE_NO_TITLE); //before
         LinearLayout downloadTopicImageTextLayout = (LinearLayout) getLayoutInflater().inflate(R.layout.download_topic_image_text_layout, null);
         mDownloadTopicImageTextDialog.setContentView(downloadTopicImageTextLayout);
         mDownloadTopicImageTextDialog.setCancelable(false);
@@ -358,17 +355,21 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         mTvTopicTabComment = (TextView) findViewById(R.id.tv_topic_tab_comment);
         mTvTopicSubmittedHomework = (TextView) findViewById(R.id.tv_submitted_homework);
         // 上传照片
-        mTakeImage = new TakeImage.Builder().context(this).uri(Constants.YILOS_NAILSTAR_PATH).aspectX(1).aspectY(1).outputX(800).outputY(800).callback(new TakeImageCallback() {
-            @Override
-            public void callback(Uri uri) {
-                // TODO
-                Intent intent = new Intent(TopicVideoPlayerActivity.this, TopicHomeworkActivity.class);
-                intent.putExtra(Constants.TOPIC_ID, mTopicId);
-                intent.putExtra(Constants.CONTENT_PIC, uri.getPath());
-                startActivityForResult(intent, TOPIC_HOMEWORK_REQUEST_CODE);
-                //Toast.makeText(TopicVideoPlayerActivity.this, "交作业成功", Toast.LENGTH_SHORT).show();
-            }
-        }).build();
+        mTakeImage = new TakeImage.Builder().context(this)
+                .uri(Constants.YILOS_NAILSTAR_PATH)
+                .aspectX(Constants.HOMEWORK_PIC_ASPECT_RATIO)
+                .aspectY(Constants.HOMEWORK_PIC_ASPECT_RATIO)
+                .outputX(Constants.HOMEWORK_PIC_PIXEL)
+                .outputY(Constants.HOMEWORK_PIC_PIXEL)
+                .callback(new TakeImageCallback() {
+                    @Override
+                    public void callback(Uri uri) {
+                        Intent intent = new Intent(TopicVideoPlayerActivity.this, TopicHomeworkActivity.class);
+                        intent.putExtra(Constants.TOPIC_ID, mTopicId);
+                        intent.putExtra(Constants.CONTENT_PIC, uri.getPath());
+                        startActivityForResult(intent, TOPIC_HOMEWORK_REQUEST_CODE);
+                    }
+                }).build();
     }
 
     private void initControlEvent() {
@@ -462,10 +463,6 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
             @Override
             public void onClick(View v) {
                 mDecorView.removeView(mZoomInImageTextLayout);
-
-//                if (mZoomInImageTextDialog.isShowing()) {
-//                    mZoomInImageTextDialog.dismiss();
-//                }
             }
         });
 
@@ -473,9 +470,8 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
             @Override
             public void onClick(View v) {
                 // 保存单张图片
-                String imageSrc = ((PhotoView) ((FrameLayout) mZoomInImageTextViewPager.getChildAt(0)).getChildAt(0)).getImageSrc();
-
-                mTopicVideoPlayerPresenter.downLoadTopicImage(mTopicId, imageSrc);
+                PhotoView photoView = ((PhotoView) ((FrameLayout) mZoomInImageTextViewPager.getChildAt(0)).getChildAt(0));
+                mTopicVideoPlayerPresenter.downLoadTopicImage(mTopicId, photoView.getImageSrc());
             }
         });
 
@@ -494,34 +490,33 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
             public void onClick(View v) {
                 // 下载图文信息到本地
                 if (null == mTopicImageTextInfo || CollectionUtil.isEmpty(mTopicImageTextInfo.getPictures())) {
-                    Toast.makeText(TopicVideoPlayerActivity.this, R.string.no_topic_image_text_info, Toast.LENGTH_SHORT).show();
+                    showShortToast(R.string.no_topic_image_text_info);
                     return;
                 }
+                mDownloadTopicImageTextDialog.show();
                 mTvDownloadTopicImageText.setText(R.string.saving_photos);
                 mRpbDownloadTopicImageText.setMax(mTopicImageTextInfo.getPictures().size());
                 mRpbDownloadTopicImageText.setVisibility(View.VISIBLE);
                 mIvDownloadTopicImageTextSuccess.setVisibility(View.GONE);
                 mDownloadTopicImageTextIndex = 0;
-                mDownloadTopicImageTextDialog.show();
                 mTopicVideoPlayerPresenter.downloadTopicImageText(mTopicId, mTopicImageTextInfo.getPictures());
-
             }
         });
 
         mZoomInImageLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                // 不需要处理，防止点击到底层view上的按钮
             }
         });
 
+        // 取消评论区域图片放大查看
         mIcvTopicCommentImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mDecorView.removeView(mZoomInImageLayout);
             }
         });
-
 
         // 喜欢
         mCbTopicTabLike.setOnCheckedChangeListener(new CheckBox.OnCheckedChangeListener() {
@@ -573,7 +568,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         if (View.GONE == visibility) {
             // 如果没有图文信息则返回
             if (mLayoutTopicImageTextContent.getChildCount() == 0) {
-                Toast.makeText(this, R.string.no_topic_image_text_info, Toast.LENGTH_SHORT).show();
+                showShortToast(R.string.no_topic_image_text_info);
                 return;
             }
 
@@ -1073,9 +1068,6 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
             contentText.append("<font color=\"#adafb0\">");
 
             if (topicCommentInfo.getIsHomework() == Constants.IS_HOME_WORK_VALUE) {
-//                contentText.append("<font color=\"#555657\">#")
-//                        .append(getString(R.string.submitted_homework))
-//                        .append("#    </font>");
                 contentText.append("#")
                         .append(getString(R.string.submitted_homework))
                         .append("#    ");
@@ -1107,7 +1099,12 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
             // -----------------显示作业图片-----------------
             if (topicCommentInfo.getIsHomework() == 1 && !StringUtil.isEmpty(topicCommentInfo.getContentPic())) {
                 ImageCacheView topicCommentHomeWorkIv = new ImageCacheView(this);
-                topicCommentHomeWorkIv.setImageSrc(topicCommentInfo.getContentPic());
+                if (!StringUtil.isHttpUrl(topicCommentInfo.getContentPic())) {
+                    topicCommentHomeWorkIv.setImageURI(Uri.parse(topicCommentInfo.getContentPic()));
+                } else {
+                    topicCommentHomeWorkIv.setImageSrc(topicCommentInfo.getContentPic());
+                }
+
                 LinearLayout.LayoutParams icvTopicCommentHomeWorkLp = new LinearLayout.LayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 icvTopicCommentHomeWorkLp.setMargins(0, 0, 0, mCommentContentPicMarginBottom);
@@ -1117,7 +1114,11 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
                 topicCommentHomeWorkIv.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mIcvTopicCommentImage.setImageSrc(topicCommentInfo.getContentPic());
+                        if (!StringUtil.isHttpUrl(topicCommentInfo.getContentPic())) {
+                            mIcvTopicCommentImage.setImageURI(Uri.parse(topicCommentInfo.getContentPic()));
+                        } else {
+                            mIcvTopicCommentImage.setImageSrc(topicCommentInfo.getContentPic());
+                        }
                         mDecorView.removeView(mZoomInImageLayout);
                         mDecorView.addView(mZoomInImageLayout);
                     }
@@ -1135,13 +1136,12 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
             topicCommentContentLayoutParent.addView(topicCommentContentLayout);
             topicCommentLayout.addView(topicCommentContentLayoutParent);
 
-            // 将评论和回复内容添加的界面
+            // 将评论和回复内容添加的界面，如果是新增的回复或评论的话，应该显示在第一条
             if (orderBy == Constants.TOPIC_COMMENTS_INIT_ORDER_BY_DESC) {
                 mLayoutTopicComments.addView(topicCommentLayout, 0);
             } else {
                 mLayoutTopicComments.addView(topicCommentLayout);
             }
-
         }
     }
 
@@ -1240,31 +1240,40 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
 
     @Override
     public void showDownloadTopicImageStatus(boolean isSuccess, String filePath) {
-        refreshMedia(filePath);
-        Toast.makeText(this, isSuccess ? "保存成功" : "保存失败", Toast.LENGTH_SHORT).show();
+        if (isSuccess) {
+            refreshMedia(filePath);
+            showShortToast(R.string.save_success);
+            return;
+        }
+        showShortToast(R.string.save_fail);
     }
 
     @Override
-    public void showDownloadTopicImageTextStatus(boolean isSuccess, String filePath) {
-        refreshMedia(filePath);
-        mRpbDownloadTopicImageText.setProgress(++mDownloadTopicImageTextIndex);
-        mTvDownloadTopicImageText.setText(String.format(getString(R.string.download_topic_image_text_index), mDownloadTopicImageTextIndex));
-
-        if (mRpbDownloadTopicImageText.getMax() == mRpbDownloadTopicImageText.getProgress()) {
-            // TODO 显示下载完成
-            mTvDownloadTopicImageText.setText(R.string.save_topic_image_text_success);
-            mRpbDownloadTopicImageText.setVisibility(View.GONE);
-            mIvDownloadTopicImageTextSuccess.setVisibility(View.VISIBLE);
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    mDownloadTopicImageTextDialog.dismiss();
-                    mRpbDownloadTopicImageText.setProgress(0);
-                }
-            }, 2000);
-
+    public void showDownloadTopicImageTextStatus(boolean isSuccess, final String filePath) {
+        if (!isSuccess) {
+            return;
         }
-        //Toast.makeText(this, isSuccess ? "保存成功" : "保存成功", Toast.LENGTH_SHORT).show();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                refreshMedia(filePath);
+                mRpbDownloadTopicImageText.setProgress(++mDownloadTopicImageTextIndex);
+                mTvDownloadTopicImageText.setText(String.format(getString(R.string.download_topic_image_text_index), mDownloadTopicImageTextIndex));
+                if (mRpbDownloadTopicImageText.getMax() == mRpbDownloadTopicImageText.getProgress()) {
+                    // TODO 显示下载完成
+                    mTvDownloadTopicImageText.setText(R.string.save_topic_image_text_success);
+//            mRpbDownloadTopicImageText.setVisibility(View.GONE);
+                    mIvDownloadTopicImageTextSuccess.setVisibility(View.VISIBLE);
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            mDownloadTopicImageTextDialog.dismiss();
+                            mRpbDownloadTopicImageText.setProgress(0);
+                        }
+                    }, 1500);
+                }
+            }
+        });
     }
 
     private void refreshMedia(String filePath) {
@@ -1460,5 +1469,10 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
             Log.e(TAG, "info is null");
         }
         mVDVideoView.play(p);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
     }
 }
