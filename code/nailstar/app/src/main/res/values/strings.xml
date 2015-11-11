@@ -102,4 +102,6 @@
     <string name="qq_title">QQ</string>
     <string name="weibo_title">微博</string>
     <string name="weixin_title">微信</string>
+    <string name="save_success">保存成功</string>
+    <string name="save_fail">保存失败</string>
 </resources>
