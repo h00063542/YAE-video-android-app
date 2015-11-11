@@ -3,6 +3,7 @@ package com.yilos.nailstar.util;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
 
 import org.apache.log4j.Logger;
@@ -87,10 +88,7 @@ public class FileUtils {
      * @param path
      */
     public static void mediaRefresh (Activity context, File path) {
-        Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        Uri uri = Uri.fromFile(path);
-        intent.setData(uri);
-        context.sendBroadcast(intent);
+        MediaScannerConnection.scanFile(context, new String[]{path.getAbsolutePath()}, null, null);
     }
 
     /**
@@ -99,8 +97,7 @@ public class FileUtils {
      * @param path
      */
     public static void mediaRefresh(Activity context, String path) {
-        File file = new File(path);
-        mediaRefresh(context, file);
+        MediaScannerConnection.scanFile(context, new String[]{path}, null, null);
     }
 
 }

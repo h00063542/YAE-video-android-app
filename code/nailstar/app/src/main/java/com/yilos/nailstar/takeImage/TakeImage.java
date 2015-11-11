@@ -16,6 +16,21 @@ import com.yilos.nailstar.util.Constants;
 
 import java.io.File;
 
+/**
+ * 从相册或者拍照中截图
+ * 使用方法：
+ * 1. 实例化TakeImage，需设定截图之后的存储路径、截图成功之后的回调方法、请求号，以及截图的长宽比、大小等，参考各个参数的注释（注意请求号会连续占用3个，请不要冲突）
+ *         TakeImage takeImage = new TakeImage.Builder().context(this).uri(Constants.YILOS_PATH).callback(new TakeImageCallback() {
+ *              @Override
+ *              public void callback(Uri uri) {
+ *
+ *              }
+ *         }).build();
+ *
+ * 2.在需要弹出截图框的事件中调用 takeImage.initTakeImage()
+ *
+ * 3.在onActivityResult方法中调用 takeImage.onActivityResult(requestCode, resultCode, data);
+ */
 public class TakeImage {
 
     private Uri resultUri;
@@ -247,11 +262,11 @@ public class TakeImage {
                     intent.setType("image/*");
                     intent.setAction(Intent.ACTION_GET_CONTENT);
                     if (context instanceof Activity) {
-                        ((Activity) context).startActivityForResult(Intent.createChooser(intent, "Select File"),
+                        ((Activity) context).startActivityForResult(Intent.createChooser(intent, activity.getResources().getString(R.string.select_image)),
                                 requestSelectFile);
                     }
                     if (context instanceof Fragment) {
-                        ((Fragment) context).startActivityForResult(Intent.createChooser(intent, "Select File"),
+                        ((Fragment) context).startActivityForResult(Intent.createChooser(intent, activity.getResources().getString(R.string.select_image)),
                                 requestSelectFile);
                     }
 
@@ -307,10 +322,11 @@ public class TakeImage {
         intent.putExtra("outputX", outputX);
         intent.putExtra("outputY", outputY);
         intent.putExtra("scale", true);
+        intent.putExtra("scaleUpIfNeeded", true);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, resultUri);
         intent.putExtra("return-data", false);
         intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
-        intent.putExtra("noFaceDetection", true); // no face detection
+        intent.putExtra("noFaceDetection", true);
         if (context instanceof Activity) {
             ((Activity)context).startActivityForResult(intent, requestCropImage);
         }

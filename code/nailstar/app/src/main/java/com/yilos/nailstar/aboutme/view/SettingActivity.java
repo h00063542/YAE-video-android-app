@@ -20,7 +20,7 @@ public class SettingActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
         titleBar = (TitleBar) findViewById(R.id.setting_title_bar);
-        titleBar.setBackgroundColor(getResources().getColor(R.color.white));
+        titleBar.setTitleBarBackgroundColor(R.color.white);
         backButton = titleBar.getBackButton(SettingActivity.this);
         titleTextView = titleBar.getTitleView();
         titleTextView.setText(R.string.about_me_setting);

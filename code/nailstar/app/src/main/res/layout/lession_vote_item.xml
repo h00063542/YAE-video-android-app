@@ -22,7 +22,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
-                android:scaleType="fitCenter"
+                android:scaleType="fitXY"
                 android:gravity="center_vertical"
                 android:src="@mipmap/ic_default_photo"
                 android:id="@+id/lessionVoteImg0" />
@@ -65,7 +65,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
-                android:scaleType="fitCenter"
+                android:scaleType="fitXY"
                 android:gravity="center_vertical"
                 android:src="@mipmap/ic_default_photo"
                 android:id="@+id/lessionVoteImg1" />
@@ -108,7 +108,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
-                android:scaleType="fitCenter"
+                android:scaleType="fitXY"
                 android:gravity="center_vertical"
                 android:src="@mipmap/ic_default_photo"
                 android:id="@+id/lessionVoteImg2" />
