@@ -88,35 +88,41 @@
                             android:gravity="center_vertical">
 
                             <TextView
-                                android:id="@+id/tv_video_author_name"
+                                android:id="@+id/tv_video_author_play_times"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:gravity="center_vertical"
-                                android:textSize="@dimen/topic_author_font_size" />
+                                android:gravity="center_vertical" />
 
-                            <TextView
-                                android:id="@+id/tv_video_playing_times"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="2dp"
-                                android:layout_toRightOf="@id/tv_video_author_name"
-                                android:gravity="center_vertical"
-                                android:text="0"
-                                android:textSize="@dimen/topic_video_playing_time_font_size" />
+                            <!--<TextView-->
+                            <!--android:id="@+id/tv_video_author_name"-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:gravity="center_vertical"-->
+                            <!--android:textSize="@dimen/topic_author_font_size" />-->
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_toRightOf="@id/tv_video_playing_times"
-                                android:gravity="center_vertical"
-                                android:text="@string/video_player_times"
-                                android:textSize="@dimen/topic_video_playing_time_font_size" />
+                            <!--<TextView-->
+                            <!--android:id="@+id/tv_video_playing_times"-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_marginLeft="2dp"-->
+                            <!--android:layout_toRightOf="@id/tv_video_author_name"-->
+                            <!--android:gravity="center_vertical"-->
+                            <!--android:text="0"-->
+                            <!--android:textSize="@dimen/topic_video_playing_time_font_size" />-->
+
+                            <!--<TextView-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_toRightOf="@id/tv_video_playing_times"-->
+                            <!--android:gravity="center_vertical"-->
+                            <!--android:text="@string/video_player_times"-->
+                            <!--android:textSize="@dimen/topic_video_playing_time_font_size" />-->
 
                             <LinearLayout
                                 android:id="@+id/layout_topic_author_tags"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_below="@id/tv_video_author_name"
+                                android:layout_below="@id/tv_video_author_play_times"
                                 android:gravity="center_vertical"
                                 android:orientation="horizontal"
                                 android:weightSum="1">
@@ -145,7 +151,7 @@
                                     android:id="@+id/tv_topic_author_tag_2"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginLeft="10dp"
+                                    android:layout_marginLeft="5dp"
                                     android:background="@color/author_tag_color"
                                     android:gravity="center_vertical"
                                     android:paddingLeft="5dp"
@@ -166,7 +172,7 @@
                                     android:id="@+id/tv_topic_author_tag_3"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginLeft="10dp"
+                                    android:layout_marginLeft="5dp"
                                     android:background="@color/author_tag_color"
                                     android:gravity="center_vertical"
                                     android:paddingLeft="5dp"
@@ -224,10 +230,10 @@
                         android:visibility="gone">
 
                         <!--分割线-->
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:background="@color/line_color" />
+                        <!--<TextView-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="1dp"-->
+                        <!--android:background="@color/line_color" />-->
 
                         <LinearLayout
                             android:id="@+id/layout_topic_image_text_content"
@@ -243,17 +249,20 @@
 
                         <RelativeLayout
                             android:layout_width="match_parent"
-                            android:layout_height="35dp">
+                            android:layout_height="35dp"
+                            android:layout_gravity="center_vertical"
+                            android:gravity="center_vertical">
 
                             <TextView
                                 android:id="@+id/tv_hide_topic_image_text_content"
                                 android:layout_width="wrap_content"
-                                android:layout_height="20dp"
+                                android:layout_height="match_parent"
                                 android:layout_centerInParent="true"
+                                android:gravity="center_vertical"
                                 android:text="@string/hide_topic_image_text_content" />
 
                             <ImageView
-                                android:layout_width="wrap_content"
+                                android:layout_width="10dp"
                                 android:layout_height="12dp"
                                 android:layout_centerInParent="true"
                                 android:layout_toLeftOf="@id/tv_hide_topic_image_text_content"
@@ -263,12 +272,14 @@
                             <TextView
                                 android:id="@+id/tv_download_topic_image_text_content"
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
+                                android:layout_height="match_parent"
                                 android:layout_alignParentEnd="true"
                                 android:layout_alignParentRight="true"
                                 android:layout_centerInParent="true"
                                 android:layout_marginRight="10dp"
-                                android:text="@string/download_topic_image_text_content" />
+                                android:gravity="center_vertical"
+                                android:text="@string/download_topic_image_text_content"
+                                android:textColor="@color/orange" />
                         </RelativeLayout>
 
                     </LinearLayout>

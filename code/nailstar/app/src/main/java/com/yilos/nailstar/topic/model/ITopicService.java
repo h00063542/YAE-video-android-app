@@ -85,6 +85,8 @@ public interface ITopicService {
      */
     boolean setTopicCollectionStatus(String topicId, boolean isCollection) throws NetworkDisconnectException;
 
+    boolean cancelCollection(String topicId) throws NetworkDisconnectException;
+
     /**
      * 交作业
      *

@@ -77,7 +77,7 @@ public class TopicCommentActivity extends BaseActivity implements ITopicCommentV
         mIvTopicCommentCancel = mTbTopicCommentHead.getBackButton();
         mTvTopicCommentTitle = mTbTopicCommentHead.getTitleView();
         mTvTopicCommentSubmitted = mTbTopicCommentHead.getRightTextButton();
-        mEtTopicCommentContent = (EditText) findViewById(R.id.et_topic_comment_content);
+        mEtTopicCommentContent = (EditText) findViewById(R.id.et_topic_homework_content);
 
         mIvTopicCommentCancel.setImageResource(R.mipmap.icon_back_white);
 
