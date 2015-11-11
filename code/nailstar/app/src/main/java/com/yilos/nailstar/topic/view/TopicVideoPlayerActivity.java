@@ -21,6 +21,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.view.animation.TranslateAnimation;
@@ -39,7 +40,6 @@ import com.sina.sinavideo.sdk.VDVideoView;
 import com.sina.sinavideo.sdk.VDVideoViewController;
 import com.sina.sinavideo.sdk.data.VDVideoInfo;
 import com.sina.sinavideo.sdk.data.VDVideoListInfo;
-import com.sina.sinavideo.sdk.utils.VDVideoFullModeController;
 import com.yilos.nailstar.R;
 import com.yilos.nailstar.framework.view.BaseActivity;
 import com.yilos.nailstar.main.MainActivity;
@@ -96,6 +96,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
     private ScrollView mSvVideoPlayer;
     // 视频播放控件
     private VDVideoView mVDVideoView;
+    private RelativeLayout mPlayIconParent;
     private ImageView mIvVideoPlayIcon;
 
     // 作者信息
@@ -198,13 +199,26 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
 
     private int mCommentReplyBackgroundColor;
 
+    private boolean initTopicInfoFinish = false;
+    private boolean initTopicRelatedInfoFinish = false;
+    private boolean initTopicImageTextInfoFinish = false;
+    private boolean initTopicCommentsFinish = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_topic_video_player);
+        showLoading("");
         UserUtil.saveUserInfo(this, new UserInfo("001", "text", "http://pic.yilos.com/162b73dc3f69af2dc8a79a1b9da7591e"));
         mTopicVideoPlayerPresenter = TopicVideoPlayerPresenter.getInstance(this);
         init();
+        checkInitFinish();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                hideLoading();
+            }
+        }, 2000);
     }
 
 
@@ -277,6 +291,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         // 手动这是播放窗口父类，横屏的时候，会用这个做为容器使用，如果不设置，那么默认直接跳转到DecorView
         mVDVideoView.setVDVideoViewContainer((ViewGroup) mVDVideoView.getParent());
         mIvVideoPlayIcon = (ImageView) findViewById(R.id.iv_video_play_icon);
+        mPlayIconParent = (RelativeLayout) mIvVideoPlayIcon.getParent();
 
         // 根据视频宽高比例，重新计算视频播放器高度
         mVDVideoView.getLayoutParams().height = (int) (getResources().getDisplayMetrics().widthPixels / Constants.VIDEO_ASPECT_RATIO);
@@ -437,12 +452,20 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
 //                return false;
 //            }
 //        });
+        mPlayIconParent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 屏蔽视频播放器的点击事件
+            }
+        });
 
         mIvVideoPlayIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mPlayIconParent.setVisibility(View.GONE);
                 mIvVideoPlayIcon.setVisibility(View.GONE);
                 mVDVideoView.play(0);
+                mTopicVideoPlayerPresenter.addVideoPlayCount(mTopicId);
             }
         });
 
@@ -695,6 +718,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
 
     @Override
     public void initTopicInfo(TopicInfo topicInfo) {
+        initTopicInfoFinish = true;
         //TODO 提示获取视频信息失败
         if (null == topicInfo) {
             LOGGER.error(TAG + " 获取topic信息为null，topicId:" + mTopicId);
@@ -710,7 +734,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         info.mTitle = topicInfo.getTitle();
         info.mPlayUrl = !mTopicVideoPlayerPresenter.checkHasLocalVideo(mVideoLocalFilePath) ? mVideoRemoteUrl : mVideoLocalFilePath;
         mVDVideoListInfo.addVideoInfo(info);
-        mVDVideoView.open(TopicVideoPlayerActivity.this, mVDVideoListInfo);
+        mVDVideoView.open(this, mVDVideoListInfo);
     }
 
     /**
@@ -763,6 +787,8 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
 
     @Override
     public void initTopicImageTextInfo(final TopicImageTextInfo topicImageTextInfo) {
+        initTopicImageTextInfoFinish = true;
+        checkInitFinish();
         //TODO 提示获取视频图文信息失败
         if (null == topicImageTextInfo) {
             LOGGER.error(TAG + " 获取topic图文信息为null，topicId:" + mTopicId);
@@ -931,6 +957,8 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
 
     @Override
     public void initTopicRelatedInfo(ArrayList<TopicRelatedInfo> topicRelatedList) {
+        initTopicRelatedInfoFinish = true;
+        checkInitFinish();
         if (CollectionUtil.isEmpty(topicRelatedList)) {
             LOGGER.error(TAG + " topic没有关联其他的的topics，topicId:" + mTopicId);
             return;
@@ -989,6 +1017,8 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
 
     @Override
     public void initTopicCommentsInfo(ArrayList<TopicCommentInfo> topicComments, int orderBy) {
+        initTopicCommentsFinish = true;
+        checkInitFinish();
         if (CollectionUtil.isEmpty(topicComments)) {
             // 设置评论已经全部加载完毕
             mIsTopicsCommentLastPage = true;
@@ -1320,6 +1350,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
     @Override
     protected void onStop() {
         super.onStop();
+        mVDVideoView.stop();
     }
 
     @Override
@@ -1463,10 +1494,8 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         super.onConfigurationChanged(newConfig);
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             mVDVideoView.setIsFullScreen(true);
-            Log.e(VDVideoFullModeController.TAG, "onConfigurationChanged---横屏");
         } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
             mVDVideoView.setIsFullScreen(false);
-            Log.e(VDVideoFullModeController.TAG, "onConfigurationChanged---竖屏");
         }
     }
 
@@ -1484,5 +1513,11 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
     @Override
     public void onStart() {
         super.onStart();
+    }
+
+    private void checkInitFinish() {
+        if (initTopicInfoFinish && initTopicRelatedInfoFinish && initTopicImageTextInfoFinish && initTopicCommentsFinish) {
+            hideLoading();
+        }
     }
 }
