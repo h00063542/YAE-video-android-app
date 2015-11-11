@@ -55,6 +55,7 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
     private ImageView rightButtonTwo;
     private ImageView rightButtonOne;
     private ImageView backButton;
+    private TextView rightButton;//标题栏右边按钮
 
     private AboutMePresenter aboutMePresenter;
     private RelativeLayout personInfoLayout;
@@ -258,6 +259,9 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
 //        rightButtonOne.setImageResource(R.drawable.ic_head_share);
 //        backButton = titleBar.getBackButton();
 //        backButton.setImageResource(R.drawable.ic_head_back);
+//        rightButton = titleBar.getRightTextButton();
+//        rightButton.setText("确定");
+
         LoginAPI loginAPI = LoginAPI.getInstance();
         if (loginAPI.isLogin()) {
             aboutMePresenter = AboutMePresenter.getInstance(this);

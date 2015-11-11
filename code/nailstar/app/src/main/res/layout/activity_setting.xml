@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:slideswitch="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/xk2">
 
@@ -10,27 +12,189 @@
         android:layout_height="wrap_content"></com.yilos.widget.titlebar.TitleBar>
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="@dimen/common_1_dp"
         android:background="@color/xk2"/>
+
     <RelativeLayout
+        android:id="@+id/clear_cache"
+        android:clickable="true"
         android:background="@color/white"
         android:layout_width="match_parent"
-        android:layout_height="100px"
+        android:layout_height="@dimen/my_horizontal_bar_height"
         android:gravity="center">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="清除缓存"
+            android:text="@string/clear_cache"
             android:textColor="@color/z2"
-            android:textSize="30px"
-            android:layout_marginLeft="20px"/>
+            android:textSize="@dimen/my_text_size"
+            android:layout_marginLeft="@dimen/my_margin_or_padding_border_width"/>
+        <TextView
+            android:id="@+id/cache_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cache_number"
+            android:textColor="@color/z3"
+            android:textSize="@dimen/my_text_size"
+            android:layout_marginRight="@dimen/my_margin_or_padding_border_width"
+            android:layout_alignParentRight="true"/>
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/my_middle_horizontal_bar_height"
+        android:textSize="@dimen/my_middle_text_size"
+        android:textColor="@color/z3"
+        android:text="@string/clear_cache_tip"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/my_margin_or_padding_border_width"/>
+
+    <RelativeLayout
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/my_horizontal_bar_height"
+        android:gravity="center">
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="78.9M"
+            android:text="@string/allow_wifi_watch"
+            android:textColor="@color/z2"
+            android:textSize="@dimen/my_text_size"
+            android:layout_marginLeft="@dimen/my_margin_or_padding_border_width"/>
+
+        <LinearLayout
+            android:layout_width="@dimen/my_slide_switch_width"
+            android:layout_height="@dimen/my_slide_switch_height"
+            android:layout_marginRight="@dimen/my_margin_or_padding_border_width"
+            android:layout_alignParentRight="true">
+            <com.leaking.slideswitch.SlideSwitch
+                android:id="@+id/swit"
+                android:layout_height="fill_parent"
+                android:layout_width="fill_parent"
+                slideswitch:isOpen="false"
+                slideswitch:shape="circle"
+                slideswitch:themeColor="@color/slide_switch" >
+            </com.leaking.slideswitch.SlideSwitch>
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/my_middle_horizontal_bar_height"
+        android:textSize="@dimen/my_middle_text_size"
+        android:textColor="@color/z3"
+        android:text="@string/allow_wifi_watch_tip"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/my_margin_or_padding_border_width"/>
+    <RelativeLayout
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/my_horizontal_bar_height"
+        android:gravity="center">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/version_info"
+            android:textColor="@color/z2"
+            android:textSize="@dimen/my_text_size"
+            android:layout_marginLeft="@dimen/my_margin_or_padding_border_width"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/version_info_number"
             android:textColor="@color/z3"
-            android:textSize="30px"
-            android:layout_marginRight="20px"
+            android:textSize="@dimen/my_text_size"
+            android:layout_marginRight="@dimen/my_version_number_margin_border_width"
             android:layout_alignParentRight="true"/>
     </RelativeLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/common_1_dp"
+        android:background="@color/xk2"/>
+    <RelativeLayout
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/my_horizontal_bar_height"
+        android:gravity="center">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/download_folder"
+            android:textColor="@color/z2"
+            android:textSize="@dimen/my_text_size"
+            android:layout_marginLeft="@dimen/my_margin_or_padding_border_width"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/download_folder_location"
+            android:textColor="@color/z3"
+            android:textSize="@dimen/my_text_size"
+            android:layout_marginRight="@dimen/my_version_number_margin_border_width"
+            android:layout_alignParentRight="true"/>
+    </RelativeLayout>
+
+    <!-- 我要打分 -->
+    <!--<RelativeLayout-->
+        <!--android:background="@color/white"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="@dimen/my_horizontal_bar_height"-->
+        <!--android:gravity="center">-->
+        <!--<TextView-->
+            <!--android:layout_centerVertical="true"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="@string/i_need_score"-->
+            <!--android:textColor="@color/z2"-->
+            <!--android:textSize="@dimen/my_text_size"-->
+            <!--android:layout_marginLeft="@dimen/my_margin_or_padding_border_width"/>-->
+
+        <!--<ImageView-->
+            <!--android:layout_centerVertical="true"-->
+            <!--android:layout_width="@dimen/about_me_list_item_img"-->
+            <!--android:layout_height="@dimen/about_me_list_item_img"-->
+            <!--android:src="@mipmap/ic_right_button"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:layout_marginRight="@dimen/about_me_border_padding"/>-->
+    <!--</RelativeLayout>-->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/common_1_dp"
+        android:background="@color/xk2"/>
+    <RelativeLayout
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/my_horizontal_bar_height"
+        android:gravity="center">
+        <TextView
+            android:layout_centerVertical="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/about_us"
+            android:textColor="@color/z2"
+            android:textSize="@dimen/my_text_size"
+            android:layout_marginLeft="@dimen/my_margin_or_padding_border_width"/>
+
+        <ImageView
+            android:layout_centerVertical="true"
+            android:layout_width="@dimen/about_me_list_item_img"
+            android:layout_height="@dimen/about_me_list_item_img"
+            android:src="@mipmap/ic_right_button"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/about_me_border_padding"/>
+    </RelativeLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/common_1_dp"
+        android:background="@color/xk2"/>
+    <TextView
+        android:layout_marginTop="@dimen/my_horizontal_bar_space_height"
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/my_horizontal_bar_height"
+        android:gravity="center"
+        android:textColor="@color/orange"
+        android:text="@string/quick_login"
+        android:textSize="@dimen/my_text_size"/>
 </LinearLayout>
