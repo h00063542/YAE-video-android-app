@@ -332,4 +332,31 @@ public class LessionPresenter {
             }
         }.start();
     }
+
+    public void reportIllegal(final CandidateLession candidateLession) {
+
+        new Thread() {
+            @Override
+            public void run() {
+                try {
+
+                    service.reportIllegal(candidateLession.getCandidateId());
+
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            // TODO
+                        }
+                    });
+                } catch (Exception e) {
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            // TODO
+                        }
+                    });
+                }
+            }
+        }.start();
+    }
 }

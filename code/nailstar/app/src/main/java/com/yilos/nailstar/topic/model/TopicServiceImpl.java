@@ -388,41 +388,41 @@ public class TopicServiceImpl implements ITopicService {
     }
 
 
-//    /**
-//     * {
-//     * uid: “daskfjafjafd”,
-//     * type: 1, // 2赞，3收藏
-//     * topicId: “rerjkdfkajfafdaf222”
-//     * }
-//     *
-//     * @param topicId
-//     * @return
-//     * @throws NetworkDisconnectException
-//     */
-//    @Override
-//    public boolean cancelCollection(String topicId) throws NetworkDisconnectException {
-//        if (!NailStarApplicationContext.getInstance().isNetworkConnected()) {
-//            throw new NetworkDisconnectException("网络没有连接");
-//        }
-//        String url = "/vapi/nailstar/topics/" + topicId + "/cancel";
-//
-//        try {
-//
-//            JSONObject jsonObject = new JSONObject();
-//            jsonObject.put(Constants.UID, "");
-//            jsonObject.put(Constants.TYPE, Constants.ACTION_TYPE_COLLECTION);
-//            jsonObject.put(Constants.TOPIC_ID, topicId);
-//            String strResult = HttpClient.post(url, jsonObject.toString());
-//            return null != buildJSONObject(strResult);
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//            LOGGER.error(MessageFormat.format("取消收藏topic失败，topicId:{0}，url:{1}", topicId, url), e);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            LOGGER.error(MessageFormat.format("取消收藏topic失败，topicId:{0}，url:{1}", topicId, url), e);
-//        }
-//        return false;
-//    }
+    /**
+     * {
+     * uid: “daskfjafjafd”,
+     * type: 1, // 2赞，3收藏
+     * topicId: “rerjkdfkajfafdaf222”
+     * }
+     *
+     * @param topicId
+     * @return
+     * @throws NetworkDisconnectException
+     */
+    @Override
+    public boolean cancelCollection(String topicId) throws NetworkDisconnectException {
+        if (!NailStarApplicationContext.getInstance().isNetworkConnected()) {
+            throw new NetworkDisconnectException("网络没有连接");
+        }
+        String url = "/vapi/nailstar/topics/" + topicId + "/cancel";
+
+        try {
+
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put(Constants.UID, "");
+            jsonObject.put(Constants.TYPE, Constants.ACTION_TYPE_COLLECTION);
+            jsonObject.put(Constants.TOPIC_ID, topicId);
+            String strResult = HttpClient.post(url, jsonObject.toString());
+            return null != buildJSONObject(strResult);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            LOGGER.error(MessageFormat.format("取消收藏topic失败，topicId:{0}，url:{1}", topicId, url), e);
+        } catch (IOException e) {
+            e.printStackTrace();
+            LOGGER.error(MessageFormat.format("取消收藏topic失败，topicId:{0}，url:{1}", topicId, url), e);
+        }
+        return false;
+    }
 
     /**
      * {

@@ -7,8 +7,7 @@
     <com.yilos.widget.titlebar.TitleBar
         android:id="@+id/setting_title_bar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"></com.yilos.widget.titlebar.TitleBar>
+        android:layout_height="wrap_content"></com.yilos.widget.titlebar.TitleBar>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="1dp"
