@@ -210,6 +210,8 @@ public class RequireLessionFragment extends Fragment implements LessionView {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 if (checkedId == goVotingBtn.getId()) {
 
+                    voteListViewAdapter.setViewType(VoteListViewAdapter.ViewType.VOTE_LIST);
+
                     lessionPresenter.goVoteLessionList();
 
                     // 切换的时候，保证页首显示的是返回的第一条数据
@@ -221,6 +223,8 @@ public class RequireLessionFragment extends Fragment implements LessionView {
                     goVotingBtnFloat.setChecked(true);
 
                 } else if (checkedId == goRankingBtn.getId()) {
+
+                    voteListViewAdapter.setViewType(VoteListViewAdapter.ViewType.RANKING_LIST);
 
                     lessionPresenter.goRankingLessionList();
 
@@ -428,16 +432,14 @@ public class RequireLessionFragment extends Fragment implements LessionView {
     public void refreshVoteLession(List<CandidateLession> voteLessionList) {
 
         voteListViewAdapter.setVoteLessionList(voteLessionList);
-        voteListViewAdapter.setViewType(VoteListViewAdapter.ViewType.VOTE_LIST);
         voteListViewAdapter.notifyDataSetChanged();
 
     }
 
     @Override
-    public void refreshRankingLession(List<CandidateLession> voteLessionList) {
+    public void refreshRankingLession(List<CandidateLession> rankingLessionList) {
 
-        voteListViewAdapter.setVoteLessionList(voteLessionList);
-        voteListViewAdapter.setViewType(VoteListViewAdapter.ViewType.RANKING_LIST);
+        voteListViewAdapter.setRankingLessionList(rankingLessionList);
         voteListViewAdapter.notifyDataSetChanged();
 
     }

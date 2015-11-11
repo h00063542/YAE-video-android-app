@@ -71,7 +71,7 @@ public class TakeImage {
         public Builder requestCode(int requestCode) {
             this.requestCode = requestCode;
             return this;
-        };
+        }
 
         /**
          * 传入当前页面的context

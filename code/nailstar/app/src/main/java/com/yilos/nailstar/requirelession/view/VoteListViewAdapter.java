@@ -39,8 +39,11 @@ public class VoteListViewAdapter extends BaseAdapter {
     // 当前显示的页面（投票页或者排行榜）
     private ViewType viewType = ViewType.VOTE_LIST;
 
-    // 投票页或者排行榜的数据
+    // 投票页的数据
     private List<CandidateLession> voteLessionList;
+
+    // 排行榜的数据
+    private List<CandidateLession> rankingLessionList;
 
     // 当前活动阶段（求教程阶段或者视频制作阶段）
     private int stage;
@@ -126,8 +129,10 @@ public class VoteListViewAdapter extends BaseAdapter {
             @Override
             public int getCount() {
                 int count = 0;
-                if (voteLessionList != null) {
+                if (viewType.equals(ViewType.VOTE_LIST) && voteLessionList != null) {
                     count = voteLessionList.size();
+                } else if (viewType.equals(ViewType.RANKING_LIST) && rankingLessionList != null) {
+                    count = rankingLessionList.size();
                 }
                 return count;
             }
@@ -149,11 +154,20 @@ public class VoteListViewAdapter extends BaseAdapter {
                     return null;
                 }
 
+                CandidateLession candidateLession;
+                if (viewType.equals(ViewType.VOTE_LIST)) {
+                    candidateLession = voteLessionList.get(position);
+                } else if (viewType.equals(ViewType.RANKING_LIST)) {
+                    candidateLession = rankingLessionList.get(position);
+                } else {
+                    return null;
+                }
+
                 View lessionImageItem = layoutInflater.inflate(R.layout.lession_image_item, null);
                 ImageCacheView lessionLargeImage = (ImageCacheView) lessionImageItem.findViewById(R.id.lessionLargeImage);
-                lessionLargeImage.setImageSrc(voteLessionList.get(position).getPicUrl());
-                if (voteLessionList.get(position).getPicUrl() != null && !"".equals(voteLessionList.get(position).getPicUrl())) {
-                    lessionLargeImage.setImageSrc(voteLessionList.get(position).getPicUrl());
+                lessionLargeImage.setImageSrc(candidateLession.getPicUrl());
+                if (candidateLession.getPicUrl() != null && !"".equals(candidateLession.getPicUrl())) {
+                    lessionLargeImage.setImageSrc(candidateLession.getPicUrl());
                 } else {
                     lessionLargeImage.setImageURI(null);
                 }
@@ -174,7 +188,12 @@ public class VoteListViewAdapter extends BaseAdapter {
 
             @Override
             public void onPageSelected(int position) {
-                currentImage = voteLessionList.get(position);
+                if (viewType.equals(ViewType.VOTE_LIST)) {
+                    currentImage = voteLessionList.get(position);
+                } else if (viewType.equals(ViewType.RANKING_LIST)) {
+                    currentImage = rankingLessionList.get(position);
+                }
+
             }
 
             @Override
@@ -216,6 +235,7 @@ public class VoteListViewAdapter extends BaseAdapter {
         reportIllegalBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                dismissImageActionDialog();
                 lessionPresenter.reportIllegal(currentImage);
             }
         });
@@ -224,6 +244,7 @@ public class VoteListViewAdapter extends BaseAdapter {
         lessionVoteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                dismissImageActionDialog();
                 lessionPresenter.vote(currentImage);
             }
         });
@@ -236,6 +257,13 @@ public class VoteListViewAdapter extends BaseAdapter {
     public void setVoteLessionList(List<CandidateLession> voteLessionList) {
 
         this.voteLessionList = voteLessionList;
+
+    }
+
+
+    public void setRankingLessionList(List<CandidateLession> rankingLessionList) {
+
+        this.rankingLessionList = rankingLessionList;
 
     }
 
@@ -270,13 +298,11 @@ public class VoteListViewAdapter extends BaseAdapter {
     public int getCount() {
 
         int count = 0;
-        if (voteLessionList != null) {
-            count = voteLessionList.size();
-        }
-
-        // 投票列表每行显示3个，所以需要除以3
-        if (viewType.equals(ViewType.VOTE_LIST)) {
-            count = (int) Math.ceil((double) count / 3);
+        if (viewType.equals(ViewType.VOTE_LIST) && voteLessionList != null) {
+            // 投票列表每行显示3个，所以需要除以3
+            count = (int) Math.ceil((double) voteLessionList.size() / 3);
+        } else if (viewType.equals(ViewType.RANKING_LIST) && rankingLessionList != null) {
+            count = rankingLessionList.size();
         }
 
         return count;
@@ -348,7 +374,7 @@ public class VoteListViewAdapter extends BaseAdapter {
 
         }
 
-        final CandidateLession candidateLession = voteLessionList.get(position);
+        final CandidateLession candidateLession = rankingLessionList.get(position);
 
         holder.rankingItem.lessionRankingNo.setText(String.valueOf(position + 1));
         holder.rankingItem.lessionAuthorName.setText(candidateLession.getAuthorName());

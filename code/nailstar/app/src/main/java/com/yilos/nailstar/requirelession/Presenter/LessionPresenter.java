@@ -231,6 +231,10 @@ public class LessionPresenter {
             @Override
             public void run() {
                 try {
+                    if (candidateLession.getVoted() != 0) {
+                        // 已经投票
+                        return;
+                    }
                     service.vote(candidateLession.getCandidateId());
                     // 设置为已投票
                     for (CandidateLession item : rankingLessionList) {
@@ -248,7 +252,7 @@ public class LessionPresenter {
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
-                            view.refreshRankingLession(rankingLessionList);
+                            view.notifyRefreshListView();
                         }
                     });
                 } catch (Exception e) {
