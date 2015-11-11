@@ -131,6 +131,8 @@
             android:layout_marginRight="@dimen/my_version_number_margin_border_width"
             android:layout_alignParentRight="true"/>
     </RelativeLayout>
+
+    <!-- 我要打分 -->
     <!--<RelativeLayout-->
         <!--android:background="@color/white"-->
         <!--android:layout_width="match_parent"-->
