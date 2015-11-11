@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.yilos.nailstar">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -21,6 +22,7 @@
         android:xlargeScreens="true" />
 
     <application
+        tools:replace="android:icon"
         android:name=".framework.application.NailStarApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
