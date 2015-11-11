@@ -91,12 +91,11 @@
     <string name="download_topic_image_text_index">保存了第%1$s张</string>
     <string name="save_topic_image_text_success">整套图片已保存到相册</string>
     <string name="homework_waiting_for_reviews">已有%1$s名同学提交了作业等待大咖点评</string>
-
-
+    
     <!-- 登录注册 -->
     <string name="title_activity_login">账号登录</string>
-    <string name="login_user_name_text">"  账号"</string>
-    <string name="login_password_text">"  密码"</string>
+    <string name="login_user_name_text">账号</string>
+    <string name="login_password_text">密码</string>
     <string name="login_button">"登 录"</string>
     <string name="login_forget_password">忘记密码 ？</string>
     <string name="login_use_3rd_account">使用第三方账号登录</string>
@@ -106,4 +105,12 @@
     <string name="sign_up">注册</string>
     <string name="enter_account">请输入账号</string>
     <string name="enter_password">请输入密码</string>
+    <string name="title_activity_register">手机注册</string>
+    <string name="enter_phone_number">请输入手机号</string>
+    <string name="enter_validate_code">请输入验证码</string>
+    <string name="enter_valid_password">设置密码（6-20个字）</string>
+    <string name="get_validate_code">获取验证码</string>
+    <string name="read_and_agree">我已阅读并同意</string>
+    <string name="nailstar_licence">美甲大咖软件用户协议</string>
+    <string name="title_activity_licence">用户协议</string>
 </resources>
