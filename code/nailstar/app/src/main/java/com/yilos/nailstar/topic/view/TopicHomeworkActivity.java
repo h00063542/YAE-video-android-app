@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.yilos.nailstar.R;
 import com.yilos.nailstar.framework.view.BaseActivity;
+import com.yilos.nailstar.topic.entity.SubmittedHomeworkInfo;
 import com.yilos.nailstar.topic.presenter.TopicHomeworkPresenter;
 import com.yilos.nailstar.util.Constants;
 import com.yilos.nailstar.util.UserUtil;
@@ -24,7 +25,7 @@ public class TopicHomeworkActivity extends BaseActivity implements ITopicHomewor
     private TextView mTvTopicHomeworkTitle;
     private TextView mTvTopicHomeworkSubmitted;
 
-    private TextView mTvTopicHomeworkWaitingReviews;
+    private TextView mTvTopicHomeworkReviews;
     private ImageView mIvTopicHomework;
 
 
@@ -34,7 +35,7 @@ public class TopicHomeworkActivity extends BaseActivity implements ITopicHomewor
     private String mContentPic;
     private String mContent;
 
-    private TopicHomeworkPresenter mTopicCommentPresenter;
+    private TopicHomeworkPresenter mTopicHomeworkPresenter;
 
 
     @Override
@@ -57,7 +58,8 @@ public class TopicHomeworkActivity extends BaseActivity implements ITopicHomewor
         // 初始化控件事件
         initControlEvent();
 
-        mTopicCommentPresenter = TopicHomeworkPresenter.getInstance(this);
+        mTopicHomeworkPresenter = TopicHomeworkPresenter.getInstance(this);
+        mTopicHomeworkPresenter.initSubmittedHomeworkCount(mTopicId);
     }
 
     private void initControl() {
@@ -65,6 +67,7 @@ public class TopicHomeworkActivity extends BaseActivity implements ITopicHomewor
         mIvTopicHomeworkCancel = mTbTopicHomeworkHead.getBackButton();
         mTvTopicHomeworkTitle = mTbTopicHomeworkHead.getTitleView();
         mTvTopicHomeworkSubmitted = mTbTopicHomeworkHead.getRightTextButton();
+        mTvTopicHomeworkReviews = (TextView) findViewById(R.id.tv_topic_homework_reviews);
         mEtTopicHomeworkContent = (EditText) findViewById(R.id.et_topic_homework_content);
 
         mIvTopicHomeworkCancel.setImageResource(R.mipmap.icon_back_white);
@@ -72,9 +75,13 @@ public class TopicHomeworkActivity extends BaseActivity implements ITopicHomewor
         mTvTopicHomeworkTitle.setText(getString(R.string.submitted_homework));
         mTvTopicHomeworkSubmitted.setText(getString(R.string.submitted));
 
-        mTvTopicHomeworkWaitingReviews = (TextView) findViewById(R.id.tv_topic_homework_waiting_for_reviews);
+        mTvTopicHomeworkReviews = (TextView) findViewById(R.id.tv_topic_homework_reviews);
         mIvTopicHomework = (ImageView) findViewById(R.id.iv_topic_homework);
         mIvTopicHomework.setImageURI(Uri.parse(mContentPic));
+    }
+
+    public void initSubmittedHomeworkCount(int count) {
+        mTvTopicHomeworkReviews.setText(String.format(getString(R.string.homework_waiting_for_reviews), count));
     }
 
     private void initControlEvent() {
@@ -93,7 +100,13 @@ public class TopicHomeworkActivity extends BaseActivity implements ITopicHomewor
             @Override
             public void onClick(View v) {
                 mContent = mEtTopicHomeworkContent.getText().toString();
-                mTopicCommentPresenter.submittedHomework(null);
+                String userId = UserUtil.getUserInfo(TopicHomeworkActivity.this).getUserId();
+                SubmittedHomeworkInfo info = new SubmittedHomeworkInfo();
+                info.setTopicId(mTopicId);
+                info.setContent(mContent);
+                info.setPicUrl(Constants.EMPTY_STRING);
+                info.setUserId(userId);
+                mTopicHomeworkPresenter.submittedHomework(info);
             }
         });
 
@@ -105,7 +118,7 @@ public class TopicHomeworkActivity extends BaseActivity implements ITopicHomewor
         //设置返回数据
         intent.putExtra(Constants.TOPIC_ID, mTopicId);
         intent.putExtra(Constants.CONTENT, mContent);
-        intent.putExtra(Constants.CONTENT_PIC, "");
+        intent.putExtra(Constants.CONTENT_PIC, mContentPic);
         setResult(RESULT_OK, intent);
         finish();
     }

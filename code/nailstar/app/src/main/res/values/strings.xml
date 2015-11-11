@@ -9,7 +9,7 @@
     <string name="title_section2">Section 2</string>
     <string name="title_section3">Section 3</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
+    <!-- 主题详情 -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="video_author_name_play_time">%1$s  %2$s次播放</string>
     <string name="topic_image_text_content">图文分解</string>
@@ -21,6 +21,21 @@
     <string name="comment">评论</string>
     <string name="submitted_homework">交作业</string>
     <string name="reply">回复</string>
+    <string name="save_success">保存成功</string>
+    <string name="save_fail">保存失败</string>
+    <string name="abnormal_exit_program">抱歉，程序出现异常，即将退出。</string>
+    <string name="back">返回</string>
+    <string name="share">分享</string>
+    <string name="loading_finish">已经全部加载完毕</string>
+    <string name="submitted">提交</string>
+    <string name="write_down_your_learning_experience">写下你的学习心得</string>
+    <string name="like">喜欢</string>
+    <string name="topic_comment_count">评论数</string>
+    <string name="saving_photos">正在保存图片</string>
+    <string name="no_topic_image_text_info">暂无图文信息</string>
+    <string name="download_topic_image_text_index">保存了第%1$s张</string>
+    <string name="save_topic_image_text_success">整套图片已保存到相册</string>
+    <string name="homework_waiting_for_reviews">已有%1$s名同学提交了作业等待大咖点评</string>
 
     <!-- about me -->
     <string name="about_me_my">我的</string>
@@ -78,20 +93,6 @@
     <string name="cancel">取消</string>
     <string name="select_image">选择图片</string>
 
-    <string name="abnormal_exit_program">抱歉，程序出现异常，即将退出。</string>
-    <string name="back">返回</string>
-    <string name="share">分享</string>
-    <string name="loading_finish">已经全部加载完毕</string>
-    <string name="submitted">提交</string>
-    <string name="write_down_your_learning_experience">写下你的学习心得</string>
-    <string name="like">喜欢</string>
-    <string name="topic_comment_count">评论数</string>
-    <string name="saving_photos">正在保存图片</string>
-    <string name="no_topic_image_text_info">暂无图文信息</string>
-    <string name="download_topic_image_text_index">保存了第%1$s张</string>
-    <string name="save_topic_image_text_success">整套图片已保存到相册</string>
-    <string name="homework_waiting_for_reviews">已有%1$s名同学提交了作业等待大咖点评</string>
-    
     <!-- 登录注册 -->
     <string name="title_activity_login">账号登录</string>
     <string name="login_user_name_text">账号</string>
