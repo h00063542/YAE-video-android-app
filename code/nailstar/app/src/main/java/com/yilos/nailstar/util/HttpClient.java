@@ -30,6 +30,14 @@ public class HttpClient {
     }
 
     /**
+     * 获取OkHttpClient实例
+     * @return
+     */
+    public static OkHttpClient getOkHttpClient() {
+        return okHttpClient;
+    }
+
+    /**
      * 获取Json数据
      *
      * @param url url地址

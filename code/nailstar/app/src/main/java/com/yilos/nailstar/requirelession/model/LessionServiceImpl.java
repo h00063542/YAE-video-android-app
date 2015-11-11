@@ -123,4 +123,16 @@ public class LessionServiceImpl implements LessionService {
         }
 
     }
+
+    @Override
+    public void reportIllegal(String id) throws IOException, JSONException {
+        String url = "/vapi/nailstar/qjc/candidate/" + id + "/report";
+        String stringResult = HttpClient.post(url, "{}");
+
+        JSONObject jsonResult = new JSONObject(stringResult);
+
+        if (jsonResult.getInt("code") != 0) {
+            throw new IOException("Unexpected code");
+        }
+    }
 }
