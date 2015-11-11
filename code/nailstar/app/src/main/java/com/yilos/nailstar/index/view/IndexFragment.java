@@ -209,7 +209,7 @@ public class IndexFragment extends Fragment implements IIndexView {
             public void onGlobalLayout() {
                 Rect rect = new Rect();
                 view.getDrawingRect(rect);
-                int height = rect.height() - getResources().getDimensionPixelSize(R.dimen.index_tab_height) - getResources().getDimensionPixelSize(R.dimen.common_tool_bar_height);
+                int height = rect.height() - getResources().getDimensionPixelSize(R.dimen.index_tab_height) - getResources().getDimensionPixelSize(R.dimen.common_title_bar_height);
                 ((MaxHeightGridLayoutManager) latestListView.getLayoutManager()).setMaxHeight(height);
                 ((MaxHeightGridLayoutManager) hotestListView.getLayoutManager()).setMaxHeight(height);
                 ((MaxHeightGridLayoutManager) watchListView.getLayoutManager()).setMaxHeight(height);

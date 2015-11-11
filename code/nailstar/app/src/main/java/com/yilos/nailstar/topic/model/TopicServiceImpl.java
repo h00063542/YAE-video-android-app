@@ -48,7 +48,7 @@ public class TopicServiceImpl implements ITopicService {
     @Override
     public TopicInfo getTopicInfo(String topicId) throws NetworkDisconnectException {
         if (!NailStarApplicationContext.getInstance().isNetworkConnected()) {
-            String strResult = getLocalJsonResult(topicId, Constants.FILE_TYPE_TOPIC_INFO);
+            String strResult = getLocalJsonResult(topicId, Constants.FILE_NAME_TOPIC_INFO);
             return buildTopicInfo(topicId, strResult);
         }
         String url = "/vapi/nailstar/topics/" + topicId;
@@ -56,7 +56,7 @@ public class TopicServiceImpl implements ITopicService {
             String strResult = HttpClient.getJson(url);
             TopicInfo topicInfo = buildTopicInfo(topicId, strResult);
             if (null != topicInfo) {
-                writeLocalJsonResult(topicId, strResult, Constants.FILE_TYPE_TOPIC_INFO);
+                writeLocalJsonResult(topicId, strResult, Constants.FILE_NAME_TOPIC_INFO);
             }
             return topicInfo;
         } catch (IOException e) {
@@ -119,7 +119,7 @@ public class TopicServiceImpl implements ITopicService {
     @Override
     public TopicImageTextInfo getTopicImageTextInfo(String topicId) throws NetworkDisconnectException {
         if (!NailStarApplicationContext.getInstance().isNetworkConnected()) {
-            String strResult = getLocalJsonResult(topicId, Constants.FILE_TYPE_TOPIC_IMAGE_TEXT_INFO);
+            String strResult = getLocalJsonResult(topicId, Constants.FILE_NAME_TOPIC_IMAGE_TEXT_INFO);
             return buildTopicImageTextInfo(topicId, strResult);
         }
         try {
@@ -127,7 +127,7 @@ public class TopicServiceImpl implements ITopicService {
             String strResult = HttpClient.getJson(url);
             TopicImageTextInfo topicImageTextInfo = buildTopicImageTextInfo(topicId, strResult);
             if (null != topicImageTextInfo) {
-                writeLocalJsonResult(topicId, strResult, Constants.FILE_TYPE_TOPIC_IMAGE_TEXT_INFO);
+                writeLocalJsonResult(topicId, strResult, Constants.FILE_NAME_TOPIC_IMAGE_TEXT_INFO);
             }
             return topicImageTextInfo;
         } catch (IOException e) {
@@ -177,7 +177,7 @@ public class TopicServiceImpl implements ITopicService {
     @Override
     public ArrayList<TopicRelatedInfo> getTopicRelatedInfoList(String topicId) throws NetworkDisconnectException {
         if (!NailStarApplicationContext.getInstance().isNetworkConnected()) {
-            String strResult = getLocalJsonResult(topicId, Constants.FILE_TYPE_TOPIC_RELATE_INFO);
+            String strResult = getLocalJsonResult(topicId, Constants.FILE_NAME_TOPIC_RELATE_INFO);
             return buildTopicRelatedInfo(topicId, strResult);
         }
         String url = "/vapi/nailstar/topics/" + topicId + "/related";
@@ -185,7 +185,7 @@ public class TopicServiceImpl implements ITopicService {
             String strResult = HttpClient.getJson(url);
             ArrayList<TopicRelatedInfo> result = buildTopicRelatedInfo(topicId, strResult);
             if (!CollectionUtil.isEmpty(result)) {
-                writeLocalJsonResult(topicId, strResult, Constants.FILE_TYPE_TOPIC_RELATE_INFO);
+                writeLocalJsonResult(topicId, strResult, Constants.FILE_NAME_TOPIC_RELATE_INFO);
             }
             return result;
 
@@ -232,7 +232,7 @@ public class TopicServiceImpl implements ITopicService {
             if (page != 1) {
                 return new ArrayList<TopicCommentInfo>();
             }
-            String strResult = getLocalJsonResult(topicId, Constants.FILE_TYPE_TOPIC_COMMENT_INFO);
+            String strResult = getLocalJsonResult(topicId, Constants.FILE_NAME_TOPIC_COMMENT_INFO);
             return buildTopicCommentInfo(topicId, strResult);
         }
         String url = "/vapi/nailstar/topics/" + topicId + "/comments?page=" + page;
@@ -240,7 +240,7 @@ public class TopicServiceImpl implements ITopicService {
             String strResult = HttpClient.getJson(url);
             ArrayList<TopicCommentInfo> result = buildTopicCommentInfo(topicId, strResult);
             if (page == 1 && !CollectionUtil.isEmpty(result)) {
-                writeLocalJsonResult(topicId, strResult, Constants.FILE_TYPE_TOPIC_COMMENT_INFO);
+                writeLocalJsonResult(topicId, strResult, Constants.FILE_NAME_TOPIC_COMMENT_INFO);
             }
             return result;
         } catch (IOException e) {
@@ -388,41 +388,41 @@ public class TopicServiceImpl implements ITopicService {
     }
 
 
-//    /**
-//     * {
-//     * uid: “daskfjafjafd”,
-//     * type: 1, // 2赞，3收藏
-//     * topicId: “rerjkdfkajfafdaf222”
-//     * }
-//     *
-//     * @param topicId
-//     * @return
-//     * @throws NetworkDisconnectException
-//     */
-//    @Override
-//    public boolean cancelCollection(String topicId) throws NetworkDisconnectException {
-//        if (!NailStarApplicationContext.getInstance().isNetworkConnected()) {
-//            throw new NetworkDisconnectException("网络没有连接");
-//        }
-//        String url = "/vapi/nailstar/topics/" + topicId + "/cancel";
-//
-//        try {
-//
-//            JSONObject jsonObject = new JSONObject();
-//            jsonObject.put(Constants.UID, "");
-//            jsonObject.put(Constants.TYPE, Constants.ACTION_TYPE_COLLECTION);
-//            jsonObject.put(Constants.TOPIC_ID, topicId);
-//            String strResult = HttpClient.post(url, jsonObject.toString());
-//            return null != buildJSONObject(strResult);
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//            LOGGER.error(MessageFormat.format("取消收藏topic失败，topicId:{0}，url:{1}", topicId, url), e);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            LOGGER.error(MessageFormat.format("取消收藏topic失败，topicId:{0}，url:{1}", topicId, url), e);
-//        }
-//        return false;
-//    }
+    /**
+     * {
+     * uid: “daskfjafjafd”,
+     * type: 1, // 2赞，3收藏
+     * topicId: “rerjkdfkajfafdaf222”
+     * }
+     *
+     * @param topicId
+     * @return
+     * @throws NetworkDisconnectException
+     */
+    @Override
+    public boolean cancelCollection(String topicId) throws NetworkDisconnectException {
+        if (!NailStarApplicationContext.getInstance().isNetworkConnected()) {
+            throw new NetworkDisconnectException("网络没有连接");
+        }
+        String url = "/vapi/nailstar/topics/" + topicId + "/cancel";
+
+        try {
+
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put(Constants.UID, "");
+            jsonObject.put(Constants.TYPE, Constants.ACTION_TYPE_COLLECTION);
+            jsonObject.put(Constants.TOPIC_ID, topicId);
+            String strResult = HttpClient.post(url, jsonObject.toString());
+            return null != buildJSONObject(strResult);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            LOGGER.error(MessageFormat.format("取消收藏topic失败，topicId:{0}，url:{1}", topicId, url), e);
+        } catch (IOException e) {
+            e.printStackTrace();
+            LOGGER.error(MessageFormat.format("取消收藏topic失败，topicId:{0}，url:{1}", topicId, url), e);
+        }
+        return false;
+    }
 
     /**
      * {

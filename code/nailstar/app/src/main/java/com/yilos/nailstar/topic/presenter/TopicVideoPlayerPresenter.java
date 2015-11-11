@@ -1,6 +1,5 @@
 package com.yilos.nailstar.topic.presenter;
 
-import com.sina.sinavideo.coreplayer.util.StringUtils;
 import com.yilos.nailstar.framework.exception.NetworkDisconnectException;
 import com.yilos.nailstar.topic.entity.TopicCommentInfo;
 import com.yilos.nailstar.topic.entity.TopicImageTextInfo;
@@ -154,8 +153,9 @@ public class TopicVideoPlayerPresenter {
                 .start();
     }
 
-    public void download(final String url, final String filePath) {
-        TaskManager.Task loadTopicComments = new TaskManager.BackgroundTask() {
+    public void downLoadTopicImage(final String topicId, final String url) {
+        final String filePath = buildPictureLocalFilePath(topicId, url);
+        TaskManager.Task download = new TaskManager.BackgroundTask() {
             @Override
             public Object doWork(Object data) {
                 try {
@@ -171,16 +171,52 @@ public class TopicVideoPlayerPresenter {
         TaskManager.UITask<Boolean> updateUi = new TaskManager.UITask<Boolean>() {
             @Override
             public Object doWork(Boolean isSuccess) {
-                videoPlayerView.showDownloadStatus(isSuccess);
+                videoPlayerView.showDownloadTopicImageStatus(isSuccess, filePath);
                 return null;
             }
         };
 
         new TaskManager()
-                .next(loadTopicComments)
+                .next(download)
                 .next(updateUi)
                 .start();
 
+    }
+
+    public void downloadTopicImageText(final String topicId, final ArrayList<String> urls) {
+        TaskManager.Task download;
+        TaskManager.Task updateUi;
+
+        int index = 0;
+        for (final String url : urls) {
+            final String filePath = new StringBuffer().append(Constants.YILOS_NAILSTAR_PICTURE_PATH).append(topicId).append(Constants.UNDERLINE).append(index++).append(Constants.PNG_SUFFIX).toString();
+            buildPictureLocalFilePath(topicId, url);
+            download = new TaskManager.BackgroundTask() {
+                @Override
+                public Object doWork(Object data) {
+                    try {
+                        return topicsService.download(url, filePath);
+                    } catch (NetworkDisconnectException e) {
+                        e.printStackTrace();
+                        LOGGER.error("下载文件失败，url：" + url + "，filePath：" + filePath, e);
+                    }
+                    return null;
+                }
+            };
+
+            updateUi = new TaskManager.UITask<Boolean>() {
+                @Override
+                public Object doWork(Boolean isSuccess) {
+                    videoPlayerView.showDownloadTopicImageTextStatus(isSuccess, filePath);
+                    return null;
+                }
+            };
+            new TaskManager()
+                    .next(download)
+                    .next(updateUi)
+                    .start();
+
+        }
     }
 
     public void shareTopic(String topicId) {

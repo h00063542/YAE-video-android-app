@@ -1,4 +1,4 @@
-package com.yilos.nailstar.splash;
+package com.yilos.nailstar.splash.view;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,8 +6,8 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 
 import com.yilos.nailstar.R;
-import com.yilos.nailstar.framework.application.NailStarApplication;
 import com.yilos.nailstar.main.MainActivity;
+import com.yilos.nailstar.splash.presenter.SplashPresenter;
 import com.yilos.nailstar.util.TaskManager;
 
 public class SplashActivity extends AppCompatActivity {
@@ -32,7 +32,7 @@ public class SplashActivity extends AppCompatActivity {
         TaskManager.BackgroundTask preload = new TaskManager.BackgroundTask() {
             @Override
             public Object doWork(Object data) {
-                NailStarApplication.getApplication().preloadIndexContent();
+                SplashPresenter.getInstance().splashWork();
                 return null;
             }
         };

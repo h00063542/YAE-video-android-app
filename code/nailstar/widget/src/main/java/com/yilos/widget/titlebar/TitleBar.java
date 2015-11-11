@@ -1,4 +1,5 @@
 package com.yilos.widget.titlebar;
+import android.app.Activity;
 import android.view.ViewTreeObserver;
 import android.widget.RelativeLayout;
 
@@ -19,11 +20,15 @@ import com.yilos.widget.R;
  */
 public class TitleBar extends RelativeLayout {
     private ImageView backButton;//返回按钮
+    private ImageView searchButton;//左边搜索按钮
     private TextView rightTextButton;//右边确定按钮
     private ImageView rightImageButtonOne;//从右边算起的第一个图片按钮
     private ImageView rightImageButtonTwo;//从右边算起的第二个图片按钮
     private TextView titleView;//顶部居中标题
     private TextView leftTitleView;//顶部居左标题
+    private ImageView imageTitleView;//顶部图片标题
+
+    private RelativeLayout titleBarGroup;//背景
 
     private Context mContext;
 
@@ -37,9 +42,25 @@ public class TitleBar extends RelativeLayout {
         view.setVisibility(VISIBLE);
     }
 
+    public ImageView getBackButton(final Activity activity) {
+        showWidget(backButton);
+        backButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                activity.finish();
+            }
+        });
+        return backButton;
+    }
+
     public ImageView getBackButton() {
         showWidget(backButton);
         return backButton;
+    }
+
+    public ImageView getSearchButton() {
+        showWidget(searchButton);
+        return searchButton;
     }
 
     public TextView getRightTextButton() {
@@ -57,6 +78,11 @@ public class TitleBar extends RelativeLayout {
         return leftTitleView;
     }
 
+    public ImageView getImageTitleView() {
+        showWidget(imageTitleView);
+        return imageTitleView;
+    }
+
     public ImageView getRightImageButtonOne() {
         showWidget(rightImageButtonOne);
         return rightImageButtonOne;
@@ -67,9 +93,18 @@ public class TitleBar extends RelativeLayout {
         return rightImageButtonTwo;
     }
 
+    public void setTitleBarBackgroundColor(int color) {
+        titleBarGroup.setBackgroundColor(getResources().getColor(color));
+    }
+    private LayoutInflater layoutInflater;
     private void init() {
-        LayoutInflater layoutInflater = LayoutInflater.from(mContext);
+        layoutInflater = LayoutInflater.from(mContext);
         layoutInflater.inflate(R.layout.title_bar, this);
+
+        titleBarGroup = (RelativeLayout)findViewById(R.id.title_bar_group);
+        titleBarGroup.setBackgroundColor(getResources().getColor(R.color.orange));
+        searchButton = (ImageView)findViewById(R.id.title_bar_left_search);
+        imageTitleView = (ImageView)findViewById(R.id.title_bar_image_title);
         backButton = (ImageView)findViewById(R.id.title_bar_left_back);
         rightTextButton = (TextView)findViewById(R.id.title_bar_right_text_button);
         titleView = (TextView)findViewById(R.id.title_bar_title);

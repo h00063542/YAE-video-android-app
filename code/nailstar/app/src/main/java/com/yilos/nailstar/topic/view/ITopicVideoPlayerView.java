@@ -45,7 +45,7 @@ public interface ITopicVideoPlayerView {
 
     void showTopicCollectionStatus(boolean isCollection, boolean isSuccess);
 
-    void showDownloadStatus(boolean isSuccess);
+    void showDownloadTopicImageStatus(boolean isSuccess, String filePath);
 
-
+    void showDownloadTopicImageTextStatus(boolean isSuccess, String filePath);
 }
