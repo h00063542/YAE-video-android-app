@@ -19,7 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/vp_zoomIn_topic_image_text"
-        android:layout_marginBottom="50dp"
+        android:layout_marginBottom="@dimen/zoomIn_layout_margin_bottom"
         android:orientation="horizontal">
 
         <TextView

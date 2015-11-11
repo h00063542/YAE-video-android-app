@@ -68,8 +68,13 @@ public class Constants {
     /**
      * 视频宽高比例
      */
-    public static final double VIDEO_ASPECT_RATIO = 1.78;
+    public static final double VIDEO_ASPECT_RATIO = 1.78d;
 
+
+    /**
+     * 图文分解宽高比例
+     */
+    public static final double IMAGE_TEXT_ASPECT_RATIO = 1.75d;
 
     /**
      * 评论

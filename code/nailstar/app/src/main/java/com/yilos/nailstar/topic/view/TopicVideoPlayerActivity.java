@@ -13,6 +13,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.Html;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -370,6 +371,14 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
                         startActivityForResult(intent, TOPIC_HOMEWORK_REQUEST_CODE);
                     }
                 }).build();
+
+        //  计算图文详情放大时文字的marginTop
+        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+        int widthPixels = displayMetrics.widthPixels;
+        int heightPixels = displayMetrics.heightPixels;
+        int zooInLayout = heightPixels - getResources().getDimensionPixelSize(R.dimen.zoomIn_layout_margin_bottom);
+        int zoomInImageHeight = (int) (widthPixels / Constants.IMAGE_TEXT_ASPECT_RATIO);
+        mZoomInTextViewMarginTop = (zooInLayout / 2) + (zoomInImageHeight / 2) + mImageTextMargin;
     }
 
     private void initControlEvent() {
@@ -803,6 +812,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         ArrayList<String> pictures = topicImageTextInfo.getPictures();
         final FrameLayout[] views = new FrameLayout[pictures.size()];
         final FrameLayout.LayoutParams textLp = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        textLp.setMargins(mImageTextMargin, mZoomInTextViewMarginTop, mImageTextMargin, 0);
         int selectedIndex = -1;
         LayoutInflater inflater = getLayoutInflater();
         String picUrl = null;
@@ -883,20 +893,20 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
                         .append("/")
                         .append(getCount());
                 mTvZoomInImageTextIndex.setText(String.valueOf(text));
-                if (null != container && container.getChildCount() > 0) {
-                    // 获取第一页显示的图片，获取图片的底部Y轴位置，用于控制TextView的位置
-                    PhotoView photoView = ((PhotoView) ((FrameLayout) container.getChildAt(0)).getChildAt(0));
-                    mZoomInTextViewMarginTop = mImageTextMargin + (int) photoView.getInfo().getmRect().bottom;
-                    textLp.setMargins(mImageTextMargin, mZoomInTextViewMarginTop, mImageTextMargin, 0);
-
-//                    FrameLayout.LayoutParams textLp = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-//                    textLp.setMargins(mImageTextMargin, mImageTextMargin + (int) rectF.bottom, mImageTextMargin, 0);
-//                    TextView textView = ((TextView) ((FrameLayout) container.getChildAt(1)).getChildAt(1));
-//                    textView.setLayoutParams(textLp);
-//                    Log.i(TAG, "Text:" + textView.getText());
-//                    Log.i(TAG, "bottom:" + rectF.bottom);
-//                    Log.i(TAG, "photoView.getMeasuredHeight():" + photoView.getMeasuredHeight() + ",textView.getMeasuredHeight():" + textView.getMeasuredHeight());
-                }
+//                if (null != container && container.getChildCount() > 0) {
+//                    // 获取第一页显示的图片，获取图片的底部Y轴位置，用于控制TextView的位置
+//                    PhotoView photoView = ((PhotoView) ((FrameLayout) container.getChildAt(0)).getChildAt(0));
+//                    mZoomInTextViewMarginTop = mImageTextMargin + (int) photoView.getInfo().getmRect().bottom;
+//                    textLp.setMargins(mImageTextMargin, mZoomInTextViewMarginTop, mImageTextMargin, 0);
+//
+////                    FrameLayout.LayoutParams textLp = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+////                    textLp.setMargins(mImageTextMargin, mImageTextMargin + (int) rectF.bottom, mImageTextMargin, 0);
+////                    TextView textView = ((TextView) ((FrameLayout) container.getChildAt(1)).getChildAt(1));
+////                    textView.setLayoutParams(textLp);
+////                    Log.i(TAG, "Text:" + textView.getText());
+////                    Log.i(TAG, "bottom:" + rectF.bottom);
+////                    Log.i(TAG, "photoView.getMeasuredHeight():" + photoView.getMeasuredHeight() + ",textView.getMeasuredHeight():" + textView.getMeasuredHeight());
+//                }
             }
         });
         if (selectedIndex != -1) {
