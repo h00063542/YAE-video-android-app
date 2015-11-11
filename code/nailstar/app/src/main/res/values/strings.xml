@@ -102,4 +102,18 @@
     <string name="qq_title">QQ</string>
     <string name="weibo_title">微博</string>
     <string name="weixin_title">微信</string>
+    
+    <!-- 设置 -->
+    <string name="clear_cache">清除缓存</string>
+    <string name="cache_number">0.00M</string>
+    <string name="clear_cache_tip">清除不必要的缓存，为系统节省空间</string>
+    <string name="allow_wifi_watch">允许非WiFi环境下观看和下载视频</string>
+    <string name="allow_wifi_watch_tip">非WiFi环境可能产生流量费用</string>
+    <string name="version_info">版本信息</string>
+    <string name="version_info_number">1.0.0</string>
+    <string name="download_folder">下载目录</string>
+    <string name="download_folder_location">存储卡1</string>
+    <string name="i_need_score">我要打分</string>
+    <string name="about_us">关于美甲大咖</string>
+    <string name="quick_login">退出登录</string>
 </resources>
