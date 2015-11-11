@@ -16,6 +16,8 @@
         android:background="@color/xk2"/>
 
     <RelativeLayout
+        android:id="@+id/clear_cache"
+        android:clickable="true"
         android:background="@color/white"
         android:layout_width="match_parent"
         android:layout_height="@dimen/my_horizontal_bar_height"
@@ -28,6 +30,7 @@
             android:textSize="@dimen/my_text_size"
             android:layout_marginLeft="@dimen/my_margin_or_padding_border_width"/>
         <TextView
+            android:id="@+id/cache_number"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/cache_number"
