@@ -1,6 +1,7 @@
 package com.yilos.nailstar.requirelession.view;
 
 import android.app.Activity;
+import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -8,17 +9,18 @@ import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.nostra13.universalimageloader.core.ImageLoader;
 import com.yilos.nailstar.R;
 import com.yilos.nailstar.requirelession.Presenter.LessionPresenter;
 import com.yilos.nailstar.requirelession.entity.CandidateLession;
 import com.yilos.nailstar.util.Constants;
-import com.yilos.nailstar.util.FileUtils;
 import com.yilos.widget.circleimageview.CircleImageView;
 import com.yilos.widget.view.ImageCacheView;
 
@@ -74,6 +76,13 @@ public class VoteListViewAdapter extends BaseAdapter {
     // 当前大图对应的数据
     private CandidateLession currentImage;
 
+    private Animation slideInBottom;
+
+    private Animation slideOutBottom;
+
+    // 弹出框正在消失
+    private boolean isDismissing;
+
     public VoteListViewAdapter(Activity context, LayoutInflater layoutInflater, LessionPresenter lessionPresenter) {
         this.context = context;
         this.layoutInflater = layoutInflater;
@@ -83,6 +92,8 @@ public class VoteListViewAdapter extends BaseAdapter {
         context.getWindowManager().getDefaultDisplay().getMetrics(metric);
         screenWidth = metric.widthPixels;
 
+        isDismissing = false;
+
         // 点击图片的时候弹出大图
         initLessionImageView();
         // 绑定按钮
@@ -90,6 +101,9 @@ public class VoteListViewAdapter extends BaseAdapter {
     }
 
     private void initLessionImageView() {
+
+        slideInBottom = AnimationUtils.loadAnimation(context, R.anim.slide_in_bottom);
+        slideOutBottom = AnimationUtils.loadAnimation(context, R.anim.slide_out_bottom);
 
         lessionImageView = layoutInflater.inflate(R.layout.lession_image_action, null);
         lessionImageView.setBackgroundColor(0xa0000000);
@@ -138,6 +152,11 @@ public class VoteListViewAdapter extends BaseAdapter {
                 View lessionImageItem = layoutInflater.inflate(R.layout.lession_image_item, null);
                 ImageCacheView lessionLargeImage = (ImageCacheView) lessionImageItem.findViewById(R.id.lessionLargeImage);
                 lessionLargeImage.setImageSrc(voteLessionList.get(position).getPicUrl());
+                if (voteLessionList.get(position).getPicUrl() != null && !"".equals(voteLessionList.get(position).getPicUrl())) {
+                    lessionLargeImage.setImageSrc(voteLessionList.get(position).getPicUrl());
+                } else {
+                    lessionLargeImage.setImageURI(null);
+                }
                 lessionLargeImage.setBackgroundColor(0x00000000);
                 container.addView(lessionImageItem);
 
@@ -176,6 +195,7 @@ public class VoteListViewAdapter extends BaseAdapter {
     // 绑定大图下方的按钮
     private void bindLessionImageBtn() {
 
+        // 取消按钮
         cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -183,6 +203,7 @@ public class VoteListViewAdapter extends BaseAdapter {
             }
         });
 
+        // 保存图片
         saveImageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -191,6 +212,21 @@ public class VoteListViewAdapter extends BaseAdapter {
             }
         });
 
+        // 举报按钮
+        reportIllegalBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                lessionPresenter.reportIllegal(currentImage);
+            }
+        });
+
+        // 投票按钮
+        lessionVoteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                lessionPresenter.vote(currentImage);
+            }
+        });
     }
 
     public void setViewType(ViewType viewType) {
@@ -204,7 +240,18 @@ public class VoteListViewAdapter extends BaseAdapter {
     }
 
     public void setStage(int stage) {
+
         this.stage = stage;
+
+        if (stage == 2) {
+            lessionVoteBtn.setVisibility(View.GONE);
+            lessionCanvassBtn.setVisibility(View.GONE);
+            reportIllegalBtn.setVisibility(View.GONE);
+        } else if (stage == 1) {
+            lessionVoteBtn.setVisibility(View.VISIBLE);
+            lessionCanvassBtn.setVisibility(View.VISIBLE);
+            reportIllegalBtn.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -270,7 +317,7 @@ public class VoteListViewAdapter extends BaseAdapter {
     }
 
     @NonNull
-    private View handleRankingList(int position, View convertView) {
+    private View handleRankingList(final int position, View convertView) {
 
         ViewHolder holder;
 
@@ -306,13 +353,29 @@ public class VoteListViewAdapter extends BaseAdapter {
         holder.rankingItem.lessionRankingNo.setText(String.valueOf(position + 1));
         holder.rankingItem.lessionAuthorName.setText(candidateLession.getAuthorName());
         holder.rankingItem.lessionVoteCount.setText(String.valueOf(candidateLession.getVoteCount()));
-        holder.rankingItem.lessionRankingImg.setImageSrc(candidateLession.getPicUrl());
-        if (candidateLession.getAuthorPhoto() != null) {
+
+        if (candidateLession.getPicUrl() != null && !"".equals(candidateLession.getPicUrl())) {
+            holder.rankingItem.lessionRankingImg.setImageSrc(candidateLession.getPicUrl());
+        } else {
+            holder.rankingItem.lessionRankingImg.setImageResource(R.mipmap.ic_default_image);
+        }
+
+        if (candidateLession.getAuthorPhoto() != null && !"".equals(candidateLession.getAuthorPhoto())) {
             holder.rankingItem.lessionAuthorPhoto.setImageSrc(candidateLession.getAuthorPhoto());
         } else {
             holder.rankingItem.lessionAuthorPhoto.setImageResource(R.mipmap.ic_default_photo);
         }
 
+        // 点击图片显示大图
+        holder.rankingItem.lessionRankingImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 点击的时候记录当前打开的图，以便保存或者举报的时候用
+                currentImage = candidateLession;
+                // 显示大图
+                showImageActionDialog(position);
+            }
+        });
 
         // 是否已投票
         if (candidateLession.getVoted() > 0) {
@@ -389,6 +452,13 @@ public class VoteListViewAdapter extends BaseAdapter {
             voteItem.lessionTime = (TextView) convertView.findViewById(R.id.lessionTime2);
             holder.voteItemList.add(voteItem);
 
+            // 设置高度为宽度的 4/5
+            for (int i = 0; i < 3; i++) {
+                LinearLayout.LayoutParams laParams = new LinearLayout.LayoutParams(holder.voteItemList.get(i).lessionVoteImg.getLayoutParams());
+                laParams.height = screenWidth / 3 * 4 / 5;
+                holder.voteItemList.get(i).lessionVoteImg.setLayoutParams(laParams);
+            }
+
             convertView.setTag(holder);
 
         } else {
@@ -409,10 +479,13 @@ public class VoteListViewAdapter extends BaseAdapter {
                 CandidateLession candidateLession = voteLessionList.get(realPosition);
 
                 voteItem.lessionvoteCount.setText(String.valueOf(candidateLession.getVoteCount()));
-                voteItem.lessionVoteImg.setImageSrc(candidateLession.getPicUrl());
+                if (candidateLession.getPicUrl() != null && !"".equals(candidateLession.getPicUrl())) {
+                    voteItem.lessionVoteImg.setImageSrc(candidateLession.getPicUrl());
+                } else {
+                    voteItem.lessionVoteImg.setImageResource(R.mipmap.ic_default_image);
+                }
 
-                // 点击图片显示大图
-                voteItem.lessionVoteImg.setOnClickListener(new View.OnClickListener() {
+                View.OnClickListener onClickListener = new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         // 点击的时候记录当前打开的图，以便保存或者举报的时候用
@@ -420,7 +493,11 @@ public class VoteListViewAdapter extends BaseAdapter {
                         // 显示大图
                         showImageActionDialog(realPosition);
                     }
-                });
+                };
+                // 点击图片显示大图
+                voteItem.lessionVoteImg.setOnClickListener(onClickListener);
+                // 点击投票按钮也显示大图
+                voteItem.lessionVotePic.setOnClickListener(onClickListener);
 
                 String lessionTime = "";
                 if ((now - candidateLession.getCreateDate()) / 1000 < 60) {
@@ -463,15 +540,56 @@ public class VoteListViewAdapter extends BaseAdapter {
 
     private void showImageActionDialog(int position) {
 
+        if (isShowing(R.id.lessionImageContainer)) {
+            return;
+        }
+
         pagerAdapter.notifyDataSetChanged();
         lessionImageViewPager.setCurrentItem(position);
         decorView.addView(lessionImageView);
+
+        lessionImageView.startAnimation(slideInBottom);
+
     }
 
     private void dismissImageActionDialog() {
 
-        decorView.removeView(lessionImageView);
+        if (isDismissing) {
+            return;
+        }
 
+        //消失动画
+        slideOutBottom.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                decorView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        decorView.removeView(lessionImageView);
+                        isDismissing = false;
+                    }
+                });
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
+        isDismissing = true;
+        lessionImageView.startAnimation(slideOutBottom);
+
+    }
+
+    public boolean isShowing(@IdRes int id) {
+        View view = decorView.findViewById(id);
+        return view != null;
     }
 
     class ViewHolder {
