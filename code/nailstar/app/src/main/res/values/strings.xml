@@ -120,6 +120,9 @@
     <string name="qq_title">QQ</string>
     <string name="weibo_title">微博</string>
     <string name="weixin_title">微信</string>
+    <string name="sign_up">注册</string>
+    <string name="enter_account">请输入账号</string>
+    <string name="enter_password">请输入密码</string>
 
     <!-- DLNA -->
     <string name="dlna_switch_to_mobile">切回手机播放</string>
