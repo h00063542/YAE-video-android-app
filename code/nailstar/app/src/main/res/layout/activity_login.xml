@@ -1,0 +1,146 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/xk2"
+    tools:context="com.yilos.nailstar.aboutme.view.LoginActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <com.yilos.widget.titlebar.TitleBar
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/common_title_bar_height"
+            android:id="@+id/titleBar" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@color/white"
+            android:layout_marginTop="@dimen/common_10_dp">
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/common_text_height"
+                android:inputType="phone"
+                android:ems="10"
+                android:id="@+id/userNameText"
+                android:drawableLeft="@mipmap/login_user_name"
+                android:layout_gravity="center_horizontal"
+                android:hint="@string/login_user_name_text"
+                android:editable="true"
+                android:phoneNumber="true"
+                android:allowUndo="true"
+                android:autoText="true"
+                android:enabled="true"
+                android:focusable="true"
+                android:singleLine="true"
+                android:layout_margin="@dimen/common_10_dp"
+                android:background="@color/white"
+                android:textColor="@color/z2"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/common_1_dp"
+                android:layout_marginLeft="@dimen/common_10_dp"
+                android:layout_marginRight="@dimen/common_10_dp"
+                android:background="@color/xk2"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/common_text_height"
+                android:inputType="textPassword"
+                android:ems="10"
+                android:id="@+id/passwordText"
+                android:drawableLeft="@mipmap/login_password"
+                android:layout_gravity="center_horizontal"
+                android:hint="@string/login_password_text"
+                android:editable="true"
+                android:background="@color/white"
+                android:layout_margin="@dimen/common_10_dp"
+                android:textColor="@color/z2"/>
+        </LinearLayout>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/login_button"
+            android:id="@+id/loginButton"
+            android:background="@color/orange"
+            android:textColor="@color/white"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="@dimen/common_20_dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/editText3"
+            android:text="@string/login_forget_password"
+            android:textAlignment="center"
+            android:layout_gravity="center"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|bottom"
+        android:orientation="vertical">
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/common_1_dp"
+                android:background="@color/xk1"
+                android:layout_gravity="center"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/login_use_3rd_account"
+                android:layout_gravity="center_horizontal"
+                android:paddingLeft="@dimen/common_20_dp"
+                android:paddingRight="@dimen/common_20_dp"
+                android:textColor="@color/z2"
+                android:background="@color/xk2"/>
+        </FrameLayout>
+
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/common_20_dp"
+            android:layout_marginLeft="@dimen/common_20_dp"
+            android:layout_marginRight="@dimen/common_20_dp"
+            android:orientation="horizontal">
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/MMTabButton"
+                android:id="@+id/weiboLoginButton"
+                android:drawableTop="@mipmap/ic_weibo_login"
+                android:drawablePadding="@dimen/common_10_dp"
+                android:text="@string/weibo_title"
+                android:textColor="@color/z2" />
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/MMTabButton"
+                android:id="@+id/weixinLoginButton"
+                android:drawableTop="@mipmap/ic_weixin_login"
+                android:drawablePadding="@dimen/common_10_dp"
+                android:text="@string/weixin_title"
+                android:textColor="@color/z2"/>
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/MMTabButton"
+                android:id="@+id/qqLoginButton"
+                android:drawableTop="@mipmap/ic_qq_login"
+                android:drawablePadding="@dimen/common_10_dp"
+                android:text="@string/qq_title"
+                android:textColor="@color/z2"/>
+        </RadioGroup>
+    </LinearLayout>
+
+</FrameLayout>
