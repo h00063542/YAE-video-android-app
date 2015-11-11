@@ -150,7 +150,7 @@ public class VoteListViewAdapter extends BaseAdapter {
             @Override
             public Object instantiateItem(ViewGroup container, int position) {
 
-                if (position > getCount()) {
+                if (position >= getCount()) {
                     return null;
                 }
 
@@ -227,7 +227,7 @@ public class VoteListViewAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 dismissImageActionDialog();
-                lessionPresenter.saveImage(currentImage.getPicUrl(), Constants.YILOS_PATH, currentImage.getCandidateId() + ".jpg");
+                lessionPresenter.saveImage(currentImage.getPicUrl(), Constants.YILOS_NAILSTAR_PICTURE_PATH, currentImage.getCandidateId() + ".jpg");
             }
         });
 
@@ -321,7 +321,7 @@ public class VoteListViewAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        if (position > getCount()) {
+        if (position >= getCount()) {
             return null;
         }
 
@@ -403,6 +403,19 @@ public class VoteListViewAdapter extends BaseAdapter {
             }
         });
 
+        // 投票按钮
+        View.OnClickListener voteBtnListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (candidateLession.getVoted() == 0) {
+                    lessionPresenter.vote(candidateLession);
+                }
+            }
+        };
+
+        holder.rankingItem.lessionVotePic.setOnClickListener(voteBtnListener);
+        holder.rankingItem.lessionVote.setOnClickListener(voteBtnListener);
+
         // 是否已投票
         if (candidateLession.getVoted() > 0) {
 
@@ -410,18 +423,6 @@ public class VoteListViewAdapter extends BaseAdapter {
             holder.rankingItem.lessionVote.setText(R.string.voted);
 
         } else {
-
-            View.OnClickListener voteBtnListener = new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (candidateLession.getVoted() == 0) {
-                        lessionPresenter.vote(candidateLession);
-                    }
-                }
-            };
-
-            holder.rankingItem.lessionVotePic.setOnClickListener(voteBtnListener);
-            holder.rankingItem.lessionVote.setOnClickListener(voteBtnListener);
 
             holder.rankingItem.lessionVotePic.setImageResource(R.mipmap.vote_black);
             holder.rankingItem.lessionVote.setText(R.string.vote);

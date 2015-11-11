@@ -210,6 +210,8 @@ public class RequireLessionFragment extends Fragment implements LessionView {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 if (checkedId == goVotingBtn.getId()) {
 
+                    // 切换的时候先用notifyDataSetInvalidated通知Adapter数据暂时不可用，数据准备好之后再调用notifyDataSetChanged通知数据可用
+                    voteListViewAdapter.notifyDataSetInvalidated();
                     voteListViewAdapter.setViewType(VoteListViewAdapter.ViewType.VOTE_LIST);
 
                     lessionPresenter.goVoteLessionList();
@@ -224,6 +226,8 @@ public class RequireLessionFragment extends Fragment implements LessionView {
 
                 } else if (checkedId == goRankingBtn.getId()) {
 
+                    // 切换的时候先用notifyDataSetInvalidated通知Adapter数据暂时不可用，数据准备好之后再调用notifyDataSetChanged通知数据可用
+                    voteListViewAdapter.notifyDataSetInvalidated();
                     voteListViewAdapter.setViewType(VoteListViewAdapter.ViewType.RANKING_LIST);
 
                     lessionPresenter.goRankingLessionList();
