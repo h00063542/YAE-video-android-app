@@ -29,6 +29,7 @@ import com.yilos.nailstar.topic.view.TopicVideoPlayerActivity;
 import com.yilos.nailstar.util.Constants;
 import com.yilos.nailstar.util.FileUtils;
 import com.yilos.widget.circleimageview.CircleImageView;
+import com.yilos.widget.titlebar.TitleBar;
 import com.yilos.widget.view.ImageCacheView;
 
 import java.util.List;
@@ -47,6 +48,9 @@ public class RequireLessionFragment extends Fragment implements LessionView {
 
     // 下拉刷新
     PtrClassicFrameLayout lessionPullRefresh;
+
+    // title bar
+    TitleBar lessionTitleBar;
 
     // 求教程页面
     private View view;
@@ -171,6 +175,10 @@ public class RequireLessionFragment extends Fragment implements LessionView {
 
         // 下拉刷新
         lessionPullRefresh = (PtrClassicFrameLayout) view.findViewById(R.id.lessionPullRefresh);
+
+        // title bar
+        lessionTitleBar = (TitleBar) view.findViewById(R.id.lessionTitleBar);
+        lessionTitleBar.getTitleView().setText(getResources().getString(R.string.require_lession));
 
     }
 

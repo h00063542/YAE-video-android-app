@@ -237,18 +237,23 @@ public class LessionPresenter {
                     }
                     service.vote(candidateLession.getCandidateId());
                     // 设置为已投票
-                    for (CandidateLession item : rankingLessionList) {
-                        if (item.getCandidateId().equals(candidateLession.getCandidateId())) {
-                            item.setVoted(1);
-                            item.setVoteCount(item.getVoteCount() + 1);
+                    if (rankingLessionList != null) {
+                        for (CandidateLession item : rankingLessionList) {
+                            if (item.getCandidateId().equals(candidateLession.getCandidateId())) {
+                                item.setVoted(1);
+                                item.setVoteCount(item.getVoteCount() + 1);
+                            }
                         }
                     }
-                    for (CandidateLession item : voteLessionList) {
-                        if (item.getCandidateId().equals(candidateLession.getCandidateId())) {
-                            item.setVoted(1);
-                            item.setVoteCount(item.getVoteCount() + 1);
+                    if (voteLessionList != null) {
+                        for (CandidateLession item : voteLessionList) {
+                            if (item.getCandidateId().equals(candidateLession.getCandidateId())) {
+                                item.setVoted(1);
+                                item.setVoteCount(item.getVoteCount() + 1);
+                            }
                         }
                     }
+
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {

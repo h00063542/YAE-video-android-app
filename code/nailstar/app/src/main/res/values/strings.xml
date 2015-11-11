@@ -64,12 +64,13 @@
     <string name="stage1_count_down">本期求教程结束时间还剩</string>
     <string name="stage2_count_down">大咖视频制作中，离出炉时间还剩</string>
     <string name="upload_description">上传想要学习的作品，截止之前票数最高的则由老师录制视频教你学哦~！</string>
-    <string name="upload_candidate_btn">求教程</string>
+    <string name="require_lession">求教程</string>
     <string name="vote">投票</string>
     <string name="voted">已投</string>
     <string name="ranking">排行榜</string>
     <string name="vote_count">票数:</string>
     <string name="canvass">拉票</string>
+    <string name="lession_collection">合集</string>
 
     <string name="from_camera">拍照</string>
     <string name="from_library">从手机相册中挑选</string>
