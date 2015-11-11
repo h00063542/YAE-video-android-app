@@ -92,6 +92,10 @@ public class TitleBar extends RelativeLayout {
         showWidget(rightImageButtonTwo);
         return rightImageButtonTwo;
     }
+
+    public void setTitleBarBackgroundColor(int color) {
+        titleBarGroup.setBackgroundColor(getResources().getColor(color));
+    }
     private LayoutInflater layoutInflater;
     private void init() {
         layoutInflater = LayoutInflater.from(mContext);
