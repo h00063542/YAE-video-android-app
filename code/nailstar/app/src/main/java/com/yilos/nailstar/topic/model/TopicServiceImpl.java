@@ -5,6 +5,8 @@ import android.support.annotation.Nullable;
 
 import com.yilos.nailstar.framework.entity.NailStarApplicationContext;
 import com.yilos.nailstar.framework.exception.NetworkDisconnectException;
+import com.yilos.nailstar.topic.entity.AddCommentInfo;
+import com.yilos.nailstar.topic.entity.SubmittedHomeworkInfo;
 import com.yilos.nailstar.topic.entity.TopicCommentAtInfo;
 import com.yilos.nailstar.topic.entity.TopicCommentInfo;
 import com.yilos.nailstar.topic.entity.TopicCommentReplyInfo;
@@ -39,6 +41,7 @@ import java.util.ArrayList;
  */
 public class TopicServiceImpl implements ITopicService {
     private static final Logger LOGGER = LoggerFactory.getLogger(TopicServiceImpl.class);
+    private static final String URL_PREFIX = "/vapi/nailstar/";
 
     /**
      * @param topicId
@@ -51,7 +54,7 @@ public class TopicServiceImpl implements ITopicService {
             String strResult = getLocalJsonResult(topicId, Constants.FILE_NAME_TOPIC_INFO);
             return buildTopicInfo(topicId, strResult);
         }
-        String url = "/vapi/nailstar/topics/" + topicId;
+        String url = URL_PREFIX + "topics/" + topicId;
         try {
             String strResult = HttpClient.getJson(url);
             TopicInfo topicInfo = buildTopicInfo(topicId, strResult);
@@ -123,7 +126,7 @@ public class TopicServiceImpl implements ITopicService {
             return buildTopicImageTextInfo(topicId, strResult);
         }
         try {
-            String url = "/vapi/nailstar/topics/article/" + topicId;
+            String url = URL_PREFIX + "topics/article/" + topicId;
             String strResult = HttpClient.getJson(url);
             TopicImageTextInfo topicImageTextInfo = buildTopicImageTextInfo(topicId, strResult);
             if (null != topicImageTextInfo) {
@@ -180,7 +183,7 @@ public class TopicServiceImpl implements ITopicService {
             String strResult = getLocalJsonResult(topicId, Constants.FILE_NAME_TOPIC_RELATE_INFO);
             return buildTopicRelatedInfo(topicId, strResult);
         }
-        String url = "/vapi/nailstar/topics/" + topicId + "/related";
+        String url = URL_PREFIX + "topics/" + topicId + "/related";
         try {
             String strResult = HttpClient.getJson(url);
             ArrayList<TopicRelatedInfo> result = buildTopicRelatedInfo(topicId, strResult);
@@ -235,7 +238,7 @@ public class TopicServiceImpl implements ITopicService {
             String strResult = getLocalJsonResult(topicId, Constants.FILE_NAME_TOPIC_COMMENT_INFO);
             return buildTopicCommentInfo(topicId, strResult);
         }
-        String url = "/vapi/nailstar/topics/" + topicId + "/comments?page=" + page;
+        String url = URL_PREFIX + "topics/" + topicId + "/comments?page=" + page;
         try {
             String strResult = HttpClient.getJson(url);
             ArrayList<TopicCommentInfo> result = buildTopicCommentInfo(topicId, strResult);
@@ -367,7 +370,7 @@ public class TopicServiceImpl implements ITopicService {
 //        if (!NailStarApplicationContext.getInstance().isNetworkConnected()) {
 //            throw new NetworkDisconnectException("网络没有连接");
 //        }
-//        String url = "/vapi/nailstar/topics/" + topicId + "/actions";
+//        String url = URL_PREFIX + "topics/" + topicId + "/actions";
 //
 //        try {
 //
@@ -404,7 +407,7 @@ public class TopicServiceImpl implements ITopicService {
         if (!NailStarApplicationContext.getInstance().isNetworkConnected()) {
             throw new NetworkDisconnectException("网络没有连接");
         }
-        String url = "/vapi/nailstar/topics/" + topicId + "/cancel";
+        String url = URL_PREFIX + "topics/" + topicId + "/cancel";
 
         try {
 
@@ -433,41 +436,57 @@ public class TopicServiceImpl implements ITopicService {
      * replyTo: “fdasjfkajdfkarere”
      * }
      *
-     * @param topicId
      * @return
      * @throws NetworkDisconnectException
      */
     @Override
-    public boolean addComment(String topicId) throws NetworkDisconnectException {
+    public String addComment(AddCommentInfo info) throws NetworkDisconnectException {
         if (!NailStarApplicationContext.getInstance().isNetworkConnected()) {
             throw new NetworkDisconnectException("网络没有连接");
         }
-        String url = "/vapi/nailstar/topics/" + topicId + "/comments";
+        String url = URL_PREFIX + "topics/" + info.getTopicId() + "/comments";
         try {
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put(Constants.AUTHOR, "");
-            jsonObject.put(Constants.AT_USER, "");
-            jsonObject.put(Constants.CONTENT, Constants.ACTION_TYPE_COLLECTION);
-            jsonObject.put(Constants.CONTENT_PIC, Constants.ACTION_TYPE_COLLECTION);
-            jsonObject.put(Constants.REPLY_TO, topicId);
+            jsonObject.put(Constants.AUTHOR, info.getUserId());
+            jsonObject.put(Constants.AT_USER, info.getAtUserId());
+            jsonObject.put(Constants.CONTENT, info.getContent());
+            jsonObject.put(Constants.CONTENT_PIC, info.getContentPic());
+            jsonObject.put(Constants.REPLY_TO, info.getReplayTo());
             String strResult = HttpClient.post(url, String.valueOf(jsonObject));
-            return null != buildJSONObject(strResult);
+            JSONObject jsonObj = buildJSONObject(strResult);
+            return JsonUtil.optString(jsonObj.optJSONObject(Constants.RESULT), Constants.COMMENT_ID);
         } catch (JSONException e) {
             e.printStackTrace();
-            LOGGER.error(MessageFormat.format("评论topic失败，topicId:{0}，url:{1}", topicId, url), e);
+            LOGGER.error(MessageFormat.format("评论topic失败，topicId:{0}，url:{1}", info.getTopicId(), url), e);
         } catch (IOException e) {
             e.printStackTrace();
-            LOGGER.error(MessageFormat.format("评论topic失败，topicId:{0}，url:{1}", topicId, url), e);
+            LOGGER.error(MessageFormat.format("评论topic失败，topicId:{0}，url:{1}", info.getTopicId(), url), e);
         }
-        return false;
+        return Constants.EMPTY_STRING;
     }
 
     @Override
-    public boolean submittedHomework(String topicId) throws NetworkDisconnectException {
+    public String submittedHomework(SubmittedHomeworkInfo info) throws NetworkDisconnectException {
         if (!NailStarApplicationContext.getInstance().isNetworkConnected()) {
             throw new NetworkDisconnectException("网络没有连接");
         }
-        return false;
+        String url = URL_PREFIX + "qjc/topic" + info.getTopicId() + "/homework";
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put(Constants.UID, info.getUserId());
+            jsonObject.put(Constants.CONTENT, info.getContent());
+            jsonObject.put(Constants.PIC_URL, info.getPicUrl());
+            String strResult = HttpClient.post(url, jsonObject.toString());
+            JSONObject jsonObj = buildJSONObject(strResult);
+            return JsonUtil.optString(jsonObj.optJSONObject(Constants.RESULT), Constants.COMMENT_ID);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            LOGGER.error(MessageFormat.format("交作业失败，topicId:{0}，url:{1}，postData:{2}", info.getTopicId(), url, jsonObject.toString()), e);
+        } catch (IOException e) {
+            e.printStackTrace();
+            LOGGER.error(MessageFormat.format("交作业失败，topicId:{0}，url:{1}，postData:{2}", info.getTopicId(), url, jsonObject.toString()), e);
+        }
+        return Constants.EMPTY_STRING;
     }
 
     @Override
@@ -475,7 +494,7 @@ public class TopicServiceImpl implements ITopicService {
         if (!NailStarApplicationContext.getInstance().isNetworkConnected()) {
             throw new NetworkDisconnectException("网络没有连接");
         }
-        String url = "/vapi/nailstar/videos/" + topicId + "/actions";
+        String url = URL_PREFIX + "videos/" + topicId + "/actions";
         try {
             String strResult = HttpClient.post(url, Constants.EMPTY_JSON_STRING);
             return null != buildJSONObject(strResult);
@@ -487,6 +506,31 @@ public class TopicServiceImpl implements ITopicService {
             LOGGER.error(MessageFormat.format("视频播放次数+1失败，topicId:{0}，url:{1}", topicId, url), e);
         }
         return false;
+    }
+
+    @Override
+    public int getSubmittedHomeworkCount(String topicId) throws NetworkDisconnectException {
+        if (!NailStarApplicationContext.getInstance().isNetworkConnected()) {
+            throw new NetworkDisconnectException("网络没有连接");
+        }
+        String url = URL_PREFIX + "qjc/topic/" + topicId + "/homeworks";
+        try {
+            String strResult = HttpClient.getJson(url);
+            JSONObject jsonObject = buildJSONObject(strResult);
+            if (null == jsonObject) {
+                return 0;
+            }
+            JSONObject jsonResult = jsonObject.optJSONObject(Constants.RESULT);
+
+            return jsonResult.optInt(Constants.COUNT, 0);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            LOGGER.error(MessageFormat.format("视频播放次数+1失败，topicId:{0}，url:{1}", topicId, url), e);
+        } catch (IOException e) {
+            e.printStackTrace();
+            LOGGER.error(MessageFormat.format("视频播放次数+1失败，topicId:{0}，url:{1}", topicId, url), e);
+        }
+        return 0;
     }
 
     /**

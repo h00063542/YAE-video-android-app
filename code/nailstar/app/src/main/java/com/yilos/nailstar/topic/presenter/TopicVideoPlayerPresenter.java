@@ -1,5 +1,8 @@
 package com.yilos.nailstar.topic.presenter;
 
+import android.graphics.Bitmap;
+
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.yilos.nailstar.framework.exception.NetworkDisconnectException;
 import com.yilos.nailstar.topic.entity.TopicCommentInfo;
 import com.yilos.nailstar.topic.entity.TopicImageTextInfo;
@@ -10,6 +13,7 @@ import com.yilos.nailstar.topic.model.ITopicService;
 import com.yilos.nailstar.topic.model.TopicServiceImpl;
 import com.yilos.nailstar.topic.view.ITopicVideoPlayerView;
 import com.yilos.nailstar.util.Constants;
+import com.yilos.nailstar.util.FileUtils;
 import com.yilos.nailstar.util.LoggerFactory;
 import com.yilos.nailstar.util.StringUtil;
 import com.yilos.nailstar.util.TaskManager;
@@ -17,6 +21,7 @@ import com.yilos.nailstar.util.TaskManager;
 import org.apache.log4j.Logger;
 
 import java.io.File;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -31,6 +36,7 @@ public class TopicVideoPlayerPresenter {
 
     private ITopicVideoPlayerView videoPlayerView;
     private ITopicService topicsService = new TopicServiceImpl();
+    private ImageLoader imageLoader = ImageLoader.getInstance();
 
     public static TopicVideoPlayerPresenter getInstance(ITopicVideoPlayerView videoPlayerView) {
         topicPresenter.videoPlayerView = videoPlayerView;
@@ -45,7 +51,7 @@ public class TopicVideoPlayerPresenter {
                     return topicsService.getTopicInfo(topicId);
                 } catch (NetworkDisconnectException e) {
                     e.printStackTrace();
-                    LOGGER.error("获取topic信息失败，topicId：" + topicId, e);
+                    LOGGER.error(MessageFormat.format("获取topic信息失败，topicId:{0}", topicId), e);
                 }
                 return null;
             }
@@ -74,7 +80,7 @@ public class TopicVideoPlayerPresenter {
                     return topicsService.getTopicRelatedInfoList(topicId);
                 } catch (NetworkDisconnectException e) {
                     e.printStackTrace();
-                    LOGGER.error("获取topic图文信息失败，topicId：" + topicId, e);
+                    LOGGER.error(MessageFormat.format("获取topic图文信息失败，topicId:{0}", topicId), e);
                 }
                 return null;
             }
@@ -103,7 +109,7 @@ public class TopicVideoPlayerPresenter {
                     return topicsService.getTopicImageTextInfo(topicId);
                 } catch (NetworkDisconnectException e) {
                     e.printStackTrace();
-                    LOGGER.error("获取topic图文信息失败，topicId：" + topicId, e);
+                    LOGGER.error(MessageFormat.format("获取topic图文信息失败，topicId:{0}", topicId), e);
                 }
                 return null;
             }
@@ -124,7 +130,6 @@ public class TopicVideoPlayerPresenter {
 
     }
 
-
     public void initTopicComments(final String topicId, final int page) {
         TaskManager.Task loadTopicComments = new TaskManager.BackgroundTask() {
             @Override
@@ -133,7 +138,7 @@ public class TopicVideoPlayerPresenter {
                     return topicsService.getTopicComments(topicId, page);
                 } catch (NetworkDisconnectException e) {
                     e.printStackTrace();
-                    LOGGER.error("获取topic评论信息失败，topicId：" + topicId, e);
+                    LOGGER.error(MessageFormat.format("获取topic评论信息失败，topicId:{0}", topicId), e);
                 }
                 return null;
             }
@@ -153,70 +158,43 @@ public class TopicVideoPlayerPresenter {
                 .start();
     }
 
-    public void downLoadTopicImage(final String topicId, final String url) {
-        final String filePath = buildPictureLocalFilePath(topicId, url);
-        TaskManager.Task download = new TaskManager.BackgroundTask() {
+    public void addVideoPlayCount(final String topicId) {
+        TaskManager.Task loadTopicComments = new TaskManager.BackgroundTask() {
             @Override
             public Object doWork(Object data) {
-                try {
-                    return topicsService.download(url, filePath);
-                } catch (NetworkDisconnectException e) {
-                    e.printStackTrace();
-                    LOGGER.error("下载文件失败，url：" + url + "，filePath：" + filePath, e);
-                }
-                return null;
-            }
-        };
-
-        TaskManager.UITask<Boolean> updateUi = new TaskManager.UITask<Boolean>() {
-            @Override
-            public Object doWork(Boolean isSuccess) {
-                videoPlayerView.showDownloadTopicImageStatus(isSuccess, filePath);
+//                try {
+                // TODO 防止向正式环境发送数据
+                //return topicsService.addVideoPlayCount(topicId);
+//                } catch (NetworkDisconnectException e) {
+//                    e.printStackTrace();
+//                    LOGGER.error(MessageFormat.format("视频播放次数+1失败，topicId:{0}", topicId), e);
+//                }
                 return null;
             }
         };
 
         new TaskManager()
-                .next(download)
-                .next(updateUi)
+                .next(loadTopicComments)
                 .start();
+    }
 
+
+    public void downLoadTopicImage(final String topicId, final String url) {
+        String filePath = saveBitmap2File(topicId, url);
+        videoPlayerView.showDownloadTopicImageStatus(!StringUtil.isEmpty(filePath), filePath);
     }
 
     public void downloadTopicImageText(final String topicId, final ArrayList<String> urls) {
-        TaskManager.Task download;
-        TaskManager.Task updateUi;
-
-        int index = 0;
-        for (final String url : urls) {
-            final String filePath = new StringBuffer().append(Constants.YILOS_NAILSTAR_PICTURE_PATH).append(topicId).append(Constants.UNDERLINE).append(index++).append(Constants.PNG_SUFFIX).toString();
-            buildPictureLocalFilePath(topicId, url);
-            download = new TaskManager.BackgroundTask() {
-                @Override
-                public Object doWork(Object data) {
-                    try {
-                        return topicsService.download(url, filePath);
-                    } catch (NetworkDisconnectException e) {
-                        e.printStackTrace();
-                        LOGGER.error("下载文件失败，url：" + url + "，filePath：" + filePath, e);
-                    }
-                    return null;
+        new Thread() {
+            @Override
+            public void run() {
+                super.run();
+                for (final String url : urls) {
+                    String filePath = saveBitmap2File(topicId, url);
+                    videoPlayerView.showDownloadTopicImageTextStatus(!StringUtil.isEmpty(filePath), filePath);
                 }
-            };
-
-            updateUi = new TaskManager.UITask<Boolean>() {
-                @Override
-                public Object doWork(Boolean isSuccess) {
-                    videoPlayerView.showDownloadTopicImageTextStatus(isSuccess, filePath);
-                    return null;
-                }
-            };
-            new TaskManager()
-                    .next(download)
-                    .next(updateUi)
-                    .start();
-
-        }
+            }
+        }.start();
     }
 
     public void shareTopic(String topicId) {
@@ -232,7 +210,7 @@ public class TopicVideoPlayerPresenter {
                     return topicsService.setTopicLikeStatus(topicId, isLike);
                 } catch (NetworkDisconnectException e) {
                     e.printStackTrace();
-                    LOGGER.error("设置topic喜欢状态失败，topicId：" + topicId + "，isLike：" + isLike, e);
+                    LOGGER.error(MessageFormat.format("设置topic喜欢状态失败，topicId:{0}，isLike:{1}", topicId, isLike), e);
                 }
                 return null;
             }
@@ -260,7 +238,7 @@ public class TopicVideoPlayerPresenter {
                     return topicsService.setTopicCollectionStatus(topicId, isCollection);
                 } catch (NetworkDisconnectException e) {
                     e.printStackTrace();
-                    LOGGER.error("设置topic收藏状态失败，topicId：" + topicId, e);
+                    LOGGER.error(MessageFormat.format("设置topic收藏状态失败，topicId:{0}，isCollection:{1}", topicId, isCollection), e);
                 }
                 return null;
             }
@@ -301,13 +279,11 @@ public class TopicVideoPlayerPresenter {
         return new StringBuffer().append(Constants.YILOS_NAILSTAR_VIDEOS_PATH).append(topicVideoInfo.getVideoId()).append(videoSuffix).toString();
     }
 
-    public String buildPictureLocalFilePath(final String topicId, final String imageSrc) {
+    public String buildPictureLocalFileName(final String topicId, final String imageSrc) {
         if (StringUtil.isEmpty(topicId) || StringUtil.isEmpty(imageSrc)) {
             return Constants.EMPTY_STRING;
         }
-        String fileName = imageSrc.substring(imageSrc.lastIndexOf("/"), imageSrc.length());
-
-        return new StringBuffer().append(Constants.YILOS_NAILSTAR_PICTURE_PATH).append(fileName).append(Constants.PNG_SUFFIX).toString();
+        return new StringBuffer().append(imageSrc.substring(imageSrc.lastIndexOf("/"), imageSrc.length())).append(Constants.PNG_SUFFIX).toString();
     }
 
     public String getTopicCommentDateStr(long time) {
@@ -328,5 +304,10 @@ public class TopicVideoPlayerPresenter {
 
     public boolean checkHasLocalVideo(String filePath) {
         return StringUtil.isEmpty(filePath) ? false : new File(filePath).exists();
+    }
+
+    private String saveBitmap2File(String topicId, String url) {
+        Bitmap bitmap = imageLoader.loadImageSync(url);
+        return FileUtils.saveBitMap(bitmap, Constants.YILOS_NAILSTAR_PICTURE_PATH, buildPictureLocalFileName(topicId, url));
     }
 }

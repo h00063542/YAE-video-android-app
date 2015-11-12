@@ -9,30 +9,22 @@
 
     <com.yilos.widget.view.RoundProgressBar
         android:id="@+id/rpb_download_topic_image_text"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="10dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginBottom="15dp"
+        android:layout_marginTop="15dp"
         android:visibility="visible"
         app:ringColor="@color/xk1"
         app:ringProgressColor="@color/z1"
         app:ringWidth="4dp"
         app:textIsDisplayable="false" />
 
-    <ImageView
-        android:id="@+id/iv_download_topic_image_text_success"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="10dp"
-        android:visibility="gone" />
-
     <TextView
         android:id="@+id/tv_download_topic_image_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal|center_vertical"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="15dp"
         android:text="@string/saving_photos"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 </LinearLayout>

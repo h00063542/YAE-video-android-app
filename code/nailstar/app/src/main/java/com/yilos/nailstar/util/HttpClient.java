@@ -6,12 +6,9 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 
-import java.io.BufferedReader;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -73,7 +70,13 @@ public class HttpClient {
         if (!response.isSuccessful()) {
             throw new IOException("Unexpected code " + response);
         }
-        return response.body().string();
+
+        String contentType = response.header("Content-Type");
+        if(contentType != null && contentType.contains("application\\json")) {
+            return response.body().string();
+        } else {
+            return escapeHtml(response.body().string());
+        }
     }
 
     /**
@@ -109,5 +112,15 @@ public class HttpClient {
         while ((j = in.read(b)) != -1) {
             out.write(b, 0, j);
         }
+    }
+
+    private static String escapeHtml(String content) {
+        if(null == content) {
+            return content;
+        }
+
+        content = content.trim().replaceAll("&quot;", "\"");
+
+        return content;
     }
 }

@@ -46,6 +46,7 @@ public class Constants {
     public static final String PLAY_TIMES = "playTimes";
     public static final String CC_URL = "ccUrl";
     public static final String OSS_URL = "ossUrl";
+    public static final String PIC_URL = "picUrl";
 
     public static final String UID = "uid";
     public static final int ACTION_TYPE_COLLECTION = 3;
@@ -67,8 +68,13 @@ public class Constants {
     /**
      * 视频宽高比例
      */
-    public static final double VIDEO_ASPECT_RATIO = 1.78;
+    public static final double VIDEO_ASPECT_RATIO = 1.78d;
 
+
+    /**
+     * 图文分解宽高比例
+     */
+    public static final double IMAGE_TEXT_ASPECT_RATIO = 1.75d;
 
     /**
      * 评论
@@ -116,4 +122,16 @@ public class Constants {
     public static final String UNDERLINE = "_";
     public static final String JSON_SUFFIX = ".json";
     public static final String PNG_SUFFIX = ".png";
+    public static final String COUNT = "count";
+
+    /**
+     * 交作业图片宽高比例
+     */
+    public static final int HOMEWORK_PIC_ASPECT_RATIO = 1;
+    /**
+     * 截取的交作业图片像素
+     */
+    public static final int HOMEWORK_PIC_PIXEL = 400;
+
+    public static final String COMMENT_ID = "commentId";
 }

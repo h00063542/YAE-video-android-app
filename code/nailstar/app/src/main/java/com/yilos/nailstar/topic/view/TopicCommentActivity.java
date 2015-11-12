@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.yilos.nailstar.R;
 import com.yilos.nailstar.framework.view.BaseActivity;
+import com.yilos.nailstar.topic.entity.AddCommentInfo;
 import com.yilos.nailstar.topic.presenter.TopicCommentPresenter;
 import com.yilos.nailstar.util.Constants;
 import com.yilos.nailstar.util.StringUtil;
@@ -77,7 +78,7 @@ public class TopicCommentActivity extends BaseActivity implements ITopicCommentV
         mIvTopicCommentCancel = mTbTopicCommentHead.getBackButton();
         mTvTopicCommentTitle = mTbTopicCommentHead.getTitleView();
         mTvTopicCommentSubmitted = mTbTopicCommentHead.getRightTextButton();
-        mEtTopicCommentContent = (EditText) findViewById(R.id.et_topic_homework_content);
+        mEtTopicCommentContent = (EditText) findViewById(R.id.et_topic_comment_content);
 
         mIvTopicCommentCancel.setImageResource(R.mipmap.icon_back_white);
 
@@ -117,9 +118,19 @@ public class TopicCommentActivity extends BaseActivity implements ITopicCommentV
             @Override
             public void onClick(View v) {
                 mContent = mEtTopicCommentContent.getText().toString();
+                String userId = UserUtil.getUserInfo(TopicCommentActivity.this).getUserId();
+                AddCommentInfo info = new AddCommentInfo();
+                info.setTopicId(mTopicId);
+                info.setUserId(userId);
+                info.setContent(mContent);
+                info.setContentPic(Constants.EMPTY_STRING);
                 if (mCommentType == Constants.TOPIC_COMMENT_TYPE_REPLY) {
-                    mTopicCommentPresenter.addTopicCommentReply(null, null);
+                    info.setAtUserId(mCommentReplyAuthor);
+                    // TODO 不知道这个参数是做什么用的
+                    //info.setReplayTo();
+                    mTopicCommentPresenter.addTopicCommentReply(null);
                 } else {
+                    info.setAtUserId(mCommentUserId);
                     mTopicCommentPresenter.addTopicComment(null);
                 }
             }

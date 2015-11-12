@@ -10,7 +10,7 @@
         android:orientation="vertical">
         <com.yilos.widget.titlebar.TitleBar
             android:layout_width="match_parent"
-            android:layout_height="@dimen/common_title_bar_height"
+            android:layout_height="wrap_content"
             android:id="@+id/titleBar" />
 
         <LinearLayout
@@ -27,6 +27,7 @@
                 android:ems="10"
                 android:id="@+id/userNameText"
                 android:drawableLeft="@mipmap/login_user_name"
+                android:drawablePadding="@dimen/common_10_dp"
                 android:layout_gravity="center_horizontal"
                 android:hint="@string/login_user_name_text"
                 android:editable="true"
@@ -53,6 +54,7 @@
                 android:ems="10"
                 android:id="@+id/passwordText"
                 android:drawableLeft="@mipmap/login_password"
+                android:drawablePadding="@dimen/common_10_dp"
                 android:layout_gravity="center_horizontal"
                 android:hint="@string/login_password_text"
                 android:editable="true"
@@ -66,15 +68,16 @@
             android:layout_height="wrap_content"
             android:text="@string/login_button"
             android:id="@+id/loginButton"
-            android:background="@color/orange"
+            android:background="@drawable/custom_button"
             android:textColor="@color/white"
             android:layout_gravity="center_horizontal"
             android:layout_margin="@dimen/common_20_dp"/>
 
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/editText3"
+            android:layout_height="30dp"
+            android:gravity="center"
+            android:id="@+id/forgetPasswordText"
             android:text="@string/login_forget_password"
             android:textAlignment="center"
             android:layout_gravity="center"/>

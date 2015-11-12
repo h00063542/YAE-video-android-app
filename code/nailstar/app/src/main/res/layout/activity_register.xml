@@ -1,0 +1,153 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/xk2"
+    android:orientation="vertical"
+    tools:context="com.yilos.nailstar.aboutme.view.RegisterActivity">
+
+    <com.yilos.widget.titlebar.TitleBar
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/common_title_bar_height"
+        android:id="@+id/titleBar" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/white"
+        android:layout_marginTop="@dimen/common_10_dp">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/common_text_height"
+            android:inputType="phone"
+            android:ems="10"
+            android:id="@+id/phoneNumberText"
+            android:drawableLeft="@mipmap/login_user_name"
+            android:drawablePadding="@dimen/common_10_dp"
+            android:layout_gravity="center_horizontal"
+            android:hint="@string/enter_phone_number"
+            android:editable="true"
+            android:phoneNumber="true"
+            android:allowUndo="true"
+            android:autoText="true"
+            android:enabled="true"
+            android:focusable="true"
+            android:singleLine="true"
+            android:layout_margin="@dimen/common_10_dp"
+            android:background="@color/white"
+            android:textColor="@color/z2"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/common_1_dp"
+            android:layout_marginLeft="@dimen/common_10_dp"
+            android:layout_marginRight="@dimen/common_10_dp"
+            android:background="@color/xk2"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/common_10_dp"
+            android:orientation="horizontal">
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/common_text_height"
+                android:inputType="number"
+                android:ems="10"
+                android:id="@+id/validateCodeText"
+                android:drawableLeft="@mipmap/ic_validate_code"
+                android:drawablePadding="@dimen/common_10_dp"
+                android:hint="@string/enter_validate_code"
+                android:editable="true"
+                android:allowUndo="true"
+                android:autoText="true"
+                android:enabled="true"
+                android:focusable="true"
+                android:singleLine="true"
+                android:background="@color/white"
+                android:textColor="@color/z2"
+                android:layout_weight="1"/>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/get_validate_code"
+                android:id="@+id/getValidateCodeButton"
+                android:background="@drawable/custom_button"
+                android:textColor="@color/white"
+                android:layout_weight="2"/>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/common_1_dp"
+            android:layout_marginLeft="@dimen/common_10_dp"
+            android:layout_marginRight="@dimen/common_10_dp"
+            android:background="@color/xk2"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/common_text_height"
+            android:inputType="textPassword"
+            android:ems="10"
+            android:id="@+id/passwordText"
+            android:drawableLeft="@mipmap/login_password"
+            android:drawablePadding="@dimen/common_10_dp"
+            android:layout_gravity="center_horizontal"
+            android:hint="@string/enter_valid_password"
+            android:editable="true"
+            android:background="@color/white"
+            android:layout_margin="@dimen/common_10_dp"
+            android:textColor="@color/z2"/>
+    </LinearLayout>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/sign_up"
+        android:id="@+id/registerButton"
+        android:background="@drawable/custom_button"
+        android:textColor="@color/white"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="@dimen/common_20_dp"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/sureButtonText"
+        android:id="@+id/resetPasswordButton"
+        android:background="@drawable/custom_button"
+        android:textColor="@color/white"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="@dimen/common_20_dp"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center"
+        android:id="@+id/licenceLayout">
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/checkBox"
+            android:drawableLeft="@drawable/check_box_menus"
+            android:drawablePadding="@dimen/common_10_dp"
+            android:button="@null"
+            android:checked="true"
+            android:text="@string/read_and_agree"
+            android:textSize="18dp"
+            android:textColor="@color/z2"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/licenceTextButton"
+            android:text="@string/nailstar_licence"
+            android:textAlignment="center"
+            android:layout_gravity="center"
+            android:textSize="18dp"
+            android:textColor="@color/orange"/>
+    </LinearLayout>
+</LinearLayout>
