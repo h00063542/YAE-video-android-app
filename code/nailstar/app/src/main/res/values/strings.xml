@@ -127,7 +127,8 @@
     <string name="clear_cache_end">清除完毕</string>
     <string name="cache_number">0.00M</string>
     <string name="clear_cache_tip">清除不必要的缓存，为系统节省空间</string>
-    <string name="allow_wifi_watch">允许非WiFi环境下观看和下载视频</string>
+    <string name="allow_no_wifi_watch">允许非WiFi环境下观看和下载视频</string>
+    <string name="not_allow_no_wifi_watch">不允许非WiFi环境下观看和下载视频</string>
     <string name="allow_wifi_watch_tip">非WiFi环境可能产生流量费用</string>
     <string name="version_info">版本信息</string>
     <string name="version_info_number">1.0.0</string>
