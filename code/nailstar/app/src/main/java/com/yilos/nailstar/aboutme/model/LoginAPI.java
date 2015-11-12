@@ -20,7 +20,9 @@ public class LoginAPI {
     private String loginUserName;
     private String loginUserId;
 
-    private LoginAPI(){}
+    private LoginAPI(){
+        getLoginInfo();
+    }
 
     public static LoginAPI getInstance() {
         return instance;
@@ -63,6 +65,10 @@ public class LoginAPI {
      */
     public String getLoginUserId(){
         return loginUserId;
+    }
+
+    public String getLoginUserName() {
+        return loginUserName;
     }
 
     private void getLoginInfo() {
