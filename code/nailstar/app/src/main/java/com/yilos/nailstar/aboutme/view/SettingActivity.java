@@ -1,6 +1,8 @@
 package com.yilos.nailstar.aboutme.view;
 
+import android.app.Activity;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -12,6 +14,7 @@ import com.nostra13.universalimageloader.utils.StorageUtils;
 import com.yilos.nailstar.R;
 import com.yilos.nailstar.framework.view.BaseActivity;
 import com.yilos.nailstar.util.DataCleanManager;
+import com.yilos.nailstar.util.SharedPreferencesUtil;
 import com.yilos.widget.titlebar.TitleBar;
 
 import java.io.File;
@@ -19,7 +22,7 @@ import java.io.File;
 /**
  * Created by sisilai on 15/11/10.
  */
-public class SettingActivity extends BaseActivity implements View.OnClickListener {
+public class SettingActivity extends BaseActivity implements View.OnClickListener, SlideSwitch.SlideListener {
     private TitleBar titleBar;
     private ImageView backButton;
     private TextView titleTextView;
@@ -46,7 +49,9 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
 
 
     private void initEvents() {
-        slideSwitch.setOnClickListener(this);
+        boolean allow = SharedPreferencesUtil.getAllowNoWifi(getBaseContext());
+        slideSwitch.setState(allow);
+        slideSwitch.setSlideListener(this);
         titleTextView.setText(R.string.about_me_setting);
         clearCache.setOnClickListener(this);
         cacheNumber.setText(setCacheNumber());
@@ -76,6 +81,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 String content = getResources().getString(R.string.sure_clear_cache);
                 DialogInterface.OnClickListener setSureEvent = setSureEvent();
                 showMessageDialogWithEvent(null, content,setSureEvent,null);
+                break;
             default:
                 break;
         }
@@ -93,5 +99,31 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 }
             }
         };
+    }
+//
+//    private void setAllowNoWifiSharedPreferences(boolean allow) {
+//        SharedPreferences allowNoWifiSharedPreferences= getSharedPreferences("allow_no_wifi_watch_and_download",
+//                Activity.MODE_PRIVATE);
+//        SharedPreferences.Editor editor = allowNoWifiSharedPreferences.edit();
+//        editor.putBoolean("allow", allow);
+//        editor.commit();
+//    }
+//
+//    private SharedPreferences getAllowNoWifiSharedPreferences() {
+//        SharedPreferences allowNoWifiSharedPreferences= getSharedPreferences("allow_no_wifi_watch_and_download",
+//                Activity.MODE_PRIVATE);
+//        return allowNoWifiSharedPreferences;
+//    }
+
+    @Override
+    public void open() {
+        SharedPreferencesUtil.setAllowNoWifiSharedPreferences(getBaseContext(), true);
+        showShortToast(R.string.allow_no_wifi_watch);
+    }
+
+    @Override
+    public void close() {
+        SharedPreferencesUtil.setAllowNoWifiSharedPreferences(getBaseContext(),false);
+        showShortToast(R.string.not_allow_no_wifi_watch);
     }
 }

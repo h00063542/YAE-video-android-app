@@ -53,7 +53,7 @@ public class BaseActivity extends AppCompatActivity implements IView{
         hideLoading();
 
         LoadingDialog dialog = new LoadingDialog(this);
-        if (null != tip && tip.trim().equals("")) {
+        if (null != tip && !tip.trim().equals("")) {
             dialog.setContent(tip);
         }
         dialog.show();
@@ -73,6 +73,7 @@ public class BaseActivity extends AppCompatActivity implements IView{
         }
     }
 
+    @Override
     public void showShortToast(CharSequence text) {
         Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
     }
@@ -82,6 +83,7 @@ public class BaseActivity extends AppCompatActivity implements IView{
 
     }
 
+    @Override
     public void showLongToast(CharSequence text) {
         Toast.makeText(this, text, Toast.LENGTH_LONG).show();
 

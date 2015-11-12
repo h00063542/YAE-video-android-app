@@ -100,6 +100,9 @@
 
     <!-- 登录注册 -->
     <string name="title_activity_login">账号登录</string>
+    <string name="title_activity_register">手机注册</string>
+    <string name="title_activity_licence">用户协议</string>
+    <string name="title_activity_password">密码找回</string>
     <string name="login_user_name_text">账号</string>
     <string name="login_password_text">密码</string>
     <string name="login_button">"登 录"</string>
@@ -111,14 +114,12 @@
     <string name="sign_up">注册</string>
     <string name="enter_account">请输入账号</string>
     <string name="enter_password">请输入密码</string>
-    <string name="title_activity_register">手机注册</string>
     <string name="enter_phone_number">请输入手机号</string>
     <string name="enter_validate_code">请输入验证码</string>
     <string name="enter_valid_password">设置密码（6-20个字）</string>
     <string name="get_validate_code">获取验证码</string>
     <string name="read_and_agree">我已阅读并同意</string>
     <string name="nailstar_licence">美甲大咖软件用户协议</string>
-    <string name="title_activity_licence">用户协议</string>
     
     <!-- 设置 -->
     <string name="clear_cache">清除缓存</string>
@@ -127,7 +128,8 @@
     <string name="clear_cache_end">清除完毕</string>
     <string name="cache_number">0.00M</string>
     <string name="clear_cache_tip">清除不必要的缓存，为系统节省空间</string>
-    <string name="allow_wifi_watch">允许非WiFi环境下观看和下载视频</string>
+    <string name="allow_no_wifi_watch">允许非WiFi环境下观看和下载视频</string>
+    <string name="not_allow_no_wifi_watch">不允许非WiFi环境下观看和下载视频</string>
     <string name="allow_wifi_watch_tip">非WiFi环境可能产生流量费用</string>
     <string name="version_info">版本信息</string>
     <string name="version_info_number">1.0.0</string>
