@@ -6,11 +6,17 @@ import android.os.Handler;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.yilos.nailstar.requirelession.entity.CandidateLession;
 import com.yilos.nailstar.requirelession.entity.LessionActivity;
+import com.yilos.nailstar.requirelession.entity.VotedRecord;
 import com.yilos.nailstar.requirelession.model.LessionService;
 import com.yilos.nailstar.requirelession.model.LessionServiceImpl;
 import com.yilos.nailstar.requirelession.view.LessionView;
 import com.yilos.nailstar.util.FileUtils;
+import com.yilos.nailstar.util.LoggerFactory;
 
+import org.apache.log4j.Logger;
+
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -20,6 +26,10 @@ import java.util.TimerTask;
  */
 public class LessionPresenter {
 
+    private static Logger logger = LoggerFactory.getLogger(LessionPresenter.class);
+
+    private static final String VOTED_RECORD_FILE = "voted_record";
+
     private LessionView view;
     private LessionService service;
     private Handler mHandler = new Handler();
@@ -27,6 +37,10 @@ public class LessionPresenter {
     private LessionActivity lessionActivity;
     private List<CandidateLession> voteLessionList;
     private List<CandidateLession> rankingLessionList;
+
+    private File cacheDir;
+
+    private VotedRecord votedRecord;
 
     private Timer timer = new Timer();
     private boolean stopCountDown;
@@ -38,6 +52,10 @@ public class LessionPresenter {
         this.view = view;
         this.service = new LessionServiceImpl();
 
+    }
+
+    public void setCacheDir(File cacheDir) {
+        this.cacheDir = cacheDir;
     }
 
     public void setStopCountDown(boolean stopCountDown) {
@@ -149,6 +167,16 @@ public class LessionPresenter {
             public void run() {
                 try {
                     voteLessionList = service.queryVoteLessionList();
+                    // 设置已投票状态
+                    if (votedRecord != null) {
+                        for (String candidateId : votedRecord.getCandidateIdList()) {
+                            for (CandidateLession item : voteLessionList) {
+                                if (item.getCandidateId().equals(candidateId)) {
+                                    item.setVoted(1);
+                                }
+                            }
+                        }
+                    }
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
@@ -177,6 +205,16 @@ public class LessionPresenter {
             public void run() {
                 try {
                     rankingLessionList = service.queryRankingLessionList(1);
+                    // 设置已投票状态
+                    if (votedRecord != null) {
+                        for (String candidateId : votedRecord.getCandidateIdList()) {
+                            for (CandidateLession item : rankingLessionList) {
+                                if (item.getCandidateId().equals(candidateId)) {
+                                    item.setVoted(1);
+                                }
+                            }
+                        }
+                    }
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
@@ -254,6 +292,8 @@ public class LessionPresenter {
                         }
                     }
 
+                    saveVotedRecord(candidateLession);
+
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
@@ -274,6 +314,7 @@ public class LessionPresenter {
 
     /**
      * 保存图片
+     *
      * @param bitmap
      * @param path
      * @param fileName
@@ -309,6 +350,7 @@ public class LessionPresenter {
 
     /**
      * 保存图片
+     *
      * @param url
      * @param path
      * @param fileName
@@ -342,13 +384,17 @@ public class LessionPresenter {
         }.start();
     }
 
+    /**
+     * 举报图片
+     *
+     * @param candidateLession
+     */
     public void reportIllegal(final CandidateLession candidateLession) {
 
         new Thread() {
             @Override
             public void run() {
                 try {
-
                     service.reportIllegal(candidateLession.getCandidateId());
 
                     mHandler.post(new Runnable() {
@@ -368,4 +414,35 @@ public class LessionPresenter {
             }
         }.start();
     }
+
+    public void queryVotedRecord() {
+        new Thread() {
+            @Override
+            public void run() {
+                try {
+                    votedRecord = service.queryVotedRecord(new File(cacheDir, VOTED_RECORD_FILE));
+                } catch (Exception e) {
+                    logger.error("queryVoteRecord failed", e);
+                }
+                queryAndRefreshVoteLession();
+            }
+        }.start();
+    }
+
+    public void saveVotedRecord(CandidateLession candidateLession) {
+
+        if (votedRecord == null || (lessionActivity != null && lessionActivity.getNo() != votedRecord.getNo())) {
+            votedRecord = new VotedRecord();
+            votedRecord.setNo(lessionActivity.getNo());
+        }
+
+        votedRecord.getCandidateIdList().add(candidateLession.getCandidateId());
+
+        try {
+            service.saveVotedRecord(new File(cacheDir, VOTED_RECORD_FILE), votedRecord);
+        } catch (IOException e) {
+            logger.error("saveVotedRecord failed", e);
+        }
+    }
+
 }

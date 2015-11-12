@@ -1,12 +1,13 @@
 package com.yilos.nailstar.requirelession.model;
 
-import com.yilos.nailstar.framework.exception.NetworkDisconnectException;
 import com.yilos.nailstar.requirelession.entity.CandidateLession;
 import com.yilos.nailstar.requirelession.entity.LessionActivity;
 import com.yilos.nailstar.requirelession.entity.VideoLession;
+import com.yilos.nailstar.requirelession.entity.VotedRecord;
 
 import org.json.JSONException;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -17,6 +18,7 @@ public interface LessionService {
 
     /**
      * 查询当期活动详情
+     *
      * @return LessionActivity
      * @throws IOException
      * @throws JSONException
@@ -25,6 +27,7 @@ public interface LessionService {
 
     /**
      * 查询随机九宫格（投票列表）
+     *
      * @return List<CandidateLession>
      * @throws IOException
      * @throws JSONException
@@ -33,6 +36,7 @@ public interface LessionService {
 
     /**
      * 查询排行榜
+     *
      * @param page
      * @return List<CandidateLession>
      * @throws IOException
@@ -42,6 +46,7 @@ public interface LessionService {
 
     /**
      * 查看往期活动
+     *
      * @param page
      * @return List<VideoLession>
      * @throws IOException
@@ -51,6 +56,7 @@ public interface LessionService {
 
     /**
      * 求教程投票
+     *
      * @param id
      * @throws IOException
      * @throws JSONException
@@ -59,10 +65,27 @@ public interface LessionService {
 
     /**
      * 举报
+     *
      * @param id
      * @throws IOException
      * @throws JSONException
      */
     void reportIllegal(String id) throws IOException, JSONException;
 
+    /**
+     * 读取已投票列表
+     *
+     * @return
+     * @throws IOException
+     */
+    VotedRecord queryVotedRecord(File fileName) throws IOException, JSONException;
+
+    /**
+     * 保存已投票列表
+     *
+     * @param fileName
+     * @param votedRecord
+     * @throws IOException
+     */
+    void saveVotedRecord(File fileName, VotedRecord votedRecord) throws IOException;
 }
