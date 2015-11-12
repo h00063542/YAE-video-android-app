@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.nostra13.universalimageloader.utils.StorageUtils;
 import com.yilos.nailstar.R;
@@ -61,16 +62,37 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         return null;
     }
 
-    public void cleanExternalCache() {
-        DataCleanManager.cleanExternalCache(getApplicationContext());
+    public static void cleanExternalCache() {
+
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.clear_cache:
-                showMessageDialogWithEvent("清除缓存", "确定清除？",SettingActivity.this,"");
-                //DataCleanManager.cleanExternalCache(getApplicationContext());
+                if (cacheNumber.getText().equals("0KB")) {
+                    Toast.makeText(SettingActivity.this,"暂无缓存",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                showMessageDialogWithEvent(null, "确定要清除缓存吗？");
+            default:
+                break;
         }
+    }
+
+    @Override
+    protected void setSureEvent() {
+        super.setSureEvent();
+        DataCleanManager.cleanExternalCache(getApplicationContext());
+        String formatCacheNumber = setCacheNumber();
+        if (formatCacheNumber.equals("0KB")) {
+            cacheNumber.setText(formatCacheNumber);
+            Toast.makeText(SettingActivity.this,"清除完毕",Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    protected void setCancelEvent() {
+        super.setCancelEvent();
     }
 }

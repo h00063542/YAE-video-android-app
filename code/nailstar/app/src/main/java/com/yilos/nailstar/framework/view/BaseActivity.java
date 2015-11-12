@@ -23,27 +23,33 @@ public class BaseActivity extends AppCompatActivity {
             builder.setTitle(title);
         }
         builder.setMessage(content);
-        builder.setNegativeButton("确定", null);
+        builder.setPositiveButton("确定", null);
         builder.show();
     }
 
-    public void showMessageDialogWithEvent(String title, String content, final Activity activity,String function) {
+    //弹框需要继承该方法（点取消时所发生的事件）
+    protected void setCancelEvent() {}
+
+    //弹框需要继承该方法 (点确定时所发生的事件)
+    protected void setSureEvent() {}
+
+    public void showMessageDialogWithEvent(String title, String content) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         if(title != null) {
             builder.setTitle(title);
         }
         builder.setMessage(content);
-        builder.setNegativeButton("确定", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
+                setSureEvent();
             }
         });
 
-        builder.setPositiveButton("取消", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
+                setCancelEvent();
             }
         });
         builder.show();
