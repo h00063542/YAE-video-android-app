@@ -100,9 +100,9 @@
             android:textSize="@dimen/my_text_size"
             android:layout_marginLeft="@dimen/my_margin_or_padding_border_width"/>
         <TextView
+            android:id="@+id/version_info_number"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/version_info_number"
             android:textColor="@color/z3"
             android:textSize="@dimen/my_text_size"
             android:layout_marginRight="@dimen/my_version_number_margin_border_width"
@@ -162,6 +162,8 @@
         android:layout_height="@dimen/common_1_dp"
         android:background="@color/xk2"/>
     <RelativeLayout
+        android:id="@+id/go_to_about_us"
+        android:clickable="true"
         android:background="@color/white"
         android:layout_width="match_parent"
         android:layout_height="@dimen/my_horizontal_bar_height"

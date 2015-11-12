@@ -40,7 +40,7 @@ public class NetChangeActivity extends Activity {
         registerReceiver(new NetChangeReceiver(), filter);
     }
 
-    public boolean function() {
+    public boolean isWifi() {
         int netType = getNetworkType();
         if (netType == ConnectivityManager.TYPE_WIFI) {
             return true;
