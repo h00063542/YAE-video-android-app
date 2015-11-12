@@ -9,11 +9,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.yilos.nailstar.R;
+import com.yilos.nailstar.aboutme.model.LoginAPI;
 import com.yilos.nailstar.framework.view.BaseActivity;
-import com.yilos.nailstar.topic.entity.SubmittedHomeworkInfo;
+import com.yilos.nailstar.topic.entity.AddCommentInfo;
 import com.yilos.nailstar.topic.presenter.TopicHomeworkPresenter;
 import com.yilos.nailstar.util.Constants;
-import com.yilos.nailstar.util.UserUtil;
+import com.yilos.nailstar.util.StringUtil;
 import com.yilos.widget.titlebar.TitleBar;
 
 /**
@@ -43,8 +44,8 @@ public class TopicHomeworkActivity extends BaseActivity implements ITopicHomewor
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_topic_homework);
         init();
-        if (!UserUtil.isLogin(this)) {
-            // TODO 调用到登录界面
+        if (!LoginAPI.getInstance().isLogin()) {
+            LoginAPI.getInstance().gotoLoginPage(this);
             return;
         }
     }
@@ -100,12 +101,22 @@ public class TopicHomeworkActivity extends BaseActivity implements ITopicHomewor
             @Override
             public void onClick(View v) {
                 mContent = mEtTopicHomeworkContent.getText().toString();
-                String userId = UserUtil.getUserInfo(TopicHomeworkActivity.this).getUserId();
-                SubmittedHomeworkInfo info = new SubmittedHomeworkInfo();
+                String userId = LoginAPI.getInstance().getLoginUserId();
+                AddCommentInfo info = new AddCommentInfo();
                 info.setTopicId(mTopicId);
-                info.setContent(mContent);
-                info.setPicUrl(Constants.EMPTY_STRING);
                 info.setUserId(userId);
+                info.setContent(mContent);
+                info.setContentPic(Constants.EMPTY_STRING);
+                info.setReady(Constants.READY_HOMEWORK);
+                info.setPicLocalPath(mContentPic);
+                StringBuilder picName = new StringBuilder()
+                        .append(mTopicId)
+                        .append(Constants.UNDERLINE)
+                        .append(userId)
+                        .append(Constants.UNDERLINE)
+                        .append(Constants.HOMEWORK)
+                        .append(Constants.JPG_SUFFIX);
+                info.setPicName(picName.toString());
                 mTopicHomeworkPresenter.submittedHomework(info);
             }
         });
@@ -115,8 +126,13 @@ public class TopicHomeworkActivity extends BaseActivity implements ITopicHomewor
     @Override
     public void afterSubmittedHomework(String newCommentId) {
         Intent intent = new Intent(this, TopicVideoPlayerActivity.class);
-        //设置返回数据
         intent.putExtra(Constants.TOPIC_ID, mTopicId);
+        if (StringUtil.isEmpty(newCommentId)) {
+            setResult(RESULT_CANCELED, intent);
+            finish();
+            return;
+        }
+        //设置返回数据
         intent.putExtra(Constants.CONTENT, mContent);
         intent.putExtra(Constants.CONTENT_PIC, mContentPic);
         setResult(RESULT_OK, intent);

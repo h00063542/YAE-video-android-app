@@ -8,12 +8,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.yilos.nailstar.R;
+import com.yilos.nailstar.aboutme.model.LoginAPI;
 import com.yilos.nailstar.framework.view.BaseActivity;
 import com.yilos.nailstar.topic.entity.AddCommentInfo;
 import com.yilos.nailstar.topic.presenter.TopicCommentPresenter;
 import com.yilos.nailstar.util.Constants;
 import com.yilos.nailstar.util.StringUtil;
-import com.yilos.nailstar.util.UserUtil;
 import com.yilos.widget.titlebar.TitleBar;
 
 /**
@@ -44,8 +44,8 @@ public class TopicCommentActivity extends BaseActivity implements ITopicCommentV
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        if (!UserUtil.isLogin(this)) {
-            // TODO 调用到登录界面
+        if (!LoginAPI.getInstance().isLogin()) {
+            LoginAPI.getInstance().gotoLoginPage(this);
             return;
         }
         super.onCreate(savedInstanceState);
@@ -118,16 +118,17 @@ public class TopicCommentActivity extends BaseActivity implements ITopicCommentV
             @Override
             public void onClick(View v) {
                 mContent = mEtTopicCommentContent.getText().toString();
-                String userId = UserUtil.getUserInfo(TopicCommentActivity.this).getUserId();
+                String userId = LoginAPI.getInstance().getLoginUserId();
                 AddCommentInfo info = new AddCommentInfo();
                 info.setTopicId(mTopicId);
                 info.setUserId(userId);
                 info.setContent(mContent);
                 info.setContentPic(Constants.EMPTY_STRING);
-                if (mCommentType == Constants.TOPIC_COMMENT_TYPE_REPLY) {
+                info.setReplayTo(mCommentId);
+                info.setReady(Constants.READY_COMMENT);
+                if (mCommentType == Constants.TOPIC_COMMENT_TYPE_REPLY_AGAIN) {
                     info.setAtUserId(mCommentReplyAuthor);
-                    // TODO 不知道这个参数是做什么用的
-                    //info.setReplayTo();
+                    info.setLastReplayTO(mCommentReplyId);
                     mTopicCommentPresenter.addTopicCommentReply(null);
                 } else {
                     info.setAtUserId(mCommentUserId);
@@ -149,12 +150,14 @@ public class TopicCommentActivity extends BaseActivity implements ITopicCommentV
     }
 
     private void backTopicVideoPlayerPage(String newCommentId) {
-        if (StringUtil.isEmpty(newCommentId)) {
-
-        }
         Intent intent = new Intent(this, TopicVideoPlayerActivity.class);
-        //设置返回数据
         intent.putExtra(Constants.TOPIC_ID, mTopicId);
+        if (StringUtil.isEmpty(newCommentId)) {
+            setResult(RESULT_CANCELED, intent);
+            finish();
+            return;
+        }
+        //设置返回数据
         intent.putExtra(Constants.TYPE, mCommentType);
         intent.putExtra(Constants.TOPIC_COMMENT_ID, mCommentId);
         intent.putExtra(Constants.TOPIC_NEW_COMMENT_ID, newCommentId);
