@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.leaking.slideswitch.SlideSwitch;
 import com.nostra13.universalimageloader.utils.StorageUtils;
 import com.yilos.nailstar.R;
+import com.yilos.nailstar.aboutme.model.LoginAPI;
 import com.yilos.nailstar.framework.view.BaseActivity;
 import com.yilos.nailstar.util.DataCleanManager;
 import com.yilos.nailstar.util.SharedPreferencesUtil;
@@ -33,6 +34,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     private TextView versionInfoNumber;
     private RelativeLayout goToAboutUs;
     private String versionName;
+    private TextView loginOut;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +44,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     }
 
     private void initViews() {
+        loginOut = (TextView) findViewById(R.id.login_out);
         versionInfoNumber = (TextView) findViewById(R.id.version_info_number);
         slideSwitch = (SlideSwitch) findViewById(R.id.slide_switch);
         titleBar = (TitleBar) findViewById(R.id.setting_title_bar);
@@ -70,6 +73,10 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
 
 
     private void initEvents() {
+        if (LoginAPI.getInstance().isLogin()) {
+            loginOut.setVisibility(View.VISIBLE);
+            loginOut.setOnClickListener(this);
+        }
         goToAboutUs.setOnClickListener(this);
         versionName = getVersion();
         versionInfoNumber.setText(versionName);
@@ -108,8 +115,13 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 break;
             case R.id.go_to_about_us:
                 Intent aboutUsIntent = new Intent(SettingActivity.this,AboutUsActivity.class);
-                aboutUsIntent.putExtra("versionName",versionName);
+                aboutUsIntent.putExtra("versionName", versionName);
                 startActivity(aboutUsIntent);
+                break;
+            case R.id.login_out:
+                LoginAPI.getInstance().getLoginUserId();  //获取登录的用户ID
+                LoginAPI.getInstance().logout(); //退出登录
+                break;
             default:
                 break;
         }

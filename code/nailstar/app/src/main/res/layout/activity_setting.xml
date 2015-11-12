@@ -190,6 +190,8 @@
         android:layout_height="@dimen/common_1_dp"
         android:background="@color/xk2"/>
     <TextView
+        android:visibility="gone"
+        android:id="@+id/login_out"
         android:layout_marginTop="@dimen/my_horizontal_bar_space_height"
         android:background="@color/white"
         android:layout_width="match_parent"
