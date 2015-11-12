@@ -53,7 +53,7 @@ public class BaseActivity extends AppCompatActivity implements IView{
         hideLoading();
 
         LoadingDialog dialog = new LoadingDialog(this);
-        if (null != tip && tip.trim().equals("")) {
+        if (null != tip && !tip.trim().equals("")) {
             dialog.setContent(tip);
         }
         dialog.show();

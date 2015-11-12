@@ -17,4 +17,10 @@ public interface IRegisterView extends IView {
     void close();
 
     void showToast(String content);
+
+    void setRegisterButtonEnable(boolean enable);
+
+    void setResetPasswordButtonEnable(boolean enable);
+
+    void setValidateCodeButtonEnable(boolean enable);
 }

@@ -105,4 +105,30 @@ public class LoginServiceImpl {
             throw new CommonException("服务器出错，请联系客服", e);
         }
     }
+
+    /**
+     * 重置密码
+     * @param phoneNumber
+     * @param password
+     */
+    public void resetPassword(String phoneNumber, String password, String validateCode) throws CommonException {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("username", phoneNumber);
+            jsonObject.put("password", password);
+            String result = HttpClient.post("/vapi/nailstar/account/resetPwd", jsonObject.toString());
+            JSONObject resultObject = new JSONObject(result);
+            if(!resultObject.has("code") || resultObject.optInt("code") != 0) {
+                if(1 == resultObject.optInt("errorCode")) {
+                    throw new CommonException("用户不存在");
+                } else {
+                    throw new CommonException("重新设置密码失败，请重试");
+                }
+            }
+        } catch (JSONException e) {
+            throw new CommonException("重新设置密码失败，请重试", e);
+        } catch (IOException e) {
+            throw new CommonException("服务器出错，请联系客服", e);
+        }
+    }
 }
