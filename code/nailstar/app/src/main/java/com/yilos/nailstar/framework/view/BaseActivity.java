@@ -1,9 +1,6 @@
 package com.yilos.nailstar.framework.view;
 
-import android.app.Activity;
 import android.content.DialogInterface;
-import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.annotation.StringRes;
 import android.widget.Toast;
 import android.support.v7.app.AlertDialog;
