@@ -46,7 +46,6 @@ public class RegisterActivity extends BaseActivity implements IRegisterView {
                 }, 1000);
             } else {
                 disableSeconds = 0;
-                getValidateCodeButton.setBackgroundColor(ContextCompat.getColor(activity, R.color.orange));
                 getValidateCodeButton.setEnabled(true);
                 getValidateCodeButton.setText(R.string.get_validate_code);
             }
@@ -94,7 +93,7 @@ public class RegisterActivity extends BaseActivity implements IRegisterView {
         if(getIntent().getIntExtra(TYPE, REGISTER_TYPE) == REGISTER_TYPE) {
             titleView.setText(R.string.title_activity_register);
         } else {
-            titleView.setText(R.string.title_activity_register);
+            titleView.setText(R.string.title_activity_password);
         }
     }
 
@@ -182,7 +181,6 @@ public class RegisterActivity extends BaseActivity implements IRegisterView {
     @Override
     public void timeValidateCodeButton(int seconds) {
         getValidateCodeButton.setEnabled(false);
-        getValidateCodeButton.setBackgroundColor(ContextCompat.getColor(this, R.color.grey));
         timeHandler.sendEmptyMessage(seconds);
     }
 
@@ -193,6 +191,21 @@ public class RegisterActivity extends BaseActivity implements IRegisterView {
 
     @Override
     public void showToast(String content) {
-        Toast.makeText(this, content, Toast.LENGTH_LONG);
+        Toast.makeText(getApplicationContext(), content, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void setRegisterButtonEnable(boolean enable) {
+        registerButton.setEnabled(enable);
+    }
+
+    @Override
+    public void setResetPasswordButtonEnable(boolean enable) {
+        findViewById(R.id.resetPasswordButton).setEnabled(enable);
+    }
+
+    @Override
+    public void setValidateCodeButtonEnable(boolean enable) {
+        findViewById(R.id.getValidateCodeButton).setEnabled(enable);
     }
 }

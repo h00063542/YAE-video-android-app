@@ -74,7 +74,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/get_validate_code"
                 android:id="@+id/getValidateCodeButton"
-                android:background="@color/orange"
+                android:background="@drawable/custom_button"
                 android:textColor="@color/white"
                 android:layout_weight="2"/>
         </LinearLayout>
@@ -107,7 +107,7 @@
         android:layout_height="wrap_content"
         android:text="@string/sign_up"
         android:id="@+id/registerButton"
-        android:background="@color/orange"
+        android:background="@drawable/custom_button"
         android:textColor="@color/white"
         android:layout_gravity="center_horizontal"
         android:layout_margin="@dimen/common_20_dp"/>
@@ -115,9 +115,9 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/sign_up"
+        android:text="@string/sureButtonText"
         android:id="@+id/resetPasswordButton"
-        android:background="@color/orange"
+        android:background="@drawable/custom_button"
         android:textColor="@color/white"
         android:layout_gravity="center_horizontal"
         android:layout_margin="@dimen/common_20_dp"/>

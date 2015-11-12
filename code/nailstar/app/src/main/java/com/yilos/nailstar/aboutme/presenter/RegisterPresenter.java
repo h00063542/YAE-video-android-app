@@ -25,9 +25,11 @@ public class RegisterPresenter {
     }
 
     public void getValidateCode(){
+        view.setValidateCodeButtonEnable(false);
         final String phoneNumber = view.getPhoneNumber();
         if(null == phoneNumber || phoneNumber.trim().equals("")) {
             view.showMessageDialog(null, "请输入正确的手机号码");
+            view.setValidateCodeButtonEnable(true);
             return;
         }
 
@@ -56,6 +58,7 @@ public class RegisterPresenter {
             @Override
             public Object doWork(CommonResult data) {
                 if(data.isError()) {
+                    view.setValidateCodeButtonEnable(true);
                     view.showMessageDialog(null, data.getErrorMsg());
                 } else {
                     view.timeValidateCodeButton(60);
@@ -71,20 +74,24 @@ public class RegisterPresenter {
     }
 
     public void register() {
+        view.setRegisterButtonEnable(false);
         final String phoneNumber = view.getPhoneNumber();
         final String password = view.getPassword();
         final String validateCode = view.getValidateCode();
 
         if(phoneNumber == null || phoneNumber.trim().equals("")) {
             view.showMessageDialog(null, "请输入正确的手机号码");
+            view.setRegisterButtonEnable(true);
             return;
         }
         if(password == null || password.trim().equals("") || password.trim().length() < 6 || password.trim().length() > 20) {
             view.showMessageDialog(null, "请设置6-20位的密码");
+            view.setRegisterButtonEnable(true);
             return;
         }
         if(validateCode == null || validateCode.trim().equals("")) {
             view.showMessageDialog(null, "请输入短信验证码");
+            view.setRegisterButtonEnable(true);
             return;
         }
 
@@ -132,6 +139,7 @@ public class RegisterPresenter {
         TaskManager.UITask<CommonResult> updateUI = new TaskManager.UITask<CommonResult>() {
             @Override
             public Object doWork(CommonResult data) {
+                view.setRegisterButtonEnable(true);
                 view.hideLoading();
                 if(data.isError()) {
                     view.showMessageDialog(null, data.getErrorMsg());
@@ -152,20 +160,24 @@ public class RegisterPresenter {
     }
 
     public void resetPassword() {
+        view.setResetPasswordButtonEnable(false);
         final String phoneNumber = view.getPhoneNumber();
         final String password = view.getPassword();
         final String validateCode = view.getValidateCode();
 
         if(phoneNumber == null || phoneNumber.trim().equals("")) {
             view.showMessageDialog(null, "请输入正确的手机号码");
+            view.setResetPasswordButtonEnable(true);
             return;
         }
         if(password == null || password.trim().equals("") || password.trim().length() < 6 || password.trim().length() > 20) {
             view.showMessageDialog(null, "请设置6-20位的密码");
+            view.setResetPasswordButtonEnable(true);
             return;
         }
         if(validateCode == null || validateCode.trim().equals("")) {
             view.showMessageDialog(null, "请输入短信验证码");
+            view.setResetPasswordButtonEnable(true);
             return;
         }
 
@@ -213,6 +225,7 @@ public class RegisterPresenter {
         TaskManager.UITask<CommonResult> updateUI = new TaskManager.UITask<CommonResult>() {
             @Override
             public Object doWork(CommonResult data) {
+                view.setResetPasswordButtonEnable(true);
                 view.hideLoading();
                 if(data.isError()) {
                     view.showMessageDialog(null, data.getErrorMsg());
