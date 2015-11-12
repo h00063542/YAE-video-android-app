@@ -67,15 +67,28 @@ public class LoginActivity extends BaseActivity implements ILoginView {
             @Override
             public void onClick(View v) {
                 Intent goToRegisterIntent = new Intent(loginActivity, RegisterActivity.class);
+                goToRegisterIntent.putExtra(RegisterActivity.TYPE, RegisterActivity.REGISTER_TYPE);
                 startActivityForResult(goToRegisterIntent, 1);
             }
         });
 
+        //登录按钮事件
         Button loginButton = (Button)findViewById(R.id.loginButton);
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 presenter.login();
+            }
+        });
+
+        // 忘记密码点击事件
+        TextView forgetPasswordText = (TextView)findViewById(R.id.forgetPasswordText);
+        forgetPasswordText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent goToRegisterIntent = new Intent(loginActivity, RegisterActivity.class);
+                goToRegisterIntent.putExtra(RegisterActivity.TYPE, RegisterActivity.FIND_PASSWORD_TYPE);
+                startActivityForResult(goToRegisterIntent, 1);
             }
         });
     }

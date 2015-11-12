@@ -1,22 +1,20 @@
 package com.yilos.nailstar.framework.view;
 
-import android.app.Activity;
 import android.content.DialogInterface;
-import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.annotation.StringRes;
-import android.widget.Toast;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.Toast;
 
 import com.yilos.widget.dialog.LoadingDialog;
 
 /**
  * Created by yangdan on 15/10/20.
  */
-public class BaseActivity extends AppCompatActivity {
+public class BaseActivity extends AppCompatActivity implements IView{
     private LoadingDialog loadingDialog;
 
+    @Override
     public void showMessageDialog(String title, String content) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         if (title != null) {
@@ -27,31 +25,15 @@ public class BaseActivity extends AppCompatActivity {
         builder.show();
     }
 
-    //弹框需要继承该方法（点取消时所发生的事件）
-    protected void setCancelEvent() {}
-
-    //弹框需要继承该方法 (点确定时所发生的事件)
-    protected void setSureEvent() {}
-
-    public void showMessageDialogWithEvent(String title, String content) {
+    public void showMessageDialogWithEvent(String title, String content, DialogInterface.OnClickListener sureEvent, DialogInterface.OnClickListener cancelEvent) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         if(title != null) {
             builder.setTitle(title);
         }
         builder.setMessage(content);
-        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                setSureEvent();
-            }
-        });
+        builder.setPositiveButton("确定", sureEvent);
 
-        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                setCancelEvent();
-            }
-        });
+        builder.setNegativeButton("取消", cancelEvent);
         builder.show();
     }
 
@@ -60,6 +42,7 @@ public class BaseActivity extends AppCompatActivity {
      *
      * @param tip
      */
+    @Override
     public void showLoading(String tip) {
         hideLoading();
 
@@ -75,6 +58,7 @@ public class BaseActivity extends AppCompatActivity {
     /**
      * 隐藏loading图标
      */
+    @Override
     public void hideLoading() {
         if (loadingDialog != null) {
             if (loadingDialog.isShowing()) {
