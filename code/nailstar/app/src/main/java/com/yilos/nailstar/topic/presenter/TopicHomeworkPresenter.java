@@ -1,14 +1,20 @@
 package com.yilos.nailstar.topic.presenter;
 
+import com.alibaba.sdk.android.oss.callback.SaveCallback;
+import com.alibaba.sdk.android.oss.model.OSSException;
 import com.yilos.nailstar.framework.exception.NetworkDisconnectException;
-import com.yilos.nailstar.topic.entity.SubmittedHomeworkInfo;
+import com.yilos.nailstar.topic.entity.AddCommentInfo;
 import com.yilos.nailstar.topic.model.ITopicService;
 import com.yilos.nailstar.topic.model.TopicServiceImpl;
+import com.yilos.nailstar.topic.model.UpdateReadyInfo;
 import com.yilos.nailstar.topic.view.ITopicHomeworkView;
+import com.yilos.nailstar.util.Constants;
 import com.yilos.nailstar.util.LoggerFactory;
 import com.yilos.nailstar.util.TaskManager;
 
 import org.apache.log4j.Logger;
+
+import java.util.ArrayList;
 
 
 /**
@@ -56,7 +62,7 @@ public class TopicHomeworkPresenter {
     }
 
 
-    public void submittedHomework(final SubmittedHomeworkInfo info) {
+    public void submittedHomework(final AddCommentInfo info) {
         TaskManager.Task submittedHomeworkTask = new TaskManager.BackgroundTask() {
             @Override
             public Object doWork(Object data) {
@@ -80,18 +86,41 @@ public class TopicHomeworkPresenter {
             }
         };
 
-        TaskManager.Task uploadPicHomeworkTask = new TaskManager.BackgroundTask() {
+        TaskManager.Task uploadHomeworkPicTask = new TaskManager.BackgroundTask() {
             @Override
             public Object doWork(Object data) {
-//                try {
-                // TODO 测试阶段，先不要调用服务端接口
-                return "003";
-//                    return topicsService.submittedHomework(info);
-//                } catch (NetworkDisconnectException e) {
-//                    e.printStackTrace();
-//                    LOGGER.error("添加评论信息失败，topicId：" + info.getTopicId(), e);
-//                }
-//                return null;
+                try {
+                    topicsService.uploadFile2Oss(info.getPicLocalPath(), info.getPicName(), new SaveCallback() {
+                        @Override
+                        public void onSuccess(String objectKey) {
+                            LOGGER.debug("[onSuccess] - " + objectKey + " upload success!");
+                            UpdateReadyInfo updateReadyInfo = new UpdateReadyInfo();
+                            updateReadyInfo.setId(info.getTopicId());
+                            ArrayList<String> picUrls = new ArrayList<String>();
+                            picUrls.add(Constants.YILOS_PIC_URL + objectKey);
+                            updateReadyInfo.setPicUrls(picUrls);
+                            updateReadyInfo.setTable(Constants.HOMEWORK);
+                        }
+
+                        @Override
+                        public void onProgress(String objectKey, int byteCount, int totalSize) {
+                            LOGGER.debug("[onProgress] - current upload " + objectKey + " bytes: " + byteCount + " in total: " + totalSize);
+                        }
+
+                        @Override
+                        public void onFailure(String objectKey, OSSException e) {
+                            LOGGER.error("上传交作业图片到Oss失败，localPath:" + info.getPicLocalPath()
+                                    + "，picName:" + info.getPicName()
+                                    + ",objectKey:" + objectKey, e);
+                            e.printStackTrace();
+                            e.getException().printStackTrace();
+                        }
+                    });
+                } catch (NetworkDisconnectException e) {
+                    e.printStackTrace();
+                    LOGGER.error("上传交作业图片到oss失败，topicId：" + info.getTopicId(), e);
+                }
+                return null;
             }
         };
 
@@ -101,8 +130,9 @@ public class TopicHomeworkPresenter {
                 .next(updateUi)
                 .start();
 
+        // TODO 测试阶段，先不要调用服务端接口
 //        new TaskManager()
-//                .next(uploadPicHomeworkTask)
+//                .next(uploadHomeworkPicTask)
 //                .start();
     }
 }

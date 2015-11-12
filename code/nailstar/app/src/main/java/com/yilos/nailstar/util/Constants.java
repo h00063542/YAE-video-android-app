@@ -49,9 +49,12 @@ public class Constants {
     public static final String PIC_URL = "picUrl";
 
     public static final String UID = "uid";
+    public static final int ACTION_TYPE_LIKE = 2;
     public static final int ACTION_TYPE_COLLECTION = 3;
     public static final String AT_USER = "atUser";
     public static final String REPLY_TO = "replyTo";
+    public static final String LAST_REPLY_TO = "lastReplyTo";
+    public static final String READY = "ready";
 
     public static final int IS_HOME_WORK_VALUE = 1;
     public static final int NOT_HOME_WORK_VALUE = 0;
@@ -122,6 +125,7 @@ public class Constants {
     public static final String UNDERLINE = "_";
     public static final String JSON_SUFFIX = ".json";
     public static final String PNG_SUFFIX = ".png";
+    public static final String JPG_SUFFIX = ".jpg";
     public static final String COUNT = "count";
 
     /**
@@ -134,4 +138,14 @@ public class Constants {
     public static final int HOMEWORK_PIC_PIXEL = 400;
 
     public static final String COMMENT_ID = "commentId";
+    public static final int READY_HOMEWORK = 0;
+    public static final int READY_COMMENT = 1;
+    public static final String TABLE = "table";
+    public static final String HOMEWORK = "homework";
+    public static final String POSTS = "posts";
+    public static final String YILOS_PIC_URL = "http://pic.yilos.com/";
+    public static final String DEFAULT_ACCESS_KEY_NAME = "com.yilos.nailstar.ossak";
+    public static final String DEFAULT_SCRECT_KEY_NAME = "com.yilos.nailstar.osssk";
+    public static final String DEFAULT_BUCKET_NAME = "com.yilos.nailstar.ossbucketname";
+    public static final String DEFAULT_OSS_HOST_ID = "oss-cn-hangzhou.aliyuncs.com";
 }
