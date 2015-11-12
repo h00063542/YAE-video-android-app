@@ -69,7 +69,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.clear_cache:
-                showMessageDialogWithEvent("清除缓存", "确定清除？",SettingActivity.this,1);
+                showMessageDialogWithEvent("清除缓存", "确定清除？",SettingActivity.this,"");
                 //DataCleanManager.cleanExternalCache(getApplicationContext());
         }
     }
