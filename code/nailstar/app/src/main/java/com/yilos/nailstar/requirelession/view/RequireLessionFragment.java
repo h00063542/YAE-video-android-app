@@ -32,6 +32,7 @@ import com.yilos.widget.circleimageview.CircleImageView;
 import com.yilos.widget.titlebar.TitleBar;
 import com.yilos.widget.view.ImageCacheView;
 
+import java.io.File;
 import java.util.List;
 
 import in.srain.cube.views.ptr.PtrClassicFrameLayout;
@@ -183,9 +184,12 @@ public class RequireLessionFragment extends Fragment implements LessionView {
     }
 
     private void initData() {
+
+        lessionPresenter.setCacheDir(this.getActivity().getFilesDir());
         // 查询数据
         lessionPresenter.queryAndRefreshActivityTopic();
-        lessionPresenter.queryAndRefreshVoteLession();
+        lessionPresenter.queryVotedRecord();
+
     }
 
     private void bindControl() {
