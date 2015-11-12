@@ -1,12 +1,10 @@
 package com.yilos.nailstar.aboutme.view;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.nostra13.universalimageloader.utils.StorageUtils;
 import com.yilos.nailstar.R;
@@ -62,19 +60,17 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         return null;
     }
 
-    public static void cleanExternalCache() {
-
-    }
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.clear_cache:
                 if (cacheNumber.getText().equals("0KB")) {
-                    Toast.makeText(SettingActivity.this,"暂无缓存",Toast.LENGTH_SHORT).show();
+                    showShortToast(R.string.with_no_cache);
                     return;
                 }
-                showMessageDialogWithEvent(null, "确定要清除缓存吗？");
+
+                String content = getResources().getString(R.string.sure_clear_cache);
+                showMessageDialogWithEvent(null, content);
             default:
                 break;
         }
@@ -87,7 +83,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         String formatCacheNumber = setCacheNumber();
         if (formatCacheNumber.equals("0KB")) {
             cacheNumber.setText(formatCacheNumber);
-            Toast.makeText(SettingActivity.this,"清除完毕",Toast.LENGTH_SHORT).show();
+            showShortToast(R.string.clear_cache_end);
         }
     }
 
