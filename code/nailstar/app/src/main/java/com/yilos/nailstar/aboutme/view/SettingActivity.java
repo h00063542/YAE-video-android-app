@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.leaking.slideswitch.SlideSwitch;
 import com.nostra13.universalimageloader.utils.StorageUtils;
 import com.yilos.nailstar.R;
 import com.yilos.nailstar.framework.view.BaseActivity;
@@ -24,6 +25,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     private TextView titleTextView;
     private RelativeLayout clearCache;
     private TextView cacheNumber;
+    private SlideSwitch slideSwitch;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,7 +35,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     }
 
     private void initViews() {
-
+        slideSwitch = (SlideSwitch) findViewById(R.id.slide_switch);
         titleBar = (TitleBar) findViewById(R.id.setting_title_bar);
         backButton = titleBar.getBackButton(SettingActivity.this);
         titleTextView = titleBar.getTitleView();
@@ -42,8 +44,9 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
 
     }
 
-    private void initEvents() {
 
+    private void initEvents() {
+        slideSwitch.setOnClickListener(this);
         titleTextView.setText(R.string.about_me_setting);
         clearCache.setOnClickListener(this);
         cacheNumber.setText(setCacheNumber());
