@@ -1,6 +1,5 @@
 package com.yilos.nailstar.main;
 
-import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
@@ -10,10 +9,11 @@ import android.widget.TextView;
 import com.yilos.nailstar.R;
 import com.yilos.nailstar.aboutme.view.AboutMeFragment;
 import com.yilos.nailstar.circle.CircleFragment;
+import com.yilos.nailstar.framework.view.BaseActivity;
 import com.yilos.nailstar.index.view.IndexFragment;
 import com.yilos.nailstar.requirelession.view.RequireLessionFragment;
 
-public class MainActivity extends Activity {
+public class MainActivity extends BaseActivity {
     private FragmentManager fragmentManager;
     private TextView mainTabNewMessage;
 

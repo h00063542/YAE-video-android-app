@@ -1,6 +1,8 @@
 package com.yilos.nailstar.framework.view;
 
 import android.content.DialogInterface;
+import android.content.pm.ActivityInfo;
+import android.os.Bundle;
 import android.support.annotation.StringRes;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -13,6 +15,12 @@ import com.yilos.widget.dialog.LoadingDialog;
  */
 public class BaseActivity extends AppCompatActivity implements IView{
     private LoadingDialog loadingDialog;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+    }
 
     @Override
     public void showMessageDialog(String title, String content) {
