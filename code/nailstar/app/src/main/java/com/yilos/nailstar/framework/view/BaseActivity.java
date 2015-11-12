@@ -1,20 +1,19 @@
 package com.yilos.nailstar.framework.view;
 
-import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.annotation.StringRes;
-import android.widget.Toast;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.Toast;
 
 import com.yilos.widget.dialog.LoadingDialog;
 
 /**
  * Created by yangdan on 15/10/20.
  */
-public class BaseActivity extends AppCompatActivity {
+public class BaseActivity extends AppCompatActivity implements IView{
     private LoadingDialog loadingDialog;
 
+    @Override
     public void showMessageDialog(String title, String content) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         if (title != null) {
@@ -30,6 +29,7 @@ public class BaseActivity extends AppCompatActivity {
      *
      * @param tip
      */
+    @Override
     public void showLoading(String tip) {
         hideLoading();
 
@@ -45,6 +45,7 @@ public class BaseActivity extends AppCompatActivity {
     /**
      * 隐藏loading图标
      */
+    @Override
     public void hideLoading() {
         if (loadingDialog != null) {
             if (loadingDialog.isShowing()) {

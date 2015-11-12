@@ -51,7 +51,7 @@ public class CircleView extends FrameLayout {
                         mSweep = startAngle + step;
                     }
                 } else {
-                    step = mSweep / 36 + 1;
+                    step = (360 - mSweep) / 36 + 1;
                     mSweep += step;
 
                     if(mSweep >= 360) {
