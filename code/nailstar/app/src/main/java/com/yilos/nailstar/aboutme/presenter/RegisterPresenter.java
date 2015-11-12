@@ -150,4 +150,85 @@ public class RegisterPresenter {
                 .next(updateUI)
                 .start();
     }
+
+    public void resetPassword() {
+        final String phoneNumber = view.getPhoneNumber();
+        final String password = view.getPassword();
+        final String validateCode = view.getValidateCode();
+
+        if(phoneNumber == null || phoneNumber.trim().equals("")) {
+            view.showMessageDialog(null, "请输入正确的手机号码");
+            return;
+        }
+        if(password == null || password.trim().equals("") || password.trim().length() < 6 || password.trim().length() > 20) {
+            view.showMessageDialog(null, "请设置6-20位的密码");
+            return;
+        }
+        if(validateCode == null || validateCode.trim().equals("")) {
+            view.showMessageDialog(null, "请输入短信验证码");
+            return;
+        }
+
+        view.showLoading("正在重置密码...");
+
+        TaskManager.BackgroundTask checkCode = new TaskManager.BackgroundTask() {
+            @Override
+            public Object doWork(Object data) {
+                CommonResult commonResult = new CommonResult();
+                try {
+                    if(loginService.checkValidateCode(phoneNumber, validateCode)) {
+                        return commonResult;
+                    } else {
+                        commonResult.setError(true);
+                        commonResult.setErrorMsg("验证码错误");
+                        return commonResult;
+                    }
+                } catch (CommonException e) {
+                    commonResult.setError(true);
+                    commonResult.setErrorMsg(e.getMessage());
+                    return commonResult;
+                }
+            }
+        };
+
+        TaskManager.BackgroundTask<CommonResult> register = new TaskManager.BackgroundTask<CommonResult>() {
+            @Override
+            public Object doWork(CommonResult data) {
+                if(data.isError()) {
+                    return data;
+                }
+
+                CommonResult commonResult = new CommonResult();
+                try {
+                    loginService.resetPassword(phoneNumber, password, validateCode);
+                    return commonResult;
+                } catch (CommonException e) {
+                    commonResult.setError(true);
+                    commonResult.setErrorMsg(e.getMessage());
+                    return commonResult;
+                }
+            }
+        };
+
+        TaskManager.UITask<CommonResult> updateUI = new TaskManager.UITask<CommonResult>() {
+            @Override
+            public Object doWork(CommonResult data) {
+                view.hideLoading();
+                if(data.isError()) {
+                    view.showMessageDialog(null, data.getErrorMsg());
+                    return null;
+                } else {
+                    view.showToast("密码重置成功，请使用新密码登录");
+                    view.close();
+                    return null;
+                }
+            }
+        };
+
+        new TaskManager()
+                .next(checkCode)
+                .next(register)
+                .next(updateUI)
+                .start();
+    }
 }

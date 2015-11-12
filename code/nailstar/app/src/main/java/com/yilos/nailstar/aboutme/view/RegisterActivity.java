@@ -1,6 +1,5 @@
 package com.yilos.nailstar.aboutme.view;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -13,7 +12,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -81,31 +79,26 @@ public class RegisterActivity extends BaseActivity implements IRegisterView {
     }
 
     private void initViews(){
-        final Activity registerActivity = this;
+        initTitleBar();
+        initCommonView();
+        initRegisterView();
+        initFindPasswordView();
+    }
+
+    private void initTitleBar() {
         //设置titlebar
         TitleBar titleBar = (TitleBar) findViewById(R.id.titleBar);
-        ImageView backButton = titleBar.getBackButton();
-        backButton.setClickable(true);
-        backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                registerActivity.finish();
-            }
-        });
+        titleBar.getBackButton(activity);
 
         TextView titleView = titleBar.getTitleView();
-        titleView.setText(R.string.title_activity_register);
+        if(getIntent().getIntExtra(TYPE, REGISTER_TYPE) == REGISTER_TYPE) {
+            titleView.setText(R.string.title_activity_register);
+        } else {
+            titleView.setText(R.string.title_activity_register);
+        }
+    }
 
-        // 设置协议跳转
-        TextView licenceTextButton = (TextView)findViewById(R.id.licenceTextButton);
-        licenceTextButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent goToLicenceIntent = new Intent(registerActivity, LicenceActivity.class);
-                startActivityForResult(goToLicenceIntent, 1);
-            }
-        });
-
+    private void initCommonView() {
         //获取验证码添加事件
         getValidateCodeButton = (Button)findViewById(R.id.getValidateCodeButton);
         getValidateCodeButton.setOnClickListener(new View.OnClickListener() {
@@ -114,42 +107,61 @@ public class RegisterActivity extends BaseActivity implements IRegisterView {
                 presenter.getValidateCode();
             }
         });
-
-        // 注册按钮事件
-        registerButton = (Button)findViewById(R.id.registerButton);
-        registerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                presenter.register();
-            }
-        });
-
-        // checkBox事件
-        CheckBox checkBox = (CheckBox)findViewById(R.id.checkBox);
-        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked) {
-                    registerButton.setBackgroundColor(ContextCompat.getColor(activity, R.color.orange));
-                    registerButton.setEnabled(true);
-                } else {
-                    registerButton.setBackgroundColor(ContextCompat.getColor(activity, R.color.grey));
-                    registerButton.setEnabled(false);
-                }
-            }
-        });
-    }
-
-    private void initCommonView() {
-
     }
 
     private void initRegisterView() {
+        registerButton = (Button)findViewById(R.id.registerButton);
+        if(getIntent().getIntExtra(TYPE, REGISTER_TYPE) == REGISTER_TYPE) {
+            // 设置协议跳转
+            TextView licenceTextButton = (TextView)findViewById(R.id.licenceTextButton);
+            licenceTextButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent goToLicenceIntent = new Intent(activity, LicenceActivity.class);
+                    startActivityForResult(goToLicenceIntent, 1);
+                }
+            });
 
+            // 注册按钮事件
+            registerButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    presenter.register();
+                }
+            });
+
+            // checkBox事件
+            CheckBox checkBox = (CheckBox)findViewById(R.id.checkBox);
+            checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if (isChecked) {
+                        registerButton.setBackgroundColor(ContextCompat.getColor(activity, R.color.orange));
+                        registerButton.setEnabled(true);
+                    } else {
+                        registerButton.setBackgroundColor(ContextCompat.getColor(activity, R.color.grey));
+                        registerButton.setEnabled(false);
+                    }
+                }
+            });
+        } else {
+            registerButton.setVisibility(View.GONE);
+            findViewById(R.id.licenceLayout).setVisibility(View.GONE);
+        }
     }
 
     private void initFindPasswordView() {
-
+        Button resetPasswordButton = (Button)findViewById(R.id.resetPasswordButton);
+        if(getIntent().getIntExtra(TYPE, REGISTER_TYPE) == FIND_PASSWORD_TYPE) {
+            resetPasswordButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    presenter.resetPassword();
+                }
+            });
+        } else {
+            resetPasswordButton.setVisibility(View.GONE);
+        }
     }
 
     @Override
