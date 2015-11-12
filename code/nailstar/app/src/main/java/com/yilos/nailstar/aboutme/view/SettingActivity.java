@@ -1,5 +1,6 @@
 package com.yilos.nailstar.aboutme.view;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -70,25 +71,24 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 }
 
                 String content = getResources().getString(R.string.sure_clear_cache);
-                showMessageDialogWithEvent(null, content);
+                DialogInterface.OnClickListener setSureEvent = setSureEvent();
+                showMessageDialogWithEvent(null, content,setSureEvent,null);
             default:
                 break;
         }
     }
 
-    @Override
-    protected void setSureEvent() {
-        super.setSureEvent();
-        DataCleanManager.cleanExternalCache(getApplicationContext());
-        String formatCacheNumber = setCacheNumber();
-        if (formatCacheNumber.equals("0KB")) {
-            cacheNumber.setText(formatCacheNumber);
-            showShortToast(R.string.clear_cache_end);
-        }
-    }
-
-    @Override
-    protected void setCancelEvent() {
-        super.setCancelEvent();
+    protected DialogInterface.OnClickListener setSureEvent() {
+        return new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                DataCleanManager.cleanExternalCache(getApplicationContext());
+                String formatCacheNumber = setCacheNumber();
+                if (formatCacheNumber.equals("0KB")) {
+                    cacheNumber.setText(formatCacheNumber);
+                    showShortToast(R.string.clear_cache_end);
+                }
+            }
+        };
     }
 }
