@@ -9,4 +9,8 @@ public interface IView {
     void showLoading(String tip);
 
     void hideLoading();
+
+    void showShortToast(CharSequence text);
+
+    void showLongToast(CharSequence text);
 }
