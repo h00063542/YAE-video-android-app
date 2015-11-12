@@ -127,6 +127,12 @@ public class VoteListViewAdapter extends BaseAdapter {
         pagerAdapter = new PagerAdapter() {
 
             @Override
+            public int getItemPosition(Object object) {
+                // 每次点击进来都刷新数据，防止下拉刷新后显示大图用的是缓存中的旧图片
+                return POSITION_NONE;
+            }
+
+            @Override
             public int getCount() {
                 int count = 0;
                 if (viewType.equals(ViewType.VOTE_LIST) && voteLessionList != null) {
