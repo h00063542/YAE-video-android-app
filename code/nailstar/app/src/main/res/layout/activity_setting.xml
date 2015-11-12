@@ -69,7 +69,7 @@
             android:layout_marginRight="@dimen/my_margin_or_padding_border_width"
             android:layout_alignParentRight="true">
             <com.leaking.slideswitch.SlideSwitch
-                android:id="@+id/swit"
+                android:id="@+id/slide_switch"
                 android:layout_height="fill_parent"
                 android:layout_width="fill_parent"
                 slideswitch:isOpen="false"

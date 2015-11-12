@@ -25,6 +25,12 @@ public class BaseActivity extends AppCompatActivity implements IView{
         builder.show();
     }
 
+    /**
+     * @param title 弹框标题
+     * @param content 弹框内容
+     * @param sureEvent 确定事件
+     * @param cancelEvent 取消事件
+     */
     public void showMessageDialogWithEvent(String title, String content, DialogInterface.OnClickListener sureEvent, DialogInterface.OnClickListener cancelEvent) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         if(title != null) {
