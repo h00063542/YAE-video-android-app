@@ -133,6 +133,7 @@ public class CirclePageIndicator extends View {
         if(viewPager.getAdapter() instanceof BannerAdapter) {
             count = ((BannerAdapter)viewPager.getAdapter()).getActualCount();
         }
+        tabItems = new ArrayList<>(count);
         for (int i = 0; i < count; i++) {
             OvalShape circle = new OvalShape();
             ShapeDrawable drawable = new ShapeDrawable(circle);
