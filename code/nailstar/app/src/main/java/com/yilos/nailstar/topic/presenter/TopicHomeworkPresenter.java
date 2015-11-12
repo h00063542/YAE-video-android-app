@@ -80,9 +80,29 @@ public class TopicHomeworkPresenter {
             }
         };
 
+        TaskManager.Task uploadPicHomeworkTask = new TaskManager.BackgroundTask() {
+            @Override
+            public Object doWork(Object data) {
+//                try {
+                // TODO 测试阶段，先不要调用服务端接口
+                return "003";
+//                    return topicsService.submittedHomework(info);
+//                } catch (NetworkDisconnectException e) {
+//                    e.printStackTrace();
+//                    LOGGER.error("添加评论信息失败，topicId：" + info.getTopicId(), e);
+//                }
+//                return null;
+            }
+        };
+
+
         new TaskManager()
                 .next(submittedHomeworkTask)
                 .next(updateUi)
                 .start();
+
+//        new TaskManager()
+//                .next(uploadPicHomeworkTask)
+//                .start();
     }
 }
