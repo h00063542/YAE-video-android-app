@@ -1,11 +1,13 @@
 package com.yilos.nailstar.aboutme.view;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.leaking.slideswitch.SlideSwitch;
 import com.nostra13.universalimageloader.utils.StorageUtils;
 import com.yilos.nailstar.R;
 import com.yilos.nailstar.framework.view.BaseActivity;
@@ -23,6 +25,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     private TextView titleTextView;
     private RelativeLayout clearCache;
     private TextView cacheNumber;
+    private SlideSwitch slideSwitch;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,7 +35,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     }
 
     private void initViews() {
-
+        slideSwitch = (SlideSwitch) findViewById(R.id.slide_switch);
         titleBar = (TitleBar) findViewById(R.id.setting_title_bar);
         backButton = titleBar.getBackButton(SettingActivity.this);
         titleTextView = titleBar.getTitleView();
@@ -41,8 +44,9 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
 
     }
 
-    private void initEvents() {
 
+    private void initEvents() {
+        slideSwitch.setOnClickListener(this);
         titleTextView.setText(R.string.about_me_setting);
         clearCache.setOnClickListener(this);
         cacheNumber.setText(setCacheNumber());
@@ -70,25 +74,24 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 }
 
                 String content = getResources().getString(R.string.sure_clear_cache);
-                showMessageDialogWithEvent(null, content);
+                DialogInterface.OnClickListener setSureEvent = setSureEvent();
+                showMessageDialogWithEvent(null, content,setSureEvent,null);
             default:
                 break;
         }
     }
 
-    @Override
-    protected void setSureEvent() {
-        super.setSureEvent();
-        DataCleanManager.cleanExternalCache(getApplicationContext());
-        String formatCacheNumber = setCacheNumber();
-        if (formatCacheNumber.equals("0KB")) {
-            cacheNumber.setText(formatCacheNumber);
-            showShortToast(R.string.clear_cache_end);
-        }
-    }
-
-    @Override
-    protected void setCancelEvent() {
-        super.setCancelEvent();
+    protected DialogInterface.OnClickListener setSureEvent() {
+        return new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                DataCleanManager.cleanExternalCache(getApplicationContext());
+                String formatCacheNumber = setCacheNumber();
+                if (formatCacheNumber.equals("0KB")) {
+                    cacheNumber.setText(formatCacheNumber);
+                    showShortToast(R.string.clear_cache_end);
+                }
+            }
+        };
     }
 }
