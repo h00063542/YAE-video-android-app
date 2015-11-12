@@ -121,7 +121,6 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
     private TextView mTvDownloadTopicImageTextContent;
     private Dialog mDownloadTopicImageTextDialog;
     private RoundProgressBar mRpbDownloadTopicImageText;
-    private ImageView mIvDownloadTopicImageTextSuccess;
     private TextView mTvDownloadTopicImageText;
     private int mDownloadTopicImageTextIndex;
     private TopicImageTextInfo mTopicImageTextInfo;
@@ -141,9 +140,9 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
 
     // topic评论
     private LinearLayout mLayoutTopicComments;
+    private LinearLayout mLayoutTopicBlankComment;
     private View mZoomInImageLayout;
     private ImageCacheView mIcvTopicCommentImage;
-    private ImageView mIvBlankComment;
 
 
 //    private FloatingActionButton mFabBackTop;
@@ -318,14 +317,12 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         mTvHideTopicImageTextContent = (TextView) findViewById(R.id.tv_hide_topic_image_text_content);
         mTvDownloadTopicImageTextContent = (TextView) findViewById(R.id.tv_download_topic_image_text_content);
         mDownloadTopicImageTextDialog = new Dialog(this);
-//        mDownloadTopicImageTextDialog.requestWindowFeature(Window.FEATURE_NO_TITLE); //before
+        mDownloadTopicImageTextDialog.requestWindowFeature(Window.FEATURE_NO_TITLE); //before
         LinearLayout downloadTopicImageTextLayout = (LinearLayout) getLayoutInflater().inflate(R.layout.download_topic_image_text_layout, null);
         mDownloadTopicImageTextDialog.setContentView(downloadTopicImageTextLayout);
         mDownloadTopicImageTextDialog.setCancelable(false);
         mDownloadTopicImageTextDialog.setCanceledOnTouchOutside(false);
-        mDownloadTopicImageTextDialog.setContentView(downloadTopicImageTextLayout);
         mRpbDownloadTopicImageText = (RoundProgressBar) downloadTopicImageTextLayout.findViewById(R.id.rpb_download_topic_image_text);
-        mIvDownloadTopicImageTextSuccess = (ImageView) downloadTopicImageTextLayout.findViewById(R.id.iv_download_topic_image_text_success);
         mTvDownloadTopicImageText = (TextView) downloadTopicImageTextLayout.findViewById(R.id.tv_download_topic_image_text);
         mRpbDownloadTopicImageText.setProgress(0);
 
@@ -339,12 +336,6 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         mZoomInImageTextViewPager = (ViewPager) mZoomInImageTextLayout.findViewById(R.id.vp_zoomIn_topic_image_text);
         mZoomInImageTextLayout.setBackgroundColor(getResources().getColor(R.color.black));
 
-
-//        mZoomInImageTextDialog = new Dialog(this, R.style.dialog_fullscreen);
-//        mZoomInImageTextDialog.setContentView(mZoomInImageTextLayout);
-//        mZoomInImageTextDialog.setCancelable(true);
-//        mZoomInImageTextDialog.setCanceledOnTouchOutside(true);
-
         mZoomInImageLayout = getLayoutInflater().inflate(R.layout.zoomin_topic_comment_image_layout, null);
         mDecorView = (ViewGroup) getWindow().getDecorView().findViewById(android.R.id.content);
 
@@ -354,14 +345,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         mTvTopicCommentCount = (TextView) findViewById(R.id.tv_topic_comment_count);
 
         mLayoutTopicComments = (LinearLayout) findViewById(R.id.layout_topic_comments);
-
-        mIvBlankComment = new ImageView(this);
-        mIvBlankComment.setImageResource(R.mipmap.blank_comment);
-        LinearLayout.LayoutParams ivBlankCommentLp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        ivBlankCommentLp.gravity = Gravity.CENTER_HORIZONTAL | Gravity.CENTER_VERTICAL;
-        ivBlankCommentLp.setMargins(mCommentMarginTop, mCommentMarginTop, mCommentMarginTop, mCommentMarginTop);
-        mIvBlankComment.setLayoutParams(ivBlankCommentLp);
-        mIvBlankComment.setAdjustViewBounds(true);
+        mLayoutTopicBlankComment = (LinearLayout) getLayoutInflater().inflate(R.layout.topic_blank_comment_layout, null);
 
 //        mFabBackTop = (FloatingActionButton) findViewById(R.id.fab_back_top);
 
@@ -526,10 +510,10 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
                     return;
                 }
                 mDownloadTopicImageTextDialog.show();
+                mDownloadTopicImageTextDialog.getWindow().setLayout((int) (getResources().getDisplayMetrics().widthPixels * 0.6), ViewGroup.LayoutParams.WRAP_CONTENT);
                 mTvDownloadTopicImageText.setText(R.string.saving_photos);
                 mRpbDownloadTopicImageText.setMax(mTopicImageTextInfo.getPictures().size());
                 mRpbDownloadTopicImageText.setVisibility(View.VISIBLE);
-                mIvDownloadTopicImageTextSuccess.setVisibility(View.GONE);
                 mDownloadTopicImageTextIndex = 0;
                 mTopicVideoPlayerPresenter.downloadTopicImageText(mTopicId, mTopicImageTextInfo.getPictures());
             }
@@ -748,7 +732,15 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         // 作者照片
         mIvVideoAuthorPhoto.setImageSrc(topicInfo.getAuthorPhoto());
         // 作者和播放次数名称
-        mTvVideoAuthorPlayTimes.setText(String.format(getString(R.string.video_author_name_play_time), topicInfo.getAuthor(), topicInfo.getVideos().get(0).getPlayTimes()));
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("<font><big>");
+        stringBuilder.append(topicInfo.getAuthor());
+        stringBuilder.append("</big></font>");
+        stringBuilder.append("  ");
+        stringBuilder.append("<font color=\"#adafb0\">");
+        stringBuilder.append(String.format(getString(R.string.video_play_times), topicInfo.getVideos().get(0).getPlayTimes()));
+        stringBuilder.append("</font>");
+        mTvVideoAuthorPlayTimes.setText(Html.fromHtml(stringBuilder.toString()));
 
         ArrayList tags = topicInfo.getTags();
         if (!CollectionUtil.isEmpty(tags)) {
@@ -991,7 +983,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
                 topicRelateLayout.addView(topicRelateIv);
 
                 ImageView playTopicRelateIv = new ImageView(this);
-                playTopicRelateIv.setImageResource(R.drawable.play);
+                playTopicRelateIv.setImageResource(R.mipmap.icon_video_play);
                 playTopicRelateIv.setLayoutParams(playTopicRelateIvLp);
                 topicRelateLayout.addView(playTopicRelateIv);
             } else {
@@ -1024,12 +1016,12 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
             mIsTopicsCommentLastPage = true;
             mTopicPullToRefreshView.setFooterLastUpdate(null);
             if (mPage == 1) {//没有评论
-                mLayoutTopicComments.addView(mIvBlankComment, 0);
+                mLayoutTopicComments.addView(mLayoutTopicBlankComment, 0);
             }
             return;
         } else {
             if (mPage == 1) {
-                mLayoutTopicComments.removeView(mIvBlankComment);
+                mLayoutTopicComments.removeView(mLayoutTopicBlankComment);
             }
         }
         mTopicPullToRefreshView.onFooterRefreshComplete();
@@ -1137,8 +1129,10 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
 
 
             // -----------------显示作业图片-----------------
-            if (topicCommentInfo.getIsHomework() == 1 && !StringUtil.isEmpty(topicCommentInfo.getContentPic())) {
+            if (topicCommentInfo.getIsHomework() == Constants.IS_HOME_WORK_VALUE
+                    && !StringUtil.isEmpty(topicCommentInfo.getContentPic())) {
                 ImageCacheView topicCommentHomeWorkIv = new ImageCacheView(this);
+                // 交作业时，显示的是本地图片
                 if (!StringUtil.isHttpUrl(topicCommentInfo.getContentPic())) {
                     topicCommentHomeWorkIv.setImageURI(Uri.parse(topicCommentInfo.getContentPic()));
                 } else {
@@ -1154,6 +1148,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
                 topicCommentHomeWorkIv.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        // 交作业时，显示的是本地图片
                         if (!StringUtil.isHttpUrl(topicCommentInfo.getContentPic())) {
                             mIcvTopicCommentImage.setImageURI(Uri.parse(topicCommentInfo.getContentPic()));
                         } else {
@@ -1186,7 +1181,8 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
     }
 
     @NonNull
-    private TextView buildCommentReplyTextView(TopicCommentInfo topicCommentInfo, TopicCommentReplyInfo topicCommentReplyInfo) {
+    private TextView buildCommentReplyTextView(TopicCommentInfo topicCommentInfo
+            , TopicCommentReplyInfo topicCommentReplyInfo) {
         LinearLayout.LayoutParams topicCommentContentReplyLp = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         // 设置主题评论回复之间的上下间隔
@@ -1212,7 +1208,8 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         topicCommentReplyTv.setTextSize(TypedValue.COMPLEX_UNIT_PX, mCommentReplyFontSize);
 
         // 设置padding
-        topicCommentReplyTv.setPadding(mCommentReplyPaddingLeft, mCommentReplyPaddingTop, mCommentReplyPaddingRight, mCommentReplyPaddingBottom);
+        topicCommentReplyTv.setPadding(mCommentReplyPaddingLeft, mCommentReplyPaddingTop
+                , mCommentReplyPaddingRight, mCommentReplyPaddingBottom);
         topicCommentReplyTv.setBackgroundColor(mCommentReplyBackgroundColor);
         topicCommentReplyTv.setTag(R.id.topic_comment_info, topicCommentInfo);
         topicCommentReplyTv.setTag(R.id.topic_comment_reply_info, topicCommentReplyInfo);
@@ -1300,10 +1297,9 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
                 mRpbDownloadTopicImageText.setProgress(++mDownloadTopicImageTextIndex);
                 mTvDownloadTopicImageText.setText(String.format(getString(R.string.download_topic_image_text_index), mDownloadTopicImageTextIndex));
                 if (mRpbDownloadTopicImageText.getMax() == mRpbDownloadTopicImageText.getProgress()) {
-                    // TODO 显示下载完成
+                    // 显示下载完成
                     mTvDownloadTopicImageText.setText(R.string.save_topic_image_text_success);
-//            mRpbDownloadTopicImageText.setVisibility(View.GONE);
-                    mIvDownloadTopicImageTextSuccess.setVisibility(View.VISIBLE);
+//                    mRpbDownloadTopicImageText.setVisibility(View.GONE);
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -1320,11 +1316,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         if (StringUtil.isEmpty(filePath)) {
             return;
         }
-//        MediaScannerConnection.scanFile(TopicVideoPlayerActivity.this, new String[]{Constants.YILOS_NAILSTAR_PICTURE_PATH}, null, null);
         MediaScannerConnection.scanFile(this, new String[]{filePath}, null, null);
-//        sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://" + Environment.getExternalStorageDirectory())));
-//        MediaScannerConnection.scanFile(this, new String[]{filePath}, null, null);
-//        sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://" + filePath)));
     }
 
     @Override

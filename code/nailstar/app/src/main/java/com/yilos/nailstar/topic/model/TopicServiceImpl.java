@@ -41,6 +41,7 @@ import java.util.ArrayList;
  */
 public class TopicServiceImpl implements ITopicService {
     private static final Logger LOGGER = LoggerFactory.getLogger(TopicServiceImpl.class);
+    private static final String URL_PREFIX = "/vapi/nailstar/";
 
     /**
      * @param topicId
@@ -53,7 +54,7 @@ public class TopicServiceImpl implements ITopicService {
             String strResult = getLocalJsonResult(topicId, Constants.FILE_NAME_TOPIC_INFO);
             return buildTopicInfo(topicId, strResult);
         }
-        String url = "/vapi/nailstar/topics/" + topicId;
+        String url = URL_PREFIX + "topics/" + topicId;
         try {
             String strResult = HttpClient.getJson(url);
             TopicInfo topicInfo = buildTopicInfo(topicId, strResult);
@@ -125,7 +126,7 @@ public class TopicServiceImpl implements ITopicService {
             return buildTopicImageTextInfo(topicId, strResult);
         }
         try {
-            String url = "/vapi/nailstar/topics/article/" + topicId;
+            String url = URL_PREFIX + "topics/article/" + topicId;
             String strResult = HttpClient.getJson(url);
             TopicImageTextInfo topicImageTextInfo = buildTopicImageTextInfo(topicId, strResult);
             if (null != topicImageTextInfo) {
@@ -182,7 +183,7 @@ public class TopicServiceImpl implements ITopicService {
             String strResult = getLocalJsonResult(topicId, Constants.FILE_NAME_TOPIC_RELATE_INFO);
             return buildTopicRelatedInfo(topicId, strResult);
         }
-        String url = "/vapi/nailstar/topics/" + topicId + "/related";
+        String url = URL_PREFIX + "topics/" + topicId + "/related";
         try {
             String strResult = HttpClient.getJson(url);
             ArrayList<TopicRelatedInfo> result = buildTopicRelatedInfo(topicId, strResult);
@@ -237,7 +238,7 @@ public class TopicServiceImpl implements ITopicService {
             String strResult = getLocalJsonResult(topicId, Constants.FILE_NAME_TOPIC_COMMENT_INFO);
             return buildTopicCommentInfo(topicId, strResult);
         }
-        String url = "/vapi/nailstar/topics/" + topicId + "/comments?page=" + page;
+        String url = URL_PREFIX + "topics/" + topicId + "/comments?page=" + page;
         try {
             String strResult = HttpClient.getJson(url);
             ArrayList<TopicCommentInfo> result = buildTopicCommentInfo(topicId, strResult);
@@ -369,7 +370,7 @@ public class TopicServiceImpl implements ITopicService {
 //        if (!NailStarApplicationContext.getInstance().isNetworkConnected()) {
 //            throw new NetworkDisconnectException("网络没有连接");
 //        }
-//        String url = "/vapi/nailstar/topics/" + topicId + "/actions";
+//        String url = URL_PREFIX + "topics/" + topicId + "/actions";
 //
 //        try {
 //
@@ -406,7 +407,7 @@ public class TopicServiceImpl implements ITopicService {
         if (!NailStarApplicationContext.getInstance().isNetworkConnected()) {
             throw new NetworkDisconnectException("网络没有连接");
         }
-        String url = "/vapi/nailstar/topics/" + topicId + "/cancel";
+        String url = URL_PREFIX + "topics/" + topicId + "/cancel";
 
         try {
 
@@ -443,7 +444,7 @@ public class TopicServiceImpl implements ITopicService {
         if (!NailStarApplicationContext.getInstance().isNetworkConnected()) {
             throw new NetworkDisconnectException("网络没有连接");
         }
-        String url = "/vapi/nailstar/topics/" + info.getTopicId() + "/comments";
+        String url = URL_PREFIX + "topics/" + info.getTopicId() + "/comments";
         try {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put(Constants.AUTHOR, info.getUserId());
@@ -469,7 +470,7 @@ public class TopicServiceImpl implements ITopicService {
         if (!NailStarApplicationContext.getInstance().isNetworkConnected()) {
             throw new NetworkDisconnectException("网络没有连接");
         }
-        String url = "/vapi/nailstar/qjc/topic" + info.getTopicId() + "/homework";
+        String url = URL_PREFIX + "qjc/topic" + info.getTopicId() + "/homework";
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put(Constants.UID, info.getUserId());
@@ -493,7 +494,7 @@ public class TopicServiceImpl implements ITopicService {
         if (!NailStarApplicationContext.getInstance().isNetworkConnected()) {
             throw new NetworkDisconnectException("网络没有连接");
         }
-        String url = "/vapi/nailstar/videos/" + topicId + "/actions";
+        String url = URL_PREFIX + "videos/" + topicId + "/actions";
         try {
             String strResult = HttpClient.post(url, Constants.EMPTY_JSON_STRING);
             return null != buildJSONObject(strResult);
@@ -512,7 +513,7 @@ public class TopicServiceImpl implements ITopicService {
         if (!NailStarApplicationContext.getInstance().isNetworkConnected()) {
             throw new NetworkDisconnectException("网络没有连接");
         }
-        String url = "/vapi/nailstar/qjc/topic/" + topicId + "/homeworks";
+        String url = URL_PREFIX + "qjc/topic/" + topicId + "/homeworks";
         try {
             String strResult = HttpClient.getJson(url);
             JSONObject jsonObject = buildJSONObject(strResult);
