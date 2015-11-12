@@ -5,14 +5,12 @@ import android.support.annotation.Nullable;
 
 import com.alibaba.sdk.android.oss.OSSService;
 import com.alibaba.sdk.android.oss.callback.SaveCallback;
-import com.alibaba.sdk.android.oss.model.OSSException;
 import com.alibaba.sdk.android.oss.storage.OSSBucket;
 import com.alibaba.sdk.android.oss.storage.OSSFile;
 import com.yilos.nailstar.aboutme.model.LoginAPI;
 import com.yilos.nailstar.framework.entity.NailStarApplicationContext;
 import com.yilos.nailstar.framework.exception.NetworkDisconnectException;
 import com.yilos.nailstar.topic.entity.AddCommentInfo;
-import com.yilos.nailstar.topic.entity.SubmittedHomeworkInfo;
 import com.yilos.nailstar.topic.entity.TopicCommentAtInfo;
 import com.yilos.nailstar.topic.entity.TopicCommentInfo;
 import com.yilos.nailstar.topic.entity.TopicCommentReplyInfo;
@@ -20,6 +18,7 @@ import com.yilos.nailstar.topic.entity.TopicImageTextInfo;
 import com.yilos.nailstar.topic.entity.TopicInfo;
 import com.yilos.nailstar.topic.entity.TopicRelatedInfo;
 import com.yilos.nailstar.topic.entity.TopicVideoInfo;
+import com.yilos.nailstar.topic.entity.UpdateReadyInfo;
 import com.yilos.nailstar.util.CollectionUtil;
 import com.yilos.nailstar.util.Constants;
 import com.yilos.nailstar.util.HttpClient;
@@ -463,7 +462,7 @@ public class TopicServiceImpl implements ITopicService {
             jsonObject.put(Constants.LAST_REPLY_TO, info.getLastReplayTO());
             //
             jsonObject.put(Constants.READY, info.getReady());
-            String strResult = HttpClient.post(url, String.valueOf(jsonObject));
+            String strResult = HttpClient.post(url, jsonObject.toString());
             JSONObject jsonObj = buildJSONObject(strResult);
             return JsonUtil.optString(jsonObj.optJSONObject(Constants.RESULT), Constants.COMMENT_ID);
         } catch (JSONException e) {
@@ -562,7 +561,7 @@ public class TopicServiceImpl implements ITopicService {
             jsonObject.put(Constants.ID, info.getId());
             jsonObject.put(Constants.PIC_URL, info.getPicUrls());
             jsonObject.put(Constants.TABLE, Constants.HOMEWORK);
-            String strResult = HttpClient.post(url, String.valueOf(jsonObject));
+            String strResult = HttpClient.post(url, jsonObject.toString());
             return null != buildJSONObject(strResult);
         } catch (JSONException e) {
             e.printStackTrace();

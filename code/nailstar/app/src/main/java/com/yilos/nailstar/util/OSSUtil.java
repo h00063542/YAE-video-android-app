@@ -169,7 +169,7 @@ public class OSSUtil {
      * @param localFilePath 本地文件路径
      * @param ossFileName   oss文件名称
      * @param autoRetryTime 默认为2次，最大3次
-     * @param threadNum     默认为2次，最大3次
+     * @param threadNum     默认并发3个线程，最大5个
      */
     public void resumableDownloadWithSpecConfigByDefault(String localFilePath, String ossFileName, int autoRetryTime, int threadNum) {
         if (null == defaultOssService) {
@@ -178,7 +178,7 @@ public class OSSUtil {
         OSSFile ossFile = defaultOssService.getOssFile(defaultOssService.getOssBucket(getDefaultBucketName()), ossFileName);
         ResumableTaskOption option = new ResumableTaskOption();
         option.setAutoRetryTime(autoRetryTime);
-        option.setThreadNum(threadNum); // 默认并发3个线程，最大5个
+        option.setThreadNum(threadNum);
         ossFile.ResumableDownloadToInBackground(localFilePath, new GetFileCallback() {
 
             @Override
