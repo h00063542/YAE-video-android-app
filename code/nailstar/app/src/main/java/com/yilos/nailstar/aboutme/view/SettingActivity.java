@@ -1,8 +1,9 @@
 package com.yilos.nailstar.aboutme.view;
 
-import android.app.Activity;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
+import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -29,6 +30,9 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     private RelativeLayout clearCache;
     private TextView cacheNumber;
     private SlideSwitch slideSwitch;
+    private TextView versionInfoNumber;
+    private RelativeLayout goToAboutUs;
+    private String versionName;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,17 +42,37 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     }
 
     private void initViews() {
+        versionInfoNumber = (TextView) findViewById(R.id.version_info_number);
         slideSwitch = (SlideSwitch) findViewById(R.id.slide_switch);
         titleBar = (TitleBar) findViewById(R.id.setting_title_bar);
         backButton = titleBar.getBackButton(SettingActivity.this);
         titleTextView = titleBar.getTitleView();
         cacheNumber = (TextView) findViewById(R.id.cache_number);
         clearCache = (RelativeLayout) findViewById(R.id.clear_cache);
+        goToAboutUs = (RelativeLayout) findViewById(R.id.go_to_about_us);
+    }
 
+    /**
+     * 获取版本号
+     * @return 当前应用的版本号
+     */
+    public String getVersion() {
+        try {
+            PackageManager manager = this.getPackageManager();
+            PackageInfo info = manager.getPackageInfo(this.getPackageName(), 0);
+            String version = info.versionName;
+            return version;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return this.getString(R.string.can_not_find_version_name);
+        }
     }
 
 
     private void initEvents() {
+        goToAboutUs.setOnClickListener(this);
+        versionName = getVersion();
+        versionInfoNumber.setText(versionName);
         boolean allow = SharedPreferencesUtil.getAllowNoWifi(getBaseContext());
         slideSwitch.setState(allow);
         slideSwitch.setSlideListener(this);
@@ -82,6 +106,10 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 DialogInterface.OnClickListener setSureEvent = setSureEvent();
                 showMessageDialogWithEvent(null, content,setSureEvent,null);
                 break;
+            case R.id.go_to_about_us:
+                Intent aboutUsIntent = new Intent(SettingActivity.this,AboutUsActivity.class);
+                aboutUsIntent.putExtra("versionName",versionName);
+                startActivity(aboutUsIntent);
             default:
                 break;
         }
@@ -100,20 +128,6 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
             }
         };
     }
-//
-//    private void setAllowNoWifiSharedPreferences(boolean allow) {
-//        SharedPreferences allowNoWifiSharedPreferences= getSharedPreferences("allow_no_wifi_watch_and_download",
-//                Activity.MODE_PRIVATE);
-//        SharedPreferences.Editor editor = allowNoWifiSharedPreferences.edit();
-//        editor.putBoolean("allow", allow);
-//        editor.commit();
-//    }
-//
-//    private SharedPreferences getAllowNoWifiSharedPreferences() {
-//        SharedPreferences allowNoWifiSharedPreferences= getSharedPreferences("allow_no_wifi_watch_and_download",
-//                Activity.MODE_PRIVATE);
-//        return allowNoWifiSharedPreferences;
-//    }
 
     @Override
     public void open() {
