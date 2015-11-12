@@ -11,6 +11,8 @@
     <color name="xk2">#ebeeef</color><!--线，块基本（背景）-->
     <color name="xk3">#f8fafb</color><!--最浅（出现在顶部或底部）-->
 
+    <color name="slide_switch">#47cc54</color>
+
     <!--<color name="tab_font_orange_color">#FF0000</color>-->
     <color name="tab_border">#999999</color>
 

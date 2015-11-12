@@ -1,5 +1,6 @@
 package com.yilos.nailstar.framework.view;
 
+import android.content.DialogInterface;
 import android.support.annotation.StringRes;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -20,7 +21,19 @@ public class BaseActivity extends AppCompatActivity implements IView{
             builder.setTitle(title);
         }
         builder.setMessage(content);
-        builder.setNegativeButton("确定", null);
+        builder.setPositiveButton("确定", null);
+        builder.show();
+    }
+
+    public void showMessageDialogWithEvent(String title, String content, DialogInterface.OnClickListener sureEvent, DialogInterface.OnClickListener cancelEvent) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        if(title != null) {
+            builder.setTitle(title);
+        }
+        builder.setMessage(content);
+        builder.setPositiveButton("确定", sureEvent);
+
+        builder.setNegativeButton("取消", cancelEvent);
         builder.show();
     }
 

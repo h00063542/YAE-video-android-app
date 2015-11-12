@@ -51,6 +51,7 @@ public class DownLoadTask {
     }
 
     public void run() throws IOException {
+
         Request request = new Request.Builder()
                 .url(url)
                 .build();
@@ -62,6 +63,10 @@ public class DownLoadTask {
 
                 }
             };
+        }
+
+        if (client == null) {
+            client = new OkHttpClient();
         }
 
         client.networkInterceptors().add(new Interceptor() {

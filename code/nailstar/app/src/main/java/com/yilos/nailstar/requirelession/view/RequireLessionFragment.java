@@ -29,6 +29,7 @@ import com.yilos.nailstar.topic.view.TopicVideoPlayerActivity;
 import com.yilos.nailstar.util.Constants;
 import com.yilos.nailstar.util.FileUtils;
 import com.yilos.widget.circleimageview.CircleImageView;
+import com.yilos.widget.titlebar.TitleBar;
 import com.yilos.widget.view.ImageCacheView;
 
 import java.util.List;
@@ -47,6 +48,9 @@ public class RequireLessionFragment extends Fragment implements LessionView {
 
     // 下拉刷新
     PtrClassicFrameLayout lessionPullRefresh;
+
+    // title bar
+    TitleBar lessionTitleBar;
 
     // 求教程页面
     private View view;
@@ -172,6 +176,10 @@ public class RequireLessionFragment extends Fragment implements LessionView {
         // 下拉刷新
         lessionPullRefresh = (PtrClassicFrameLayout) view.findViewById(R.id.lessionPullRefresh);
 
+        // title bar
+        lessionTitleBar = (TitleBar) view.findViewById(R.id.lessionTitleBar);
+        lessionTitleBar.getTitleView().setText(getResources().getString(R.string.require_lession));
+
     }
 
     private void initData() {
@@ -210,6 +218,10 @@ public class RequireLessionFragment extends Fragment implements LessionView {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 if (checkedId == goVotingBtn.getId()) {
 
+                    // 切换的时候先用notifyDataSetInvalidated通知Adapter数据暂时不可用，数据准备好之后再调用notifyDataSetChanged通知数据可用
+                    voteListViewAdapter.notifyDataSetInvalidated();
+                    voteListViewAdapter.setViewType(VoteListViewAdapter.ViewType.VOTE_LIST);
+
                     lessionPresenter.goVoteLessionList();
 
                     // 切换的时候，保证页首显示的是返回的第一条数据
@@ -221,6 +233,10 @@ public class RequireLessionFragment extends Fragment implements LessionView {
                     goVotingBtnFloat.setChecked(true);
 
                 } else if (checkedId == goRankingBtn.getId()) {
+
+                    // 切换的时候先用notifyDataSetInvalidated通知Adapter数据暂时不可用，数据准备好之后再调用notifyDataSetChanged通知数据可用
+                    voteListViewAdapter.notifyDataSetInvalidated();
+                    voteListViewAdapter.setViewType(VoteListViewAdapter.ViewType.RANKING_LIST);
 
                     lessionPresenter.goRankingLessionList();
 
@@ -428,16 +444,14 @@ public class RequireLessionFragment extends Fragment implements LessionView {
     public void refreshVoteLession(List<CandidateLession> voteLessionList) {
 
         voteListViewAdapter.setVoteLessionList(voteLessionList);
-        voteListViewAdapter.setViewType(VoteListViewAdapter.ViewType.VOTE_LIST);
         voteListViewAdapter.notifyDataSetChanged();
 
     }
 
     @Override
-    public void refreshRankingLession(List<CandidateLession> voteLessionList) {
+    public void refreshRankingLession(List<CandidateLession> rankingLessionList) {
 
-        voteListViewAdapter.setVoteLessionList(voteLessionList);
-        voteListViewAdapter.setViewType(VoteListViewAdapter.ViewType.RANKING_LIST);
+        voteListViewAdapter.setRankingLessionList(rankingLessionList);
         voteListViewAdapter.notifyDataSetChanged();
 
     }

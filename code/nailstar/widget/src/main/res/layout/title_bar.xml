@@ -61,8 +61,8 @@
         android:layout_centerVertical="true"
         android:textColor="@color/white"
         android:textSize="@dimen/title_bar_title"
-        android:clickable="true"
-        android:padding="@dimen/title_bar_icon_padding"/>
+        android:layout_marginRight="@dimen/title_bar_icon_padding"
+        android:clickable="true"/>
     <ImageView
         android:visibility="gone"
         android:id="@+id/title_bar_right_image_button_one"
