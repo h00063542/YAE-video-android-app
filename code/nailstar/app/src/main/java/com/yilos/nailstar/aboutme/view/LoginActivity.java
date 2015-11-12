@@ -15,6 +15,7 @@ import com.yilos.widget.titlebar.TitleBar;
 
 public class LoginActivity extends BaseActivity implements ILoginView {
     private LoginPresenter presenter;
+    private Button loginButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,14 +37,18 @@ public class LoginActivity extends BaseActivity implements ILoginView {
     }
 
     @Override
-    public void showMessageDialog(String content) {
-        //super.showMessageDialog("登录错误", content);
-        super.showLoading(content);
+    public CharSequence getResourceStringById(int id) {
+        return this.getApplicationContext().getResources().getText(id);
     }
 
     @Override
-    public CharSequence getResourceStringById(int id) {
-        return this.getApplicationContext().getResources().getText(id);
+    public void setLoginButtonEnable(boolean enable) {
+        loginButton.setEnabled(enable);
+    }
+
+    @Override
+    public void close() {
+        this.finish();
     }
 
     private void initViews() {
@@ -73,7 +78,7 @@ public class LoginActivity extends BaseActivity implements ILoginView {
         });
 
         //登录按钮事件
-        Button loginButton = (Button)findViewById(R.id.loginButton);
+        loginButton = (Button)findViewById(R.id.loginButton);
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

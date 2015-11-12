@@ -54,6 +54,7 @@ public class DownLoadTask {
 
         Request request = new Request.Builder()
                 .url(url)
+                .tag(url)
                 .build();
 
         if (progressListener == null) {
@@ -86,6 +87,12 @@ public class DownLoadTask {
         }
 
         saveFile(response, path, fileName);
+
+    }
+
+    public void cancel() {
+
+        client.cancel(url);
 
     }
 

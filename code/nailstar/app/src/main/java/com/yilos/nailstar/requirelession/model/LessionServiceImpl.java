@@ -5,11 +5,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yilos.nailstar.requirelession.entity.CandidateLession;
 import com.yilos.nailstar.requirelession.entity.LessionActivity;
 import com.yilos.nailstar.requirelession.entity.VideoLession;
+import com.yilos.nailstar.requirelession.entity.VotedRecord;
+import com.yilos.nailstar.util.FileUtils;
 import com.yilos.nailstar.util.HttpClient;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -134,5 +137,31 @@ public class LessionServiceImpl implements LessionService {
         if (jsonResult.getInt("code") != 0) {
             throw new IOException("Unexpected code");
         }
+    }
+
+    @Override
+    public VotedRecord queryVotedRecord(File fileName) throws IOException, JSONException {
+
+        if (!fileName.exists()) {
+            return null;
+        }
+
+        String stringResult = FileUtils.readFromFile(fileName);
+        JSONObject jsonResult = new JSONObject(stringResult);
+
+        VotedRecord votedRecord = new VotedRecord();
+        votedRecord.setNo(jsonResult.getInt("no"));
+        String stringCandidateIdList = jsonResult.optString("candidateIdList");
+        List<String> candidateIdList = objectMapper.readValue(stringCandidateIdList, new TypeReference<List<String>>() {
+        });
+        votedRecord.setCandidateIdList(candidateIdList);
+
+        return votedRecord;
+    }
+
+    @Override
+    public void saveVotedRecord(File fileName, VotedRecord votedRecord) throws IOException {
+        String stringVotedRecord = objectMapper.writeValueAsString(votedRecord);
+        FileUtils.writeToFile(fileName, stringVotedRecord);
     }
 }

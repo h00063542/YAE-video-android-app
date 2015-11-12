@@ -366,9 +366,8 @@ public class IndexFragment extends Fragment implements IIndexView {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-
+    public void onStop() {
         indexPresenter.saveIndexContentCache();
+        super.onStop();
     }
 }
