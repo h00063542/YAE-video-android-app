@@ -58,7 +58,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/allow_wifi_watch"
+            android:text="@string/allow_no_wifi_watch"
             android:textColor="@color/z2"
             android:textSize="@dimen/my_text_size"
             android:layout_marginLeft="@dimen/my_margin_or_padding_border_width"/>
@@ -70,9 +70,8 @@
             android:layout_alignParentRight="true">
             <com.leaking.slideswitch.SlideSwitch
                 android:id="@+id/slide_switch"
-                android:layout_height="fill_parent"
-                android:layout_width="fill_parent"
-                slideswitch:isOpen="false"
+                android:layout_height="match_parent"
+                android:layout_width="match_parent"
                 slideswitch:shape="circle"
                 slideswitch:themeColor="@color/slide_switch" >
             </com.leaking.slideswitch.SlideSwitch>
