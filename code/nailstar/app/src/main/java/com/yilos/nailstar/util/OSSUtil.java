@@ -1,8 +1,5 @@
 package com.yilos.nailstar.util;
 
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
-
 import com.alibaba.sdk.android.oss.OSSService;
 import com.alibaba.sdk.android.oss.OSSServiceProvider;
 import com.alibaba.sdk.android.oss.callback.GetFileCallback;
@@ -10,9 +7,9 @@ import com.alibaba.sdk.android.oss.callback.SaveCallback;
 import com.alibaba.sdk.android.oss.model.AccessControlList;
 import com.alibaba.sdk.android.oss.model.AuthenticationType;
 import com.alibaba.sdk.android.oss.model.ClientConfiguration;
-import com.alibaba.sdk.android.oss.model.OSSException;
 import com.alibaba.sdk.android.oss.model.ResumableTaskOption;
 import com.alibaba.sdk.android.oss.model.TokenGenerator;
+import com.alibaba.sdk.android.oss.storage.OSSBucket;
 import com.alibaba.sdk.android.oss.storage.OSSFile;
 import com.alibaba.sdk.android.oss.util.OSSLog;
 import com.alibaba.sdk.android.oss.util.OSSToolKit;
@@ -30,12 +27,12 @@ public class OSSUtil {
 
     private static OSSService defaultOssService;
 
-    private static String accessKey;
-    private static String screctKey;
-    private static String bucketName;
+    private static String accessKey = "OA7cwTn8CH2XKE97";
+    private static String screctKey = "F1z5IaFaQtB97Y8wRvtvtai2tBN3GT";
+    private static String bucketName = "ypicture";
 
 
-    public static OSSService getDefaultOssService() {
+    private static OSSService getDefaultOssService() {
         if (null == defaultOssService) {
             initDefaultOssService();
         }
@@ -45,20 +42,12 @@ public class OSSUtil {
 
     private static void initDefaultOssService() {
         NailStarApplication app = NailStarApplication.getApplication();
-        try {
-            ApplicationInfo appInfo = app.getPackageManager().getApplicationInfo(app.getPackageName(), PackageManager.GET_META_DATA);
-            accessKey = appInfo.metaData.getString(Constants.DEFAULT_ACCESS_KEY_NAME);
-            screctKey = appInfo.metaData.getString(Constants.DEFAULT_SCRECT_KEY_NAME);
-            bucketName = appInfo.metaData.getString(Constants.DEFAULT_BUCKET_NAME);
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
         // 开启Log
         OSSLog.enableLog();
 
         defaultOssService = OSSServiceProvider.getService();
 
-        defaultOssService.setApplicationContext(app);
+        defaultOssService.setApplicationContext(NailStarApplication.getApplication());
         defaultOssService.setGlobalDefaultHostId(Constants.DEFAULT_OSS_HOST_ID); // 设置region host 即 endpoint
         defaultOssService.setGlobalDefaultACL(AccessControlList.PUBLIC_READ_WRITE); // 默认为private
         defaultOssService.setAuthenticationType(AuthenticationType.ORIGIN_AKSK); // 设置加签类型为原始AK/SK加签
@@ -66,10 +55,8 @@ public class OSSUtil {
             @Override
             public String generateToken(String httpMethod, String md5, String type, String date,
                                         String ossHeaders, String resource) {
-
                 String content = httpMethod + "\n" + md5 + "\n" + type + "\n" + date + "\n" + ossHeaders
                         + resource;
-
                 return OSSToolKit.generateToken(accessKey, screctKey, content);
             }
         });
@@ -84,14 +71,11 @@ public class OSSUtil {
     }
 
     public static String getDefaultBucketName() {
-        NailStarApplication app = NailStarApplication.getApplication();
-        try {
-            ApplicationInfo appInfo = app.getPackageManager().getApplicationInfo(app.getPackageName(), PackageManager.GET_META_DATA);
-            return appInfo.metaData.getString("com.yilos.nailstar.ossbucketname");
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
-        return Constants.EMPTY_STRING;
+        return bucketName;
+    }
+
+    public static OSSBucket getDefaultOssBucket() {
+        return getDefaultOssService().getOssBucket(bucketName);
     }
 
 
@@ -100,33 +84,13 @@ public class OSSUtil {
      *
      * @param localFilePath 本地文件路径
      * @param ossFileName   oss文件名称
+     * @param callback      上传回调
      */
-    public void resumableUploadByDefault(String localFilePath, String ossFileName) {
-        if (null == defaultOssService) {
-            initDefaultOssService();
-        }
-        OSSFile ossFile = defaultOssService.getOssFile(defaultOssService.getOssBucket(getDefaultBucketName()), ossFileName);
+    public static void resumableUpload(String localFilePath, String ossFileName, SaveCallback callback) {
+        OSSFile ossFile = getDefaultOssService().getOssFile(getDefaultOssBucket(), ossFileName);
         try {
             ossFile.setUploadFilePath(localFilePath, "application/octet-stream");
-            ossFile.ResumableUploadInBackground(new SaveCallback() {
-
-                @Override
-                public void onSuccess(String objectKey) {
-                    LOGGER.debug("[onSuccess] - " + objectKey + " upload success!");
-                }
-
-                @Override
-                public void onProgress(String objectKey, int byteCount, int totalSize) {
-                    LOGGER.debug("[onProgress] - current upload " + objectKey + " bytes: " + byteCount + " in total: " + totalSize);
-                }
-
-                @Override
-                public void onFailure(String objectKey, OSSException ossException) {
-                    LOGGER.error("[onFailure] - upload " + objectKey + " failed!", ossException);
-                    ossException.printStackTrace();
-                    ossException.getException().printStackTrace();
-                }
-            });
+            ossFile.ResumableUploadInBackground(callback);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -137,30 +101,11 @@ public class OSSUtil {
      *
      * @param localFilePath 本地文件路径
      * @param ossFileName   oss文件名称
+     * @param callback      下载回调
      */
-    public void resumableDownloadByDefault(String localFilePath, String ossFileName) {
-        if (null == defaultOssService) {
-            initDefaultOssService();
-        }
-        OSSFile ossFile = defaultOssService.getOssFile(defaultOssService.getOssBucket(getDefaultBucketName()), ossFileName);
-        ossFile.ResumableDownloadToInBackground(localFilePath, new GetFileCallback() {
-
-            @Override
-            public void onSuccess(String objectKey, String filePath) {
-                LOGGER.debug("[onSuccess] - " + objectKey + " storage path: " + filePath);
-            }
-
-            @Override
-            public void onProgress(String objectKey, int byteCount, int totalSize) {
-                LOGGER.debug("[onProgress] - current download: " + objectKey + " bytes:" + byteCount + " in total:" + totalSize);
-            }
-
-            @Override
-            public void onFailure(String objectKey, OSSException ossException) {
-
-                ossException.printStackTrace();
-            }
-        });
+    public static void resumableDownload(String localFilePath, String ossFileName, GetFileCallback callback) {
+        OSSFile ossFile = getDefaultOssService().getOssFile(getDefaultOssBucket(), ossFileName);
+        ossFile.ResumableDownloadToInBackground(localFilePath, callback);
     }
 
     /**
@@ -170,32 +115,14 @@ public class OSSUtil {
      * @param ossFileName   oss文件名称
      * @param autoRetryTime 默认为2次，最大3次
      * @param threadNum     默认并发3个线程，最大5个
+     * @param callback      下载回调
      */
-    public void resumableDownloadWithSpecConfigByDefault(String localFilePath, String ossFileName, int autoRetryTime, int threadNum) {
-        if (null == defaultOssService) {
-            initDefaultOssService();
-        }
-        OSSFile ossFile = defaultOssService.getOssFile(defaultOssService.getOssBucket(getDefaultBucketName()), ossFileName);
+    public static void resumableDownloadWithSpecConfig(String localFilePath, String ossFileName
+            , int autoRetryTime, int threadNum, GetFileCallback callback) {
+        OSSFile ossFile = getDefaultOssService().getOssFile(getDefaultOssBucket(), ossFileName);
         ResumableTaskOption option = new ResumableTaskOption();
         option.setAutoRetryTime(autoRetryTime);
         option.setThreadNum(threadNum);
-        ossFile.ResumableDownloadToInBackground(localFilePath, new GetFileCallback() {
-
-            @Override
-            public void onSuccess(String objectKey, String filePath) {
-                LOGGER.debug("[onSuccess] - " + objectKey + " storage path: " + filePath);
-            }
-
-            @Override
-            public void onProgress(String objectKey, int byteCount, int totalSize) {
-                LOGGER.debug("[onProgress] - current download: " + objectKey + " bytes:" + byteCount + " in total:" + totalSize);
-            }
-
-            @Override
-            public void onFailure(String objectKey, OSSException ossException) {
-                LOGGER.error("[onFailure] - download " + objectKey + " failed!", ossException);
-                ossException.printStackTrace();
-            }
-        });
+        ossFile.ResumableDownloadToInBackground(localFilePath, callback);
     }
 }

@@ -109,13 +109,13 @@ public interface ITopicService {
     /**
      * 上传文件到oss
      *
-     * @param filePath
-     * @param fileName
+     * @param localFilePath
+     * @param ossFileName
      * @param callback
      * @return
      * @throws NetworkDisconnectException
      */
-    void uploadFile2Oss(String filePath, String fileName, SaveCallback callback) throws NetworkDisconnectException;
+    void uploadFile2Oss(String localFilePath, String ossFileName, SaveCallback callback) throws NetworkDisconnectException;
 
     /**
      * 更新ready状态

@@ -3,10 +3,7 @@ package com.yilos.nailstar.topic.model;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.alibaba.sdk.android.oss.OSSService;
 import com.alibaba.sdk.android.oss.callback.SaveCallback;
-import com.alibaba.sdk.android.oss.storage.OSSBucket;
-import com.alibaba.sdk.android.oss.storage.OSSFile;
 import com.yilos.nailstar.aboutme.model.LoginAPI;
 import com.yilos.nailstar.framework.entity.NailStarApplicationContext;
 import com.yilos.nailstar.framework.exception.NetworkDisconnectException;
@@ -520,19 +517,11 @@ public class TopicServiceImpl implements ITopicService {
     }
 
     @Override
-    public void uploadFile2Oss(String filePath, String fileName, SaveCallback callback) throws NetworkDisconnectException {
+    public void uploadFile2Oss(String localFilePath, String ossFileName, SaveCallback callback) throws NetworkDisconnectException {
         if (!NailStarApplicationContext.getInstance().isNetworkConnected()) {
             throw new NetworkDisconnectException("网络没有连接");
         }
-        OSSService ossService = OSSUtil.getDefaultOssService();
-        OSSBucket bucket = ossService.getOssBucket(OSSUtil.getDefaultBucketName());
-        OSSFile ossFile = ossService.getOssFile(bucket, fileName);
-        try {
-            ossFile.setUploadFilePath(filePath, "application/octet-stream");
-            ossFile.ResumableUploadInBackground(callback);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+        OSSUtil.resumableUpload(localFilePath, ossFileName, callback);
     }
 
     /**
