@@ -113,6 +113,8 @@
         android:layout_height="@dimen/common_1_dp"
         android:background="@color/xk2"/>
     <RelativeLayout
+        android:id="@+id/setting_folder"
+        android:clickable="true"
         android:background="@color/white"
         android:layout_width="match_parent"
         android:layout_height="@dimen/my_horizontal_bar_height"
@@ -125,6 +127,7 @@
             android:textSize="@dimen/my_text_size"
             android:layout_marginLeft="@dimen/my_margin_or_padding_border_width"/>
         <TextView
+            android:id="@+id/download_sdcard"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/download_folder_location"
@@ -190,6 +193,8 @@
         android:layout_height="@dimen/common_1_dp"
         android:background="@color/xk2"/>
     <TextView
+        android:visibility="gone"
+        android:id="@+id/login_out"
         android:layout_marginTop="@dimen/my_horizontal_bar_space_height"
         android:background="@color/white"
         android:layout_width="match_parent"
