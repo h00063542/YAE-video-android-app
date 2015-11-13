@@ -130,7 +130,6 @@
             android:id="@+id/download_sdcard"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/download_folder_location"
             android:textColor="@color/z3"
             android:textSize="@dimen/my_text_size"
             android:layout_marginRight="@dimen/my_version_number_margin_border_width"

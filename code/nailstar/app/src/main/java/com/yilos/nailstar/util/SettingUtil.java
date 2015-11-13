@@ -59,6 +59,6 @@ public class SettingUtil {
      * @return
      */
     public static String getSdcardName() {
-        return getSettingSharedPreferences().getString("sdcard_name", "存储卡1");
+        return getSettingSharedPreferences().getString("sdcard_name", "");
     }
 }
