@@ -16,6 +16,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.yilos.nailstar.R;
+import com.yilos.nailstar.framework.application.NailStarApplication;
 import com.yilos.nailstar.framework.entity.NailStarApplicationContext;
 import com.yilos.nailstar.index.entity.Category;
 import com.yilos.nailstar.index.entity.IndexContent;
@@ -47,9 +48,6 @@ import in.srain.cube.views.ptr.PtrHandler;
  * create an instance of this fragment.
  */
 public class IndexFragment extends Fragment implements IIndexView {
-    /**
-     * 轮播图
-     */
     private Banner posterBanner;
 
     private Banner categoryBanner;
@@ -254,6 +252,7 @@ public class IndexFragment extends Fragment implements IIndexView {
 
     @Override
     public void initPosters(final List<Poster> posters) {
+        final int height = NailStarApplication.getApplication().getHeightByScreenWidth(getActivity(), 7f/3f);
         posterBanner.setViewCreator(new Banner.ViewCreator() {
             @Override
             public List<View> createViews() {
@@ -265,10 +264,10 @@ public class IndexFragment extends Fragment implements IIndexView {
 
                         Banner.LayoutParams layoutParams = new Banner.LayoutParams();
                         layoutParams.width = Banner.LayoutParams.MATCH_PARENT;
-                        layoutParams.height = Banner.LayoutParams.WRAP_CONTENT;
+                        layoutParams.height = height;
                         imageCacheView.setLayoutParams(layoutParams);
                         imageCacheView.setAdjustViewBounds(true);
-                        imageCacheView.setScaleType(ImageView.ScaleType.FIT_START);
+                        imageCacheView.setScaleType(ImageView.ScaleType.FIT_CENTER);
 
                         imageCacheView.setImageSrc(poster.getPicUrl());
                         imageCacheView.setClickable(true);
