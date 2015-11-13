@@ -3,11 +3,13 @@ package com.yilos.nailstar.topic.presenter;
 import android.graphics.Bitmap;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.yilos.nailstar.download.DownLoadTaskManager;
 import com.yilos.nailstar.framework.exception.NetworkDisconnectException;
 import com.yilos.nailstar.topic.entity.TopicCommentInfo;
 import com.yilos.nailstar.topic.entity.TopicImageTextInfo;
 import com.yilos.nailstar.topic.entity.TopicInfo;
 import com.yilos.nailstar.topic.entity.TopicRelatedInfo;
+import com.yilos.nailstar.topic.entity.TopicStatusInfo;
 import com.yilos.nailstar.topic.entity.TopicVideoInfo;
 import com.yilos.nailstar.topic.model.ITopicService;
 import com.yilos.nailstar.topic.model.TopicServiceImpl;
@@ -178,6 +180,10 @@ public class TopicVideoPlayerPresenter {
                 .start();
     }
 
+    public void downloadVideo(TopicInfo topicInfo) {
+        DownLoadTaskManager.getInstance().addDownLoadTask(topicInfo);
+    }
+
 
     public void downLoadTopicImage(final String topicId, final String url) {
         String filePath = saveBitmap2File(topicId, url);
@@ -200,6 +206,34 @@ public class TopicVideoPlayerPresenter {
     public void shareTopic(String topicId) {
 
 
+    }
+
+    public void initUserTopicStatus(final String topicId) {
+        TaskManager.Task loadTopicStatusInfo = new TaskManager.BackgroundTask() {
+            @Override
+            public Object doWork(Object data) {
+                try {
+                    return topicsService.initUserTopicStatus(topicId);
+                } catch (NetworkDisconnectException e) {
+                    e.printStackTrace();
+                    LOGGER.error(MessageFormat.format("获取用户topic状态失败，topicId:{0}", topicId), e);
+                }
+                return null;
+            }
+        };
+
+        TaskManager.UITask<TopicStatusInfo> updateUi = new TaskManager.UITask<TopicStatusInfo>() {
+            @Override
+            public Object doWork(TopicStatusInfo topicStatusInfo) {
+                videoPlayerView.initUserTopicLikeStatus(topicStatusInfo);
+                return null;
+            }
+        };
+
+        new TaskManager()
+                .next(loadTopicStatusInfo)
+                .next(updateUi)
+                .start();
     }
 
     public void setTopicLikeStatus(final String topicId, final boolean isLike) {

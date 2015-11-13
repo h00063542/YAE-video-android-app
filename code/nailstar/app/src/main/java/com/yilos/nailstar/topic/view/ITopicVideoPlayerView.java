@@ -4,6 +4,7 @@ import com.yilos.nailstar.topic.entity.TopicCommentInfo;
 import com.yilos.nailstar.topic.entity.TopicImageTextInfo;
 import com.yilos.nailstar.topic.entity.TopicInfo;
 import com.yilos.nailstar.topic.entity.TopicRelatedInfo;
+import com.yilos.nailstar.topic.entity.TopicStatusInfo;
 
 import java.util.ArrayList;
 
@@ -40,6 +41,8 @@ public interface ITopicVideoPlayerView {
      * @param topicRelatedList
      */
     void initTopicRelatedInfo(ArrayList<TopicRelatedInfo> topicRelatedList);
+
+    void initUserTopicLikeStatus(TopicStatusInfo topicStatusInfo);
 
     void showTopicLikeStatus(boolean isLike, boolean isSuccess);
 

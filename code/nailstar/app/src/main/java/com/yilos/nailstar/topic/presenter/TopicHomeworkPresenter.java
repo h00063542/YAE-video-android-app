@@ -6,7 +6,7 @@ import com.yilos.nailstar.framework.exception.NetworkDisconnectException;
 import com.yilos.nailstar.topic.entity.AddCommentInfo;
 import com.yilos.nailstar.topic.model.ITopicService;
 import com.yilos.nailstar.topic.model.TopicServiceImpl;
-import com.yilos.nailstar.topic.model.UpdateReadyInfo;
+import com.yilos.nailstar.topic.entity.UpdateReadyInfo;
 import com.yilos.nailstar.topic.view.ITopicHomeworkView;
 import com.yilos.nailstar.util.Constants;
 import com.yilos.nailstar.util.LoggerFactory;

@@ -55,6 +55,14 @@ public class Constants {
     public static final String REPLY_TO = "replyTo";
     public static final String LAST_REPLY_TO = "lastReplyTo";
     public static final String READY = "ready";
+    public static final String LIKE = "like";
+    public static final String COLLECT = "collect";
+    public static final String COMMENT_ID = "commentId";
+    public static final int READY_HOMEWORK = 0;
+    public static final int READY_COMMENT = 1;
+    public static final String TABLE = "table";
+    public static final String HOMEWORK = "homework";
+    public static final String POSTS = "posts";
 
     public static final int IS_HOME_WORK_VALUE = 1;
     public static final int NOT_HOME_WORK_VALUE = 0;
@@ -103,7 +111,6 @@ public class Constants {
     public static final String TOPIC_COMMENT_REPLY_USER_ID = "topicCommentUserId";
     public static final String TOPIC_COMMENT_REPLY_AUTHOR = "topicCommentReplyAuthor";
 
-    public static final String USER_INFO = "user_info";
     public static final int TOPIC_COMMENTS_INIT_ORDER_BY_ASC = 1;
     public static final int TOPIC_COMMENTS_INIT_ORDER_BY_DESC = 2;
 
@@ -137,15 +144,8 @@ public class Constants {
      */
     public static final int HOMEWORK_PIC_PIXEL = 400;
 
-    public static final String COMMENT_ID = "commentId";
-    public static final int READY_HOMEWORK = 0;
-    public static final int READY_COMMENT = 1;
-    public static final String TABLE = "table";
-    public static final String HOMEWORK = "homework";
-    public static final String POSTS = "posts";
+
     public static final String YILOS_PIC_URL = "http://pic.yilos.com/";
-    public static final String DEFAULT_ACCESS_KEY_NAME = "com.yilos.nailstar.ossak";
-    public static final String DEFAULT_SCRECT_KEY_NAME = "com.yilos.nailstar.osssk";
-    public static final String DEFAULT_BUCKET_NAME = "com.yilos.nailstar.ossbucketname";
     public static final String DEFAULT_OSS_HOST_ID = "oss-cn-hangzhou.aliyuncs.com";
+
 }

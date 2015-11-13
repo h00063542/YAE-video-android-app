@@ -5,21 +5,19 @@ import android.support.annotation.Nullable;
 
 import com.alibaba.sdk.android.oss.OSSService;
 import com.alibaba.sdk.android.oss.callback.SaveCallback;
-import com.alibaba.sdk.android.oss.model.OSSException;
-import com.alibaba.sdk.android.oss.storage.OSSBucket;
-import com.alibaba.sdk.android.oss.storage.OSSFile;
 import com.yilos.nailstar.aboutme.model.LoginAPI;
 import com.yilos.nailstar.framework.entity.NailStarApplicationContext;
 import com.yilos.nailstar.framework.exception.NetworkDisconnectException;
 import com.yilos.nailstar.topic.entity.AddCommentInfo;
-import com.yilos.nailstar.topic.entity.SubmittedHomeworkInfo;
 import com.yilos.nailstar.topic.entity.TopicCommentAtInfo;
 import com.yilos.nailstar.topic.entity.TopicCommentInfo;
 import com.yilos.nailstar.topic.entity.TopicCommentReplyInfo;
 import com.yilos.nailstar.topic.entity.TopicImageTextInfo;
 import com.yilos.nailstar.topic.entity.TopicInfo;
 import com.yilos.nailstar.topic.entity.TopicRelatedInfo;
+import com.yilos.nailstar.topic.entity.TopicStatusInfo;
 import com.yilos.nailstar.topic.entity.TopicVideoInfo;
+import com.yilos.nailstar.topic.entity.UpdateReadyInfo;
 import com.yilos.nailstar.util.CollectionUtil;
 import com.yilos.nailstar.util.Constants;
 import com.yilos.nailstar.util.HttpClient;
@@ -356,6 +354,31 @@ public class TopicServiceImpl implements ITopicService {
         return false;
     }
 
+    @Override
+    public TopicStatusInfo initUserTopicStatus(String topicId) throws NetworkDisconnectException {
+        if (!NailStarApplicationContext.getInstance().isNetworkConnected()) {
+            throw new NetworkDisconnectException("网络没有连接");
+        }
+        TopicStatusInfo topicStatusInfo = new TopicStatusInfo();
+        String url = URL_PREFIX + "topics/" + topicId + "/actionsCount?uid=" + LoginAPI.getInstance().getLoginUserId();
+        try {
+            String strResult = HttpClient.getJson(url);
+            JSONObject jsonObject = buildJSONObject(strResult);
+            JSONObject jsonResult = jsonObject.optJSONObject(Constants.RESULT);
+            int like = jsonResult.optInt(Constants.LIKE, 0);
+            int collect = jsonResult.optInt(Constants.COLLECT, 0);
+            topicStatusInfo.setIsLike(like != 0);
+            topicStatusInfo.setIsCollect(collect != 0);
+        } catch (IOException e) {
+            e.printStackTrace();
+            LOGGER.error(MessageFormat.format("获取用户topic状态失败，topicId：{1}，url：{2}", topicId, url), e);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            LOGGER.error(MessageFormat.format("获取用户topic状态失败，topicId：{1}，url：{2}", topicId, url), e);
+        }
+        return topicStatusInfo;
+    }
+
     /**
      * 赞
      *
@@ -463,7 +486,7 @@ public class TopicServiceImpl implements ITopicService {
             jsonObject.put(Constants.LAST_REPLY_TO, info.getLastReplayTO());
             //
             jsonObject.put(Constants.READY, info.getReady());
-            String strResult = HttpClient.post(url, String.valueOf(jsonObject));
+            String strResult = HttpClient.post(url, jsonObject.toString());
             JSONObject jsonObj = buildJSONObject(strResult);
             return JsonUtil.optString(jsonObj.optJSONObject(Constants.RESULT), Constants.COMMENT_ID);
         } catch (JSONException e) {
@@ -521,19 +544,12 @@ public class TopicServiceImpl implements ITopicService {
     }
 
     @Override
-    public void uploadFile2Oss(String filePath, String fileName, SaveCallback callback) throws NetworkDisconnectException {
+    public void uploadFile2Oss(String localFilePath, String ossFileName, SaveCallback callback) throws NetworkDisconnectException {
         if (!NailStarApplicationContext.getInstance().isNetworkConnected()) {
             throw new NetworkDisconnectException("网络没有连接");
         }
         OSSService ossService = OSSUtil.getDefaultOssService();
-        OSSBucket bucket = ossService.getOssBucket(OSSUtil.getDefaultBucketName());
-        OSSFile ossFile = ossService.getOssFile(bucket, fileName);
-        try {
-            ossFile.setUploadFilePath(filePath, "application/octet-stream");
-            ossFile.ResumableUploadInBackground(callback);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+        OSSUtil.resumableUpload(ossService, ossService.getOssBucket(OSSUtil.BUCKET_YPICTURE), localFilePath, ossFileName, callback);
     }
 
     /**
@@ -562,7 +578,7 @@ public class TopicServiceImpl implements ITopicService {
             jsonObject.put(Constants.ID, info.getId());
             jsonObject.put(Constants.PIC_URL, info.getPicUrls());
             jsonObject.put(Constants.TABLE, Constants.HOMEWORK);
-            String strResult = HttpClient.post(url, String.valueOf(jsonObject));
+            String strResult = HttpClient.post(url, jsonObject.toString());
             return null != buildJSONObject(strResult);
         } catch (JSONException e) {
             e.printStackTrace();
