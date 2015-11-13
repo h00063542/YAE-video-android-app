@@ -4,12 +4,17 @@ package com.yilos.nailstar.util;
  * * 描    述:  主要功能有清除内/外缓存，清除数据库，清除sharedPreference，清除files和清除自定义目录
  * */
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.math.BigDecimal;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Environment;
 import android.text.TextUtils;
+import android.util.Log;
 
 /** * 本应用数据清除管理器 */
 public class DataCleanManager {
@@ -227,5 +232,4 @@ public class DataCleanManager {
     public static String getCacheSize(File file) throws Exception {
         return getFormatSize(getFolderSize(file));
     }
-
 }
