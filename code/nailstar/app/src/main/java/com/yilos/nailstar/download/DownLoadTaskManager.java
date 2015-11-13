@@ -7,7 +7,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
 import com.yilos.nailstar.topic.entity.TopicInfo;
 import com.yilos.nailstar.util.Constants;
 import com.yilos.nailstar.util.FileUtils;
@@ -17,6 +16,7 @@ import com.yilos.nailstar.util.LoggerFactory;
 import org.apache.log4j.Logger;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -118,6 +118,7 @@ public class DownLoadTaskManager {
 
         // 如果之前保留了下载信息，则删除
         final DownLoadInfo downLoadInfo = new DownLoadInfo(topicInfo);
+
         for (Iterator<DownLoadInfo> iterator = downLoadInfoList.iterator(); iterator.hasNext(); ) {
             DownLoadInfo item = iterator.next();
             if (item.getUrl().equals(downLoadInfo.getUrl())) {
@@ -142,6 +143,12 @@ public class DownLoadTaskManager {
                 String photoPath = FileUtils.saveBitMap(photo, path, downLoadInfo.getName() + ".jpg");
                 if (photoPath != null) {
                     downLoadInfo.setPhoto(photoPath);
+                }
+                try {
+                    long length = HttpClient.getFileLength(downLoadInfo.getUrl());
+                    downLoadInfo.setFileSize(length);
+                } catch (IOException e) {
+                    logger.error("addDownLoadTask get file length failed", e);
                 }
 
                 // 下载信息保存
