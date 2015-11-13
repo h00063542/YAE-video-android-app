@@ -42,6 +42,10 @@ public class DownLoadTask {
         this.fileName = fileName;
     }
 
+    public String getUrl() {
+        return url;
+    }
+
     public void setProgressListener(ProgressListener progressListener) {
         this.progressListener = progressListener;
     }
