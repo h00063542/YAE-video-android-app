@@ -193,14 +193,14 @@ public class IndexFragment extends Fragment implements IIndexView {
 
         NestedScrollingScrollView scrollView = (NestedScrollingScrollView)this.view.findViewById(R.id.indexScrollView);
         scrollView.setOverScrollMode(NestedScrollingScrollView.OVER_SCROLL_NEVER);
-        scrollView.setFillViewport(true);
+        //scrollView.setFillViewport(true);
 
-        scrollView.setScrollViewListener(new NestedScrollingScrollView.ScrollViewListener() {
-            @Override
-            public void onScrollChanged(NestedScrollingScrollView scrollView, int x, int y, int oldx, int oldy, int xRange, int yRange) {
-                scrollView.setMaxScrollY((int) tabPageIndicator.getY());
-            }
-        });
+//        scrollView.setScrollViewListener(new NestedScrollingScrollView.ScrollViewListener() {
+//            @Override
+//            public void onScrollChanged(NestedScrollingScrollView scrollView, int x, int y, int oldx, int oldy, int xRange, int yRange) {
+//                scrollView.setMaxScrollY((int) tabPageIndicator.getY());
+//            }
+//        });
 
 //        this.view.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
 //            @Override
