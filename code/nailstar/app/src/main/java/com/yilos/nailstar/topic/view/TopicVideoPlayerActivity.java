@@ -78,7 +78,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
     private static final Logger LOGGER = LoggerFactory.getLogger(TopicVideoPlayerActivity.class);
     private static final String TEMP_USER_PHOTO_URL = "http://pic.yilos.com/162b73dc3f69af2dc8a79a1b9da7591e";
 
-    private static final String TAG = "VideoPlayerActivity";
+    private static final String TAG = "TopicVideoPlayerActivity";
 
     private static final int TOPIC_COMMENT_REQUEST_CODE = 3;
     private static final int TOPIC_HOMEWORK_REQUEST_CODE = 4;
