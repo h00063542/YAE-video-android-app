@@ -1,5 +1,6 @@
 package com.yilos.nailstar.topic.model;
 
+import com.alibaba.sdk.android.oss.callback.SaveCallback;
 import com.yilos.nailstar.framework.exception.NetworkDisconnectException;
 import com.yilos.nailstar.topic.entity.AddCommentInfo;
 import com.yilos.nailstar.topic.entity.SubmittedHomeworkInfo;
@@ -87,19 +88,6 @@ public interface ITopicService {
      */
     boolean setTopicCollectionStatus(String topicId, boolean isCollection) throws NetworkDisconnectException;
 
-    boolean cancelCollection(String topicId) throws NetworkDisconnectException;
-
-
-    /**
-     * 交作业
-     *
-     * @param info
-     * @return
-     * @throws NetworkDisconnectException
-     */
-    String submittedHomework(SubmittedHomeworkInfo info) throws NetworkDisconnectException;
-
-
     /**
      * 视频播放次数+1
      *
@@ -117,4 +105,24 @@ public interface ITopicService {
      * @throws NetworkDisconnectException
      */
     int getSubmittedHomeworkCount(String topicId) throws NetworkDisconnectException;
+
+    /**
+     * 上传文件到oss
+     *
+     * @param filePath
+     * @param fileName
+     * @param callback
+     * @return
+     * @throws NetworkDisconnectException
+     */
+    void uploadFile2Oss(String filePath, String fileName, SaveCallback callback) throws NetworkDisconnectException;
+
+    /**
+     * 更新ready状态
+     *
+     * @param info
+     * @return
+     * @throws NetworkDisconnectException
+     */
+    boolean updateReady(UpdateReadyInfo info) throws NetworkDisconnectException;
 }

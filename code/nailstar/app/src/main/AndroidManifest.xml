@@ -64,6 +64,9 @@
             android:name=".aboutme.view.LicenceActivity"
             android:label="@string/title_activity_licence" >
         </activity>
+        <meta-data android:name="com.yilos.nailstar.ossak" android:value="OA7cwTn8CH2XKE97"></meta-data>
+        <meta-data android:name="com.yilos.nailstar.osssk" android:value="F1z5IaFaQtB97Y8wRvtvtai2tBN3GT"></meta-data>
+        <meta-data android:name="com.yilos.nailstar.ossbucketname" android:value="ypicture"></meta-data>
     </application>
 
 </manifest>

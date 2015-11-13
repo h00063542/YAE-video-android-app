@@ -41,6 +41,7 @@ import com.sina.sinavideo.sdk.VDVideoViewController;
 import com.sina.sinavideo.sdk.data.VDVideoInfo;
 import com.sina.sinavideo.sdk.data.VDVideoListInfo;
 import com.yilos.nailstar.R;
+import com.yilos.nailstar.aboutme.model.LoginAPI;
 import com.yilos.nailstar.framework.view.BaseActivity;
 import com.yilos.nailstar.main.MainActivity;
 import com.yilos.nailstar.takeImage.TakeImage;
@@ -57,8 +58,6 @@ import com.yilos.nailstar.util.CollectionUtil;
 import com.yilos.nailstar.util.Constants;
 import com.yilos.nailstar.util.LoggerFactory;
 import com.yilos.nailstar.util.StringUtil;
-import com.yilos.nailstar.util.UserInfo;
-import com.yilos.nailstar.util.UserUtil;
 import com.yilos.widget.circleimageview.CircleImageView;
 import com.yilos.widget.photoview.PhotoView;
 import com.yilos.widget.pullrefresh.PullToRefreshView;
@@ -76,6 +75,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         PullToRefreshView.OnHeaderRefreshListener,
         PullToRefreshView.OnFooterRefreshListener {
     private static final Logger LOGGER = LoggerFactory.getLogger(TopicVideoPlayerActivity.class);
+    private static final String TEMP_USER_PHOTO_URL = "http://pic.yilos.com/162b73dc3f69af2dc8a79a1b9da7591e";
 
     private static final String TAG = "VideoPlayerActivity";
 
@@ -208,7 +208,6 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_topic_video_player);
         showLoading("");
-        UserUtil.saveUserInfo(this, new UserInfo("001", "text", "http://pic.yilos.com/162b73dc3f69af2dc8a79a1b9da7591e"));
         mTopicVideoPlayerPresenter = TopicVideoPlayerPresenter.getInstance(this);
         init();
         checkInitFinish();
@@ -217,7 +216,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
             public void run() {
                 hideLoading();
             }
-        }, 2000);
+        }, 5000);
     }
 
 
@@ -564,8 +563,8 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         mTvTopicSubmittedHomework.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!UserUtil.isLogin(TopicVideoPlayerActivity.this)) {
-                    // TODO 调用到登录界面
+                if (!LoginAPI.getInstance().isLogin()) {
+                    LoginAPI.getInstance().gotoLoginPage(TopicVideoPlayerActivity.this);
                     return;
                 }
                 mTakeImage.initTakeImage();
@@ -627,8 +626,8 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
      * 评论
      */
     private void addTopicComment() {
-        if (!UserUtil.isLogin(this)) {
-            // TODO 调用到登录界面
+        if (!LoginAPI.getInstance().isLogin()) {
+            LoginAPI.getInstance().gotoLoginPage(this);
             return;
         }
         Intent intent = new Intent(this, TopicCommentActivity.class);
@@ -644,8 +643,8 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
      * @param replyInfo
      */
     private void addTopicCommentReply(TopicCommentInfo commentInfo, TopicCommentReplyInfo replyInfo, int type) {
-        if (!UserUtil.isLogin(this)) {
-            // TODO 调用到登录界面
+        if (!LoginAPI.getInstance().isLogin()) {
+            LoginAPI.getInstance().gotoLoginPage(this);
             return;
         }
         if (type == Constants.TOPIC_COMMENT_TYPE_REPLY_AGAIN) {
@@ -1355,9 +1354,15 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (resultCode != RESULT_OK) {
+            if (requestCode == TOPIC_COMMENT_REQUEST_CODE) {
+                showShortToast("提交评论失败，请稍后再试...");
+            } else if (requestCode == TOPIC_HOMEWORK_REQUEST_CODE) {
+                showShortToast("交作业失败，请稍后再试...");
+            }
             return;
         }
-        UserInfo userInfo = UserUtil.getUserInfo(this);
+        String userId = LoginAPI.getInstance().getLoginUserId();
+        String userName = LoginAPI.getInstance().getLoginUserName();
         // 评论或回复
         if (requestCode == TOPIC_COMMENT_REQUEST_CODE) {
             Bundle data = intent.getExtras();
@@ -1374,11 +1379,11 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
                 topicCommentInfo.setId(newCommentId);
 
                 // 获取登录用户userId
-                topicCommentInfo.setUserId(userInfo.getUserId());
+                topicCommentInfo.setUserId(userId);
                 // 获取登录用户昵称
-                topicCommentInfo.setAuthor(userInfo.getNickName());
+                topicCommentInfo.setAuthor(userName);
                 // 获取登录用户头像url
-                topicCommentInfo.setAuthorPhoto(userInfo.getPhoto());
+                topicCommentInfo.setAuthorPhoto(TEMP_USER_PHOTO_URL);
                 topicCommentInfo.setContent(content);
                 // 获取登录用户头像url
                 topicCommentInfo.setContentPic(Constants.EMPTY_STRING);
@@ -1397,9 +1402,9 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
                 topicCommentAtInfo.setUserId(commentUserId);
                 topicCommentAtInfo.setNickName(commentAuthor);
                 topicCommentReplyInfo.setId(newCommentId);
-                topicCommentReplyInfo.setUserId(userInfo.getUserId());
-                topicCommentReplyInfo.setNickname(userInfo.getNickName());
-                topicCommentReplyInfo.setAuthor(userInfo.getNickName());
+                topicCommentReplyInfo.setUserId(userId);
+                topicCommentReplyInfo.setNickname(userName);
+                topicCommentReplyInfo.setAuthor(userName);
                 topicCommentReplyInfo.setContent(content);
                 topicCommentReplyInfo.setContentPic(Constants.EMPTY_STRING);
                 topicCommentReplyInfo.setIsHomework(Constants.NOT_HOME_WORK_VALUE);
@@ -1417,9 +1422,9 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
                 topicCommentAtInfo.setUserId(commentReplyUserId);
                 topicCommentAtInfo.setNickName(commentReplyAuthor);
                 topicCommentReplyInfo.setId(newCommentId);
-                topicCommentReplyInfo.setUserId(userInfo.getUserId());
-                topicCommentReplyInfo.setNickname(userInfo.getNickName());
-                topicCommentReplyInfo.setAuthor(userInfo.getNickName());
+                topicCommentReplyInfo.setUserId(userName);
+                topicCommentReplyInfo.setNickname(userName);
+                topicCommentReplyInfo.setAuthor(userName);
                 topicCommentReplyInfo.setContent(content);
                 topicCommentReplyInfo.setContentPic(Constants.EMPTY_STRING);
                 topicCommentReplyInfo.setIsHomework(Constants.NOT_HOME_WORK_VALUE);
@@ -1442,11 +1447,11 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
             topicCommentInfo.setId(newCommentId);
 
             // 获取登录用户userId
-            topicCommentInfo.setUserId(userInfo.getUserId());
+            topicCommentInfo.setUserId(userName);
             // 获取登录用户昵称
-            topicCommentInfo.setAuthor(userInfo.getNickName());
+            topicCommentInfo.setAuthor(userName);
             // 获取登录用户头像url
-            topicCommentInfo.setAuthorPhoto(userInfo.getPhoto());
+            topicCommentInfo.setAuthorPhoto(TEMP_USER_PHOTO_URL);
             topicCommentInfo.setContent(content);
             // 获取登录用户头像url
             topicCommentInfo.setContentPic(contentPic);

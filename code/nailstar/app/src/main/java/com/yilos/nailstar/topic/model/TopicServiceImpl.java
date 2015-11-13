@@ -3,6 +3,12 @@ package com.yilos.nailstar.topic.model;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.alibaba.sdk.android.oss.OSSService;
+import com.alibaba.sdk.android.oss.callback.SaveCallback;
+import com.alibaba.sdk.android.oss.model.OSSException;
+import com.alibaba.sdk.android.oss.storage.OSSBucket;
+import com.alibaba.sdk.android.oss.storage.OSSFile;
+import com.yilos.nailstar.aboutme.model.LoginAPI;
 import com.yilos.nailstar.framework.entity.NailStarApplicationContext;
 import com.yilos.nailstar.framework.exception.NetworkDisconnectException;
 import com.yilos.nailstar.topic.entity.AddCommentInfo;
@@ -19,6 +25,7 @@ import com.yilos.nailstar.util.Constants;
 import com.yilos.nailstar.util.HttpClient;
 import com.yilos.nailstar.util.JsonUtil;
 import com.yilos.nailstar.util.LoggerFactory;
+import com.yilos.nailstar.util.OSSUtil;
 import com.yilos.nailstar.util.StringUtil;
 
 import org.apache.log4j.Logger;
@@ -349,49 +356,43 @@ public class TopicServiceImpl implements ITopicService {
         return false;
     }
 
+    /**
+     * 赞
+     *
+     * @param topicId
+     * @param isLike
+     * @return
+     * @throws NetworkDisconnectException
+     */
     @Override
     public boolean setTopicLikeStatus(String topicId, boolean isLike) throws NetworkDisconnectException {
-        return false;
+        return postTopicHandler(topicId, Constants.ACTION_TYPE_LIKE, isLike);
     }
 
     /**
-     * {
-     * uid: “daskfjafjafd”,
-     * type: 1, // 1浏览，2赞，3收藏，4转发
-     * topicId: “rerjkdfkajfafdaf222”
-     * }
+     * 收藏
      *
      * @param topicId
+     * @param isCollection
      * @return
      * @throws NetworkDisconnectException
      */
     @Override
     public boolean setTopicCollectionStatus(String topicId, boolean isCollection) throws NetworkDisconnectException {
-//        if (!NailStarApplicationContext.getInstance().isNetworkConnected()) {
-//            throw new NetworkDisconnectException("网络没有连接");
-//        }
-//        String url = URL_PREFIX + "topics/" + topicId + "/actions";
-//
-//        try {
-//
-//            JSONObject jsonObject = new JSONObject();
-//            jsonObject.put(Constants.UID, "");
-//            jsonObject.put(Constants.TYPE, Constants.ACTION_TYPE_COLLECTION);
-//            jsonObject.put(Constants.TOPIC_ID, topicId);
-//            String strResult = HttpClient.post(url, jsonObject.toString());
-//            return null != buildJSONObject(strResult);
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//            LOGGER.error(MessageFormat.format("收藏topic失败，topicId:{0}，url:{1}", topicId, url), e);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            LOGGER.error(MessageFormat.format("收藏topic失败，topicId:{0}，url:{1}", topicId, url), e);
-//        }
-        return false;
+        return postTopicHandler(topicId, Constants.ACTION_TYPE_COLLECTION, isCollection);
     }
 
-
     /**
+     * 操作视频（浏览，赞，收藏，转发）
+     * POST /svc/nailstar/topics/xxxxx/actions
+     * {
+     * uid: “daskfjafjafd”,
+     * type: 1, // 1浏览，2赞，3收藏，4转发
+     * topicId: “rerjkdfkajfafdaf222”
+     * }
+     * <p/>
+     * 取消操作（取消赞，取消收藏）
+     * POST /svc/nailstar/topics/xxxxx/cancel
      * {
      * uid: “daskfjafjafd”,
      * type: 1, // 2赞，3收藏
@@ -399,30 +400,28 @@ public class TopicServiceImpl implements ITopicService {
      * }
      *
      * @param topicId
-     * @return
+     * @param type
+     * @param isChecked
      * @throws NetworkDisconnectException
      */
-    @Override
-    public boolean cancelCollection(String topicId) throws NetworkDisconnectException {
+    private boolean postTopicHandler(String topicId, int type, boolean isChecked) throws NetworkDisconnectException {
         if (!NailStarApplicationContext.getInstance().isNetworkConnected()) {
             throw new NetworkDisconnectException("网络没有连接");
         }
-        String url = URL_PREFIX + "topics/" + topicId + "/cancel";
-
+        String url = URL_PREFIX + "topics/" + topicId + (isChecked ? "/actions" : "cancel");
         try {
-
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put(Constants.UID, "");
-            jsonObject.put(Constants.TYPE, Constants.ACTION_TYPE_COLLECTION);
+            jsonObject.put(Constants.UID, LoginAPI.getInstance().getLoginUserId());
+            jsonObject.put(Constants.TYPE, type);
             jsonObject.put(Constants.TOPIC_ID, topicId);
             String strResult = HttpClient.post(url, jsonObject.toString());
             return null != buildJSONObject(strResult);
         } catch (JSONException e) {
             e.printStackTrace();
-            LOGGER.error(MessageFormat.format("取消收藏topic失败，topicId:{0}，url:{1}", topicId, url), e);
+            LOGGER.error(MessageFormat.format("topic操作失败，topicId:{0}，url:{1}", topicId, url), e);
         } catch (IOException e) {
             e.printStackTrace();
-            LOGGER.error(MessageFormat.format("取消收藏topic失败，topicId:{0}，url:{1}", topicId, url), e);
+            LOGGER.error(MessageFormat.format("topic操作失败，topicId:{0}，url:{1}", topicId, url), e);
         }
         return false;
     }
@@ -433,7 +432,10 @@ public class TopicServiceImpl implements ITopicService {
      * atUser: “fdafsdfafsf”,
      * content: “我也来评论一句”,
      * contentPic: “http://st.yilos.com/pic/dalfjlafjafdfrere.png”,
-     * replyTo: “fdasjfkajdfkarere”
+     * replyTo: “fdasjfkajdfkarere”,
+     * lastReplyTo: "adsfafasfasfasf",
+     * score: 1,
+     * ready: 0 || 1
      * }
      *
      * @return
@@ -447,11 +449,20 @@ public class TopicServiceImpl implements ITopicService {
         String url = URL_PREFIX + "topics/" + info.getTopicId() + "/comments";
         try {
             JSONObject jsonObject = new JSONObject();
+            // 当前登录用户Id
             jsonObject.put(Constants.AUTHOR, info.getUserId());
+            // at用户Id
             jsonObject.put(Constants.AT_USER, info.getAtUserId());
+            // 内容
             jsonObject.put(Constants.CONTENT, info.getContent());
+            // 图片
             jsonObject.put(Constants.CONTENT_PIC, info.getContentPic());
+            // commentId
             jsonObject.put(Constants.REPLY_TO, info.getReplayTo());
+            // replyId
+            jsonObject.put(Constants.LAST_REPLY_TO, info.getLastReplayTO());
+            //
+            jsonObject.put(Constants.READY, info.getReady());
             String strResult = HttpClient.post(url, String.valueOf(jsonObject));
             JSONObject jsonObj = buildJSONObject(strResult);
             return JsonUtil.optString(jsonObj.optJSONObject(Constants.RESULT), Constants.COMMENT_ID);
@@ -461,30 +472,6 @@ public class TopicServiceImpl implements ITopicService {
         } catch (IOException e) {
             e.printStackTrace();
             LOGGER.error(MessageFormat.format("评论topic失败，topicId:{0}，url:{1}", info.getTopicId(), url), e);
-        }
-        return Constants.EMPTY_STRING;
-    }
-
-    @Override
-    public String submittedHomework(SubmittedHomeworkInfo info) throws NetworkDisconnectException {
-        if (!NailStarApplicationContext.getInstance().isNetworkConnected()) {
-            throw new NetworkDisconnectException("网络没有连接");
-        }
-        String url = URL_PREFIX + "qjc/topic" + info.getTopicId() + "/homework";
-        JSONObject jsonObject = new JSONObject();
-        try {
-            jsonObject.put(Constants.UID, info.getUserId());
-            jsonObject.put(Constants.CONTENT, info.getContent());
-            jsonObject.put(Constants.PIC_URL, info.getPicUrl());
-            String strResult = HttpClient.post(url, jsonObject.toString());
-            JSONObject jsonObj = buildJSONObject(strResult);
-            return JsonUtil.optString(jsonObj.optJSONObject(Constants.RESULT), Constants.COMMENT_ID);
-        } catch (JSONException e) {
-            e.printStackTrace();
-            LOGGER.error(MessageFormat.format("交作业失败，topicId:{0}，url:{1}，postData:{2}", info.getTopicId(), url, jsonObject.toString()), e);
-        } catch (IOException e) {
-            e.printStackTrace();
-            LOGGER.error(MessageFormat.format("交作业失败，topicId:{0}，url:{1}，postData:{2}", info.getTopicId(), url, jsonObject.toString()), e);
         }
         return Constants.EMPTY_STRING;
     }
@@ -531,6 +518,60 @@ public class TopicServiceImpl implements ITopicService {
             LOGGER.error(MessageFormat.format("视频播放次数+1失败，topicId:{0}，url:{1}", topicId, url), e);
         }
         return 0;
+    }
+
+    @Override
+    public void uploadFile2Oss(String filePath, String fileName, SaveCallback callback) throws NetworkDisconnectException {
+        if (!NailStarApplicationContext.getInstance().isNetworkConnected()) {
+            throw new NetworkDisconnectException("网络没有连接");
+        }
+        OSSService ossService = OSSUtil.getDefaultOssService();
+        OSSBucket bucket = ossService.getOssBucket(OSSUtil.getDefaultBucketName());
+        OSSFile ossFile = ossService.getOssFile(bucket, fileName);
+        try {
+            ossFile.setUploadFilePath(filePath, "application/octet-stream");
+            ossFile.ResumableUploadInBackground(callback);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * {
+     * picUrl: [
+     * "http://pic.yilos.com/YYYYYYYY",
+     * "http://pic.yilos.com/YYYYYYYY",
+     * ],
+     * id: "fjkhsdfjsfjds",   //id为postId, 或commentId
+     * table: "posts"     //posts或homework
+     * }
+     *
+     * @param info
+     * @return
+     * @throws NetworkDisconnectException
+     */
+    @Override
+    public boolean updateReady(UpdateReadyInfo info) throws NetworkDisconnectException {
+        if (!NailStarApplicationContext.getInstance().isNetworkConnected()) {
+            throw new NetworkDisconnectException("网络没有连接");
+        }
+        String url = URL_PREFIX + "updateReady";
+        try {
+            JSONObject jsonObject = new JSONObject();
+            // 当前登录用户Id
+            jsonObject.put(Constants.ID, info.getId());
+            jsonObject.put(Constants.PIC_URL, info.getPicUrls());
+            jsonObject.put(Constants.TABLE, Constants.HOMEWORK);
+            String strResult = HttpClient.post(url, String.valueOf(jsonObject));
+            return null != buildJSONObject(strResult);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            LOGGER.error(MessageFormat.format("修改ready状态失败，id:{0}，url:{1}", info.getId(), url), e);
+        } catch (IOException e) {
+            e.printStackTrace();
+            LOGGER.error(MessageFormat.format("修改ready状态失败，id:{0}，url:{1}", info.getId(), url), e);
+        }
+        return false;
     }
 
     /**
