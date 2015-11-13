@@ -1,4 +1,4 @@
-package com.yilos.nailstar.topic.model;
+package com.yilos.nailstar.topic.entity;
 
 import java.util.ArrayList;
 

@@ -120,7 +120,7 @@
 
                                 <ImageView
                                     android:id="@+id/iv_topic_author_tag_1_icon"
-                                    android:layout_width="7dp"
+                                    android:layout_width="6dp"
                                     android:layout_height="wrap_content"
                                     android:adjustViewBounds="true"
                                     android:src="@drawable/graya"
@@ -141,7 +141,7 @@
 
                                 <ImageView
                                     android:id="@+id/iv_topic_author_tag_2_icon"
-                                    android:layout_width="7dp"
+                                    android:layout_width="6dp"
                                     android:layout_height="wrap_content"
                                     android:adjustViewBounds="true"
                                     android:src="@drawable/graya"
@@ -162,7 +162,7 @@
 
                                 <ImageView
                                     android:id="@+id/iv_topic_author_tag_3_icon"
-                                    android:layout_width="7dp"
+                                    android:layout_width="6dp"
                                     android:layout_height="wrap_content"
                                     android:adjustViewBounds="true"
                                     android:src="@drawable/graya"
@@ -183,7 +183,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_vertical"
-                                android:layout_marginLeft="10dp"
+                                android:paddingLeft="5dp"
                                 android:text="@string/topic_image_text_content"
                                 android:textSize="@dimen/topic_image_text_font_size" />
 
