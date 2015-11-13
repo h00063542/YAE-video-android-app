@@ -19,6 +19,15 @@ public class Sdcard {
     private long availCount;
     private String blockCountFormat;
     private String availCountFormat;
+    private boolean isChoosed;
+
+    public void setChoosed(boolean isChoosed) {
+        this.isChoosed = isChoosed;
+    }
+
+    public boolean getIsChoosed() {
+        return isChoosed;
+    }
 
     public void setSdcardName(String sdcardName) {
         this.sdcardName = sdcardName;

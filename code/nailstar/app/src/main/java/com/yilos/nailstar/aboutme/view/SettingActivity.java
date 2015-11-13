@@ -9,6 +9,7 @@ import android.os.StatFs;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -43,6 +44,8 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     private TextView loginOut;
     private TextView downloadSdcard;
     private RelativeLayout settingFolder;
+
+    ArrayList<Sdcard> sdcardArrayList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,10 +103,11 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         titleTextView.setText(R.string.about_me_setting);
         clearCache.setOnClickListener(this);
         cacheNumber.setText(setCacheNumber());
-        ArrayList<Sdcard> sdcardArrayList = new ArrayList<>();
         sdcardArrayList = getSdcard();
         Sdcard sdcard = sdcardArrayList.get(sdcardArrayList.size() - 1);
-        SettingUtil.setSdcardPathSharedPreferences(sdcard.getSdcardName(),sdcard.getSdcardPath());
+        if (SettingUtil.getSdcardName().isEmpty()) {
+            SettingUtil.setSdcardPathSharedPreferences(sdcard.getSdcardName(),sdcard.getSdcardPath());
+        }
         downloadSdcard.setText(SettingUtil.getSdcardName());
     }
 
@@ -141,16 +145,21 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 LoginAPI.getInstance().logout(); //退出登录
                 break;
             case R.id.setting_folder:
+                final SettingFolderAdapter settingFolderAdapter = new SettingFolderAdapter(this,sdcardArrayList,SettingUtil.getSdcardName());
                 DialogPlus dialog = DialogPlus.newDialog(this)
-                        .setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, new String[]{"asdfa"}))
+                        .setAdapter(settingFolderAdapter)
                                 .setOnItemClickListener(new OnItemClickListener() {
                                     @Override
                                     public void onItemClick(DialogPlus dialog, Object item, View view, int position) {
+                                        Sdcard sdcard = new Sdcard();
+                                        sdcard = (Sdcard) item;
+                                        SettingUtil.setSdcardPathSharedPreferences(sdcard.getSdcardName(), sdcard.getSdcardPath());
+                                        downloadSdcard.setText(SettingUtil.getSdcardName());
+                                        dialog.dismiss();
                                     }
                                 })
                                 .setGravity(Gravity.CENTER)
-                                        .setHeader(R.layout.setting_folder_dialog_header)
-                                //.setExpanded(false)  // This will enable the expand feature, (similar to android L share dialog)
+                                .setHeader(R.layout.setting_folder_dialog_header) // This will enable the expand feature, (similar to android L share dialog)
                                 .create();
                 dialog.show();
                 break;
