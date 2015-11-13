@@ -20,7 +20,7 @@ public class VotedRecord implements Serializable {
     private List<String> candidateIdList;
 
     public VotedRecord() {
-        candidateIdList = new ArrayList();
+        candidateIdList = new ArrayList<>();
     }
 
     public int getNo() {
