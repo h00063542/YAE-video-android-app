@@ -2,6 +2,7 @@ package com.yilos.nailstar.framework.application;
 
 import android.graphics.Bitmap;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiskCache;
 import com.nostra13.universalimageloader.cache.disc.naming.HashCodeFileNameGenerator;
 import com.nostra13.universalimageloader.cache.memory.impl.LruMemoryCache;
@@ -52,10 +53,13 @@ public class NailStarApplication extends android.app.Application {
 
         application = this;
 
+        Fresco.initialize(getApplicationContext());
+
         File cacheDir = StorageUtils.getCacheDirectory(getApplicationContext());
 
         DisplayImageOptions options = new DisplayImageOptions.Builder()
-                .showImageOnLoading(R.mipmap.ic_launcher)
+                .showImageOnLoading(R.mipmap.icon_loading)
+                .showImageOnFail(R.mipmap.icon_refresh)
                 .resetViewBeforeLoading(false)  // default
                 .cacheInMemory(true) // default
                 .cacheOnDisk(true) // default

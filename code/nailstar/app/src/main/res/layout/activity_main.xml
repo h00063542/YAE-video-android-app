@@ -12,9 +12,9 @@
 
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/common_main_tab_height"
         android:orientation="horizontal"
-        android:background="@drawable/main_tab_group_stype">
+        android:background="@drawable/main_tab_group_style">
 
         <RadioGroup
             android:id="@+id/main_tab_group"
