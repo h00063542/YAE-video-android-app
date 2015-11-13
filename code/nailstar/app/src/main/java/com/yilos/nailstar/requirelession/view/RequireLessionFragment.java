@@ -20,6 +20,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.yilos.nailstar.R;
+import com.yilos.nailstar.framework.entity.NailStarApplicationContext;
 import com.yilos.nailstar.requirelession.Presenter.LessionPresenter;
 import com.yilos.nailstar.requirelession.entity.CandidateLession;
 import com.yilos.nailstar.requirelession.entity.LessionActivity;
@@ -32,7 +33,6 @@ import com.yilos.widget.circleimageview.CircleImageView;
 import com.yilos.widget.titlebar.TitleBar;
 import com.yilos.widget.view.ImageCacheView;
 
-import java.io.File;
 import java.util.List;
 
 import in.srain.cube.views.ptr.PtrClassicFrameLayout;
@@ -185,7 +185,7 @@ public class RequireLessionFragment extends Fragment implements LessionView {
 
     private void initData() {
 
-        lessionPresenter.setCacheDir(this.getActivity().getFilesDir());
+        lessionPresenter.setCacheDir(NailStarApplicationContext.getInstance().getFileDir());
         // 查询数据
         lessionPresenter.queryAndRefreshActivityTopic();
         lessionPresenter.queryVotedRecord();

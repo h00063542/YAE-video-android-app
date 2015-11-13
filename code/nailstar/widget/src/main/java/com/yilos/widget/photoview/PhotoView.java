@@ -29,7 +29,7 @@ public class PhotoView extends ImageCacheView {
 
     private final static int MIN_ROTATE = 35;
     private final static int ANIMA_DURING = 320;
-    private final static float MAX_SCALE = 2.5f;
+    private final static float MAX_SCALE = 2.9f;
     private int MAX_OVER_SCROLL = 0;
     private int MAX_FLING_OVER_SCROLL = 0;
     private int MAX_OVER_RESISTANCE = 0;
@@ -64,6 +64,7 @@ public class PhotoView extends ImageCacheView {
     private float mRotateFlag;
     private float mDegrees;
     private float mScale = 1.0f;
+    private float mInitScale = 1.0f;
     private int mTranslateX;
     private int mTranslateY;
 
@@ -298,6 +299,7 @@ public class PhotoView extends ImageCacheView {
             float scaleY = imgh / mImgRect.height();
 
             mScale = scaleX > scaleY ? scaleX : scaleY;
+            mInitScale = mScale;
 
             mAnimaMatrix.postScale(mScale, mScale, mScreenCenter.x, mScreenCenter.y);
 
@@ -311,7 +313,7 @@ public class PhotoView extends ImageCacheView {
             float scaleY = mWidgetRect.height() / mImgRect.height();
 
             mScale = scaleX > scaleY ? scaleX : scaleY;
-
+            mInitScale = mScale;
             mAnimaMatrix.postScale(mScale, mScale, mScreenCenter.x, mScreenCenter.y);
 
             executeTranslate();
@@ -334,6 +336,7 @@ public class PhotoView extends ImageCacheView {
     private void initFitCenter() {
         if (mImgRect.width() < mWidgetRect.width()) {
             mScale = mWidgetRect.width() / mImgRect.width();
+            mInitScale = mScale;
 
             mAnimaMatrix.postScale(mScale, mScale, mScreenCenter.x, mScreenCenter.y);
 
@@ -516,7 +519,7 @@ public class PhotoView extends ImageCacheView {
 
         if (mScale < 1) {
             scale = 1;
-            mTranslate.withScale(mScale, 1);
+            mTranslate.withScale(mScale, mInitScale);
         } else if (mScale > MAX_SCALE) {
             scale = MAX_SCALE;
             mTranslate.withScale(mScale, MAX_SCALE);
@@ -777,6 +780,7 @@ public class PhotoView extends ImageCacheView {
             return true;
         }
 
+
         @Override
         public boolean onSingleTapUp(MotionEvent e) {
             postDelayed(mClickRunnable, 250);
@@ -801,7 +805,7 @@ public class PhotoView extends ImageCacheView {
 
             if (isZoonUp) {
                 from = mScale;
-                to = 1;
+                to = mInitScale;
             } else {
                 from = mScale;
                 to = MAX_SCALE;

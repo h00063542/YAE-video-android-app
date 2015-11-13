@@ -2,7 +2,8 @@ package com.yilos.widget.view;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Color;
+import android.graphics.Canvas;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
@@ -11,53 +12,37 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingProgressListener;
+import com.yilos.widget.R;
 
 /**
  * Created by yangdan on 15/10/20.
  */
 public class ImageCacheView extends ImageView implements ImageLoadingListener, ImageLoadingProgressListener, View.OnClickListener {
-
+    /**
+     * 网络图片路径
+     */
     private String imageSrc = null;
 
     private boolean loadSuccess = false;
 
     private boolean loading = false;
 
+    private OnClickListener clickListener;
+
     public ImageCacheView(Context context) {
-        super(context);
-
-        int bg = Color.rgb((int) Math.floor(Math.random() * 128) + 64,
-                (int) Math.floor(Math.random() * 128) + 64,
-                (int) Math.floor(Math.random() * 128) + 64);
-        setBackgroundColor(bg);
-
-        setOnClickListener(this);
+        this(context, null);
     }
 
     public ImageCacheView(Context context, AttributeSet attrs) {
-
         this(context, attrs, 0);
-
-        int bg = Color.rgb((int) Math.floor(Math.random() * 128) + 64,
-                (int) Math.floor(Math.random() * 128) + 64,
-                (int) Math.floor(Math.random() * 128) + 64);
-        setBackgroundColor(bg);
-
-        setOnClickListener(this);
-
     }
 
     public ImageCacheView(Context context, AttributeSet attrs, int defStyle) {
-
         super(context, attrs, defStyle);
 
-        int bg = Color.rgb((int) Math.floor(Math.random() * 128) + 64,
-                (int) Math.floor(Math.random() * 128) + 64,
-                (int) Math.floor(Math.random() * 128) + 64);
-        setBackgroundColor(bg);
+        setBackgroundColor(ContextCompat.getColor(getContext(), R.color.xk2));
 
-        setOnClickListener(this);
-
+        super.setOnClickListener(this);
     }
 
     public void setImageSrc(String src) {
@@ -78,6 +63,11 @@ public class ImageCacheView extends ImageView implements ImageLoadingListener, I
         }
 
         loadImage();
+    }
+
+    @Override
+    public void setOnClickListener(OnClickListener l) {
+        clickListener = l;
     }
 
     @Override
@@ -108,6 +98,21 @@ public class ImageCacheView extends ImageView implements ImageLoadingListener, I
         //如果当前没有加载，并且之前的加载失败了，点击可以重新加载图片
         if (!loading && !loadSuccess) {
             reloadImage();
+        }
+
+        if(clickListener != null) {
+            clickListener.onClick(v);
+        }
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        if(loading) {
+            //canvas.drawBitmap();
+        } else if(!loadSuccess) {
+
+        } else {
+            super.onDraw(canvas);
         }
     }
 

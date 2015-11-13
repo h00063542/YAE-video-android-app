@@ -3,11 +3,12 @@ package com.yilos.nailstar.topic.model;
 import com.alibaba.sdk.android.oss.callback.SaveCallback;
 import com.yilos.nailstar.framework.exception.NetworkDisconnectException;
 import com.yilos.nailstar.topic.entity.AddCommentInfo;
-import com.yilos.nailstar.topic.entity.SubmittedHomeworkInfo;
 import com.yilos.nailstar.topic.entity.TopicCommentInfo;
 import com.yilos.nailstar.topic.entity.TopicImageTextInfo;
 import com.yilos.nailstar.topic.entity.TopicInfo;
 import com.yilos.nailstar.topic.entity.TopicRelatedInfo;
+import com.yilos.nailstar.topic.entity.TopicStatusInfo;
+import com.yilos.nailstar.topic.entity.UpdateReadyInfo;
 
 import java.util.ArrayList;
 
@@ -73,6 +74,13 @@ public interface ITopicService {
     boolean download(String url, String filePath) throws NetworkDisconnectException;
 
     /**
+     * @param topicId
+     * @return
+     * @throws NetworkDisconnectException
+     */
+    TopicStatusInfo initUserTopicStatus(String topicId) throws NetworkDisconnectException;
+
+    /**
      * 设置topic喜欢状态
      *
      * @param topicId
@@ -109,13 +117,13 @@ public interface ITopicService {
     /**
      * 上传文件到oss
      *
-     * @param filePath
-     * @param fileName
+     * @param localFilePath
+     * @param ossFileName
      * @param callback
      * @return
      * @throws NetworkDisconnectException
      */
-    void uploadFile2Oss(String filePath, String fileName, SaveCallback callback) throws NetworkDisconnectException;
+    void uploadFile2Oss(String localFilePath, String ossFileName, SaveCallback callback) throws NetworkDisconnectException;
 
     /**
      * 更新ready状态

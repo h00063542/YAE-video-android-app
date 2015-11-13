@@ -2,7 +2,6 @@ package com.yilos.nailstar.index.view;
 
 import android.app.Fragment;
 import android.content.Intent;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -11,7 +10,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -195,26 +193,26 @@ public class IndexFragment extends Fragment implements IIndexView {
 
         NestedScrollingScrollView scrollView = (NestedScrollingScrollView)this.view.findViewById(R.id.indexScrollView);
         scrollView.setOverScrollMode(NestedScrollingScrollView.OVER_SCROLL_NEVER);
-        scrollView.setFillViewport(true);
+        //scrollView.setFillViewport(true);
 
-        scrollView.setScrollViewListener(new NestedScrollingScrollView.ScrollViewListener() {
-            @Override
-            public void onScrollChanged(NestedScrollingScrollView scrollView, int x, int y, int oldx, int oldy, int xRange, int yRange) {
-                scrollView.setMaxScrollY((int) tabPageIndicator.getY());
-            }
-        });
+//        scrollView.setScrollViewListener(new NestedScrollingScrollView.ScrollViewListener() {
+//            @Override
+//            public void onScrollChanged(NestedScrollingScrollView scrollView, int x, int y, int oldx, int oldy, int xRange, int yRange) {
+//                scrollView.setMaxScrollY((int) tabPageIndicator.getY());
+//            }
+//        });
 
-        this.view.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                Rect rect = new Rect();
-                view.getDrawingRect(rect);
-                int height = rect.height() - getResources().getDimensionPixelSize(R.dimen.index_tab_height) - getResources().getDimensionPixelSize(R.dimen.common_title_bar_height);
-                ((MaxHeightGridLayoutManager) latestListView.getLayoutManager()).setMaxHeight(height);
-                ((MaxHeightGridLayoutManager) hotestListView.getLayoutManager()).setMaxHeight(height);
-                ((MaxHeightGridLayoutManager) watchListView.getLayoutManager()).setMaxHeight(height);
-            }
-        });
+//        this.view.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+//            @Override
+//            public void onGlobalLayout() {
+//                Rect rect = new Rect();
+//                view.getDrawingRect(rect);
+//                int height = rect.height() - getResources().getDimensionPixelSize(R.dimen.index_tab_height) - getResources().getDimensionPixelSize(R.dimen.common_title_bar_height);
+//                ((MaxHeightGridLayoutManager) latestListView.getLayoutManager()).setMaxHeight(height);
+//                ((MaxHeightGridLayoutManager) hotestListView.getLayoutManager()).setMaxHeight(height);
+//                ((MaxHeightGridLayoutManager) watchListView.getLayoutManager()).setMaxHeight(height);
+//            }
+//        });
     }
 
     private CustomRecyclerView initVideoRecycleView() {
@@ -223,6 +221,14 @@ public class IndexFragment extends Fragment implements IIndexView {
         MaxHeightGridLayoutManager maxHeightGridLayoutManager = new MaxHeightGridLayoutManager(getActivity(), 3, 1500);
         maxHeightGridLayoutManager.setOrientation(MaxHeightGridLayoutManager.VERTICAL);
         maxHeightGridLayoutManager.setSmoothScrollbarEnabled(true);
+
+        int result = 0;
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = getResources().getDimensionPixelSize(resourceId);
+        }
+
+        maxHeightGridLayoutManager.setMaxHeight(1800 - getResources().getDimensionPixelSize(R.dimen.index_tab_height) - getResources().getDimensionPixelSize(R.dimen.common_title_bar_height) - getResources().getDimensionPixelSize(R.dimen.common_main_tab_height) - result);
         view.setLayoutManager(maxHeightGridLayoutManager);
 
         return view;

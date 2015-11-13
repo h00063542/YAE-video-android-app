@@ -1,10 +1,8 @@
 package com.yilos.nailstar.index.view;
 
 import android.content.Context;
-import android.os.Build;
 import android.support.v4.view.NestedScrollingChildHelper;
 import android.support.v4.view.NestedScrollingParentHelper;
-import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -54,55 +52,6 @@ public class NestedScrollingScrollView extends NestedScrollView {
         }
     }
 
-//    @Override
-//    public boolean onInterceptTouchEvent(MotionEvent ev) {
-//        if(Build.VERSION.SDK_INT < 21) {
-//            if(ev.getAction() == MotionEvent.ACTION_DOWN) {
-//                if(!super.onInterceptTouchEvent(ev)) {
-//                    super.onTouchEvent(ev);
-//                    return false;
-//                }
-//            }
-//        }
-//
-//        if(ev.getY() > 1100)
-//        return false;
-//        else return super.onInterceptTouchEvent(ev);
-//    }
-
-    /**
-     * NestedScrollingParent接口
-     * @param child
-     * @param target
-     * @param nestedScrollAxes
-     * @return
-     */
-    @Override
-    public boolean onStartNestedScroll(View child, View target, int nestedScrollAxes) {
-        return (nestedScrollAxes & ViewCompat.SCROLL_AXIS_VERTICAL) != 0;
-    }
-//
-//    @Override
-//    public void onNestedScrollAccepted(View child, View target, int nestedScrollAxes) {
-//        nestedScrollingParentHelper.onNestedScrollAccepted(child, target, nestedScrollAxes);
-//        startNestedScroll(ViewCompat.SCROLL_AXIS_VERTICAL);
-//    }
-//
-//    @Override
-//    public void onStopNestedScroll(View target) {
-//        stopNestedScroll();
-//    }
-//
-//    @Override
-//    public void onNestedScroll(View target, int dxConsumed, int dyConsumed, int dxUnconsumed,
-//                               int dyUnconsumed) {
-//        final int oldScrollY = getScrollY();
-//        scrollBy(0, dyUnconsumed);
-//        final int myConsumed = getScrollY() - oldScrollY;
-//        final int myUnconsumed = dyUnconsumed - myConsumed;
-//        dispatchNestedScroll(0, myConsumed, 0, myUnconsumed, null);
-//    }
-//
     @Override
     public int getNestedScrollAxes() {
         return 0;
@@ -171,57 +120,22 @@ public class NestedScrollingScrollView extends NestedScrollView {
         return false;
     }
 
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
+        int action = ev.getAction();
 
-    /**
-     * NestedScrollChild接口
-     * @param enabled
-     */
-//    @Override
-//    public void setNestedScrollingEnabled(boolean enabled) {
-//        nestedScrollingChildHelper.setNestedScrollingEnabled(enabled);
-//    }
-//
-//    @Override
-//    public boolean isNestedScrollingEnabled() {
-//        return nestedScrollingChildHelper.isNestedScrollingEnabled();
-//    }
-//
-//    @Override
-//    public boolean startNestedScroll(int axes) {
-//        return nestedScrollingChildHelper.startNestedScroll(axes);
-//    }
-//
-//    @Override
-//    public void stopNestedScroll() {
-//        nestedScrollingChildHelper.stopNestedScroll();
-//    }
-//
-//    @Override
-//    public boolean hasNestedScrollingParent() {
-//        return nestedScrollingChildHelper.hasNestedScrollingParent();
-//    }
-//
-//    @Override
-//    public boolean dispatchNestedScroll(int dxConsumed, int dyConsumed, int dxUnconsumed,
-//                                        int dyUnconsumed, int[] offsetInWindow) {
-//        return nestedScrollingChildHelper.dispatchNestedScroll(dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed,
-//                offsetInWindow);
-//    }
-//
-//    @Override
-//    public boolean dispatchNestedPreScroll(int dx, int dy, int[] consumed, int[] offsetInWindow) {
-//        return nestedScrollingChildHelper.dispatchNestedPreScroll(dx, dy, consumed, offsetInWindow);
-//    }
-//
-//    @Override
-//    public boolean dispatchNestedFling(float velocityX, float velocityY, boolean consumed) {
-//        return nestedScrollingChildHelper.dispatchNestedFling(velocityX, velocityY, consumed);
-//    }
-//
-//    @Override
-//    public boolean dispatchNestedPreFling(float velocityX, float velocityY) {
-//        return nestedScrollingChildHelper.dispatchNestedPreFling(velocityX, velocityY);
-//    }
+        if(action == MotionEvent.ACTION_DOWN) {
+            super.onInterceptTouchEvent(ev);
+            return false;
+        }
+
+        return super.onInterceptTouchEvent(ev);
+    }
+
+    @Override
+    public void requestChildFocus(View child, View focused) {
+        //空实现
+    }
 
     public interface ScrollViewListener {
 

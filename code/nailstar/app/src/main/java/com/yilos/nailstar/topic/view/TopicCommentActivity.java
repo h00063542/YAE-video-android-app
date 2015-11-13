@@ -153,7 +153,7 @@ public class TopicCommentActivity extends BaseActivity implements ITopicCommentV
         Intent intent = new Intent(this, TopicVideoPlayerActivity.class);
         intent.putExtra(Constants.TOPIC_ID, mTopicId);
         if (StringUtil.isEmpty(newCommentId)) {
-            setResult(RESULT_CANCELED, intent);
+            setResult(RESULT_FIRST_USER, intent);
             finish();
             return;
         }
