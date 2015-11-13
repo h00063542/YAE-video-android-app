@@ -7,6 +7,7 @@ import com.yilos.nailstar.topic.entity.TopicCommentInfo;
 import com.yilos.nailstar.topic.entity.TopicImageTextInfo;
 import com.yilos.nailstar.topic.entity.TopicInfo;
 import com.yilos.nailstar.topic.entity.TopicRelatedInfo;
+import com.yilos.nailstar.topic.entity.TopicStatusInfo;
 import com.yilos.nailstar.topic.entity.UpdateReadyInfo;
 
 import java.util.ArrayList;
@@ -71,6 +72,13 @@ public interface ITopicService {
      * @throws NetworkDisconnectException
      */
     boolean download(String url, String filePath) throws NetworkDisconnectException;
+
+    /**
+     * @param topicId
+     * @return
+     * @throws NetworkDisconnectException
+     */
+    TopicStatusInfo initUserTopicStatus(String topicId) throws NetworkDisconnectException;
 
     /**
      * 设置topic喜欢状态

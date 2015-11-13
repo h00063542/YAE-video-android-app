@@ -3,6 +3,7 @@ package com.yilos.nailstar.topic.model;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.alibaba.sdk.android.oss.OSSService;
 import com.alibaba.sdk.android.oss.callback.SaveCallback;
 import com.yilos.nailstar.aboutme.model.LoginAPI;
 import com.yilos.nailstar.framework.entity.NailStarApplicationContext;
@@ -14,6 +15,7 @@ import com.yilos.nailstar.topic.entity.TopicCommentReplyInfo;
 import com.yilos.nailstar.topic.entity.TopicImageTextInfo;
 import com.yilos.nailstar.topic.entity.TopicInfo;
 import com.yilos.nailstar.topic.entity.TopicRelatedInfo;
+import com.yilos.nailstar.topic.entity.TopicStatusInfo;
 import com.yilos.nailstar.topic.entity.TopicVideoInfo;
 import com.yilos.nailstar.topic.entity.UpdateReadyInfo;
 import com.yilos.nailstar.util.CollectionUtil;
@@ -352,6 +354,31 @@ public class TopicServiceImpl implements ITopicService {
         return false;
     }
 
+    @Override
+    public TopicStatusInfo initUserTopicStatus(String topicId) throws NetworkDisconnectException {
+        if (!NailStarApplicationContext.getInstance().isNetworkConnected()) {
+            throw new NetworkDisconnectException("网络没有连接");
+        }
+        TopicStatusInfo topicStatusInfo = new TopicStatusInfo();
+        String url = URL_PREFIX + "topics/" + topicId + "/actionsCount?uid=" + LoginAPI.getInstance().getLoginUserId();
+        try {
+            String strResult = HttpClient.getJson(url);
+            JSONObject jsonObject = buildJSONObject(strResult);
+            JSONObject jsonResult = jsonObject.optJSONObject(Constants.RESULT);
+            int like = jsonResult.optInt(Constants.LIKE, 0);
+            int collect = jsonResult.optInt(Constants.COLLECT, 0);
+            topicStatusInfo.setIsLike(like != 0);
+            topicStatusInfo.setIsCollect(collect != 0);
+        } catch (IOException e) {
+            e.printStackTrace();
+            LOGGER.error(MessageFormat.format("获取用户topic状态失败，topicId：{1}，url：{2}", topicId, url), e);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            LOGGER.error(MessageFormat.format("获取用户topic状态失败，topicId：{1}，url：{2}", topicId, url), e);
+        }
+        return topicStatusInfo;
+    }
+
     /**
      * 赞
      *
@@ -521,7 +548,8 @@ public class TopicServiceImpl implements ITopicService {
         if (!NailStarApplicationContext.getInstance().isNetworkConnected()) {
             throw new NetworkDisconnectException("网络没有连接");
         }
-        OSSUtil.resumableUpload(localFilePath, ossFileName, callback);
+        OSSService ossService = OSSUtil.getDefaultOssService();
+        OSSUtil.resumableUpload(ossService, ossService.getOssBucket(OSSUtil.BUCKET_YPICTURE), localFilePath, ossFileName, callback);
     }
 
     /**

@@ -52,6 +52,7 @@ import com.yilos.nailstar.topic.entity.TopicCommentReplyInfo;
 import com.yilos.nailstar.topic.entity.TopicImageTextInfo;
 import com.yilos.nailstar.topic.entity.TopicInfo;
 import com.yilos.nailstar.topic.entity.TopicRelatedInfo;
+import com.yilos.nailstar.topic.entity.TopicStatusInfo;
 import com.yilos.nailstar.topic.entity.TopicVideoInfo;
 import com.yilos.nailstar.topic.presenter.TopicVideoPlayerPresenter;
 import com.yilos.nailstar.util.CollectionUtil;
@@ -202,6 +203,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
     private boolean initTopicRelatedInfoFinish = false;
     private boolean initTopicImageTextInfoFinish = false;
     private boolean initTopicCommentsFinish = false;
+    private boolean initUserTopicStatusFinish = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -211,12 +213,12 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         mTopicVideoPlayerPresenter = TopicVideoPlayerPresenter.getInstance(this);
         init();
         checkInitFinish();
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                hideLoading();
-            }
-        }, 5000);
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                hideLoading();
+//            }
+//        }, 5000);
     }
 
 
@@ -267,6 +269,11 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         mTopicVideoPlayerPresenter.initTopicRelatedInfo(mTopicId);
         mTopicVideoPlayerPresenter.initTopicImageTextInfo(mTopicId);
         mTopicVideoPlayerPresenter.initTopicComments(mTopicId, mPage);
+        if (LoginAPI.getInstance().isLogin()) {
+            mTopicVideoPlayerPresenter.initUserTopicStatus(mTopicId);
+        } else {
+            initUserTopicStatusFinish = true;
+        }
     }
 
     private void initControl() {
@@ -394,7 +401,8 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
             @Override
             public void onClick(View v) {
                 //下载视频
-                // mTopicVideoPlayerPresenter.downLoadTopicImage(mVideoRemoteUrl, mVideoLocalFilePath);
+                mTopicVideoPlayerPresenter.downloadVideo(mTopicInfo);
+                // TODO 提示视频已经在下载了
             }
         });
 
@@ -533,28 +541,14 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
             }
         });
 
-        // 喜欢
-        mCbTopicTabLike.setOnCheckedChangeListener(new CheckBox.OnCheckedChangeListener() {
-
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                Log.i(TAG, "mCbTopicTabLike isChecked:" + isChecked);
-                mTopicVideoPlayerPresenter.setTopicLikeStatus(mTopicId, isChecked);
-            }
-        });
-        //收藏
-        mCbTopicTabCollection.setOnCheckedChangeListener(new CheckBox.OnCheckedChangeListener() {
-
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                Log.i(TAG, "mCbTopicTabCollection isChecked:" + isChecked);
-                mTopicVideoPlayerPresenter.setTopicCollectionStatus(mTopicId, isChecked);
-            }
-        });
         // 评论按钮
         mTvTopicTabComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!LoginAPI.getInstance().isLogin()) {
+                    LoginAPI.getInstance().gotoLoginPage(TopicVideoPlayerActivity.this);
+                    return;
+                }
                 addTopicComment();
             }
         });
@@ -568,6 +562,33 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
                     return;
                 }
                 mTakeImage.initTakeImage();
+            }
+        });
+    }
+
+    private void initControlEventAfterInitTopicStatus() {
+        // 喜欢
+        mCbTopicTabLike.setOnCheckedChangeListener(new CheckBox.OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (!LoginAPI.getInstance().isLogin()) {
+                    LoginAPI.getInstance().gotoLoginPage(TopicVideoPlayerActivity.this);
+                    return;
+                }
+                mTopicVideoPlayerPresenter.setTopicLikeStatus(mTopicId, isChecked);
+            }
+        });
+        //收藏
+        mCbTopicTabCollection.setOnCheckedChangeListener(new CheckBox.OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (!LoginAPI.getInstance().isLogin()) {
+                    LoginAPI.getInstance().gotoLoginPage(TopicVideoPlayerActivity.this);
+                    return;
+                }
+                mTopicVideoPlayerPresenter.setTopicCollectionStatus(mTopicId, isChecked);
             }
         });
     }
@@ -702,6 +723,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
     @Override
     public void initTopicInfo(TopicInfo topicInfo) {
         initTopicInfoFinish = true;
+        checkInitFinish();
         //TODO 提示获取视频信息失败
         if (null == topicInfo) {
             LOGGER.error(TAG + " 获取topic信息为null，topicId:" + mTopicId);
@@ -994,6 +1016,17 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         }
     }
 
+    @Override
+    public void initUserTopicLikeStatus(TopicStatusInfo topicStatusInfo) {
+        initUserTopicStatusFinish = true;
+        checkInitFinish();
+        if (null != topicStatusInfo) {
+            mCbTopicTabLike.setChecked(topicStatusInfo.isLike());
+            mCbTopicTabCollection.setChecked(topicStatusInfo.isCollect());
+        }
+        initControlEventAfterInitTopicStatus();
+    }
+
     /**
      * 跳转到topic关联的topic
      *
@@ -1190,13 +1223,18 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         TextView topicCommentReplyTv = new TextView(this);
         topicCommentReplyTv.setLayoutParams(topicCommentContentReplyLp);
         StringBuilder replyText = new StringBuilder();
-        replyText.append("<font color=\"#693012\">")
+        replyText.append("<font color=\"#f45d49\">")
                 .append(topicCommentReplyInfo.getAuthor())
                 .append("</font>");
 
-        replyText.append("<font color=\"#555657\"> ")
-                .append(getString(R.string.reply) + " " + topicCommentReplyInfo.getAt().getNickName())
-                .append(": </font>");
+        if (!topicCommentInfo.getUserId().equals(topicCommentReplyInfo.getAt().getUserId())) {
+            replyText.append("<font color=\"#555657\">")
+                    .append(getString(R.string.reply))
+                    .append(topicCommentReplyInfo.getAt().getNickName())
+                    .append("</font>");
+        }
+
+        replyText.append(": ");
 
         replyText.append("<font color=\"#000000\">")
                 .append(topicCommentReplyInfo.getContent())
@@ -1320,6 +1358,19 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
+        super.onKeyDown(keyCode, event);
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            boolean hasZoomInLayout = false;
+            for (int i = 0, count = mDecorView.getChildCount(); i < count; i++) {
+                if (mDecorView.getChildAt(i) == mZoomInImageTextLayout || mDecorView.getChildAt(i) == mZoomInImageLayout) {
+                    hasZoomInLayout = true;
+                    break;
+                }
+            }
+            mDecorView.removeView(mZoomInImageTextLayout);
+            mDecorView.removeView(mZoomInImageLayout);
+            return !hasZoomInLayout;
+        }
         if (!mVDVideoView.onVDKeyDown(keyCode, event)) {
             return super.onKeyDown(keyCode, event);
         }
@@ -1354,9 +1405,9 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (resultCode != RESULT_OK) {
-            if (requestCode == TOPIC_COMMENT_REQUEST_CODE) {
+            if (requestCode == TOPIC_COMMENT_REQUEST_CODE && resultCode == RESULT_FIRST_USER) {
                 showShortToast("提交评论失败，请稍后再试...");
-            } else if (requestCode == TOPIC_HOMEWORK_REQUEST_CODE) {
+            } else if (requestCode == TOPIC_HOMEWORK_REQUEST_CODE && resultCode == RESULT_FIRST_USER) {
                 showShortToast("交作业失败，请稍后再试...");
             }
             return;
@@ -1513,7 +1564,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
     }
 
     private void checkInitFinish() {
-        if (initTopicInfoFinish && initTopicRelatedInfoFinish && initTopicImageTextInfoFinish && initTopicCommentsFinish) {
+        if (initTopicInfoFinish && initTopicRelatedInfoFinish && initTopicImageTextInfoFinish && initTopicCommentsFinish && initUserTopicStatusFinish) {
             hideLoading();
         }
     }

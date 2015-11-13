@@ -25,23 +25,22 @@ import java.io.FileNotFoundException;
 public class OSSUtil {
     private static final Logger LOGGER = LoggerFactory.getLogger(OSSUtil.class);
 
+    public static final String BUCKET_YPICTURE = "ypicture";
+
     private static OSSService defaultOssService;
 
     private static String accessKey = "OA7cwTn8CH2XKE97";
     private static String screctKey = "F1z5IaFaQtB97Y8wRvtvtai2tBN3GT";
-    private static String bucketName = "ypicture";
 
 
-    private static OSSService getDefaultOssService() {
+    public static OSSService getDefaultOssService() {
         if (null == defaultOssService) {
             initDefaultOssService();
         }
         return defaultOssService;
-
     }
 
     private static void initDefaultOssService() {
-        NailStarApplication app = NailStarApplication.getApplication();
         // 开启Log
         OSSLog.enableLog();
 
@@ -49,7 +48,7 @@ public class OSSUtil {
 
         defaultOssService.setApplicationContext(NailStarApplication.getApplication());
         defaultOssService.setGlobalDefaultHostId(Constants.DEFAULT_OSS_HOST_ID); // 设置region host 即 endpoint
-        defaultOssService.setGlobalDefaultACL(AccessControlList.PUBLIC_READ_WRITE); // 默认为private
+        defaultOssService.setGlobalDefaultACL(AccessControlList.PRIVATE); // 默认为private
         defaultOssService.setAuthenticationType(AuthenticationType.ORIGIN_AKSK); // 设置加签类型为原始AK/SK加签
         defaultOssService.setGlobalDefaultTokenGenerator(new TokenGenerator() { // 设置全局默认加签器
             @Override
@@ -70,25 +69,20 @@ public class OSSUtil {
         defaultOssService.setClientConfiguration(conf);
     }
 
-    public static String getDefaultBucketName() {
-        return bucketName;
-    }
-
-    public static OSSBucket getDefaultOssBucket() {
-        return getDefaultOssService().getOssBucket(bucketName);
-    }
-
 
     /**
      * 断点上传
      *
+     * @param ossService
+     * @param bucket
      * @param localFilePath 本地文件路径
      * @param ossFileName   oss文件名称
      * @param callback      上传回调
      */
-    public static void resumableUpload(String localFilePath, String ossFileName, SaveCallback callback) {
-        OSSFile ossFile = getDefaultOssService().getOssFile(getDefaultOssBucket(), ossFileName);
+    public static void resumableUpload(OSSService ossService, OSSBucket bucket
+            , String localFilePath, String ossFileName, SaveCallback callback) {
         try {
+            OSSFile ossFile = ossService.getOssFile(bucket, ossFileName);
             ossFile.setUploadFilePath(localFilePath, "application/octet-stream");
             ossFile.ResumableUploadInBackground(callback);
         } catch (FileNotFoundException e) {
@@ -99,27 +93,39 @@ public class OSSUtil {
     /**
      * 断点下载
      *
+     * @param ossService
+     * @param bucket
      * @param localFilePath 本地文件路径
      * @param ossFileName   oss文件名称
      * @param callback      下载回调
      */
-    public static void resumableDownload(String localFilePath, String ossFileName, GetFileCallback callback) {
-        OSSFile ossFile = getDefaultOssService().getOssFile(getDefaultOssBucket(), ossFileName);
+    public static void resumableDownload(OSSService ossService, OSSBucket bucket
+            , String localFilePath, String ossFileName, GetFileCallback callback) {
+        OSSFile ossFile = ossService.getOssFile(bucket, ossFileName);
         ossFile.ResumableDownloadToInBackground(localFilePath, callback);
     }
 
     /**
      * 设置相关参数的断点续传
      *
+
+     */
+
+    /**
+     * 设置相关参数的断点续传
+     *
+     * @param ossService
+     * @param bucket
      * @param localFilePath 本地文件路径
      * @param ossFileName   oss文件名称
      * @param autoRetryTime 默认为2次，最大3次
      * @param threadNum     默认并发3个线程，最大5个
      * @param callback      下载回调
      */
-    public static void resumableDownloadWithSpecConfig(String localFilePath, String ossFileName
+    public static void resumableDownloadWithSpecConfig(OSSService ossService, OSSBucket bucket
+            , String localFilePath, String ossFileName
             , int autoRetryTime, int threadNum, GetFileCallback callback) {
-        OSSFile ossFile = getDefaultOssService().getOssFile(getDefaultOssBucket(), ossFileName);
+        OSSFile ossFile = ossService.getOssFile(bucket, ossFileName);
         ResumableTaskOption option = new ResumableTaskOption();
         option.setAutoRetryTime(autoRetryTime);
         option.setThreadNum(threadNum);
