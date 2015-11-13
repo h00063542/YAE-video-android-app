@@ -3,8 +3,6 @@ package com.yilos.nailstar.index.view;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -16,6 +14,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.yilos.nailstar.R;
+import com.yilos.nailstar.framework.application.NailStarApplication;
 import com.yilos.nailstar.framework.entity.NailStarApplicationContext;
 import com.yilos.nailstar.index.entity.Category;
 import com.yilos.nailstar.index.entity.IndexContent;
@@ -29,9 +28,10 @@ import com.yilos.widget.banner.Banner;
 import com.yilos.widget.circleimageview.CircleImageView;
 import com.yilos.widget.pageindicator.CirclePageIndicator;
 import com.yilos.widget.pageindicator.TabPageIndicator;
+import com.yilos.widget.pageindicator.UnderlinePageIndicator;
 import com.yilos.widget.pullrefresh.PullRefreshLayout;
 import com.yilos.widget.view.ImageCacheView;
-import com.yilos.widget.view.MaxHeightGridLayoutManager;
+import com.yilos.widget.view.MViewPager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,22 +47,18 @@ import in.srain.cube.views.ptr.PtrHandler;
  * create an instance of this fragment.
  */
 public class IndexFragment extends Fragment implements IIndexView {
-    /**
-     * 轮播图
-     */
+    private LayoutInflater inflater;
+    private View view;
+    // 轮播图
     private Banner posterBanner;
-
+    // 分类菜单
     private Banner categoryBanner;
+    // 视频列表Pager
+    private MViewPager videoListPager;
+    // 视频列表适配器
+    private VideoListAdapter videoListAdapter;
 
     private IndexPresenter indexPresenter;
-
-    private LayoutInflater inflater;
-
-    private View view;
-
-    private CustomRecyclerView latestListView;
-    private CustomRecyclerView hotestListView;
-    private CustomRecyclerView watchListView;
 
     public IndexFragment() {
         // Required empty public constructor
@@ -77,10 +73,9 @@ public class IndexFragment extends Fragment implements IIndexView {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         this.inflater = inflater;
         view = inflater.inflate(R.layout.fragment_index, container, false);
-        initViews(view);
+        initViews();
 
         if(NailStarApplicationContext.getInstance().getIndexContent() != null){
             // 闪屏出现时已经加载了数据
@@ -96,14 +91,18 @@ public class IndexFragment extends Fragment implements IIndexView {
         return view;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    private void initViews(final View view) {
+    private void initViews() {
         posterBanner = (Banner) view.findViewById(R.id.posterBanner);
         categoryBanner = (Banner) view.findViewById(R.id.categoryBanner);
+        videoListPager = (MViewPager)view.findViewById(R.id.videoListPager);
+        videoListAdapter = new VideoListAdapter(getActivity());
+        videoListPager.setAdapter(videoListAdapter);
+
+        // 初始化tab页
+        final TabPageIndicator tabPageIndicator = (TabPageIndicator)view.findViewById(R.id.videoListPagerIndicator);
+        tabPageIndicator.setViewPager(videoListPager);
+        final UnderlinePageIndicator underlinePageIndicator = (UnderlinePageIndicator)view.findViewById(R.id.videoListPagerLineIndicator);
+        underlinePageIndicator.setViewPager(videoListPager);
 
         // 初始化下拉刷新功能
         final PullRefreshLayout pullRefreshLayout = (PullRefreshLayout) view.findViewById(R.id.fragment_home_ptr_frame);
@@ -125,113 +124,6 @@ public class IndexFragment extends Fragment implements IIndexView {
                 }, 50);
             }
         });
-
-        // 初始化最热、最新、关注视频Tab页
-        latestListView = initVideoRecycleView();
-        hotestListView = initVideoRecycleView();
-        watchListView = initVideoRecycleView();
-        ViewPager viewPager = (ViewPager)view.findViewById(R.id.videoListPager);
-        viewPager.setAdapter(new PagerAdapter() {
-            @Override
-            public Object instantiateItem(ViewGroup container, int position) {
-                RecyclerView newView = null;
-                switch (position) {
-                    case 0:
-                        newView = latestListView;
-                        break;
-                    case 1:
-                        newView = hotestListView;
-                        break;
-                    case 2:
-                        newView = watchListView;
-                        break;
-                    default:
-                        newView = new RecyclerView(getActivity());
-                        break;
-                }
-
-                if (newView.getParent() != null) {
-                    container.removeView(newView);
-                }
-
-                container.addView(newView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                return newView;
-            }
-
-            @Override
-            public int getCount() {
-                return 3;
-            }
-
-            @Override
-            public boolean isViewFromObject(View view, Object object) {
-                return view == object;
-            }
-
-            @Override
-            public CharSequence getPageTitle(int position) {
-                switch (position) {
-                    case 0:
-                        return "最新";
-                    case 1:
-                        return "热播";
-                    case 2:
-                        return "关注";
-                    default:
-                        return "";
-                }
-            }
-
-            @Override
-            public void destroyItem(ViewGroup container, int position, Object object) {
-                //container.removeViewAt(position);
-            }
-        });
-
-        final TabPageIndicator tabPageIndicator = (TabPageIndicator)view.findViewById(R.id.videoListPagerIndicator);
-        tabPageIndicator.setViewPager(viewPager);
-
-        NestedScrollingScrollView scrollView = (NestedScrollingScrollView)this.view.findViewById(R.id.indexScrollView);
-        scrollView.setOverScrollMode(NestedScrollingScrollView.OVER_SCROLL_NEVER);
-        //scrollView.setFillViewport(true);
-
-//        scrollView.setScrollViewListener(new NestedScrollingScrollView.ScrollViewListener() {
-//            @Override
-//            public void onScrollChanged(NestedScrollingScrollView scrollView, int x, int y, int oldx, int oldy, int xRange, int yRange) {
-//                scrollView.setMaxScrollY((int) tabPageIndicator.getY());
-//            }
-//        });
-
-//        this.view.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-//            @Override
-//            public void onGlobalLayout() {
-//                Rect rect = new Rect();
-//                view.getDrawingRect(rect);
-//                int height = rect.height() - getResources().getDimensionPixelSize(R.dimen.index_tab_height) - getResources().getDimensionPixelSize(R.dimen.common_title_bar_height);
-//                ((MaxHeightGridLayoutManager) latestListView.getLayoutManager()).setMaxHeight(height);
-//                ((MaxHeightGridLayoutManager) hotestListView.getLayoutManager()).setMaxHeight(height);
-//                ((MaxHeightGridLayoutManager) watchListView.getLayoutManager()).setMaxHeight(height);
-//            }
-//        });
-    }
-
-    private CustomRecyclerView initVideoRecycleView() {
-        final CustomRecyclerView view = new CustomRecyclerView(getActivity());
-
-        MaxHeightGridLayoutManager maxHeightGridLayoutManager = new MaxHeightGridLayoutManager(getActivity(), 3, 1500);
-        maxHeightGridLayoutManager.setOrientation(MaxHeightGridLayoutManager.VERTICAL);
-        maxHeightGridLayoutManager.setSmoothScrollbarEnabled(true);
-
-        int result = 0;
-        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
-        if (resourceId > 0) {
-            result = getResources().getDimensionPixelSize(resourceId);
-        }
-
-        maxHeightGridLayoutManager.setMaxHeight(1800 - getResources().getDimensionPixelSize(R.dimen.index_tab_height) - getResources().getDimensionPixelSize(R.dimen.common_title_bar_height) - getResources().getDimensionPixelSize(R.dimen.common_main_tab_height) - result);
-        view.setLayoutManager(maxHeightGridLayoutManager);
-
-        return view;
     }
 
     private void init(IndexContent indexContent){
@@ -254,6 +146,7 @@ public class IndexFragment extends Fragment implements IIndexView {
 
     @Override
     public void initPosters(final List<Poster> posters) {
+        final int height = NailStarApplication.getApplication().getHeightByScreenWidth(getActivity(), 7f/3f);
         posterBanner.setViewCreator(new Banner.ViewCreator() {
             @Override
             public List<View> createViews() {
@@ -265,10 +158,10 @@ public class IndexFragment extends Fragment implements IIndexView {
 
                         Banner.LayoutParams layoutParams = new Banner.LayoutParams();
                         layoutParams.width = Banner.LayoutParams.MATCH_PARENT;
-                        layoutParams.height = Banner.LayoutParams.WRAP_CONTENT;
+                        layoutParams.height = height;
                         imageCacheView.setLayoutParams(layoutParams);
                         imageCacheView.setAdjustViewBounds(true);
-                        imageCacheView.setScaleType(ImageView.ScaleType.FIT_START);
+                        imageCacheView.setScaleType(ImageView.ScaleType.FIT_CENTER);
 
                         imageCacheView.setImageSrc(poster.getPicUrl());
                         imageCacheView.setClickable(true);
@@ -341,7 +234,7 @@ public class IndexFragment extends Fragment implements IIndexView {
     }
 
     public void initLatestTopics(final List<Topic> topics) {
-        latestListView.setAdapter(new RecyclerView.Adapter() {
+        videoListAdapter.getLatestListView().setAdapter(new RecyclerView.Adapter() {
             @Override
             public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
                 ImageCacheView imageCacheView = new ImageCacheView(getActivity());
@@ -360,7 +253,7 @@ public class IndexFragment extends Fragment implements IIndexView {
 
             @Override
             public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-                ImageCacheView imageCacheView = (ImageCacheView)holder.itemView;
+                ImageCacheView imageCacheView = (ImageCacheView) holder.itemView;
                 imageCacheView.setImageSrc(topics.get(position % topics.size()).getPhotoUrl());
             }
 

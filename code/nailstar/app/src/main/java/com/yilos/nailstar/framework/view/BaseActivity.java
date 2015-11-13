@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.StringRes;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.DisplayMetrics;
 import android.widget.Toast;
 
 import com.yilos.widget.dialog.LoadingDialog;
@@ -16,22 +15,11 @@ import com.yilos.widget.dialog.LoadingDialog;
  */
 public class BaseActivity extends AppCompatActivity implements IView{
     private LoadingDialog loadingDialog;
-    private DisplayMetrics metric;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        metric = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(metric);
-    }
-
-    public int getScreenWidth() {
-        return metric.widthPixels;
-    }
-
-    public int getScreenHeight() {
-        return metric.heightPixels;
     }
 
     @Override

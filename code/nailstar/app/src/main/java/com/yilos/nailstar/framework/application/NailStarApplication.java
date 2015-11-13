@@ -1,6 +1,8 @@
 package com.yilos.nailstar.framework.application;
 
+import android.app.Activity;
 import android.graphics.Bitmap;
+import android.util.DisplayMetrics;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiskCache;
@@ -90,6 +92,33 @@ public class NailStarApplication extends android.app.Application {
 
         // 播放器初始化，要在app启动前进行初始化，才能解压出相应的解码器
         initVideoPlayer();
+    }
+
+    public int getScreenWidth(Activity activity) {
+        DisplayMetrics metric = new DisplayMetrics();
+        activity.getWindowManager().getDefaultDisplay().getMetrics(metric);
+
+        return metric.widthPixels;
+    }
+
+    public int getScreenHeight(Activity activity) {
+        DisplayMetrics metric = new DisplayMetrics();
+        activity.getWindowManager().getDefaultDisplay().getMetrics(metric);
+
+        return metric.heightPixels;
+    }
+
+    /**
+     * 根据长宽比获取高度
+     * @param activity
+     * @param ratio
+     * @return
+     */
+    public int getHeightByScreenWidth(Activity activity, float ratio) {
+        DisplayMetrics metric = new DisplayMetrics();
+        activity.getWindowManager().getDefaultDisplay().getMetrics(metric);
+
+        return (int)(metric.widthPixels * ratio);
     }
 
     public void preloadIndexContent() {
