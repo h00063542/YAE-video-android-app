@@ -80,7 +80,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         goToAboutUs.setOnClickListener(this);
         versionName = getVersion();
         versionInfoNumber.setText(versionName);
-        boolean allow = SharedPreferencesUtil.getAllowNoWifi(getBaseContext());
+        boolean allow = SharedPreferencesUtil.getAllowNoWifi();
         slideSwitch.setState(allow);
         slideSwitch.setSlideListener(this);
         titleTextView.setText(R.string.about_me_setting);
@@ -143,13 +143,13 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
 
     @Override
     public void open() {
-        SharedPreferencesUtil.setAllowNoWifiSharedPreferences(getBaseContext(), true);
+        SharedPreferencesUtil.setAllowNoWifiSharedPreferences(true);
         showShortToast(R.string.allow_no_wifi_watch);
     }
 
     @Override
     public void close() {
-        SharedPreferencesUtil.setAllowNoWifiSharedPreferences(getBaseContext(),false);
+        SharedPreferencesUtil.setAllowNoWifiSharedPreferences(false);
         showShortToast(R.string.not_allow_no_wifi_watch);
     }
 }
