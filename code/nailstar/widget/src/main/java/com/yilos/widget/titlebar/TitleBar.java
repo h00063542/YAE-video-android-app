@@ -43,6 +43,7 @@ public class TitleBar extends RelativeLayout {
     }
 
     public ImageView getBackButton(final Activity activity) {
+        backButton.setImageResource(R.drawable.ic_head_back);
         showWidget(backButton);
         backButton.setOnClickListener(new OnClickListener() {
             @Override
