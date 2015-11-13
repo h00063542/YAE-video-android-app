@@ -7,12 +7,16 @@ public class Sdcard {
     /**
      * sdcardName :
      * sdcardPath :
+     * blockCount :
+     * availCount :
      * blockSizeFormat :
      * availCountFormat :
      */
 
     private String sdcardName;
     private String sdcardPath;
+    private long blockCount;
+    private long availCount;
     private String blockCountFormat;
     private String availCountFormat;
 
@@ -22,6 +26,14 @@ public class Sdcard {
 
     public void setSdcardPath(String sdcardPath) {
         this.sdcardPath = sdcardPath;
+    }
+
+    public void setBlockCount(long blockCount) {
+        this.blockCount = blockCount;
+    }
+
+    public void setAvailCount(long availCount) {
+        this.availCount = availCount;
     }
 
     public void setBlockCountFormat(String blockCountFormat) {
@@ -38,6 +50,14 @@ public class Sdcard {
 
     public String getSdcardPath() {
         return sdcardPath;
+    }
+
+    public long getBlockCount() {
+        return blockCount;
+    }
+
+    public long getAvailCount() {
+        return availCount;
     }
 
     public String getBlockCountFormat() {

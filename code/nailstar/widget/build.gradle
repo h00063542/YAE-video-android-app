@@ -30,4 +30,5 @@ dependencies {
     compile 'in.srain.cube:ultra-ptr:1.0.11'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.4'
     compile 'com.leaking.slideswitch:app:1.0.0'
+    compile 'com.orhanobut:dialogplus:1.10@aar'
 }

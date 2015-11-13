@@ -113,6 +113,8 @@
         android:layout_height="@dimen/common_1_dp"
         android:background="@color/xk2"/>
     <RelativeLayout
+        android:id="@+id/setting_folder"
+        android:clickable="true"
         android:background="@color/white"
         android:layout_width="match_parent"
         android:layout_height="@dimen/my_horizontal_bar_height"

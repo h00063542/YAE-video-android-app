@@ -1,39 +1,38 @@
 package com.yilos.nailstar.aboutme.view;
 
-import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.StatFs;
-import android.os.storage.StorageManager;
+import android.view.Gravity;
 import android.view.View;
-import android.widget.ImageView;
+import android.widget.ArrayAdapter;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.leaking.slideswitch.SlideSwitch;
 import com.nostra13.universalimageloader.utils.StorageUtils;
+import com.orhanobut.dialogplus.DialogPlus;
+import com.orhanobut.dialogplus.OnItemClickListener;
 import com.yilos.nailstar.R;
 import com.yilos.nailstar.aboutme.entity.Sdcard;
+import com.yilos.nailstar.aboutme.entity.StorageList;
 import com.yilos.nailstar.aboutme.model.LoginAPI;
 import com.yilos.nailstar.framework.view.BaseActivity;
 import com.yilos.nailstar.util.DataCleanManager;
-import com.yilos.nailstar.util.SharedPreferencesUtil;
+import com.yilos.nailstar.util.SettingUtil;
 import com.yilos.widget.titlebar.TitleBar;
 
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.util.ArrayList;
 
 /**
  * Created by sisilai on 15/11/10.
  */
 public class SettingActivity extends BaseActivity implements View.OnClickListener, SlideSwitch.SlideListener {
     private TitleBar titleBar;
-    private ImageView backButton;
     private TextView titleTextView;
     private RelativeLayout clearCache;
     private TextView cacheNumber;
@@ -43,9 +42,8 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     private String versionName;
     private TextView loginOut;
     private TextView downloadSdcard;
+    private RelativeLayout settingFolder;
 
-    private StorageManager mStorageManager;
-    private Method mMethodGetPaths;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,11 +54,12 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     }
 
     private void initViews() {
+        settingFolder = (RelativeLayout) findViewById(R.id.setting_folder);
         loginOut = (TextView) findViewById(R.id.login_out);
         versionInfoNumber = (TextView) findViewById(R.id.version_info_number);
         slideSwitch = (SlideSwitch) findViewById(R.id.slide_switch);
         titleBar = (TitleBar) findViewById(R.id.setting_title_bar);
-        backButton = titleBar.getBackButton(SettingActivity.this);
+        titleBar.getBackButton(SettingActivity.this);
         titleTextView = titleBar.getTitleView();
         cacheNumber = (TextView) findViewById(R.id.cache_number);
         clearCache = (RelativeLayout) findViewById(R.id.clear_cache);
@@ -70,6 +69,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
 
     /**
      * 获取版本号
+     *
      * @return 当前应用的版本号
      */
     public String getVersion() {
@@ -91,16 +91,20 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
             loginOut.setOnClickListener(this);
         }
         goToAboutUs.setOnClickListener(this);
+        settingFolder.setOnClickListener(this);
         versionName = getVersion();
         versionInfoNumber.setText(versionName);
-        boolean allow = SharedPreferencesUtil.getAllowNoWifi();
+        boolean allow = SettingUtil.getAllowNoWifi();
         slideSwitch.setState(allow);
         slideSwitch.setSlideListener(this);
         titleTextView.setText(R.string.about_me_setting);
         clearCache.setOnClickListener(this);
         cacheNumber.setText(setCacheNumber());
-        Sdcard sdcard = getSdcard();
-        downloadSdcard.setText(sdcard.getSdcardPath() + "有效大小：" + sdcard.getAvailCountFormat() + "总大小:" + sdcard.getBlockCountFormat());
+        ArrayList<Sdcard> sdcardArrayList = new ArrayList<>();
+        sdcardArrayList = getSdcard();
+        Sdcard sdcard = sdcardArrayList.get(sdcardArrayList.size() - 1);
+        SettingUtil.setSdcardPathSharedPreferences(sdcard.getSdcardName(),sdcard.getSdcardPath());
+        downloadSdcard.setText(SettingUtil.getSdcardName());
     }
 
     private String setCacheNumber() {
@@ -123,19 +127,32 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                     showShortToast(R.string.with_no_cache);
                     return;
                 }
-
                 String content = getResources().getString(R.string.sure_clear_cache);
                 DialogInterface.OnClickListener setSureEvent = setSureEvent();
-                showMessageDialogWithEvent(null, content,setSureEvent,null);
+                showMessageDialogWithEvent(null, content, setSureEvent, null);
                 break;
             case R.id.go_to_about_us:
-                Intent aboutUsIntent = new Intent(SettingActivity.this,AboutUsActivity.class);
+                Intent aboutUsIntent = new Intent(SettingActivity.this, AboutUsActivity.class);
                 aboutUsIntent.putExtra("versionName", versionName);
                 startActivity(aboutUsIntent);
                 break;
             case R.id.login_out:
                 LoginAPI.getInstance().getLoginUserId();  //获取登录的用户ID
                 LoginAPI.getInstance().logout(); //退出登录
+                break;
+            case R.id.setting_folder:
+                DialogPlus dialog = DialogPlus.newDialog(this)
+                        .setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, new String[]{"asdfa"}))
+                                .setOnItemClickListener(new OnItemClickListener() {
+                                    @Override
+                                    public void onItemClick(DialogPlus dialog, Object item, View view, int position) {
+                                    }
+                                })
+                                .setGravity(Gravity.CENTER)
+                                        .setHeader(R.layout.setting_folder_dialog_header)
+                                //.setExpanded(false)  // This will enable the expand feature, (similar to android L share dialog)
+                                .create();
+                dialog.show();
                 break;
             default:
                 break;
@@ -158,31 +175,43 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
 
     @Override
     public void open() {
-        SharedPreferencesUtil.setAllowNoWifiSharedPreferences(true);
+        SettingUtil.setAllowNoWifiSharedPreferences(true);
         showShortToast(R.string.allow_no_wifi_watch);
     }
 
     @Override
     public void close() {
-        SharedPreferencesUtil.setAllowNoWifiSharedPreferences(false);
+        SettingUtil.setAllowNoWifiSharedPreferences(false);
         showShortToast(R.string.not_allow_no_wifi_watch);
     }
 
-    private Sdcard getSdcard() {
-        Sdcard sdcard =new Sdcard();
-        String sd_default_path = Environment.getExternalStorageDirectory().getAbsolutePath();
-        StatFs sf = new StatFs(sd_default_path);
-        long blockSize = sf.getBlockSize(); //每个block大小
-        long blockCount = sf.getBlockCount(); //总大小
-        long availCount = sf.getAvailableBlocks(); //有效大小
-        try {
-            sdcard.setBlockCountFormat(DataCleanManager.getFormatSize(blockSize * blockCount));
-            sdcard.setAvailCountFormat(DataCleanManager.getFormatSize(blockSize * availCount));
-        } catch (Exception e) {
-            e.printStackTrace();
+    private ArrayList<Sdcard> getSdcard() {
+
+        StorageList storageList = new StorageList(SettingActivity.this);
+        String[] paths;
+        paths = storageList.getVolumePaths();
+
+        ArrayList<Sdcard> sdcardArrayList = new ArrayList<>();
+
+        for (int index = 0; index < paths.length; index++) {
+            Sdcard sdcard = new Sdcard();
+            sdcard.setSdcardName("存储卡" + String.valueOf(index + 1));
+            sdcard.setSdcardPath(paths[index]);
+            StatFs sf = new StatFs(sdcard.getSdcardPath());
+            long blockSize = sf.getBlockSize(); //每个block大小
+            long blockCount = sf.getBlockCount(); //总大小
+            long availCount = sf.getAvailableBlocks(); //有效大小
+            sdcard.setBlockCount(blockSize * blockCount);
+            sdcard.setAvailCount(blockSize * availCount);
+            try {
+                sdcard.setBlockCountFormat(DataCleanManager.getFormatSize(sdcard.getBlockCount()));
+                sdcard.setAvailCountFormat(DataCleanManager.getFormatSize(sdcard.getAvailCount()));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            sdcardArrayList.add(sdcard);
         }
-        sdcard.setSdcardName("存储卡1");
-        sdcard.setSdcardPath(sd_default_path);
-        return sdcard;
+
+        return sdcardArrayList;
     }
 }
