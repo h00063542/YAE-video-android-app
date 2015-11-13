@@ -5,10 +5,12 @@
         <item name="android:indeterminateOnly">false</item>
         <item name="android:indeterminateDrawable">@android:drawable/progress_indeterminate_horizontal</item>
         <item name="android:progressDrawable">@drawable/shape_level_progressbar_mini</item>
-        <item name="vpiTabPageIndicatorStyle">@style/CustomTabPageIndicator</item>
     </style>
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar"></style>
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="vpiTabPageIndicatorStyle">@style/CustomTabPageIndicator</item>
+        <item name="vpiUnderlinePageIndicatorStyle">@style/CustomUnderlinePageIndicator</item>
+    </style>
 
     <style name="MMTabButton">
         <item name="android:textSize">12.0dip</item>
@@ -38,28 +40,33 @@
         <item name="android:windowNoTitle">true</item>
     </style>
 
-    <style name="CustomTabPageIndicator">
-        <item name="android:gravity">center</item>
-        <item name="android:layout_gravity">center</item>
-        <item name="android:background">@color/white</item>
-
+    <style name="CustomTabPageIndicator" parent="Widget.TabPageIndicator">
         <item name="android:paddingTop">4dp</item>
         <item name="android:paddingLeft">8dp</item>
         <item name="android:paddingBottom">4dp</item>
         <item name="android:paddingRight">8dp</item>
 
         <item name="android:textAppearance">@style/CustomTabPageIndicator_text</item>
-        <!--<item name="android:textColor">@color/selector_tab</item>-->
         <item name="android:textSize">18sp</item>
 
-        <!-- 分割线，可有可无的 -->
-        <item name="android:divider">@mipmap/vote_black</item>
-        <item name="android:dividerPadding">10dip</item>
-        <item name="android:showDividers">middle</item>
+        <!-- Tab之间的分割线 -->
+        <!--<item name="android:divider">@mipmap/vote_black</item>-->
+        <!--<item name="android:dividerPadding">10dip</item>-->
+        <!--<item name="android:showDividers">middle</item>-->
         <item name="android:fadingEdge">horizontal</item>
         <item name="android:fadingEdgeLength">8dp</item>
     </style>
     <style name="CustomTabPageIndicator_text" parent="android:TextAppearance.Medium">
         <item name="android:typeface">monospace</item>
+        <item name="android:textColor">@drawable/index_fragment_tab_selector</item>
+    </style>
+
+    <!--  下标的指示器的颜色 -->
+    <style name="CustomUnderlinePageIndicator">
+        <item name="fades">false</item>
+        <item name="selectedColor">@color/orange</item>
+        <item name="android:background">@color/xk2</item>
+        <item name="fadeLength">1000</item>
+        <item name="fadeDelay">1000</item>
     </style>
 </resources>
