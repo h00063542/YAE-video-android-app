@@ -3,7 +3,6 @@ package com.yilos.nailstar.download;
 import com.yilos.nailstar.topic.entity.TopicInfo;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * Created by yilos on 15/11/12.
@@ -51,9 +50,14 @@ public class DownLoadInfo implements Serializable {
     private String url;
 
     /**
+     * 已下载文件大小
+     */
+    private transient long bytesRead;
+
+    /**
      * 是否下载完成
      */
-    private boolean finished;
+    private transient boolean finished;
 
     /**
      * 保存路径
@@ -114,6 +118,14 @@ public class DownLoadInfo implements Serializable {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public long getBytesRead() {
+        return bytesRead;
+    }
+
+    public void setBytesRead(long bytesRead) {
+        this.bytesRead = bytesRead;
     }
 
     public boolean isFinished() {

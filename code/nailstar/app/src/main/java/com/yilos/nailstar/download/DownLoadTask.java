@@ -117,9 +117,10 @@ public class DownLoadTask {
             while ((len = is.read(buf)) != -1) {
                 fos.write(buf, 0, len);
                 totalBytesRead += len != -1 ? len : 0;
-                progressListener.update(totalBytesRead, totalBytes, len == -1);
+                progressListener.update(totalBytesRead, totalBytes, false);
             }
             fos.flush();
+            progressListener.update(totalBytesRead, totalBytes, true);
 
         } finally {
             try {

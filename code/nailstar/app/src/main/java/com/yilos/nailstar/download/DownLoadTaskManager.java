@@ -16,7 +16,6 @@ import com.yilos.nailstar.util.LoggerFactory;
 import org.apache.log4j.Logger;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -133,6 +132,9 @@ public class DownLoadTaskManager {
             @Override
             public void run() {
 
+                // 保存存储路径
+                downLoadInfo.setPath(new File(path, downLoadInfo.getTitle() + ".mp4").getPath());
+
                 // 保存视频图片，讲师图片
                 Bitmap image = imageLoader.loadImageSync(topicInfo.getThumbUrl());
                 String imagePath = FileUtils.saveBitMap(image, path, downLoadInfo.getTitle() + ".jpg");
@@ -144,12 +146,12 @@ public class DownLoadTaskManager {
                 if (photoPath != null) {
                     downLoadInfo.setPhoto(photoPath);
                 }
-                try {
-                    long length = HttpClient.getFileLength(downLoadInfo.getUrl());
-                    downLoadInfo.setFileSize(length);
-                } catch (IOException e) {
-                    logger.error("addDownLoadTask get file length failed", e);
-                }
+//                try {
+//                    long length = HttpClient.getFileLength(downLoadInfo.getUrl());
+//                    downLoadInfo.setFileSize(length);
+//                } catch (IOException e) {
+//                    logger.error("addDownLoadTask get file length failed", e);
+//                }
 
                 // 下载信息保存
                 try {
@@ -170,6 +172,16 @@ public class DownLoadTaskManager {
         }
         // 添加下载任务
         final DownLoadTask downLoadTask = new DownLoadTask(client, downLoadInfo.getUrl(), path, downLoadInfo.getTitle() + ".mp4");
+        downLoadTask.setProgressListener(new ProgressListener() {
+            @Override
+            public void update(long bytesRead, long contentLength, boolean done) {
+                downLoadInfo.setFileSize(contentLength);
+                downLoadInfo.setBytesRead(bytesRead);
+                if (bytesRead >= contentLength && done) {
+                    downLoadInfo.setFinished(true);
+                }
+            }
+        });
         downLoadTaskList.add(downLoadTask);
 
         new Thread(new Runnable() {
