@@ -118,35 +118,6 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
         myImageUrl = personInfo.getPhotoUrl();
         int type = personInfo.getType();
         String identity = IdentityUtil.getIdentity(type);
-        //        1美甲店主
-        //        2美甲师
-        //        3美甲从业者
-        //        4美甲消费者
-        //        5美甲老师
-        //        6其他
-//        switch (type) {
-//            case 1:
-//                identity = "美甲店主";
-//                break;
-//            case 2:
-//                identity = "美甲师";
-//                break;
-//            case 3:
-//                identity = "美甲从业者";
-//                break;
-//            case 4:
-//                identity = "美甲消费者";
-//                break;
-//            case 5:
-//                identity = "美甲老师";
-//                break;
-//            case 6:
-//                identity = "其他";
-//                break;
-//            default:
-//                identity = "身份";
-//                break;
-//        }
         nameText.setText(nickName);
         identityText.setText(identity);
         if(bitmap != null) {
@@ -250,26 +221,15 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
 
     private void initEvents() {
         titleText = titleBar.getTitleView();
-        //leftTitleText = titleBar.getLeftTitleView();
         titleText.setText(R.string.about_me_my);
-        //titleText.setText("我的我的我的我的我的我的我的我的我的我的我的我的我的我的v");//R.string.about_me_my
-//        leftTitleText.setText("我的我的我的我的我的我的我的我的我的我的我的我的我的我的v");
-//        rightButtonTwo = titleBar.getRightImageButtonTwo();
-//        rightButtonTwo.setImageResource(R.drawable.ic_head_download);
-//        rightButtonOne = titleBar.getRightImageButtonOne();
-//        rightButtonOne.setImageResource(R.drawable.ic_head_share);
-//        backButton = titleBar.getBackButton();
-//        backButton.setImageResource(R.drawable.ic_head_back);
-//        rightButton = titleBar.getRightTextButton();
-//        rightButton.setText("确定");
 
         LoginAPI loginAPI = LoginAPI.getInstance();
-        if (loginAPI.isLogin()) {
+        //if (loginAPI.isLogin()) {
             aboutMePresenter = AboutMePresenter.getInstance(this);
             aboutMePresenter.getMessageCount();
             aboutMePresenter.getAboutMeNumber();
             aboutMePresenter.getPersonInfo();
-        }
+        //}
 
         myFollowList.setOnClickListener(this);
         myFansList.setOnClickListener(this);

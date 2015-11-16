@@ -12,6 +12,20 @@
     <dimen name="common_text_height">50dp</dimen>
     <dimen name="index_tab_height">50dp</dimen>
     <dimen name="index_content_padding">5dp</dimen>
+    
+    <!-- 字体大小 -->
+
+    <!-- 大 -->
+    <dimen name="large_text_size">17dp</dimen>
+
+    <!-- 中 -->
+    <dimen name="middle_text_size">15dp</dimen>
+
+    <!-- 小 -->
+    <dimen name="small_text_size">12dp</dimen>
+
+    <!-- 极小 -->
+    <dimen name="very_small_text_size">10dp</dimen>
 
     <!--topic-->
     <dimen name="topic_video_player_height">240dp</dimen>
