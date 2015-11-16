@@ -91,6 +91,12 @@
     <dimen name="my_horizontal_bar_space_height">9dp</dimen>
     <dimen name="zoomIn_layout_margin_bottom">50dp</dimen>
     <dimen name="video_play_icon_size">50dp</dimen>
+
+    <!-- 个人资料 -->
+    <dimen name="person_info_horizontal_bar_height">100dp</dimen>
+    <dimen name="person_info_middle_horizontal_bar_height">80dp</dimen>
+    <dimen name="person_info_label_width">120dp</dimen>
+    <dimen name="person_info_text_width">200dp</dimen>
 </resources>
 
 
