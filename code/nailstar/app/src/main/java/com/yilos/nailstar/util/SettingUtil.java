@@ -49,7 +49,7 @@ public class SettingUtil {
     }
 
     /**
-     * @return
+     * @return 获取SD卡存储路径
      */
     public static String getSdcardPath() {
         return getSettingSharedPreferences().getString("sdcard_path", "");

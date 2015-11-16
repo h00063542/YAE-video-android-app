@@ -20,6 +20,7 @@ import com.yilos.nailstar.aboutme.entity.MessageCount;
 import com.yilos.nailstar.aboutme.entity.PersonInfo;
 import com.yilos.nailstar.aboutme.model.LoginAPI;
 import com.yilos.nailstar.aboutme.presenter.AboutMePresenter;
+import com.yilos.nailstar.util.IdentityUtil;
 import com.yilos.nailstar.util.LevelUtil;
 import com.yilos.widget.circleimageview.CircleImageView;
 import com.yilos.widget.titlebar.TitleBar;
@@ -116,36 +117,36 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
         Bitmap bitmap = personInfo.getImageBitmap();
         myImageUrl = personInfo.getPhotoUrl();
         int type = personInfo.getType();
-        String identity;
+        String identity = IdentityUtil.getIdentity(type);
         //        1美甲店主
         //        2美甲师
         //        3美甲从业者
         //        4美甲消费者
         //        5美甲老师
         //        6其他
-        switch (type) {
-            case 1:
-                identity = "美甲店主";
-                break;
-            case 2:
-                identity = "美甲师";
-                break;
-            case 3:
-                identity = "美甲从业者";
-                break;
-            case 4:
-                identity = "美甲消费者";
-                break;
-            case 5:
-                identity = "美甲老师";
-                break;
-            case 6:
-                identity = "其他";
-                break;
-            default:
-                identity = "身份";
-                break;
-        }
+//        switch (type) {
+//            case 1:
+//                identity = "美甲店主";
+//                break;
+//            case 2:
+//                identity = "美甲师";
+//                break;
+//            case 3:
+//                identity = "美甲从业者";
+//                break;
+//            case 4:
+//                identity = "美甲消费者";
+//                break;
+//            case 5:
+//                identity = "美甲老师";
+//                break;
+//            case 6:
+//                identity = "其他";
+//                break;
+//            default:
+//                identity = "身份";
+//                break;
+//        }
         nameText.setText(nickName);
         identityText.setText(identity);
         if(bitmap != null) {
