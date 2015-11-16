@@ -40,6 +40,9 @@
     <string name="download_topic_image_text_index">保存了第%1$s张</string>
     <string name="save_topic_image_text_success">整套图片已保存到相册</string>
     <string name="homework_waiting_for_reviews">已有%1$s名同学提交了作业等待大咖点评</string>
+    <string name="video_play_not_wifi_tips2">继续播放可能产生流量费用</string>
+    <string name="video_play_not_wifi_tips1">您正在使用为Wi-Fi网络</string>
+    <string name="continue_to_play">继续播放</string>
 
     <!-- about me -->
     <string name="about_me_my">我的</string>

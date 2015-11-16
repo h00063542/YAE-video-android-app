@@ -9,7 +9,8 @@
 
     <com.yilos.widget.titlebar.TitleBar
         android:layout_width="match_parent"
-        android:layout_height="@dimen/common_title_bar_height">
+        android:layout_height="@dimen/common_title_bar_height"
+        android:id="@+id/titleBar">
 
     </com.yilos.widget.titlebar.TitleBar>
 
@@ -58,7 +59,7 @@
                         android:layout_marginBottom="5dp"
                         android:id="@+id/indicator"
                         CirclePageIndicator:ci_background="@android:color/white"
-                        CirclePageIndicator:ci_selected_background="0xffe6454a"
+                        CirclePageIndicator:ci_selected_background="@color/orange"
                         CirclePageIndicator:ci_mode="solo"
                         CirclePageIndicator:ci_gravity="center"
                         CirclePageIndicator:ci_radius="5dp"
@@ -82,7 +83,7 @@
                         android:layout_marginBottom="5dp"
                         android:id="@+id/categoryBannerIndicator"
                         CirclePageIndicator:ci_background="@android:color/white"
-                        CirclePageIndicator:ci_selected_background="0xffe6454a"
+                        CirclePageIndicator:ci_selected_background="@color/orange"
                         CirclePageIndicator:ci_mode="solo"
                         CirclePageIndicator:ci_gravity="center"
                         CirclePageIndicator:ci_radius="5dp"
@@ -93,17 +94,20 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/index_content_padding"
                     android:text=" "
-                    android:background="@color/grey"/>
+                    android:background="@color/xk2"/>
 
                 <com.yilos.widget.pageindicator.TabPageIndicator
                     android:id="@+id/videoListPagerIndicator"
                     android:layout_height="@dimen/index_tab_height"
                     android:layout_width="fill_parent"/>
-
+                <com.yilos.widget.pageindicator.UnderlinePageIndicator
+                    android:id="@+id/videoListPagerLineIndicator"
+                    android:layout_width="fill_parent"
+                    android:layout_height="2dp" />
                 <com.yilos.widget.view.MViewPager
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:padding="5dp"
                     android:id="@+id/videoListPager">
                 </com.yilos.widget.view.MViewPager>
 

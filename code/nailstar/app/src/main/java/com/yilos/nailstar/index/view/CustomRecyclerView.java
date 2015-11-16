@@ -11,6 +11,8 @@ import android.view.ViewParent;
  * Created by yangdan on 15/11/4.
  */
 public class CustomRecyclerView extends RecyclerView {
+    private float downX;
+    private float downY;
 
     public CustomRecyclerView(Context context) {
         this(context, null);
@@ -34,9 +36,17 @@ public class CustomRecyclerView extends RecyclerView {
         int action = ev.getAction();
 
         if(action == MotionEvent.ACTION_DOWN) {
+            downX = ev.getX();
+            downY = ev.getY();
             requestDisallowParentInterceptTouchEvent(true);
-        }
-        else if(action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL) {
+        } else if(action == MotionEvent.ACTION_MOVE) {
+            float deltaX = Math.abs(ev.getX() - downX);
+            float deltaY = Math.abs(ev.getY() - downY);
+
+            if(deltaX > deltaY && deltaX > 40) {
+                requestDisallowParentInterceptTouchEvent(false);
+            }
+        } else if(action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL) {
             requestDisallowParentInterceptTouchEvent(false);
         }
 
