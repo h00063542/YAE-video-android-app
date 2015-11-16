@@ -37,9 +37,6 @@ public class SettingFolderAdapter extends BaseAdapter {
     public Sdcard getItem(int position) {
         Sdcard sdcard = new Sdcard();
         sdcard = sdcardArrayList.get(position);
-//        if (sdcard.getSdcardName().equals(sdcardName)) {
-//            sdcard.setChoosed(true);
-//        }
         return sdcard;
     }
 

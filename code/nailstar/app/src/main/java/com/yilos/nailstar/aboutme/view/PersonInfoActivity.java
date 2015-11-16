@@ -8,6 +8,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.yilos.nailstar.R;
+import com.yilos.nailstar.framework.view.BaseActivity;
 import com.yilos.nailstar.util.IdentityUtil;
 import com.yilos.widget.titlebar.TitleBar;
 import com.yilos.widget.wheelView.LoopListener;
@@ -18,7 +19,7 @@ import java.util.ArrayList;
 /**
  * Created by sisilai on 15/10/30.
  */
-public class PersonInfoActivity extends Activity implements View.OnClickListener {
+public class PersonInfoActivity extends BaseActivity implements View.OnClickListener {
     private TitleBar titleBar;
     private TextView titleBarTitle;
     private TextView rightTextButton;

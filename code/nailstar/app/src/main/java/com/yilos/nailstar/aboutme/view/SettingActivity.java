@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.leaking.slideswitch.SlideSwitch;
 import com.nostra13.universalimageloader.utils.StorageUtils;
@@ -143,6 +144,8 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
             case R.id.login_out:
                 LoginAPI.getInstance().getLoginUserId();  //获取登录的用户ID
                 LoginAPI.getInstance().logout(); //退出登录
+                loginOut.setVisibility(View.GONE);
+                showShortToast(R.string.has_been_login_out);
                 break;
             case R.id.setting_folder:
                 final SettingFolderAdapter settingFolderAdapter = new SettingFolderAdapter(this,sdcardArrayList,SettingUtil.getSdcardName());
@@ -221,7 +224,9 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            sdcardArrayList.add(sdcard);
+            if (sdcard.getAvailCount() > 0) {
+                sdcardArrayList.add(sdcard);
+            }
         }
 
         return sdcardArrayList;

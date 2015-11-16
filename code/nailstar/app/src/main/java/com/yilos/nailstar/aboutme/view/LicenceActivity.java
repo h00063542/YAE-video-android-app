@@ -9,9 +9,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.yilos.nailstar.R;
+import com.yilos.nailstar.framework.view.BaseActivity;
 import com.yilos.widget.titlebar.TitleBar;
 
-public class LicenceActivity extends AppCompatActivity {
+public class LicenceActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,22 +23,12 @@ public class LicenceActivity extends AppCompatActivity {
     }
 
     private void initView() {
-        final Activity licenceActivity = this;
 
         //设置titlebar
         TitleBar titleBar = (TitleBar) findViewById(R.id.titleBar);
-        ImageView backButton = titleBar.getBackButton();
-        backButton.setClickable(true);
-        backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                licenceActivity.finish();
-            }
-        });
-
+        titleBar.getBackButton(LicenceActivity.this);
         TextView titleView = titleBar.getTitleView();
         titleView.setText(R.string.title_activity_licence);
-
         ((WebView)findViewById(R.id.webView)).loadUrl("file:///android_asset/licence.html");
     }
 }

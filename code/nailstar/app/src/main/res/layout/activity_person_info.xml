@@ -88,7 +88,7 @@
             android:id="@+id/person_info_identity"
             android:layout_width="@dimen/person_info_text_width"
             android:layout_height="match_parent"
-            android:gravity="center_vertical"
+            android:gravity="center"
             android:layout_toRightOf="@id/person_info_identity_label"
             android:background="@null"
             android:clickable="true"
