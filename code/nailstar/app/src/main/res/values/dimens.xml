@@ -16,16 +16,16 @@
     <!-- 字体大小 -->
 
     <!-- 大 -->
-    <dimen name="large_text_size">17dp</dimen>
+    <dimen name="large_text_size">17sp</dimen>
 
     <!-- 中 -->
-    <dimen name="middle_text_size">15dp</dimen>
+    <dimen name="middle_text_size">15sp</dimen>
 
     <!-- 小 -->
-    <dimen name="small_text_size">12dp</dimen>
+    <dimen name="small_text_size">12sp</dimen>
 
     <!-- 极小 -->
-    <dimen name="very_small_text_size">10dp</dimen>
+    <dimen name="very_small_text_size">10sp</dimen>
 
     <!--topic-->
     <dimen name="topic_video_player_height">240dp</dimen>
