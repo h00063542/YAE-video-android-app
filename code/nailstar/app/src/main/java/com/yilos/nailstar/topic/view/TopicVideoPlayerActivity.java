@@ -13,6 +13,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
@@ -37,7 +38,6 @@ import android.widget.Toast;
 
 import com.sina.sinavideo.sdk.VDVideoExtListeners;
 import com.sina.sinavideo.sdk.VDVideoView;
-import com.sina.sinavideo.sdk.VDVideoViewController;
 import com.sina.sinavideo.sdk.data.VDVideoInfo;
 import com.sina.sinavideo.sdk.data.VDVideoListInfo;
 import com.yilos.nailstar.R;
@@ -76,13 +76,13 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         VDVideoExtListeners.OnVDVideoPlaylistListener,
         PullToRefreshView.OnHeaderRefreshListener,
         PullToRefreshView.OnFooterRefreshListener {
-    private static final Logger LOGGER = LoggerFactory.getLogger(TopicVideoPlayerActivity.class);
-    private static final String TEMP_USER_PHOTO_URL = "http://pic.yilos.com/162b73dc3f69af2dc8a79a1b9da7591e";
+    private final Logger LOGGER = LoggerFactory.getLogger(TopicVideoPlayerActivity.class);
+    private final String TEMP_USER_PHOTO_URL = "http://pic.yilos.com/162b73dc3f69af2dc8a79a1b9da7591e";
 
-    private static final String TAG = "TopicVideoPlayerActivity";
+    private final String TAG = "TopicVideoPlayerActivity";
 
-    private static final int TOPIC_COMMENT_REQUEST_CODE = 3;
-    private static final int TOPIC_HOMEWORK_REQUEST_CODE = 4;
+    private final int TOPIC_COMMENT_REQUEST_CODE = 3;
+    private final int TOPIC_HOMEWORK_REQUEST_CODE = 4;
 
     private ViewGroup mDecorView;
     private TopicInfo mTopicInfo;
@@ -98,7 +98,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
     private ScrollView mSvVideoPlayer;
     // 视频播放控件
     private VDVideoView mVDVideoView;
-    private RelativeLayout mPlayIconParent;
+    private LinearLayout mPlayIconParent;
     private ImageView mIvVideoPlayIcon;
     private RelativeLayout mLayoutVideoPlayNotWifi;
     private TextView mTvVideoPlayNotWifi;
@@ -200,11 +200,18 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
 
     private int mCommentReplyBackgroundColor;
 
+    // topic信息是否初始化完成
     private boolean initTopicInfoFinish = false;
+    // topic关联信息是否初始化完成
     private boolean initTopicRelatedInfoFinish = false;
+    // topic图文信息是否初始化完成
     private boolean initTopicImageTextInfoFinish = false;
+    // topic当前页评论信息是否初始化完成
     private boolean initTopicCommentsFinish = false;
+    // topic状态信息（赞，收藏）是否初始化完成
     private boolean initUserTopicStatusFinish = false;
+    // 是否自动设置的topic状态信息（赞，收藏）
+    private boolean autoSetTopicStatus = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -244,7 +251,6 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         } else {
             initUserTopicStatusFinish = true;
             checkInitFinish();
-            initControlEventAfterInitTopicStatus();
         }
     }
 
@@ -270,7 +276,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         mIvVideoPlayIcon = (ImageView) findViewById(R.id.iv_video_play_icon);
         mLayoutVideoPlayNotWifi = (RelativeLayout) findViewById(R.id.layout_video_play_not_wifi);
         mTvVideoPlayNotWifi = (TextView) findViewById(R.id.tv_video_play_not_wifi);
-        mPlayIconParent = (RelativeLayout) mIvVideoPlayIcon.getParent();
+        mPlayIconParent = (LinearLayout) mIvVideoPlayIcon.getParent();
 
         // 当前是非WIFI环境，并且允许在非WIFI环境下播放视频，需要提示用户
         //&& SharedPreferencesUtil.getAllowNoWifi(this)
@@ -538,12 +544,49 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
             }
         });
 
+        // 喜欢
+        mCbTopicTabLike.setOnCheckedChangeListener(new CheckBox.OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (!LoginAPI.getInstance().isLogin()) {
+                    autoSetTopicStatus = true;
+                    mCbTopicTabLike.setChecked(false);
+                    LoginAPI.getInstance().gotoLoginPage(TopicVideoPlayerActivity.this);
+                    return;
+                }
+                mTopicVideoPlayerPresenter.setTopicLikeStatus(mTopicId, isChecked);
+            }
+        });
+        //收藏
+        mCbTopicTabCollection.setOnCheckedChangeListener(new CheckBox.OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (!LoginAPI.getInstance().isLogin()) {
+                    autoSetTopicStatus = true;
+                    mCbTopicTabCollection.setChecked(false);
+                    LoginAPI.getInstance().gotoLoginPage(TopicVideoPlayerActivity.this);
+                    return;
+                }
+                if (autoSetTopicStatus) {
+                    autoSetTopicStatus = false;
+                    return;
+                }
+                mTopicVideoPlayerPresenter.setTopicCollectionStatus(mTopicId, isChecked);
+            }
+        });
+
         // 评论按钮
         mTvTopicTabComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!LoginAPI.getInstance().isLogin()) {
                     LoginAPI.getInstance().gotoLoginPage(TopicVideoPlayerActivity.this);
+                    return;
+                }
+                if (autoSetTopicStatus) {
+                    autoSetTopicStatus = false;
                     return;
                 }
                 addTopicComment();
@@ -596,33 +639,6 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         mCommentReplyPaddingBottom = getResources().getDimensionPixelSize(R.dimen.topic_comment_reply_padding_bottom);
 
         mCommentReplyBackgroundColor = getResources().getColor(R.color.topic_comment_reply_background_color);
-    }
-
-    private void initControlEventAfterInitTopicStatus() {
-        // 喜欢
-        mCbTopicTabLike.setOnCheckedChangeListener(new CheckBox.OnCheckedChangeListener() {
-
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (!LoginAPI.getInstance().isLogin()) {
-                    LoginAPI.getInstance().gotoLoginPage(TopicVideoPlayerActivity.this);
-                    return;
-                }
-                mTopicVideoPlayerPresenter.setTopicLikeStatus(mTopicId, isChecked);
-            }
-        });
-        //收藏
-        mCbTopicTabCollection.setOnCheckedChangeListener(new CheckBox.OnCheckedChangeListener() {
-
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (!LoginAPI.getInstance().isLogin()) {
-                    LoginAPI.getInstance().gotoLoginPage(TopicVideoPlayerActivity.this);
-                    return;
-                }
-                mTopicVideoPlayerPresenter.setTopicCollectionStatus(mTopicId, isChecked);
-            }
-        });
     }
 
 
@@ -811,7 +827,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         } else {
             // 从布局文件中删除tags区域
             if (null != mLayoutTopicAuthorTags) {
-                RelativeLayout topicAuthorTagsParent = (RelativeLayout) mLayoutTopicAuthorTags.getParent();
+                LinearLayout topicAuthorTagsParent = (LinearLayout) mLayoutTopicAuthorTags.getParent();
                 if (null != topicAuthorTagsParent) {
                     topicAuthorTagsParent.removeView(mLayoutTopicAuthorTags);
                 }
@@ -849,7 +865,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         lpMarginTop.setMargins(0, mImageTextMargin, 0, 0);
 
 
-        for (int i = 0; i < pictures.size(); i++) {
+        for (int i = 0, size = pictures.size(); i < size; i++) {
             ImageCacheView imageView = new ImageCacheView(TopicVideoPlayerActivity.this);
             // 如果没有配图没有文字，并且不是第一张图片时，不需要设置Margin Top
 //            imageView.setLayoutParams(((null == articles.get(i) || articles.get(i).toString().length() == 0))
@@ -949,7 +965,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
                 text.append(mZoomInImageTextViewPager.getCurrentItem() + 1)
                         .append("/")
                         .append(getCount());
-                mTvZoomInImageTextIndex.setText(String.valueOf(text));
+                mTvZoomInImageTextIndex.setText(text);
             }
         });
         if (selectedIndex != -1) {
@@ -1019,14 +1035,14 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
     }
 
     @Override
-    public void initUserTopicLikeStatus(TopicStatusInfo topicStatusInfo) {
+    public void initUserTopicStatus(TopicStatusInfo topicStatusInfo) {
         initUserTopicStatusFinish = true;
         checkInitFinish();
         if (null != topicStatusInfo) {
+            autoSetTopicStatus = true;
             mCbTopicTabLike.setChecked(topicStatusInfo.isLike());
             mCbTopicTabCollection.setChecked(topicStatusInfo.isCollect());
         }
-        initControlEventAfterInitTopicStatus();
     }
 
     /**
@@ -1155,9 +1171,19 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
                     ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             tvTopicCommentContentLp.setMargins(0, mCommentContentMarginTop, 0, mCommentContentMarginBottom);
             topicCommentContentTv.setLayoutParams(tvTopicCommentContentLp);
-            topicCommentContentTv.setText(topicCommentInfo.getContent());
+
+            topicCommentContentTv.setText(Html.fromHtml(buildNumberText(topicCommentInfo.getContent())));
+            topicCommentContentTv.setMovementMethod(LinkMovementMethod.getInstance());
+
             topicCommentContentTv.setTextSize(TypedValue.COMPLEX_UNIT_PX, mCommentContentFontSize);
             topicCommentContentTv.setTextColor(getResources().getColor(R.color.black));
+            topicCommentContentTv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    TopicCommentInfo commentInfo = (TopicCommentInfo) v.getTag(R.id.topic_comment_info);
+                    addTopicCommentReply(commentInfo, null, Constants.TOPIC_COMMENT_TYPE_REPLY);
+                }
+            });
 
             topicCommentContentLayout.addView(topicCommentContentTv);
 
@@ -1222,6 +1248,8 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         // 设置主题评论回复之间的上下间隔
         topicCommentContentReplyLp.setMargins(0, 0, 0, 0);
 
+        String commentContent = buildNumberText(topicCommentReplyInfo.getContent());
+
         TextView topicCommentReplyTv = new TextView(this);
         topicCommentReplyTv.setLayoutParams(topicCommentContentReplyLp);
         StringBuilder replyText = new StringBuilder();
@@ -1239,9 +1267,11 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         replyText.append(": ");
 
         replyText.append("<font color=\"#000000\">")
-                .append(topicCommentReplyInfo.getContent())
+                .append(commentContent)
                 .append("</font>");
         topicCommentReplyTv.setText(Html.fromHtml(replyText.toString()));
+        topicCommentReplyTv.setMovementMethod(LinkMovementMethod.getInstance());
+
         // 设置行高
         topicCommentReplyTv.setLineSpacing(mCommentReplyLineHeight, 1);
         topicCommentReplyTv.setTextSize(TypedValue.COMPLEX_UNIT_PX, mCommentReplyFontSize);
@@ -1297,25 +1327,28 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
     }
 
     @Override
-    public void showTopicLikeStatus(boolean isLike, boolean isSuccess) {
-        if (isSuccess) {
-            Toast.makeText(this, isLike ? "设置喜欢成功" : "取消喜欢成功", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(this, isLike ? "设置喜欢失败" : "取消喜欢失败", Toast.LENGTH_SHORT).show();
-        }
+    public void setTopicLikeStatus(boolean isLike, boolean isSuccess) {
+//        if (isSuccess) {
+//            Toast.makeText(this, isLike ? "设置喜欢成功" : "取消喜欢成功", Toast.LENGTH_SHORT).show();
+//        } else {
+//            Toast.makeText(this, isLike ? "设置喜欢失败" : "取消喜欢失败", Toast.LENGTH_SHORT).show();
+//        }
     }
 
     @Override
-    public void showTopicCollectionStatus(boolean isCollection, boolean isSuccess) {
-        if (isSuccess) {
-            Toast.makeText(this, isCollection ? "收藏成功" : "取消收藏成功", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(this, isCollection ? "收藏失败" : "取消收藏失败", Toast.LENGTH_SHORT).show();
+    public void setTopicCollectionStatus(boolean isCollection, boolean isSuccess) {
+        if (isCollection && isSuccess) {
+            Toast.makeText(this, "成功添加至 我的 -> 已收藏", Toast.LENGTH_SHORT).show();
         }
+//        if (isSuccess) {
+//            Toast.makeText(this, isCollection ? "收藏成功" : "取消收藏成功", Toast.LENGTH_SHORT).show();
+//        } else {
+//            Toast.makeText(this, isCollection ? "收藏失败" : "取消收藏失败", Toast.LENGTH_SHORT).show();
+//        }
     }
 
     @Override
-    public void showDownloadTopicImageStatus(boolean isSuccess, String filePath) {
+    public void setDownloadTopicImageStatus(boolean isSuccess, String filePath) {
         if (isSuccess) {
             refreshMedia(filePath);
             showShortToast(R.string.save_success);
@@ -1325,7 +1358,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
     }
 
     @Override
-    public void showDownloadTopicImageTextStatus(boolean isSuccess, final String filePath) {
+    public void setDownloadTopicImageTextStatus(boolean isSuccess, final String filePath) {
         if (!isSuccess) {
             return;
         }
@@ -1400,8 +1433,88 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unregisterReceiver(VDVideoViewController
-                .getInstance(TopicVideoPlayerActivity.this).mReciever);
+        setContentView(R.layout.layout_null);
+        mTopicVideoPlayerPresenter.cleanTopicVideoPlayerView();
+        mVDVideoView.onStop();
+        mVDVideoView.destroyDrawingCache();
+//        mVDVideoView.release(false);
+        mVDVideoView.unRegisterSensorManager();
+        mVDVideoView.release(false);
+
+        mDecorView = null;
+        mTopicInfo = null;
+
+        // 顶部返回、topic名称、分享
+        mTbVideoPlayerHead = null;
+        mIvVideoPlayerBack = null;
+        mIvVideoDownload = null;
+        mIvTopicShare = null;
+        mTvTopicName = null;
+
+        mTopicPullToRefreshView = null;
+        mSvVideoPlayer = null;
+        // 视频播放控件
+        mVDVideoView = null;
+        mPlayIconParent = null;
+        mIvVideoPlayIcon = null;
+        mLayoutVideoPlayNotWifi = null;
+        mTvVideoPlayNotWifi = null;
+
+        // 作者信息
+        mIvVideoAuthorPhoto = null;
+        mTvVideoAuthorPlayTimes = null;
+        mIvVideoImageTextIcon = null;
+        mTvTopicAuthorTag1 = null;
+        mTvTopicAuthorTag2 = null;
+        mTvTopicAuthorTag3 = null;
+
+        mLayoutTopicAuthorTags = null;
+        mIvTopicAuthorTag1Icon = null;
+        mIvTopicAuthorTag2Icon = null;
+        mIvTopicAuthorTag3Icon = null;
+
+        // 更多视频
+        mLayoutMoreVideosContent = null;
+
+        // 图文分解
+        mLayoutTopicImageTextContent = null;
+        mTvHideTopicImageTextContent = null;
+        mTvDownloadTopicImageTextContent = null;
+        mDownloadTopicImageTextDialog = null;
+        mRpbDownloadTopicImageText = null;
+        mTvDownloadTopicImageText = null;
+        mTopicImageTextInfo = null;
+
+        mLayoutShowTopicImageTextContent = null;
+        mLayoutTopicImageTextContentParent = null;
+
+        mZoomInImageTextLayout = null;
+        mTvZoomInImageTextIndex = null;
+        mTvZoomInImageSave = null;
+        mZoomInImageTextViewPager = null;
+
+
+        mTvTopicCommentCount = null;
+
+        // topic评论
+        mLayoutTopicComments = null;
+        mLayoutTopicBlankComment = null;
+        mZoomInImageLayout = null;
+        mIcvTopicCommentImage = null;
+
+
+        // 底部下载、收藏、评论、交作业
+        mCbTopicTabLike = null;
+        mCbTopicTabCollection = null;
+        mTvTopicTabComment = null;
+
+        mTvTopicSubmittedHomework = null;
+        mTakeImage = null;
+
+
+        mTopicVideoPlayerPresenter = null;
+
+//        System.gc();
     }
 
     @Override
@@ -1568,6 +1681,24 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
     private void checkInitFinish() {
         if (initTopicInfoFinish && initTopicRelatedInfoFinish && initTopicImageTextInfoFinish && initTopicCommentsFinish && initUserTopicStatusFinish) {
             hideLoading();
+        }
+    }
+
+    private String buildNumberText(String text) {
+        String commentContent = StringUtil.isEmpty(text) ? Constants.EMPTY_STRING : text;
+        ArrayList<String> phoneNumbers = StringUtil.findNumber(commentContent);
+        if (CollectionUtil.isEmpty(phoneNumbers)) {
+            return commentContent;
+        } else {
+            StringBuilder stringBuilder = new StringBuilder(text);
+            int index;
+            String number = null;
+            for (int i = 0, size = phoneNumbers.size(); i < size; i++) {
+                number = phoneNumbers.get(i);
+                index = commentContent.indexOf(number);
+                stringBuilder.replace(index, number.length() + index, "<a href=\"tel:" + number + "\">" + number + "</a>");
+            }
+            return stringBuilder.toString();
         }
     }
 }
