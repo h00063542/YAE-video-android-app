@@ -16,7 +16,7 @@ import java.util.ArrayList;
  */
 public interface AboutMeService {
     MessageCount getMessageCount() throws NetworkDisconnectException, JSONException;
-    PersonInfo setPersonInfo() throws NetworkDisconnectException,JSONException;
+    PersonInfo setPersonInfo(String uid,String nickname,int type,String photoUrl,String profile) throws NetworkDisconnectException,JSONException;
     PersonInfo getPersonInfo() throws NetworkDisconnectException,JSONException;
     AboutMeNumber getAboutMeNumber() throws NetworkDisconnectException,JSONException;
     ArrayList<FollowList> getFollowList(String uid) throws NetworkDisconnectException;
