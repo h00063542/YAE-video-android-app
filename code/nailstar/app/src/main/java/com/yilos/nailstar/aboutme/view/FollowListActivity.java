@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.yilos.nailstar.R;
 import com.yilos.nailstar.aboutme.entity.FollowList;
 import com.yilos.nailstar.aboutme.presenter.FollowListPresenter;
+import com.yilos.nailstar.framework.view.BaseActivity;
 import com.yilos.widget.titlebar.TitleBar;
 
 import java.util.ArrayList;
@@ -20,7 +21,7 @@ import java.util.List;
 /**
  * Created by sisilai on 15/11/4.
  */
-public class FollowListActivity extends Activity implements View.OnClickListener {
+public class FollowListActivity extends BaseActivity implements View.OnClickListener {
     private TitleBar titleBar;
     private ImageView backButton;
     private TextView titleText;

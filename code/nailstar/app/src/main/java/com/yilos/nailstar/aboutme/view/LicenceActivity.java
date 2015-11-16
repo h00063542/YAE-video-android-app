@@ -9,9 +9,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.yilos.nailstar.R;
+import com.yilos.nailstar.framework.view.BaseActivity;
 import com.yilos.widget.titlebar.TitleBar;
 
-public class LicenceActivity extends AppCompatActivity {
+public class LicenceActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +28,6 @@ public class LicenceActivity extends AppCompatActivity {
         //设置titlebar
         TitleBar titleBar = (TitleBar) findViewById(R.id.titleBar);
         ImageView backButton = titleBar.getBackButton();
-        backButton.setClickable(true);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
