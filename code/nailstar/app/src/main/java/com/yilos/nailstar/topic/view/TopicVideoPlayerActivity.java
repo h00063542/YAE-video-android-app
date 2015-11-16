@@ -837,8 +837,9 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         // 设置评论数量
         StringBuilder stringBuild = new StringBuilder();
         stringBuild.append(getString(R.string.topic_comment_count));
-        stringBuild.append(" ");
+        stringBuild.append(" (");
         stringBuild.append(topicInfo.getCommentCount());
+        stringBuild.append(")");
         mTvTopicCommentCount.setText(stringBuild);
     }
 
