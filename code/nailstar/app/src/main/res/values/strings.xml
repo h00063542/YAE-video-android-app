@@ -141,6 +141,7 @@
     <string name="i_need_score">我要打分</string>
     <string name="about_us">关于美甲大咖</string>
     <string name="quick_login">退出登录</string>
+    <string name="has_been_login_out">已退出登录</string>
     <string name="can_not_find_version_name">版本号没有找到</string>
     <string name="title_activity_search">SearchActivity</string>
 </resources>
