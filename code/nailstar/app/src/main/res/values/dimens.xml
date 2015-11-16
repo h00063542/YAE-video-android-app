@@ -6,6 +6,7 @@
     <dimen name="common_1_dp">1dp</dimen>
     <dimen name="common_10_dp">10dp</dimen>
     <dimen name="common_20_dp">20dp</dimen>
+    <dimen name="common_200_dp">200dp</dimen>
     <dimen name="common_main_tab_height">48dp</dimen>
     <dimen name="common_title_bar_height">43dp</dimen> <!-- 标题栏高度 -->
     <dimen name="common_text_height">50dp</dimen>

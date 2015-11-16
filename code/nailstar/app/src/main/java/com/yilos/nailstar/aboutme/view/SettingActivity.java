@@ -224,7 +224,9 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            sdcardArrayList.add(sdcard);
+            if (sdcard.getAvailCount() > 0) {
+                sdcardArrayList.add(sdcard);
+            }
         }
 
         return sdcardArrayList;
