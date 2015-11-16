@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/tab_background_gray"
+    android:fitsSystemWindows="true"
+    android:clipToPadding="true"
+    android:orientation="vertical">
+
+    <com.yilos.widget.titlebar.TitleBar
+        android:id="@+id/edit_person_info_title_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"></com.yilos.widget.titlebar.TitleBar>
+
+    <RelativeLayout
+        android:id="@+id/person_info_photo_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/person_info_horizontal_bar_height"
+        android:background="@color/white">
+
+        <TextView
+            android:layout_width="@dimen/person_info_label_width"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/about_me_border_padding"
+            android:text="@string/person_info_photo"
+            android:textSize="@dimen/common_20_dp" />
+
+        <com.yilos.widget.circleimageview.CircleImageView
+            android:layout_width="@dimen/about_me_my_info_image"
+            android:layout_height="@dimen/about_me_my_info_image"
+            android:layout_centerInParent="true"
+            android:src="@mipmap/ic_about_me_star_test" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/person_info_name_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/person_info_middle_horizontal_bar_height"
+        android:layout_marginTop="@dimen/common_10_dp"
+        android:background="@color/white">
+
+        <TextView
+            android:id="@+id/person_info_name"
+            android:layout_width="@dimen/person_info_label_width"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/about_me_border_padding"
+            android:text="@string/person_info_name"
+            android:textSize="@dimen/common_20_dp" />
+
+        <EditText
+            android:layout_width="@dimen/person_info_text_width"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_toRightOf="@+id/person_info_name"
+            android:background="@null"
+            android:text="手机用户1111"
+            android:textSize="@dimen/common_20_dp" />
+
+        <ImageView
+            android:layout_width="@dimen/common_20_dp"
+            android:layout_height="@dimen/common_20_dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/common_20_dp"
+            android:src="@mipmap/ic_error" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/person_info_identity_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/person_info_middle_horizontal_bar_height"
+        android:layout_marginTop="@dimen/common_10_dp"
+        android:background="@color/white"
+        android:clickable="true">
+
+        <TextView
+            android:id="@+id/person_info_identity_label"
+            android:layout_width="@dimen/person_info_label_width"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/about_me_border_padding"
+            android:text="@string/person_info_identity"
+            android:textSize="@dimen/common_20_dp" />
+
+        <TextView
+            android:id="@+id/person_info_identity"
+            android:layout_width="@dimen/person_info_text_width"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:layout_toRightOf="@id/person_info_identity_label"
+            android:background="@null"
+            android:clickable="true"
+            android:text="手机用户1111"
+            android:textSize="@dimen/common_20_dp" />
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/common_1_dp"
+        android:background="@color/xk2" />
+
+    <RelativeLayout
+        android:id="@+id/person_info_identity_popup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:visibility="gone"></RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/person_info_introduction_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/person_info_horizontal_bar_height"
+        android:layout_marginTop="@dimen/common_10_dp"
+        android:background="@color/white">
+
+        <TextView
+            android:id="@+id/person_info_introduction_label"
+            android:layout_width="@dimen/person_info_label_width"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/about_me_border_padding"
+            android:layout_marginTop="@dimen/common_20_dp"
+            android:text="@string/person_info_introduction"
+            android:textSize="@dimen/common_20_dp" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/person_info_middle_horizontal_bar_height"
+            android:layout_marginBottom="@dimen/common_20_dp"
+            android:layout_marginRight="@dimen/common_20_dp"
+            android:layout_marginTop="@dimen/common_20_dp"
+            android:layout_toRightOf="@id/person_info_introduction_label"
+            android:background="@null"
+            android:clickable="true"
+            android:gravity="top"
+            android:text="手机用户1111"
+            android:textSize="@dimen/common_20_dp" />
+    </RelativeLayout>
+</LinearLayout>
