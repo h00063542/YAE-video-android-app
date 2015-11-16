@@ -4,7 +4,9 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/xk2">
+    android:background="@color/xk2"
+    android:fitsSystemWindows="true"
+    android:clipToPadding="true">
 
     <com.yilos.widget.titlebar.TitleBar
         android:id="@+id/setting_title_bar"

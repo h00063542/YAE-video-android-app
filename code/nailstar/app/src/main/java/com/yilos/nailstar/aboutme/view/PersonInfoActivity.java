@@ -33,7 +33,7 @@ public class PersonInfoActivity extends Activity implements View.OnClickListener
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.about_me_person_info);
+        setContentView(R.layout.activity_person_info);
         titleBar = (TitleBar)findViewById(R.id.edit_person_info_title_bar);
         personInfoIdentity = (TextView) findViewById(R.id.person_info_identity);
         personInfoIdentityPopup = (RelativeLayout)findViewById(R.id.person_info_identity_popup);
