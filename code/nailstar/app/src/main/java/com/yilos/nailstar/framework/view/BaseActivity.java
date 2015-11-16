@@ -2,12 +2,16 @@ package com.yilos.nailstar.framework.view;
 
 import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.StringRes;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.readystatesoftware.systembartint.SystemBarTintManager;
+import com.yilos.nailstar.R;
 import com.yilos.widget.dialog.LoadingDialog;
 
 /**
@@ -20,6 +24,13 @@ public class BaseActivity extends AppCompatActivity implements IView{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            SystemBarTintManager systemBarTintManager = new SystemBarTintManager(this);
+            systemBarTintManager.setStatusBarTintEnabled(true);
+            systemBarTintManager.setStatusBarTintResource(R.color.orange);
+        }
     }
 
     @Override

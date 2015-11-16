@@ -30,6 +30,7 @@ import com.yilos.widget.pageindicator.CirclePageIndicator;
 import com.yilos.widget.pageindicator.TabPageIndicator;
 import com.yilos.widget.pageindicator.UnderlinePageIndicator;
 import com.yilos.widget.pullrefresh.PullRefreshLayout;
+import com.yilos.widget.titlebar.TitleBar;
 import com.yilos.widget.view.ImageCacheView;
 import com.yilos.widget.view.MViewPager;
 
@@ -97,6 +98,13 @@ public class IndexFragment extends Fragment implements IIndexView {
         videoListPager = (MViewPager)view.findViewById(R.id.videoListPager);
         videoListAdapter = new VideoListAdapter(getActivity());
         videoListPager.setAdapter(videoListAdapter);
+
+        //title
+        TitleBar titleBar = (TitleBar)view.findViewById(R.id.titleBar);
+        ImageView logoImage = titleBar.getImageTitleView();
+        logoImage.setImageResource(R.mipmap.daka_word_logo);
+        ImageView searchButton = titleBar.getRightImageButtonOne();
+        searchButton.setImageResource(R.mipmap.ic_search);
 
         // 初始化tab页
         final TabPageIndicator tabPageIndicator = (TabPageIndicator)view.findViewById(R.id.videoListPagerIndicator);
