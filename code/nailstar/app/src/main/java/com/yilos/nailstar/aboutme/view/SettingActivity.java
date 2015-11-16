@@ -151,6 +151,9 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                                 .setOnItemClickListener(new OnItemClickListener() {
                                     @Override
                                     public void onItemClick(DialogPlus dialog, Object item, View view, int position) {
+                                        if (item == null) {
+                                            return;
+                                        }
                                         Sdcard sdcard = new Sdcard();
                                         sdcard = (Sdcard) item;
                                         SettingUtil.setSdcardPathSharedPreferences(sdcard.getSdcardName(), sdcard.getSdcardPath());
