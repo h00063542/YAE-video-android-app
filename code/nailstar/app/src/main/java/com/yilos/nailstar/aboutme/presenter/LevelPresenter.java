@@ -16,7 +16,6 @@ import java.net.URL;
  * Created by sisilai on 15/11/9.
  */
 public class LevelPresenter {
-//    private AboutMeService aboutMeService = new AboutMeServiceImpl();
     private static LevelPresenter levelPresenter = new LevelPresenter();
     private LevelActivity levelActivity;
     public static LevelPresenter getInstance(LevelActivity levelActivity) {

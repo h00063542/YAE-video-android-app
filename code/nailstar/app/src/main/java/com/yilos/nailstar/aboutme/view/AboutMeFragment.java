@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,17 +47,12 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
 
     private OnFragmentInteractionListener mListener;
 
-    private RelativeLayout relativeLayout;
+    private RelativeLayout messageGroup;
     private RelativeLayout aboutMeSetting;
     private LinearLayout aboutMeMyInfo;
     private TextView messageCountText;//信息数
     private TitleBar titleBar;//标题栏
     private TextView titleText;//标题栏标题
-    private TextView leftTitleText;//靠左标题栏标题
-    private ImageView rightButtonTwo;
-    private ImageView rightButtonOne;
-    private ImageView backButton;
-    private TextView rightButton;//标题栏右边按钮
 
     private AboutMePresenter aboutMePresenter;
     private RelativeLayout personInfoLayout;
@@ -75,8 +71,12 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
 
     private TextView aboutMeLevel;//进入等级页面按钮
 
-    private static int experience;
-    private static String myImageUrl;
+    private int experience;
+    private String myImageUrl;
+    private int identityType;
+    private String nickName;
+    private String profile;
+    private String uid;
 
     /**
      * Use this factory method to create a new instance of
@@ -113,19 +113,21 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
         if (personInfo == null) {
             return;
         }
-        String nickName = personInfo.getNickname();
         Bitmap bitmap = personInfo.getImageBitmap();
-        myImageUrl = personInfo.getPhotoUrl();
-        int type = personInfo.getType();
-        String identity = IdentityUtil.getIdentity(type);
-        nameText.setText(nickName);
-        identityText.setText(identity);
         if(bitmap != null) {
             profileImage.setImageBitmap(bitmap);
         } else {
             profileImage.setImageResource(R.mipmap.ic_default_photo);
         }
         profileImage.setImageSrc(personInfo.getPhotoUrl());
+
+        uid = personInfo.getUid();
+        profile = personInfo.getProfile();
+        myImageUrl = personInfo.getPhotoUrl();
+        identityType = personInfo.getType();
+        nickName = personInfo.getNickname();
+        identityText.setText(IdentityUtil.getIdentity(identityType));
+        nameText.setText(nickName);
     }
 
     @Override
@@ -163,7 +165,7 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
     private void initViews(View view){
         aboutMeSetting = (RelativeLayout)view.findViewById(R.id.about_me_setting_group);
         aboutMeMyInfo = (LinearLayout)view.findViewById(R.id.about_me_my_info);
-        relativeLayout = (RelativeLayout)view.findViewById(R.id.about_me_message_group);
+        messageGroup = (RelativeLayout)view.findViewById(R.id.about_me_message_group);
         messageCountText = (TextView)view.findViewById(R.id.about_me_message_count);
 
         nameText = (TextView)view.findViewById(R.id.about_me_name);
@@ -214,6 +216,17 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
 
                 }
                 break;
+            case R.id.about_me_person_info_layout:
+                Intent intent = new Intent(getActivity(),PersonInfoActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("myImageUrl", myImageUrl);
+                bundle.putInt("identityType", identityType);
+                bundle.putString("uid", uid);
+                bundle.putString("profile",profile);
+                bundle.putString("nickName",nickName);
+                intent.putExtras(bundle);
+                startActivity(intent);
+                break;
             default:
                 break;
         }
@@ -237,13 +250,7 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
         aboutMeMyInfo.setOnClickListener(this);
         aboutMeSetting.setOnClickListener(this);
 
-        personInfoLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(),PersonInfoActivity.class);
-                startActivity(intent);
-            }
-        });
+        personInfoLayout.setOnClickListener(this);
     }
 
     // TODO: Rename method, update argument and hook method into UI event

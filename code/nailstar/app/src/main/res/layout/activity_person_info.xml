@@ -24,13 +24,16 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/about_me_border_padding"
             android:text="@string/person_info_photo"
+            android:textColor="@color/z2"
             android:textSize="@dimen/common_20_dp" />
 
         <com.yilos.widget.circleimageview.CircleImageView
+            android:clickable="true"
+            android:id="@+id/my_photo"
             android:layout_width="@dimen/about_me_my_info_image"
             android:layout_height="@dimen/about_me_my_info_image"
             android:layout_centerInParent="true"
-            android:src="@mipmap/ic_about_me_star_test" />
+            android:src="@mipmap/ic_default_photo" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -38,6 +41,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/person_info_middle_horizontal_bar_height"
         android:layout_marginTop="@dimen/common_10_dp"
+        android:textColor="@color/z2"
         android:background="@color/white">
 
         <TextView
@@ -50,21 +54,27 @@
             android:textSize="@dimen/common_20_dp" />
 
         <EditText
+            android:id="@+id/person_info_nick_name"
             android:layout_width="@dimen/person_info_text_width"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:layout_toRightOf="@+id/person_info_name"
             android:background="@null"
-            android:text="手机用户1111"
+            android:textColor="@color/z1"
             android:textSize="@dimen/common_20_dp" />
-
-        <ImageView
-            android:layout_width="@dimen/common_20_dp"
-            android:layout_height="@dimen/common_20_dp"
+        <LinearLayout
+            android:id="@+id/error_clear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/common_20_dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="@dimen/common_20_dp"
-            android:src="@mipmap/ic_error" />
+            android:layout_marginRight="@dimen/common_20_dp">
+            <ImageView
+                android:layout_width="@dimen/common_20_dp"
+                android:layout_height="@dimen/common_20_dp"
+                android:src="@mipmap/ic_error" />
+        </LinearLayout>
     </RelativeLayout>
 
     <RelativeLayout
@@ -82,17 +92,18 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/about_me_border_padding"
             android:text="@string/person_info_identity"
+            android:textColor="@color/z2"
             android:textSize="@dimen/common_20_dp" />
 
         <TextView
             android:id="@+id/person_info_identity"
             android:layout_width="@dimen/person_info_text_width"
             android:layout_height="match_parent"
-            android:gravity="center"
+            android:gravity="center_vertical"
             android:layout_toRightOf="@id/person_info_identity_label"
             android:background="@null"
             android:clickable="true"
-            android:text="手机用户1111"
+            android:textColor="@color/z1"
             android:textSize="@dimen/common_20_dp" />
     </RelativeLayout>
 
@@ -122,19 +133,21 @@
             android:layout_marginLeft="@dimen/about_me_border_padding"
             android:layout_marginTop="@dimen/common_20_dp"
             android:text="@string/person_info_introduction"
+            android:textColor="@color/z2"
             android:textSize="@dimen/common_20_dp" />
 
         <EditText
+            android:id="@+id/person_info_introduction"
             android:layout_width="match_parent"
             android:layout_height="@dimen/person_info_middle_horizontal_bar_height"
             android:layout_marginBottom="@dimen/common_20_dp"
             android:layout_marginRight="@dimen/common_20_dp"
             android:layout_marginTop="@dimen/common_20_dp"
+            android:textColor="@color/z1"
             android:layout_toRightOf="@id/person_info_introduction_label"
             android:background="@null"
             android:clickable="true"
             android:gravity="top"
-            android:text="手机用户1111"
             android:textSize="@dimen/common_20_dp" />
     </RelativeLayout>
 </LinearLayout>
