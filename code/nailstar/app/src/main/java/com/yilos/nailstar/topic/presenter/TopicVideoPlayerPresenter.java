@@ -36,12 +36,12 @@ public class TopicVideoPlayerPresenter {
 
     private static TopicVideoPlayerPresenter topicPresenter = new TopicVideoPlayerPresenter();
 
-    private ITopicVideoPlayerView videoPlayerView;
+    private ITopicVideoPlayerView topicVideoPlayerView;
     private ITopicService topicsService = new TopicServiceImpl();
     private ImageLoader imageLoader = ImageLoader.getInstance();
 
     public static TopicVideoPlayerPresenter getInstance(ITopicVideoPlayerView videoPlayerView) {
-        topicPresenter.videoPlayerView = videoPlayerView;
+        topicPresenter.topicVideoPlayerView = videoPlayerView;
         return topicPresenter;
     }
 
@@ -62,7 +62,7 @@ public class TopicVideoPlayerPresenter {
         TaskManager.UITask<TopicInfo> updateUi = new TaskManager.UITask<TopicInfo>() {
             @Override
             public Object doWork(TopicInfo topicInfo) {
-                videoPlayerView.initTopicInfo(topicInfo);
+                topicVideoPlayerView.initTopicInfo(topicInfo);
 
                 return null;
             }
@@ -91,7 +91,7 @@ public class TopicVideoPlayerPresenter {
         TaskManager.UITask<ArrayList<TopicRelatedInfo>> updateUi = new TaskManager.UITask<ArrayList<TopicRelatedInfo>>() {
             @Override
             public Object doWork(ArrayList<TopicRelatedInfo> topicRelatedList) {
-                videoPlayerView.initTopicRelatedInfo(topicRelatedList);
+                topicVideoPlayerView.initTopicRelatedInfo(topicRelatedList);
                 return null;
             }
         };
@@ -120,7 +120,7 @@ public class TopicVideoPlayerPresenter {
         TaskManager.UITask<TopicImageTextInfo> updateUi = new TaskManager.UITask<TopicImageTextInfo>() {
             @Override
             public Object doWork(TopicImageTextInfo videoImageTextInfoEntity) {
-                videoPlayerView.initTopicImageTextInfo(videoImageTextInfoEntity);
+                topicVideoPlayerView.initTopicImageTextInfo(videoImageTextInfoEntity);
                 return null;
             }
         };
@@ -149,7 +149,7 @@ public class TopicVideoPlayerPresenter {
         TaskManager.UITask<ArrayList<TopicCommentInfo>> updateUi = new TaskManager.UITask<ArrayList<TopicCommentInfo>>() {
             @Override
             public Object doWork(ArrayList<TopicCommentInfo> topicComments) {
-                videoPlayerView.initTopicCommentsInfo(topicComments, Constants.TOPIC_COMMENTS_INIT_ORDER_BY_ASC);
+                topicVideoPlayerView.initTopicCommentsInfo(topicComments, Constants.TOPIC_COMMENTS_INIT_ORDER_BY_ASC);
                 return null;
             }
         };
@@ -187,7 +187,7 @@ public class TopicVideoPlayerPresenter {
 
     public void downLoadTopicImage(final String topicId, final String url) {
         String filePath = saveBitmap2File(topicId, url);
-        videoPlayerView.showDownloadTopicImageStatus(!StringUtil.isEmpty(filePath), filePath);
+        topicVideoPlayerView.setDownloadTopicImageStatus(!StringUtil.isEmpty(filePath), filePath);
     }
 
     public void downloadTopicImageText(final String topicId, final ArrayList<String> urls) {
@@ -197,7 +197,7 @@ public class TopicVideoPlayerPresenter {
                 super.run();
                 for (final String url : urls) {
                     String filePath = saveBitmap2File(topicId, url);
-                    videoPlayerView.showDownloadTopicImageTextStatus(!StringUtil.isEmpty(filePath), filePath);
+                    topicVideoPlayerView.setDownloadTopicImageTextStatus(!StringUtil.isEmpty(filePath), filePath);
                 }
             }
         }.start();
@@ -225,7 +225,7 @@ public class TopicVideoPlayerPresenter {
         TaskManager.UITask<TopicStatusInfo> updateUi = new TaskManager.UITask<TopicStatusInfo>() {
             @Override
             public Object doWork(TopicStatusInfo topicStatusInfo) {
-                videoPlayerView.initUserTopicLikeStatus(topicStatusInfo);
+                topicVideoPlayerView.initUserTopicStatus(topicStatusInfo);
                 return null;
             }
         };
@@ -253,7 +253,7 @@ public class TopicVideoPlayerPresenter {
         TaskManager.UITask<Boolean> updateUi = new TaskManager.UITask<Boolean>() {
             @Override
             public Object doWork(Boolean isSuccess) {
-                videoPlayerView.showTopicLikeStatus(isLike, isSuccess);
+                topicVideoPlayerView.setTopicLikeStatus(isLike, isSuccess);
                 return null;
             }
         };
@@ -281,7 +281,7 @@ public class TopicVideoPlayerPresenter {
         TaskManager.UITask<Boolean> updateUi = new TaskManager.UITask<Boolean>() {
             @Override
             public Object doWork(Boolean isSuccess) {
-                videoPlayerView.showTopicCollectionStatus(isCollection, isSuccess);
+                topicVideoPlayerView.setTopicCollectionStatus(isCollection, isSuccess);
                 return null;
             }
         };
@@ -343,5 +343,9 @@ public class TopicVideoPlayerPresenter {
     private String saveBitmap2File(String topicId, String url) {
         Bitmap bitmap = imageLoader.loadImageSync(url);
         return FileUtils.saveBitMap(bitmap, Constants.YILOS_NAILSTAR_PICTURE_PATH, buildPictureLocalFileName(topicId, url));
+    }
+
+    public void cleanTopicVideoPlayerView() {
+        topicVideoPlayerView = null;
     }
 }
