@@ -14,6 +14,7 @@ import com.yilos.nailstar.R;
 import com.yilos.nailstar.aboutme.entity.FansList;
 import com.yilos.nailstar.aboutme.entity.FansListCategory;
 import com.yilos.nailstar.aboutme.presenter.FansListPresenter;
+import com.yilos.nailstar.framework.view.BaseActivity;
 import com.yilos.widget.titlebar.TitleBar;
 
 import java.util.ArrayList;
@@ -21,7 +22,7 @@ import java.util.ArrayList;
 /**
  * Created by sisilai on 15/11/6.
  */
-public class FansListActivity extends Activity {
+public class FansListActivity extends BaseActivity {
     private TitleBar titleBar;
     private TextView titleText;
     private ImageView backButton;

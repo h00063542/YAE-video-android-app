@@ -1,5 +1,6 @@
 package com.yilos.nailstar.aboutme.model;
 
+import com.yilos.nailstar.aboutme.entity.PersonInfo;
 import com.yilos.nailstar.framework.entity.NailStarApplicationContext;
 import com.yilos.nailstar.framework.exception.CommonException;
 import com.yilos.nailstar.framework.exception.NetworkDisconnectException;
@@ -155,6 +156,41 @@ public class LoginServiceImpl {
             } else {
                 JSONObject loginResult = resultObject.getJSONObject("result");
                 return loginResult.getString("uid");
+            }
+        } catch (JSONException e) {
+            throw new CommonException("登录失败，请稍后重试", e);
+        } catch (IOException e) {
+            throw new CommonException("网络好像不给力哦，请检查网络设置", e);
+        }
+    }
+
+    /**
+     * 查询用户的个人信息
+     * @param uid
+     * @return
+     * @throws NetworkDisconnectException
+     * @throws CommonException
+     */
+    public PersonInfo queryPersonInfo(String uid) throws NetworkDisconnectException, CommonException {
+        if(!NailStarApplicationContext.getInstance().isNetworkConnected()) {
+            throw new NetworkDisconnectException("网络好像不给力哦，请检查网络设置");
+        }
+
+        PersonInfo personInfo = new PersonInfo();
+        try {
+            String result = HttpClient.getJson("/vapi/nailstar/account/profile?uid=" + uid);
+            JSONObject resultObject = new JSONObject(result);
+            if(!resultObject.has("code") || resultObject.optInt("code") != 0) {
+                return personInfo;
+            } else {
+                JSONObject profileResult = resultObject.getJSONObject("result");
+                personInfo.setUid(uid);
+                personInfo.setPhotoUrl(profileResult.getString("photoUrl"));
+                personInfo.setNickname(profileResult.getString("nickname"));
+                personInfo.setProfile(profileResult.getString("profile"));
+                personInfo.setType(profileResult.getInt("type"));
+
+                return personInfo;
             }
         } catch (JSONException e) {
             throw new CommonException("登录失败，请稍后重试", e);

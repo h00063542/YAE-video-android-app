@@ -5,16 +5,16 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_main">MainActivity</string>
 
-    <string name="title_section1">Section 1</string>
-    <string name="title_section2">Section 2</string>
-    <string name="title_section3">Section 3</string>
-
     <!-- 弹框下方按钮 确定和取消-->
     <string name="sureButtonText">确定</string>
     <string name="cancelButtonText">取消</string>
 
+    <!-- 搜索页面 -->
+    <string name="search_text">搜索</string>
+    <string name="search_tip">搜索 标签/内容/老师</string>
+    <string name="no_relate_video">暂无相关视频</string>
+
     <!-- 主题详情 -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="video_play_times">%1$s次播放</string>
     <string name="topic_image_text_content">图文分解</string>
     <string name="hide_topic_image_text_content">收起图文</string>
@@ -137,9 +137,12 @@
     <string name="version_info">版本信息</string>
     <string name="version_info_number">1.0.0</string>
     <string name="download_folder">下载目录</string>
+    <string name="setting_download_folder">设置下载目录</string>
     <string name="download_folder_location">存储卡1</string>
     <string name="i_need_score">我要打分</string>
     <string name="about_us">关于美甲大咖</string>
     <string name="quick_login">退出登录</string>
+    <string name="has_been_login_out">已退出登录</string>
     <string name="can_not_find_version_name">版本号没有找到</string>
+    <string name="title_activity_search">SearchActivity</string>
 </resources>

@@ -5,6 +5,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="设置下载目录"
-        android:layout_margin="10dp"/>
+        android:clickable="false"
+        android:text="@string/setting_download_folder"
+        android:layout_margin="@dimen/common_10_dp"/>
 </LinearLayout>

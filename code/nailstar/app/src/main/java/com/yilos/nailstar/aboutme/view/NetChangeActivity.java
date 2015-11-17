@@ -15,8 +15,9 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.yilos.nailstar.R;
+import com.yilos.nailstar.framework.view.BaseActivity;
 
-public class NetChangeActivity extends Activity {
+public class NetChangeActivity extends BaseActivity {
     private TextView textShow;
     private Button btnGet;
     public static final String CONNECTIVITY_CHANGE_ACTION = "android.net.conn.CONNECTIVITY_CHANGE";

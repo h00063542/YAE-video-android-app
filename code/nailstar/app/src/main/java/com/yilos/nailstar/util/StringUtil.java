@@ -1,5 +1,6 @@
 package com.yilos.nailstar.util;
 
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -24,6 +25,20 @@ public class StringUtil {
         Pattern p = Pattern.compile("^((13)|(14)|(15)|(17)|(18))\\d{9}$");
         Matcher m = p.matcher(mobileNumber);
         return m.matches();
+    }
+
+
+    public static ArrayList<String> findNumber(String str) {
+        ArrayList<String> result = new ArrayList<String>();
+        Pattern p = Pattern.compile("\\d{7,}");
+        Matcher m = p.matcher(str);
+
+        while (m.find()) {
+            if (!isEmpty(m.group())) {
+                result.add(m.group());
+            }
+        }
+        return result;
     }
 
     /**
