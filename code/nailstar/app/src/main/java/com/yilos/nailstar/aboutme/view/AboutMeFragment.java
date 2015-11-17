@@ -237,12 +237,12 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
         titleText.setText(R.string.about_me_my);
 
         LoginAPI loginAPI = LoginAPI.getInstance();
-        //if (loginAPI.isLogin()) {
-            aboutMePresenter = AboutMePresenter.getInstance(this);
-            aboutMePresenter.getMessageCount();
-            aboutMePresenter.getAboutMeNumber();
-            aboutMePresenter.getPersonInfo();
-        //}
+        if (loginAPI.isLogin()) {
+//            aboutMePresenter = AboutMePresenter.getInstance(this);
+//            aboutMePresenter.getMessageCount();
+//            aboutMePresenter.getAboutMeNumber();
+//            aboutMePresenter.getPersonInfo();
+        }
 
         myFollowList.setOnClickListener(this);
         myFansList.setOnClickListener(this);

@@ -3,6 +3,8 @@ package com.yilos.nailstar.aboutme.model;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
+import com.alibaba.sdk.android.oss.OSSService;
+import com.alibaba.sdk.android.oss.callback.SaveCallback;
 import com.squareup.okhttp.FormEncodingBuilder;
 import com.squareup.okhttp.RequestBody;
 import com.yilos.nailstar.aboutme.entity.AboutMeNumber;
@@ -16,6 +18,7 @@ import com.yilos.nailstar.util.HttpClient;
 import com.yilos.nailstar.util.ImageUtil;
 import com.yilos.nailstar.util.JsonUtil;
 import com.yilos.nailstar.util.LoggerFactory;
+import com.yilos.nailstar.util.OSSUtil;
 
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
@@ -66,6 +69,15 @@ public class AboutMeServiceImpl implements AboutMeService {
             throw new JSONException("消息数解析失败");
         }
 
+    }
+
+    @Override
+    public void uploadFile2Oss(String localFilePath, String ossFileName, SaveCallback callback) throws NetworkDisconnectException {
+        if (!NailStarApplicationContext.getInstance().isNetworkConnected()) {
+            throw new NetworkDisconnectException("网络没有连接");
+        }
+        OSSService ossService = OSSUtil.getDefaultOssService();
+        OSSUtil.resumableUpload(ossService, ossService.getOssBucket(OSSUtil.BUCKET_YPICTURE), localFilePath, ossFileName, callback);
     }
 
     @Override

@@ -12,7 +12,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.yilos.nailstar.R;
-import com.yilos.nailstar.aboutme.presenter.LevelPresenter;
+import com.yilos.nailstar.aboutme.entity.PersonInfo;
 import com.yilos.nailstar.aboutme.presenter.PersonInfoPresenter;
 import com.yilos.nailstar.framework.view.BaseActivity;
 import com.yilos.nailstar.takeImage.TakeImage;
@@ -49,6 +49,12 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
     private String profile;
     private String uid;
 
+    private PersonInfo personInfo = new PersonInfo();
+
+    public void submitMyPhotoToOss(String ossUrl) {
+        //todo
+    }
+
     public void getImage(Bitmap bitmap) {
         if (bitmap == null) {
             return;
@@ -66,6 +72,17 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
         uid = getBundle.getString("uid");
         profile = getBundle.getString("profile");
         nickName = getBundle.getString("nickName");
+
+        personInfo.setPhotoUrl(myImageUrl);
+        personInfo.setProfile(profile);
+        personInfo.setNickname(nickName);
+        String datetime = "111111";
+        StringBuilder picName = new StringBuilder()
+                .append(uid)
+                .append(Constants.UNDERLINE)
+                .append(datetime)
+                .append(Constants.JPG_SUFFIX);
+        personInfo.setPicName(picName.toString());//// STOPSHIP: 15/11/17  
         setLoopView();
         initEvents();
     }
@@ -116,7 +133,7 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
         nickNameText.setText(nickName);
         profileText.setText(profile);
 
-        PersonInfoPresenter personInfoPresenter = PersonInfoPresenter.getInstance(this);
+        final PersonInfoPresenter personInfoPresenter = PersonInfoPresenter.getInstance(this);
         personInfoPresenter.getImage(myImageUrl);
         titleBar.getBackButton(PersonInfoActivity.this);
         titleBarTitle = titleBar.getTitleView();
@@ -139,6 +156,7 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
             public void callback(Uri uri) {
                 // TODO
                 circleImageView.setImageURI(uri);
+                personInfoPresenter.submitMyPhotoToOss(personInfo);
             }
         }).build();
     }
