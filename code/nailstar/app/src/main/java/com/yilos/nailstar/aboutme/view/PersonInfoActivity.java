@@ -23,6 +23,7 @@ import com.yilos.nailstar.takeImage.TakeImage;
 import com.yilos.nailstar.takeImage.TakeImageCallback;
 import com.yilos.nailstar.util.Constants;
 import com.yilos.nailstar.util.IdentityUtil;
+import com.yilos.nailstar.util.UUIDUtil;
 import com.yilos.widget.circleimageview.CircleImageView;
 import com.yilos.widget.titlebar.TitleBar;
 import com.yilos.widget.wheelView.LoopListener;
@@ -85,13 +86,6 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
         personInfo.setPhotoUrl(myImageUrl);
         personInfo.setProfile(profile);
         personInfo.setNickname(nickName);
-        String datetime = String.valueOf(System.currentTimeMillis());
-        StringBuilder picName = new StringBuilder()
-                .append(personInfo.getUid())
-                .append(Constants.UNDERLINE)
-                .append(datetime)
-                .append(Constants.JPG_SUFFIX);
-        personInfo.setPicName(picName.toString());
         setLoopView();
         initEvents();
     }
@@ -166,6 +160,10 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
             public void callback(Uri uri) {
                 circleImageView.setImageURI(uri);
                 String path = uri.getPath();
+                StringBuilder picName = new StringBuilder()
+                        .append(UUIDUtil.getUUID())
+                        .append(Constants.JPG_SUFFIX);
+                personInfo.setPicName(picName.toString());
                 personInfoPresenter.submitMyPhotoToOss(path,personInfo.getPicName());
             }
         }).build();
