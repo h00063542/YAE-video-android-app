@@ -42,13 +42,13 @@ public interface ITopicVideoPlayerView {
      */
     void initTopicRelatedInfo(ArrayList<TopicRelatedInfo> topicRelatedList);
 
-    void initUserTopicLikeStatus(TopicStatusInfo topicStatusInfo);
+    void initUserTopicStatus(TopicStatusInfo topicStatusInfo);
 
-    void showTopicLikeStatus(boolean isLike, boolean isSuccess);
+    void setTopicLikeStatus(boolean isLike, boolean isSuccess);
 
-    void showTopicCollectionStatus(boolean isCollection, boolean isSuccess);
+    void setTopicCollectionStatus(boolean isCollection, boolean isSuccess);
 
-    void showDownloadTopicImageStatus(boolean isSuccess, String filePath);
+    void setDownloadTopicImageStatus(boolean isSuccess, String filePath);
 
-    void showDownloadTopicImageTextStatus(boolean isSuccess, String filePath);
+    void setDownloadTopicImageTextStatus(boolean isSuccess, String filePath);
 }

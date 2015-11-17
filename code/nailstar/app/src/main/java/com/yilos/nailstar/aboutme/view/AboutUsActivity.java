@@ -8,12 +8,13 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.yilos.nailstar.R;
+import com.yilos.nailstar.framework.view.BaseActivity;
 import com.yilos.widget.titlebar.TitleBar;
 
 /**
  * Created by sisilai on 15/11/12.
  */
-public class AboutUsActivity extends Activity {
+public class AboutUsActivity extends BaseActivity {
     private TitleBar titleBar;
     private TextView titleView;
     private TextView userAgreement;

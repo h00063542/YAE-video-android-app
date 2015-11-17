@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,7 @@ import com.yilos.nailstar.aboutme.entity.MessageCount;
 import com.yilos.nailstar.aboutme.entity.PersonInfo;
 import com.yilos.nailstar.aboutme.model.LoginAPI;
 import com.yilos.nailstar.aboutme.presenter.AboutMePresenter;
+import com.yilos.nailstar.util.IdentityUtil;
 import com.yilos.nailstar.util.LevelUtil;
 import com.yilos.widget.circleimageview.CircleImageView;
 import com.yilos.widget.titlebar.TitleBar;
@@ -45,17 +47,12 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
 
     private OnFragmentInteractionListener mListener;
 
-    private RelativeLayout relativeLayout;
+    private RelativeLayout messageGroup;
     private RelativeLayout aboutMeSetting;
     private LinearLayout aboutMeMyInfo;
     private TextView messageCountText;//信息数
     private TitleBar titleBar;//标题栏
     private TextView titleText;//标题栏标题
-    private TextView leftTitleText;//靠左标题栏标题
-    private ImageView rightButtonTwo;
-    private ImageView rightButtonOne;
-    private ImageView backButton;
-    private TextView rightButton;//标题栏右边按钮
 
     private AboutMePresenter aboutMePresenter;
     private RelativeLayout personInfoLayout;
@@ -74,8 +71,12 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
 
     private TextView aboutMeLevel;//进入等级页面按钮
 
-    private static int experience;
-    private static String myImageUrl;
+    private int experience;
+    private String myImageUrl;
+    private int identityType;
+    private String nickName;
+    private String profile;
+    private String uid;
 
     /**
      * Use this factory method to create a new instance of
@@ -112,48 +113,21 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
         if (personInfo == null) {
             return;
         }
-        String nickName = personInfo.getNickname();
         Bitmap bitmap = personInfo.getImageBitmap();
-        myImageUrl = personInfo.getPhotoUrl();
-        int type = personInfo.getType();
-        String identity;
-        //        1美甲店主
-        //        2美甲师
-        //        3美甲从业者
-        //        4美甲消费者
-        //        5美甲老师
-        //        6其他
-        switch (type) {
-            case 1:
-                identity = "美甲店主";
-                break;
-            case 2:
-                identity = "美甲师";
-                break;
-            case 3:
-                identity = "美甲从业者";
-                break;
-            case 4:
-                identity = "美甲消费者";
-                break;
-            case 5:
-                identity = "美甲老师";
-                break;
-            case 6:
-                identity = "其他";
-                break;
-            default:
-                identity = "身份";
-                break;
-        }
-        nameText.setText(nickName);
-        identityText.setText(identity);
         if(bitmap != null) {
             profileImage.setImageBitmap(bitmap);
         } else {
             profileImage.setImageResource(R.mipmap.ic_default_photo);
         }
         profileImage.setImageSrc(personInfo.getPhotoUrl());
+
+        uid = personInfo.getUid();
+        profile = personInfo.getProfile();
+        myImageUrl = personInfo.getPhotoUrl();
+        identityType = personInfo.getType();
+        nickName = personInfo.getNickname();
+        identityText.setText(IdentityUtil.getIdentity(identityType));
+        nameText.setText(nickName);
     }
 
     @Override
@@ -191,7 +165,7 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
     private void initViews(View view){
         aboutMeSetting = (RelativeLayout)view.findViewById(R.id.about_me_setting_group);
         aboutMeMyInfo = (LinearLayout)view.findViewById(R.id.about_me_my_info);
-        relativeLayout = (RelativeLayout)view.findViewById(R.id.about_me_message_group);
+        messageGroup = (RelativeLayout)view.findViewById(R.id.about_me_message_group);
         messageCountText = (TextView)view.findViewById(R.id.about_me_message_count);
 
         nameText = (TextView)view.findViewById(R.id.about_me_name);
@@ -242,6 +216,17 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
 
                 }
                 break;
+            case R.id.about_me_person_info_layout:
+                Intent intent = new Intent(getActivity(),PersonInfoActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("myImageUrl", myImageUrl);
+                bundle.putInt("identityType", identityType);
+                bundle.putString("uid", uid);
+                bundle.putString("profile",profile);
+                bundle.putString("nickName",nickName);
+                intent.putExtras(bundle);
+                startActivity(intent);
+                break;
             default:
                 break;
         }
@@ -249,26 +234,15 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
 
     private void initEvents() {
         titleText = titleBar.getTitleView();
-        //leftTitleText = titleBar.getLeftTitleView();
         titleText.setText(R.string.about_me_my);
-        //titleText.setText("我的我的我的我的我的我的我的我的我的我的我的我的我的我的v");//R.string.about_me_my
-//        leftTitleText.setText("我的我的我的我的我的我的我的我的我的我的我的我的我的我的v");
-//        rightButtonTwo = titleBar.getRightImageButtonTwo();
-//        rightButtonTwo.setImageResource(R.drawable.ic_head_download);
-//        rightButtonOne = titleBar.getRightImageButtonOne();
-//        rightButtonOne.setImageResource(R.drawable.ic_head_share);
-//        backButton = titleBar.getBackButton();
-//        backButton.setImageResource(R.drawable.ic_head_back);
-//        rightButton = titleBar.getRightTextButton();
-//        rightButton.setText("确定");
 
         LoginAPI loginAPI = LoginAPI.getInstance();
-        if (loginAPI.isLogin()) {
+        //if (loginAPI.isLogin()) {
             aboutMePresenter = AboutMePresenter.getInstance(this);
             aboutMePresenter.getMessageCount();
             aboutMePresenter.getAboutMeNumber();
             aboutMePresenter.getPersonInfo();
-        }
+        //}
 
         myFollowList.setOnClickListener(this);
         myFansList.setOnClickListener(this);
@@ -276,13 +250,7 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
         aboutMeMyInfo.setOnClickListener(this);
         aboutMeSetting.setOnClickListener(this);
 
-        personInfoLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(),PersonInfoActivity.class);
-                startActivity(intent);
-            }
-        });
+        personInfoLayout.setOnClickListener(this);
     }
 
     // TODO: Rename method, update argument and hook method into UI event

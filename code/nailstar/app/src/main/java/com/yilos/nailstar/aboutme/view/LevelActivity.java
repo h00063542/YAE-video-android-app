@@ -17,6 +17,7 @@ import com.yilos.nailstar.R;
 import com.yilos.nailstar.aboutme.presenter.FansListPresenter;
 import com.yilos.nailstar.aboutme.presenter.LevelPresenter;
 import com.yilos.nailstar.framework.exception.NetworkDisconnectException;
+import com.yilos.nailstar.framework.view.BaseActivity;
 import com.yilos.nailstar.util.ImageUtil;
 import com.yilos.nailstar.util.LevelUtil;
 import com.yilos.widget.circleimageview.CircleImageView;
@@ -28,7 +29,7 @@ import java.net.URL;
 /**
  * Created by sisilai on 15/11/6.
  */
-public class LevelActivity extends Activity {
+public class LevelActivity extends BaseActivity {
     private LinearLayout levelProgressbarDirection;
     private ProgressBar progressBar;
     private TextView expText;//经验值
