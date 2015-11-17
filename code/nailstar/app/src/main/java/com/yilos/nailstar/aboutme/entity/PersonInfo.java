@@ -2,10 +2,12 @@ package com.yilos.nailstar.aboutme.entity;
 
 import android.graphics.Bitmap;
 
+import java.io.Serializable;
+
 /**
  * Created by sisilai on 15/10/30.
  */
-public class PersonInfo {
+public class PersonInfo implements Serializable {
     /**
      * uid : a8affd60-efe6-11e4-a908-3132fc2abe39
      * nickname : Lolo

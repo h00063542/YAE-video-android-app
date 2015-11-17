@@ -5,14 +5,11 @@ import android.graphics.BitmapFactory;
 
 import com.alibaba.sdk.android.oss.callback.SaveCallback;
 import com.alibaba.sdk.android.oss.model.OSSException;
-import com.yilos.nailstar.aboutme.entity.FansList;
-import com.yilos.nailstar.aboutme.entity.FollowList;
 import com.yilos.nailstar.aboutme.entity.PersonInfo;
 import com.yilos.nailstar.aboutme.model.AboutMeService;
 import com.yilos.nailstar.aboutme.model.AboutMeServiceImpl;
 import com.yilos.nailstar.aboutme.view.PersonInfoActivity;
 import com.yilos.nailstar.framework.exception.NetworkDisconnectException;
-import com.yilos.nailstar.topic.entity.UpdateReadyInfo;
 import com.yilos.nailstar.util.Constants;
 import com.yilos.nailstar.util.ImageUtil;
 import com.yilos.nailstar.util.LoggerFactory;
@@ -68,7 +65,7 @@ public class PersonInfoPresenter {
     }
 
 
-    //获取粉丝列表
+    //设置个人资料
     public void setPersonInfo(final String uid, final String nickname, final int type, final String photoUrl, final String profile) {
         TaskManager.Task setPersonInfo = new TaskManager.BackgroundTask() {
             @Override
@@ -136,4 +133,5 @@ public class PersonInfoPresenter {
                 .start();
 
     }
+
 }
