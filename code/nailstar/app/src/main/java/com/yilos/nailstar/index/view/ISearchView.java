@@ -17,8 +17,4 @@ public interface ISearchView extends IView {
     void hideNoResultView();
 
     void closeSearchView();
-
-    void notifyItemRangeInserted(int positionStart, int itemCount);
-
-    void notifyDataSetChanged();
 }

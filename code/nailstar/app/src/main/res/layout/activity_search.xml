@@ -60,6 +60,7 @@
     <com.jude.easyrecyclerview.EasyRecyclerView
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
+        android:padding="@dimen/common_10_dp"
         android:visibility="gone"
         app:layout_progress="@layout/view_progress"
         android:id="@+id/videoList">
