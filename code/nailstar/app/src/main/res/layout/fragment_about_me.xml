@@ -315,6 +315,7 @@
 
                         <!-- 已下载 -->
                         <RelativeLayout
+                            android:id="@+id/downloadVideoBtn"
                             android:background="@drawable/selector"
                             android:clickable="true"
                             android:layout_width="fill_parent"

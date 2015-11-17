@@ -171,7 +171,6 @@ public class VoteListViewAdapter extends BaseAdapter {
 
                 View lessionImageItem = layoutInflater.inflate(R.layout.lession_image_item, null);
                 ImageCacheView lessionLargeImage = (ImageCacheView) lessionImageItem.findViewById(R.id.lessionLargeImage);
-                lessionLargeImage.setImageSrc(candidateLession.getPicUrl());
                 if (candidateLession.getPicUrl() != null && !"".equals(candidateLession.getPicUrl())) {
                     lessionLargeImage.setImageSrc(candidateLession.getPicUrl());
                 } else {

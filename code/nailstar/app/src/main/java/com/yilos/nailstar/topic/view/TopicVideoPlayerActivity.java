@@ -15,7 +15,6 @@ import android.support.v4.view.ViewPager;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -77,7 +76,6 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         PullToRefreshView.OnHeaderRefreshListener,
         PullToRefreshView.OnFooterRefreshListener {
     private final Logger LOGGER = LoggerFactory.getLogger(TopicVideoPlayerActivity.class);
-    private final String TEMP_USER_PHOTO_URL = "http://pic.yilos.com/162b73dc3f69af2dc8a79a1b9da7591e";
 
     private final String TAG = "TopicVideoPlayerActivity";
 
@@ -147,7 +145,6 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
     private View mZoomInImageLayout;
     private ImageCacheView mIcvTopicCommentImage;
 
-
 //    private FloatingActionButton mFabBackTop;
 
     // 底部下载、收藏、评论、交作业
@@ -164,7 +161,6 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
     private int mPage = 1;
     // 是否最后一页评论
     private boolean mIsTopicsCommentLastPage = false;
-
 
     private TopicVideoPlayerPresenter mTopicVideoPlayerPresenter;
 
@@ -217,19 +213,13 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_topic_video_player);
-        showLoading("");
-        mTopicVideoPlayerPresenter = TopicVideoPlayerPresenter.getInstance(this);
         init();
-        checkInitFinish();
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                hideLoading();
-//            }
-//        }, 5000);
     }
 
     private void init() {
+        if (NailStarApplicationContext.getInstance().isNetworkConnected()) {
+            showLoading("");
+        }
         // 获取topic id
         mTopicId = getIntent().getStringExtra(Constants.TOPIC_ID);
         mPage = 1;
@@ -240,6 +230,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         // 初始化控件布局参数
         initControlLayoutParams();
 
+        mTopicVideoPlayerPresenter = TopicVideoPlayerPresenter.getInstance(this);
         // 调用后台接口初始化界面数据
         mTopicVideoPlayerPresenter.initTopicInfo(mTopicId);
         mTopicVideoPlayerPresenter.initTopicRelatedInfo(mTopicId);
@@ -250,8 +241,8 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
             mTopicVideoPlayerPresenter.initUserTopicStatus(mTopicId);
         } else {
             initUserTopicStatusFinish = true;
-            checkInitFinish();
         }
+        checkInitFinish();
     }
 
     private void initControl() {
@@ -406,6 +397,20 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
                 Toast.makeText(TopicVideoPlayerActivity.this, "分享成功", Toast.LENGTH_SHORT).show();
             }
         });
+
+//        mVDVideoView.setPlayerChangeListener(new VDVideoExtListeners.OnVDVideoPlayerChangeListener() {
+//            @Override
+//            public void OnVDVideoPlayerChangeSwitch(int index, long position) {
+//                Log.e(TAG, "setPlayerChangeListener,index:" + index + ",position:" + position);
+//            }
+//        });
+//        mVDVideoView.setCompletionListener(new VDVideoExtListeners.OnVDVideoCompletionListener() {
+//            @Override
+//            public void onVDVideoCompletion(VDVideoInfo info, int status) {
+//                Log.e(TAG, "setCompletionListener");
+//            }
+//        });
+
 
 //        // 添加滚动监听
 //        mSvVideoPlayer.setOnTouchListener(new View.OnTouchListener() {
@@ -731,7 +736,8 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         startActivityForResult(intent, TOPIC_COMMENT_REQUEST_CODE);
     }
 
-    private void showTopicCommentReplayAgainDialog(final TopicCommentInfo commentInfo, final TopicCommentReplyInfo replyInfo, final int type) {
+    private void showTopicCommentReplayAgainDialog(final TopicCommentInfo commentInfo
+            , final TopicCommentReplyInfo replyInfo, final int type) {
         final CharSequence[] items = {getString(R.string.reply), getString(R.string.cancel)};
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -797,13 +803,14 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         mIvVideoAuthorPhoto.setImageSrc(topicInfo.getAuthorPhoto());
         // 作者和播放次数名称
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("<font><big>");
-        stringBuilder.append(topicInfo.getAuthor());
-        stringBuilder.append("</big></font>");
-        stringBuilder.append("  ");
-        stringBuilder.append("<font color=\"#adafb0\">");
-        stringBuilder.append(String.format(getString(R.string.video_play_times), topicInfo.getVideos().get(0).getPlayTimes()));
-        stringBuilder.append("</font>");
+        stringBuilder.append(buildStartFont(R.color.z2))
+                .append("<big>")
+                .append(topicInfo.getAuthor())
+                .append("</big></font>")
+                .append("  ")
+                .append(buildStartFont(R.color.z3))
+                .append(String.format(getString(R.string.video_play_times), topicInfo.getVideos().get(0).getPlayTimes()))
+                .append("</font>");
         mTvVideoAuthorPlayTimes.setText(Html.fromHtml(stringBuilder.toString()));
 
         // 设置作者的tags
@@ -837,8 +844,9 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         // 设置评论数量
         StringBuilder stringBuild = new StringBuilder();
         stringBuild.append(getString(R.string.topic_comment_count));
-        stringBuild.append(" ");
+        stringBuild.append(" (");
         stringBuild.append(topicInfo.getCommentCount());
+        stringBuild.append(")");
         mTvTopicCommentCount.setText(stringBuild);
     }
 
@@ -1058,7 +1066,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
     }
 
     @Override
-    public void initTopicCommentsInfo(ArrayList<TopicCommentInfo> topicComments, int orderBy) {
+    public void initTopicCommentInfo(ArrayList<TopicCommentInfo> topicComments, int orderBy) {
         initTopicCommentsFinish = true;
         checkInitFinish();
         if (CollectionUtil.isEmpty(topicComments)) {
@@ -1136,6 +1144,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
             tvTopicCommentAuthorLp.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
             topicCommentAuthorTv.setLayoutParams(tvTopicCommentAuthorLp);
             topicCommentAuthorTv.setText(topicCommentInfo.getAuthor());
+            topicCommentAuthorTv.setTextColor(getResources().getColor(R.color.z2));
             topicCommentAuthorTv.setTextSize(TypedValue.COMPLEX_UNIT_PX, mCommentAuthorFontSize);
             relativeLayout.addView(topicCommentAuthorTv);
 
@@ -1147,7 +1156,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
             topicCommentCreateDateTv.setLayoutParams(tvTopicCommentCreateDateLp);
 
             StringBuilder contentText = new StringBuilder();
-            contentText.append("<font color=\"#adafb0\">");
+            contentText.append(buildStartFont(R.color.z3));
 
             if (topicCommentInfo.getIsHomework() == Constants.IS_HOME_WORK_VALUE) {
                 contentText.append("#")
@@ -1172,11 +1181,12 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
             tvTopicCommentContentLp.setMargins(0, mCommentContentMarginTop, 0, mCommentContentMarginBottom);
             topicCommentContentTv.setLayoutParams(tvTopicCommentContentLp);
 
-            topicCommentContentTv.setText(Html.fromHtml(buildNumberText(topicCommentInfo.getContent())));
+            topicCommentContentTv.setText(Html.fromHtml(StringUtil.buildTelNumberHtmlText(topicCommentInfo.getContent())));
             topicCommentContentTv.setMovementMethod(LinkMovementMethod.getInstance());
 
             topicCommentContentTv.setTextSize(TypedValue.COMPLEX_UNIT_PX, mCommentContentFontSize);
             topicCommentContentTv.setTextColor(getResources().getColor(R.color.black));
+            topicCommentContentTv.setTag(R.id.topic_comment_info, topicCommentInfo);
             topicCommentContentTv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -1248,17 +1258,15 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         // 设置主题评论回复之间的上下间隔
         topicCommentContentReplyLp.setMargins(0, 0, 0, 0);
 
-        String commentContent = buildNumberText(topicCommentReplyInfo.getContent());
-
         TextView topicCommentReplyTv = new TextView(this);
         topicCommentReplyTv.setLayoutParams(topicCommentContentReplyLp);
         StringBuilder replyText = new StringBuilder();
-        replyText.append("<font color=\"#f45d49\">")
+        replyText.append(buildStartFont(R.color.orange))
                 .append(topicCommentReplyInfo.getAuthor())
                 .append("</font>");
 
         if (!topicCommentInfo.getUserId().equals(topicCommentReplyInfo.getAt().getUserId())) {
-            replyText.append("<font color=\"#555657\">")
+            replyText.append(buildStartFont(R.color.z3))
                     .append(getString(R.string.reply))
                     .append(topicCommentReplyInfo.getAt().getNickName())
                     .append("</font>");
@@ -1266,9 +1274,11 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
 
         replyText.append(": ");
 
-        replyText.append("<font color=\"#000000\">")
-                .append(commentContent)
-                .append("</font>");
+        String content = StringUtil.buildTelNumberHtmlText(topicCommentReplyInfo.getContent());
+        replyText.append(buildStartFont(R.color.z2));
+        replyText.append(content);
+        replyText.append("</font>");
+
         topicCommentReplyTv.setText(Html.fromHtml(replyText.toString()));
         topicCommentReplyTv.setMovementMethod(LinkMovementMethod.getInstance());
 
@@ -1384,13 +1394,6 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         });
     }
 
-    private void refreshMedia(String filePath) {
-        if (StringUtil.isEmpty(filePath)) {
-            return;
-        }
-        MediaScannerConnection.scanFile(this, new String[]{filePath}, null, null);
-    }
-
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         super.onKeyDown(keyCode, event);
@@ -1410,6 +1413,169 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
             return super.onKeyDown(keyCode, event);
         }
         return true;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        if (resultCode != RESULT_OK) {
+            if (requestCode == TOPIC_COMMENT_REQUEST_CODE && resultCode == RESULT_FIRST_USER) {
+                showShortToast("提交评论失败，请稍后再试...");
+            } else if (requestCode == TOPIC_HOMEWORK_REQUEST_CODE && resultCode == RESULT_FIRST_USER) {
+                showShortToast("交作业失败，请稍后再试...");
+            }
+            return;
+        }
+        String userId = LoginAPI.getInstance().getLoginUserId();
+        String userNickname = LoginAPI.getInstance().getLoginUserNickname();
+        String userPhotoUrl = LoginAPI.getInstance().getLoginUserPhotourl();
+        // 评论或回复
+        if (requestCode == TOPIC_COMMENT_REQUEST_CODE) {
+            Bundle data = intent.getExtras();
+//            String topicId = data.getString(Constants.TOPIC_ID, Constants.EMPTY_STRING);
+            int commentType = data.getInt(Constants.TYPE, Constants.TOPIC_COMMENT_TYPE_COMMENT);
+            String commentId = data.getString(Constants.TOPIC_COMMENT_ID, Constants.EMPTY_STRING);
+            String newCommentId = data.getString(Constants.TOPIC_NEW_COMMENT_ID, Constants.EMPTY_STRING);
+            String commentUserId = data.getString(Constants.TOPIC_COMMENT_USER_ID, Constants.EMPTY_STRING);
+            String commentAuthor = data.getString(Constants.TOPIC_COMMENT_AUTHOR, Constants.EMPTY_STRING);
+            String content = data.getString(Constants.CONTENT, Constants.EMPTY_STRING);
+            if (commentType == Constants.TOPIC_COMMENT_TYPE_COMMENT) {
+                ArrayList<TopicCommentInfo> topicCommentInfoList = new ArrayList<TopicCommentInfo>();
+                TopicCommentInfo topicCommentInfo = new TopicCommentInfo();
+                topicCommentInfo.setId(newCommentId);
+
+                // 获取登录用户userId
+                topicCommentInfo.setUserId(userId);
+                // 获取登录用户昵称
+                topicCommentInfo.setAuthor(userNickname);
+                // 获取登录用户头像url
+                topicCommentInfo.setAuthorPhoto(userPhotoUrl);
+                topicCommentInfo.setContent(content);
+                // 获取登录用户头像url
+                topicCommentInfo.setContentPic(Constants.EMPTY_STRING);
+                // 获取登录用户头像url
+                topicCommentInfo.setCreateDate(System.currentTimeMillis());
+                topicCommentInfo.setIsHomework(Constants.NOT_HOME_WORK_VALUE);
+                topicCommentInfo.setIsMine(0);
+                topicCommentInfo.setStatus(0);
+                topicCommentInfo.setReplies(new ArrayList<TopicCommentReplyInfo>());
+
+                topicCommentInfoList.add(topicCommentInfo);
+                initTopicCommentInfo(topicCommentInfoList, Constants.TOPIC_COMMENTS_INIT_ORDER_BY_DESC);
+            } else if (commentType == Constants.TOPIC_COMMENT_TYPE_REPLY) {
+                TopicCommentReplyInfo topicCommentReplyInfo = new TopicCommentReplyInfo();
+                TopicCommentAtInfo topicCommentAtInfo = new TopicCommentAtInfo();
+                topicCommentAtInfo.setUserId(commentUserId);
+                topicCommentAtInfo.setNickName(commentAuthor);
+                topicCommentReplyInfo.setId(newCommentId);
+                topicCommentReplyInfo.setUserId(userId);
+                topicCommentReplyInfo.setNickname(userNickname);
+                topicCommentReplyInfo.setAuthor(userNickname);
+                topicCommentReplyInfo.setContent(content);
+                topicCommentReplyInfo.setContentPic(Constants.EMPTY_STRING);
+                topicCommentReplyInfo.setIsHomework(Constants.NOT_HOME_WORK_VALUE);
+                topicCommentReplyInfo.setStatus(0);
+                topicCommentReplyInfo.setAt(topicCommentAtInfo);
+                // 将评论回复添加到正确的显示位置
+                addTopicCommentReplyToPage(commentId, topicCommentReplyInfo);
+            } else {
+//                String commentReplyId = data.getString(Constants.TOPIC_COMMENT_REPLY_ID, Constants.EMPTY_STRING);
+                String commentReplyUserId = data.getString(Constants.TOPIC_COMMENT_REPLY_USER_ID, Constants.EMPTY_STRING);
+                String commentReplyAuthor = data.getString(Constants.TOPIC_COMMENT_REPLY_AUTHOR, Constants.EMPTY_STRING);
+
+                TopicCommentReplyInfo topicCommentReplyInfo = new TopicCommentReplyInfo();
+                TopicCommentAtInfo topicCommentAtInfo = new TopicCommentAtInfo();
+                topicCommentAtInfo.setUserId(commentReplyUserId);
+                topicCommentAtInfo.setNickName(commentReplyAuthor);
+                topicCommentReplyInfo.setId(newCommentId);
+                topicCommentReplyInfo.setUserId(userId);
+                topicCommentReplyInfo.setNickname(userNickname);
+                topicCommentReplyInfo.setAuthor(userNickname);
+                topicCommentReplyInfo.setContent(content);
+                topicCommentReplyInfo.setContentPic(Constants.EMPTY_STRING);
+                topicCommentReplyInfo.setIsHomework(Constants.NOT_HOME_WORK_VALUE);
+                topicCommentReplyInfo.setStatus(0);
+                topicCommentReplyInfo.setAt(topicCommentAtInfo);
+                // 将评论回复添加到正确的显示位置
+                addTopicCommentReplyToPage(commentId, topicCommentReplyInfo);
+            }
+            return;
+        }
+        // 交作业
+        if (requestCode == TOPIC_HOMEWORK_REQUEST_CODE) {
+            Bundle data = intent.getExtras();
+            String content = data.getString(Constants.CONTENT, Constants.EMPTY_STRING);
+            String contentPic = data.getString(Constants.CONTENT_PIC, Constants.EMPTY_STRING);
+            String newCommentId = data.getString(Constants.TOPIC_NEW_COMMENT_ID, Constants.EMPTY_STRING);
+
+            ArrayList<TopicCommentInfo> topicCommentInfoList = new ArrayList<TopicCommentInfo>();
+            TopicCommentInfo topicCommentInfo = new TopicCommentInfo();
+            topicCommentInfo.setId(newCommentId);
+
+            // 获取登录用户userId
+            topicCommentInfo.setUserId(userId);
+            // 获取登录用户昵称
+            topicCommentInfo.setAuthor(userNickname);
+            // 获取登录用户头像url
+            topicCommentInfo.setAuthorPhoto(userPhotoUrl);
+            topicCommentInfo.setContent(content);
+            // 获取登录用户头像url
+            topicCommentInfo.setContentPic(contentPic);
+            // 获取登录用户头像url
+            topicCommentInfo.setCreateDate(System.currentTimeMillis());
+            topicCommentInfo.setIsHomework(Constants.IS_HOME_WORK_VALUE);
+            topicCommentInfo.setIsMine(0);
+            topicCommentInfo.setStatus(0);
+            topicCommentInfo.setReplies(new ArrayList<TopicCommentReplyInfo>());
+
+            topicCommentInfoList.add(topicCommentInfo);
+            initTopicCommentInfo(topicCommentInfoList, Constants.TOPIC_COMMENTS_INIT_ORDER_BY_DESC);
+            return;
+        }
+        mTakeImage.onActivityResult(requestCode, resultCode, intent);
+    }
+
+    private void addTopicCommentReplyToPage(String topicCommentId, TopicCommentReplyInfo topicCommentReplyInfo) {
+        // 从评论中找到回复评论的位置
+        LinearLayout view = null;
+        for (int i = mLayoutTopicComments.getChildCount() - 1; i > -1; i--) {
+            view = (LinearLayout) mLayoutTopicComments.getChildAt(i);
+            TopicCommentInfo topicCommentInfo = (TopicCommentInfo) view.getTag(R.id.topic_comment_info);
+            if (null != topicCommentInfo && topicCommentInfo.getId().equals(topicCommentId)) {
+                break;
+            }
+        }
+        if (null != view) {
+            LinearLayout topicCommentContentLayout = ((LinearLayout) ((LinearLayout) view.getChildAt(1)).getChildAt(0));
+            TextView topicCommentReplyTv = buildCommentReplyTextView((TopicCommentInfo) view.getTag(R.id.topic_comment_info), topicCommentReplyInfo);
+            topicCommentContentLayout.addView(topicCommentReplyTv);
+        }
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            mVDVideoView.setIsFullScreen(true);
+        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            mVDVideoView.setIsFullScreen(false);
+        }
+    }
+
+    /**
+     * 播放列表里面点击了某个视频，触发外部事件
+     */
+    @Override
+    public void onPlaylistClick(VDVideoInfo info, int p) {
+        if (info == null) {
+            LOGGER.error("视频信息为null");
+        }
+        mVDVideoView.play(p);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mVDVideoView.onStart();
     }
 
     @Override
@@ -1434,10 +1600,8 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
     protected void onDestroy() {
         super.onDestroy();
         setContentView(R.layout.layout_null);
-        mTopicVideoPlayerPresenter.cleanTopicVideoPlayerView();
         mVDVideoView.onStop();
         mVDVideoView.destroyDrawingCache();
-//        mVDVideoView.release(false);
         mVDVideoView.unRegisterSensorManager();
         mVDVideoView.release(false);
 
@@ -1511,171 +1675,14 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         mTvTopicSubmittedHomework = null;
         mTakeImage = null;
 
-
         mTopicVideoPlayerPresenter = null;
-
-//        System.gc();
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        if (resultCode != RESULT_OK) {
-            if (requestCode == TOPIC_COMMENT_REQUEST_CODE && resultCode == RESULT_FIRST_USER) {
-                showShortToast("提交评论失败，请稍后再试...");
-            } else if (requestCode == TOPIC_HOMEWORK_REQUEST_CODE && resultCode == RESULT_FIRST_USER) {
-                showShortToast("交作业失败，请稍后再试...");
-            }
+    private void refreshMedia(String filePath) {
+        if (StringUtil.isEmpty(filePath)) {
             return;
         }
-        String userId = LoginAPI.getInstance().getLoginUserId();
-        String userName = LoginAPI.getInstance().getLoginUserName();
-        // 评论或回复
-        if (requestCode == TOPIC_COMMENT_REQUEST_CODE) {
-            Bundle data = intent.getExtras();
-            String topicId = data.getString(Constants.TOPIC_ID, Constants.EMPTY_STRING);
-            int commentType = data.getInt(Constants.TYPE, Constants.TOPIC_COMMENT_TYPE_COMMENT);
-            String commentId = data.getString(Constants.TOPIC_COMMENT_ID, Constants.EMPTY_STRING);
-            String newCommentId = data.getString(Constants.TOPIC_NEW_COMMENT_ID, Constants.EMPTY_STRING);
-            String commentUserId = data.getString(Constants.TOPIC_COMMENT_USER_ID, Constants.EMPTY_STRING);
-            String commentAuthor = data.getString(Constants.TOPIC_COMMENT_AUTHOR, Constants.EMPTY_STRING);
-            String content = data.getString(Constants.CONTENT, Constants.EMPTY_STRING);
-            if (commentType == Constants.TOPIC_COMMENT_TYPE_COMMENT) {
-                ArrayList<TopicCommentInfo> topicCommentInfoList = new ArrayList<TopicCommentInfo>();
-                TopicCommentInfo topicCommentInfo = new TopicCommentInfo();
-                topicCommentInfo.setId(newCommentId);
-
-                // 获取登录用户userId
-                topicCommentInfo.setUserId(userId);
-                // 获取登录用户昵称
-                topicCommentInfo.setAuthor(userName);
-                // 获取登录用户头像url
-                topicCommentInfo.setAuthorPhoto(TEMP_USER_PHOTO_URL);
-                topicCommentInfo.setContent(content);
-                // 获取登录用户头像url
-                topicCommentInfo.setContentPic(Constants.EMPTY_STRING);
-                // 获取登录用户头像url
-                topicCommentInfo.setCreateDate(System.currentTimeMillis());
-                topicCommentInfo.setIsHomework(Constants.NOT_HOME_WORK_VALUE);
-                topicCommentInfo.setIsMine(0);
-                topicCommentInfo.setStatus(0);
-                topicCommentInfo.setReplies(new ArrayList<TopicCommentReplyInfo>());
-
-                topicCommentInfoList.add(topicCommentInfo);
-                initTopicCommentsInfo(topicCommentInfoList, Constants.TOPIC_COMMENTS_INIT_ORDER_BY_DESC);
-            } else if (commentType == Constants.TOPIC_COMMENT_TYPE_REPLY) {
-                TopicCommentReplyInfo topicCommentReplyInfo = new TopicCommentReplyInfo();
-                TopicCommentAtInfo topicCommentAtInfo = new TopicCommentAtInfo();
-                topicCommentAtInfo.setUserId(commentUserId);
-                topicCommentAtInfo.setNickName(commentAuthor);
-                topicCommentReplyInfo.setId(newCommentId);
-                topicCommentReplyInfo.setUserId(userId);
-                topicCommentReplyInfo.setNickname(userName);
-                topicCommentReplyInfo.setAuthor(userName);
-                topicCommentReplyInfo.setContent(content);
-                topicCommentReplyInfo.setContentPic(Constants.EMPTY_STRING);
-                topicCommentReplyInfo.setIsHomework(Constants.NOT_HOME_WORK_VALUE);
-                topicCommentReplyInfo.setStatus(0);
-                topicCommentReplyInfo.setAt(topicCommentAtInfo);
-                // 将评论回复添加到正确的显示位置
-                addTopicCommentReplyToPage(commentId, topicCommentReplyInfo);
-            } else {
-                String commentReplyId = data.getString(Constants.TOPIC_COMMENT_REPLY_ID, Constants.EMPTY_STRING);
-                String commentReplyUserId = data.getString(Constants.TOPIC_COMMENT_REPLY_USER_ID, Constants.EMPTY_STRING);
-                String commentReplyAuthor = data.getString(Constants.TOPIC_COMMENT_REPLY_AUTHOR, Constants.EMPTY_STRING);
-
-                TopicCommentReplyInfo topicCommentReplyInfo = new TopicCommentReplyInfo();
-                TopicCommentAtInfo topicCommentAtInfo = new TopicCommentAtInfo();
-                topicCommentAtInfo.setUserId(commentReplyUserId);
-                topicCommentAtInfo.setNickName(commentReplyAuthor);
-                topicCommentReplyInfo.setId(newCommentId);
-                topicCommentReplyInfo.setUserId(userName);
-                topicCommentReplyInfo.setNickname(userName);
-                topicCommentReplyInfo.setAuthor(userName);
-                topicCommentReplyInfo.setContent(content);
-                topicCommentReplyInfo.setContentPic(Constants.EMPTY_STRING);
-                topicCommentReplyInfo.setIsHomework(Constants.NOT_HOME_WORK_VALUE);
-                topicCommentReplyInfo.setStatus(0);
-                topicCommentReplyInfo.setAt(topicCommentAtInfo);
-                // 将评论回复添加到正确的显示位置
-                addTopicCommentReplyToPage(commentId, topicCommentReplyInfo);
-            }
-            return;
-        }
-        // 交作业
-        if (requestCode == TOPIC_HOMEWORK_REQUEST_CODE) {
-            Bundle data = intent.getExtras();
-            String content = data.getString(Constants.CONTENT, Constants.EMPTY_STRING);
-            String contentPic = data.getString(Constants.CONTENT_PIC, Constants.EMPTY_STRING);
-            String newCommentId = data.getString(Constants.TOPIC_NEW_COMMENT_ID, Constants.EMPTY_STRING);
-
-            ArrayList<TopicCommentInfo> topicCommentInfoList = new ArrayList<TopicCommentInfo>();
-            TopicCommentInfo topicCommentInfo = new TopicCommentInfo();
-            topicCommentInfo.setId(newCommentId);
-
-            // 获取登录用户userId
-            topicCommentInfo.setUserId(userName);
-            // 获取登录用户昵称
-            topicCommentInfo.setAuthor(userName);
-            // 获取登录用户头像url
-            topicCommentInfo.setAuthorPhoto(TEMP_USER_PHOTO_URL);
-            topicCommentInfo.setContent(content);
-            // 获取登录用户头像url
-            topicCommentInfo.setContentPic(contentPic);
-            // 获取登录用户头像url
-            topicCommentInfo.setCreateDate(System.currentTimeMillis());
-            topicCommentInfo.setIsHomework(Constants.IS_HOME_WORK_VALUE);
-            topicCommentInfo.setIsMine(0);
-            topicCommentInfo.setStatus(0);
-            topicCommentInfo.setReplies(new ArrayList<TopicCommentReplyInfo>());
-
-            topicCommentInfoList.add(topicCommentInfo);
-            initTopicCommentsInfo(topicCommentInfoList, Constants.TOPIC_COMMENTS_INIT_ORDER_BY_DESC);
-            return;
-        }
-        mTakeImage.onActivityResult(requestCode, resultCode, intent);
-    }
-
-    private void addTopicCommentReplyToPage(String topicCommentId, TopicCommentReplyInfo topicCommentReplyInfo) {
-        // 从评论中找到回复评论的位置
-        LinearLayout view = null;
-        for (int i = mLayoutTopicComments.getChildCount() - 1; i > -1; i--) {
-            view = (LinearLayout) mLayoutTopicComments.getChildAt(i);
-            TopicCommentInfo topicCommentInfo = (TopicCommentInfo) view.getTag(R.id.topic_comment_info);
-            if (null != topicCommentInfo && topicCommentInfo.getId().equals(topicCommentId)) {
-                break;
-            }
-        }
-        if (null != view) {
-            LinearLayout topicCommentContentLayout = ((LinearLayout) ((LinearLayout) view.getChildAt(1)).getChildAt(0));
-            TextView topicCommentReplyTv = buildCommentReplyTextView((TopicCommentInfo) view.getTag(R.id.topic_comment_info), topicCommentReplyInfo);
-            topicCommentContentLayout.addView(topicCommentReplyTv);
-        }
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            mVDVideoView.setIsFullScreen(true);
-        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            mVDVideoView.setIsFullScreen(false);
-        }
-    }
-
-    /**
-     * 播放列表里面点击了某个视频，触发外部事件
-     */
-    @Override
-    public void onPlaylistClick(VDVideoInfo info, int p) {
-        if (info == null) {
-            Log.e(TAG, "info is null");
-        }
-        mVDVideoView.play(p);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
+        MediaScannerConnection.scanFile(this, new String[]{filePath}, null, null);
     }
 
     private void checkInitFinish() {
@@ -1684,21 +1691,8 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         }
     }
 
-    private String buildNumberText(String text) {
-        String commentContent = StringUtil.isEmpty(text) ? Constants.EMPTY_STRING : text;
-        ArrayList<String> phoneNumbers = StringUtil.findNumber(commentContent);
-        if (CollectionUtil.isEmpty(phoneNumbers)) {
-            return commentContent;
-        } else {
-            StringBuilder stringBuilder = new StringBuilder(text);
-            int index;
-            String number = null;
-            for (int i = 0, size = phoneNumbers.size(); i < size; i++) {
-                number = phoneNumbers.get(i);
-                index = commentContent.indexOf(number);
-                stringBuilder.replace(index, number.length() + index, "<a href=\"tel:" + number + "\">" + number + "</a>");
-            }
-            return stringBuilder.toString();
-        }
+    private String buildStartFont(int resColorId) {
+        int color = getResources().getColor(resColorId);
+        return String.format("<font color=\"#%s\">", String.format("%X", color).substring(2));
     }
 }

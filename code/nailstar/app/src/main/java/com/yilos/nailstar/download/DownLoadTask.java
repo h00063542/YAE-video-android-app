@@ -1,27 +1,24 @@
 package com.yilos.nailstar.download;
 
-import com.squareup.okhttp.Interceptor;
-import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Response;
-import com.squareup.okhttp.ResponseBody;
 import com.squareup.okhttp.Request;
+import com.yilos.nailstar.util.LoggerFactory;
+
+import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import okio.Buffer;
-import okio.BufferedSource;
-import okio.ForwardingSource;
-import okio.Okio;
-import okio.Source;
 
 /**
  * Created by yilos on 15/11/11.
  */
 public class DownLoadTask {
+
+    private static Logger logger = LoggerFactory.getLogger(DownLoadTask.class);
 
     private OkHttpClient client;
     private String url;
@@ -74,16 +71,6 @@ public class DownLoadTask {
             client = new OkHttpClient();
         }
 
-        client.networkInterceptors().add(new Interceptor() {
-            @Override
-            public Response intercept(Chain chain) throws IOException {
-                Response originalResponse = chain.proceed(chain.request());
-                return originalResponse.newBuilder()
-                        .body(new ProgressResponseBody(originalResponse.body(), progressListener))
-                        .build();
-            }
-        });
-
         Response response = client.newCall(request).execute();
 
         if (!response.isSuccessful()) {
@@ -100,26 +87,32 @@ public class DownLoadTask {
 
     }
 
-    private String saveFile(Response response, String path, String fileName) throws IOException {
+    private void saveFile(Response response, String path, String fileName) throws IOException {
         InputStream is = null;
         byte[] buf = new byte[2048];
         int len;
         FileOutputStream fos = null;
         try {
+
             is = response.body().byteStream();
 
             File dir = new File(path);
             if (!dir.exists()) {
                 dir.mkdirs();
             }
+
+            long totalBytesRead = 0L;
+            long totalBytes = response.body().contentLength();
+
             File file = new File(dir, fileName);
             fos = new FileOutputStream(file);
             while ((len = is.read(buf)) != -1) {
                 fos.write(buf, 0, len);
+                totalBytesRead += len != -1 ? len : 0;
+                progressListener.update(totalBytesRead, totalBytes, false);
             }
             fos.flush();
-
-            return file.getAbsolutePath();
+            progressListener.update(totalBytesRead, totalBytes, true);
 
         } finally {
             try {
@@ -127,59 +120,16 @@ public class DownLoadTask {
                     is.close();
                 }
             } catch (IOException e) {
+                logger.error("saveFile close InputStream failed", e);
             }
             try {
                 if (fos != null) {
                     fos.close();
                 }
             } catch (IOException e) {
+                logger.error("saveFile close FileOutputStream failed", e);
             }
 
-        }
-    }
-
-    private static class ProgressResponseBody extends ResponseBody {
-
-        private final ResponseBody responseBody;
-        private final ProgressListener progressListener;
-        private BufferedSource bufferedSource;
-
-        public ProgressResponseBody(ResponseBody responseBody, ProgressListener progressListener) {
-            this.responseBody = responseBody;
-            this.progressListener = progressListener;
-        }
-
-        @Override
-        public MediaType contentType() {
-            return responseBody.contentType();
-        }
-
-        @Override
-        public long contentLength() throws IOException {
-            return responseBody.contentLength();
-        }
-
-        @Override
-        public BufferedSource source() throws IOException {
-            if (bufferedSource == null) {
-                bufferedSource = Okio.buffer(source(responseBody.source()));
-            }
-            return bufferedSource;
-        }
-
-        private Source source(Source source) {
-            return new ForwardingSource(source) {
-                long totalBytesRead = 0L;
-
-                @Override
-                public long read(Buffer sink, long byteCount) throws IOException {
-                    long bytesRead = super.read(sink, byteCount);
-                    // read() returns the number of bytes read, or -1 if this source is exhausted.
-                    totalBytesRead += bytesRead != -1 ? bytesRead : 0;
-                    progressListener.update(totalBytesRead, responseBody.contentLength(), bytesRead == -1);
-                    return bytesRead;
-                }
-            };
         }
     }
 

@@ -21,6 +21,10 @@ public class TopicCommentPresenter {
     private ITopicCommentView topicCommentView;
     private ITopicService topicsService = new TopicServiceImpl();
 
+    private TopicCommentPresenter() {
+
+    }
+
     public static TopicCommentPresenter getInstance(ITopicCommentView topicCommentView) {
         topicCommentPresenter.topicCommentView = topicCommentView;
         return topicCommentPresenter;
