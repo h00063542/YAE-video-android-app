@@ -86,13 +86,6 @@ public class AboutMeServiceImpl implements AboutMeService {
         PersonInfo personInfo = new PersonInfo();
         String result;
         JSONObject personInfoObject;
-
-//        String uid = "a8affd60-efe6-11e4-a908-3132fc2abe39";
-//        String nickname = "昵称";
-//        int type = 1;
-//        String photoUrl = "http://sssdsdsds/sdsdsdsd";
-//        String profile = "这是个人签名";
-
         personInfo.setNickname(nickname);
         personInfo.setType(type);
         personInfo.setProfile(profile);
