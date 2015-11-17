@@ -69,16 +69,16 @@ public class AboutMeServiceImpl implements AboutMeService {
     }
 
     @Override
-    public PersonInfo setPersonInfo() throws NetworkDisconnectException, JSONException {
+    public PersonInfo setPersonInfo(String uid,String nickname,int type,String photoUrl,String profile) throws NetworkDisconnectException, JSONException {
         PersonInfo personInfo = new PersonInfo();
         String jsonObject;
         JSONObject personInfoObject;
 
-        String uid = "a8affd60-efe6-11e4-a908-3132fc2abe39";
-        String nickname = "昵称";
-        int type = 1;
-        String photoUrl = "http://sssdsdsds/sdsdsdsd";
-        String profile = "这是个人签名";
+//        String uid = "a8affd60-efe6-11e4-a908-3132fc2abe39";
+//        String nickname = "昵称";
+//        int type = 1;
+//        String photoUrl = "http://sssdsdsds/sdsdsdsd";
+//        String profile = "这是个人签名";
 
         personInfo.setNickname(nickname);
         personInfo.setType(type);
