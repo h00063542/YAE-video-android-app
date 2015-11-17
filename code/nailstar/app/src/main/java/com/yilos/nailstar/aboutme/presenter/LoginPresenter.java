@@ -1,6 +1,7 @@
 package com.yilos.nailstar.aboutme.presenter;
 
 import com.yilos.nailstar.R;
+import com.yilos.nailstar.aboutme.entity.PersonInfo;
 import com.yilos.nailstar.aboutme.model.LoginAPI;
 import com.yilos.nailstar.aboutme.model.LoginServiceImpl;
 import com.yilos.nailstar.aboutme.view.ILoginView;
@@ -47,7 +48,7 @@ public class LoginPresenter {
 
         loginView.showLoading("正在登录...");
 
-        TaskManager.BackgroundTask<CommonResult> backgroundTask = new TaskManager.BackgroundTask<CommonResult>() {
+        TaskManager.BackgroundTask<CommonResult> loginTask = new TaskManager.BackgroundTask<CommonResult>() {
             @Override
             public Object doWork(CommonResult data) {
                 CommonResult commonResult = new CommonResult();
@@ -66,9 +67,35 @@ public class LoginPresenter {
             }
         };
 
-        TaskManager.UITask<CommonResult<String>> updateUI = new TaskManager.UITask<CommonResult<String>>() {
+        TaskManager.BackgroundTask<CommonResult<String>> getPersonInfoTask = new TaskManager.BackgroundTask<CommonResult<String>>() {
             @Override
             public Object doWork(CommonResult<String> data) {
+                CommonResult<PersonInfo> commonResult = new CommonResult<>();
+                if(data.isError()) {
+                    commonResult.setError(true);
+                    commonResult.setErrorMsg(data.getErrorMsg());
+                    return commonResult;
+                } else {
+                    try {
+                        PersonInfo personInfo = loginService.queryPersonInfo(data.getResult());
+                        commonResult.setResult(personInfo);
+                        return commonResult;
+                    } catch (NetworkDisconnectException e) {
+                        commonResult.setError(true);
+                        commonResult.setErrorMsg(e.getMessage());
+                    } catch (CommonException e) {
+                        commonResult.setError(true);
+                        commonResult.setErrorMsg(e.getMessage());
+                    }
+
+                    return commonResult;
+                }
+            }
+        };
+
+        TaskManager.UITask<CommonResult<PersonInfo>> updateUI = new TaskManager.UITask<CommonResult<PersonInfo>>() {
+            @Override
+            public Object doWork(CommonResult<PersonInfo> data) {
                 loginView.setLoginButtonEnable(true);
                 loginView.hideLoading();
                 if(data.isError()) {
@@ -85,7 +112,8 @@ public class LoginPresenter {
         };
 
         new TaskManager()
-                .next(backgroundTask)
+                .next(loginTask)
+                .next(getPersonInfoTask)
                 .next(updateUI)
                 .start();
     }
