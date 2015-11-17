@@ -69,6 +69,8 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
     private LinearLayout myFollowList;//关注列表
     private LinearLayout myFansList;//粉丝列表
 
+    private View downloadVideoBtn;
+
     private TextView aboutMeLevel;//进入等级页面按钮
 
     private int experience;
@@ -77,6 +79,8 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
     private String nickName;
     private String profile;
     private String uid;
+
+    LoginAPI loginAPI = LoginAPI.getInstance();
 
     /**
      * Use this factory method to create a new instance of
@@ -184,6 +188,8 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
         myFansList = (LinearLayout)view.findViewById(R.id.my_fans_list);
 
         aboutMeLevel = (TextView)view.findViewById(R.id.about_me_level);
+
+        downloadVideoBtn = view.findViewById(R.id.downloadVideoBtn);
     }
 
     @Override
@@ -216,6 +222,10 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
 
                 }
                 break;
+            case R.id.downloadVideoBtn:
+                    Intent DownloadIntent = new Intent(getActivity(),DownloadVideo.class);
+                    startActivity(DownloadIntent);
+                break;
             case R.id.about_me_person_info_layout:
                 Intent intent = new Intent(getActivity(),PersonInfoActivity.class);
                 Bundle bundle = new Bundle();
@@ -236,14 +246,6 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
         titleText = titleBar.getTitleView();
         titleText.setText(R.string.about_me_my);
 
-        LoginAPI loginAPI = LoginAPI.getInstance();
-        //if (loginAPI.isLogin()) {
-            aboutMePresenter = AboutMePresenter.getInstance(this);
-            aboutMePresenter.getMessageCount();
-            aboutMePresenter.getAboutMeNumber();
-            aboutMePresenter.getPersonInfo();
-        //}
-
         myFollowList.setOnClickListener(this);
         myFansList.setOnClickListener(this);
         aboutMeLevel.setOnClickListener(this);
@@ -251,6 +253,8 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
         aboutMeSetting.setOnClickListener(this);
 
         personInfoLayout.setOnClickListener(this);
+
+        downloadVideoBtn.setOnClickListener(this);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -268,6 +272,24 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + " must implement OnFragmentInteractionListener");
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (loginAPI.isLogin()) {
+            identityType = loginAPI.getLoginUserType();
+            nickName = loginAPI.getLoginUserNickname();
+            identityText.setText(IdentityUtil.getIdentity(identityType));
+            nameText.setText(nickName);
+//            aboutMePresenter = AboutMePresenter.getInstance(this);
+//            aboutMePresenter.getMessageCount();
+//            aboutMePresenter.getAboutMeNumber();
+//            aboutMePresenter.getPersonInfo();
+        } else {
+            identityText.setText(R.string.about_me_identity);
+            nameText.setText(R.string.about_me_name);
         }
     }
 

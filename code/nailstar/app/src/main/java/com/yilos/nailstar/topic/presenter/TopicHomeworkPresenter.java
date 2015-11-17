@@ -10,10 +10,13 @@ import com.yilos.nailstar.topic.entity.UpdateReadyInfo;
 import com.yilos.nailstar.topic.view.ITopicHomeworkView;
 import com.yilos.nailstar.util.Constants;
 import com.yilos.nailstar.util.LoggerFactory;
+import com.yilos.nailstar.util.StringUtil;
 import com.yilos.nailstar.util.TaskManager;
 
 import org.apache.log4j.Logger;
 
+import java.io.File;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 
 
@@ -27,6 +30,10 @@ public class TopicHomeworkPresenter {
 
     private ITopicHomeworkView topicHomeworkView;
     private ITopicService topicsService = new TopicServiceImpl();
+
+    private TopicHomeworkPresenter() {
+
+    }
 
     public static TopicHomeworkPresenter getInstance(ITopicHomeworkView topicHomeworkView) {
         topicHomeworkPresenter.topicHomeworkView = topicHomeworkView;
@@ -69,7 +76,7 @@ public class TopicHomeworkPresenter {
 //                try {
                 // TODO 测试阶段，先不要调用服务端接口
                 return "003";
-//                    return topicsService.submittedHomework(info);
+//                    return topicsService.addComment(info);
 //                } catch (NetworkDisconnectException e) {
 //                    e.printStackTrace();
 //                    LOGGER.error("添加评论信息失败，topicId：" + info.getTopicId(), e);
@@ -93,32 +100,50 @@ public class TopicHomeworkPresenter {
                     topicsService.uploadFile2Oss(info.getPicLocalPath(), info.getPicName(), new SaveCallback() {
                         @Override
                         public void onSuccess(String objectKey) {
-                            LOGGER.debug("[onSuccess] - " + objectKey + " upload success!");
+                            LOGGER.debug(MessageFormat.format("正在上传交作业图片到Oss成功，topicId:{0}，localPath:{1}，picName:{2}，objectKey:{3}"
+                                    , info.getTopicId(), info.getPicLocalPath(), info.getPicName(), objectKey));
                             UpdateReadyInfo updateReadyInfo = new UpdateReadyInfo();
                             updateReadyInfo.setId(info.getTopicId());
                             ArrayList<String> picUrls = new ArrayList<String>();
                             picUrls.add(Constants.YILOS_PIC_URL + objectKey);
                             updateReadyInfo.setPicUrls(picUrls);
                             updateReadyInfo.setTable(Constants.HOMEWORK);
+//                            try {
+                            // 1、更新homework状态
+                            // TODO 测试阶段，先不要调用服务端接口
+//                                topicsService.updateReady(updateReadyInfo);
+                            //2、删除本地文件
+                            if (!StringUtil.isEmpty(info.getPicLocalPath())) {
+                                File file = new File(info.getPicLocalPath());
+                                if (file.exists()) {
+                                    file.delete();
+                                }
+                            }
+//                            } catch (NetworkDisconnectException e) {
+//                                LOGGER.error(MessageFormat.format("修改ready状态失败，id:{0}", info.getTopicId()), e);
+//                                e.printStackTrace();
+//                            }
                         }
 
                         @Override
                         public void onProgress(String objectKey, int byteCount, int totalSize) {
-                            LOGGER.debug("[onProgress] - current upload " + objectKey + " bytes: " + byteCount + " in total: " + totalSize);
+                            LOGGER.debug(MessageFormat.format("正在上传交作业图片到Oss，topicId:{0}，objectKey:{1}，byteCount:{2}，totalSize:{3}"
+                                    , info.getTopicId(), objectKey, byteCount, totalSize));
                         }
 
                         @Override
                         public void onFailure(String objectKey, OSSException e) {
-                            LOGGER.error("上传交作业图片到Oss失败，localPath:" + info.getPicLocalPath()
-                                    + "，picName:" + info.getPicName()
-                                    + ",objectKey:" + objectKey, e);
+                            LOGGER.error(MessageFormat.format("上传交作业图片到Oss失败，topicId:{0}，localPath:{1}，picName:{2}，objectKey:{3}"
+                                    , info.getTopicId(), info.getPicLocalPath(), info.getPicName(), objectKey), e);
                             e.printStackTrace();
                             e.getException().printStackTrace();
                         }
                     });
                 } catch (NetworkDisconnectException e) {
                     e.printStackTrace();
-                    LOGGER.error("上传交作业图片到oss失败，topicId：" + info.getTopicId(), e);
+                    LOGGER.error(
+                            MessageFormat.format("上传交作业图片到Oss失败，topicId:{0}，localPath:{1}，picName:{2}，objectKey:{3}"
+                                    , info.getTopicId(), info.getPicLocalPath(), info.getPicName()), e);
                 }
                 return null;
             }
@@ -131,8 +156,8 @@ public class TopicHomeworkPresenter {
                 .start();
 
         // TODO 测试阶段，先不要调用服务端接口
-//        new TaskManager()
-//                .next(uploadHomeworkPicTask)
-//                .start();
+        new TaskManager()
+                .next(uploadHomeworkPicTask)
+                .start();
     }
 }

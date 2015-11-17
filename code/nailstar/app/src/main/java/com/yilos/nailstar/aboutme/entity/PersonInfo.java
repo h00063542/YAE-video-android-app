@@ -19,7 +19,17 @@ public class PersonInfo {
     private int type;
     private String photoUrl;
     private String profile;
+    private String picName;
     private Bitmap imageBitmap;
+
+    public void setPicName(String picName) {
+        this.picName = picName;
+    }
+
+    public String getPicName() {
+        return picName;
+    }
+
 
     public void setImageBitmap(Bitmap bitmap) {
         this.imageBitmap = bitmap;

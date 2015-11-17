@@ -18,7 +18,8 @@ import java.io.IOException;
 public class LoginServiceImpl {
     private static LoginServiceImpl instance = new LoginServiceImpl();
 
-    private LoginServiceImpl(){}
+    private LoginServiceImpl() {
+    }
 
     public static LoginServiceImpl getInstance() {
         return instance;
@@ -26,6 +27,7 @@ public class LoginServiceImpl {
 
     /**
      * 判断客户端是否已经登录
+     *
      * @return
      */
     public boolean isLogin() {
@@ -34,6 +36,7 @@ public class LoginServiceImpl {
 
     /**
      * 向指定手机发送验证码
+     *
      * @param phoneNumber
      */
     public void sendValidateCode(final String phoneNumber) throws CommonException {
@@ -42,7 +45,7 @@ public class LoginServiceImpl {
             jsonObject.put("phoneMobile", phoneNumber);
             String result = HttpClient.post("/vapi/nailstar/vc/getCode", jsonObject.toString());
             JSONObject resultObject = new JSONObject(result);
-            if(!resultObject.has("code") || resultObject.optInt("code") != 0) {
+            if (!resultObject.has("code") || resultObject.optInt("code") != 0) {
                 throw new CommonException("获取验证码失败，请联系客服！");
             }
         } catch (JSONException e) {
@@ -54,6 +57,7 @@ public class LoginServiceImpl {
 
     /**
      * 检查验证码是否正确
+     *
      * @param phoneNumber
      * @param validateCode
      * @return
@@ -66,10 +70,10 @@ public class LoginServiceImpl {
             jsonObject.put("verificationCode", validateCode);
             String result = HttpClient.post("/vapi/nailstar/vc/checkCode", jsonObject.toString());
             JSONObject resultObject = new JSONObject(result);
-            if(!resultObject.has("code") || resultObject.optInt("code") != 0) {
-                if("32322323".equals(JsonUtil.optString(resultObject, "errorCode"))) {
+            if (!resultObject.has("code") || resultObject.optInt("code") != 0) {
+                if ("32322323".equals(JsonUtil.optString(resultObject, "errorCode"))) {
                     throw new CommonException("验证码已失效，请重新获取");
-                } else if("30040002".equals(JsonUtil.optString(resultObject, "errorCode"))){
+                } else if ("30040002".equals(JsonUtil.optString(resultObject, "errorCode"))) {
                     throw new CommonException("验证码错误，请重新输入");
                 } else {
                     throw new CommonException("验证码已失效，请重新获取");
@@ -85,6 +89,7 @@ public class LoginServiceImpl {
 
     /**
      * 注册手机号
+     *
      * @param phoneNumber
      * @param password
      */
@@ -95,8 +100,8 @@ public class LoginServiceImpl {
             jsonObject.put("password", password);
             String result = HttpClient.post("/vapi/nailstar/account/signup", jsonObject.toString());
             JSONObject resultObject = new JSONObject(result);
-            if(!resultObject.has("code") || resultObject.optInt("code") != 0) {
-                if(1 == resultObject.optInt("errorCode")) {
+            if (!resultObject.has("code") || resultObject.optInt("code") != 0) {
+                if (1 == resultObject.optInt("errorCode")) {
                     throw new CommonException("手机号已被注册");
                 } else {
                     throw new CommonException("注册失败，请重新注册");
@@ -111,6 +116,7 @@ public class LoginServiceImpl {
 
     /**
      * 重置密码
+     *
      * @param phoneNumber
      * @param password
      */
@@ -121,8 +127,8 @@ public class LoginServiceImpl {
             jsonObject.put("password", password);
             String result = HttpClient.post("/vapi/nailstar/account/resetPwd", jsonObject.toString());
             JSONObject resultObject = new JSONObject(result);
-            if(!resultObject.has("code") || resultObject.optInt("code") != 0) {
-                if(1 == resultObject.optInt("errorCode")) {
+            if (!resultObject.has("code") || resultObject.optInt("code") != 0) {
+                if (1 == resultObject.optInt("errorCode")) {
                     throw new CommonException("用户不存在");
                 } else {
                     throw new CommonException("重新设置密码失败，请重试");
@@ -136,7 +142,7 @@ public class LoginServiceImpl {
     }
 
     public String login(String userName, String password) throws CommonException, NetworkDisconnectException {
-        if(!NailStarApplicationContext.getInstance().isNetworkConnected()) {
+        if (!NailStarApplicationContext.getInstance().isNetworkConnected()) {
             throw new NetworkDisconnectException("网络好像不给力哦，请检查网络设置");
         }
         JSONObject jsonObject = new JSONObject();
@@ -145,10 +151,10 @@ public class LoginServiceImpl {
             jsonObject.put("password", password);
             String result = HttpClient.post("/vapi/nailstar/account/login", jsonObject.toString());
             JSONObject resultObject = new JSONObject(result);
-            if(!resultObject.has("code") || resultObject.optInt("code") != 0) {
-                if(1 == resultObject.optInt("errorCode")) {
+            if (!resultObject.has("code") || resultObject.optInt("code") != 0) {
+                if (1 == resultObject.optInt("errorCode")) {
                     throw new CommonException("用户名不存在");
-                } else if(2 == resultObject.optInt("errorCode")) {
+                } else if (2 == resultObject.optInt("errorCode")) {
                     throw new CommonException("用户名或密码错误");
                 } else {
                     throw new CommonException("登陆失败，请联系客服");
@@ -166,13 +172,14 @@ public class LoginServiceImpl {
 
     /**
      * 查询用户的个人信息
+     *
      * @param uid
      * @return
      * @throws NetworkDisconnectException
      * @throws CommonException
      */
     public PersonInfo queryPersonInfo(String uid) throws NetworkDisconnectException, CommonException {
-        if(!NailStarApplicationContext.getInstance().isNetworkConnected()) {
+        if (!NailStarApplicationContext.getInstance().isNetworkConnected()) {
             throw new NetworkDisconnectException("网络好像不给力哦，请检查网络设置");
         }
 
@@ -180,14 +187,14 @@ public class LoginServiceImpl {
         try {
             String result = HttpClient.getJson("/vapi/nailstar/account/profile?uid=" + uid);
             JSONObject resultObject = new JSONObject(result);
-            if(!resultObject.has("code") || resultObject.optInt("code") != 0) {
+            if (!resultObject.has("code") || resultObject.optInt("code") != 0) {
                 return personInfo;
             } else {
                 JSONObject profileResult = resultObject.getJSONObject("result");
                 personInfo.setUid(uid);
-                personInfo.setPhotoUrl(profileResult.getString("photoUrl"));
-                personInfo.setNickname(profileResult.getString("nickname"));
-                personInfo.setProfile(profileResult.getString("profile"));
+                personInfo.setPhotoUrl(JsonUtil.optString(profileResult, "photoUrl"));
+                personInfo.setNickname(JsonUtil.optString(profileResult, "nickname"));
+                personInfo.setProfile(JsonUtil.optString(profileResult, "profile"));
                 personInfo.setType(profileResult.getInt("type"));
 
                 return personInfo;

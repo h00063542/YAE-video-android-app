@@ -40,6 +40,11 @@ public class TopicVideoPlayerPresenter {
     private ITopicService topicsService = new TopicServiceImpl();
     private ImageLoader imageLoader = ImageLoader.getInstance();
 
+
+    private TopicVideoPlayerPresenter() {
+
+    }
+
     public static TopicVideoPlayerPresenter getInstance(ITopicVideoPlayerView videoPlayerView) {
         topicPresenter.topicVideoPlayerView = videoPlayerView;
         return topicPresenter;
@@ -149,7 +154,7 @@ public class TopicVideoPlayerPresenter {
         TaskManager.UITask<ArrayList<TopicCommentInfo>> updateUi = new TaskManager.UITask<ArrayList<TopicCommentInfo>>() {
             @Override
             public Object doWork(ArrayList<TopicCommentInfo> topicComments) {
-                topicVideoPlayerView.initTopicCommentsInfo(topicComments, Constants.TOPIC_COMMENTS_INIT_ORDER_BY_ASC);
+                topicVideoPlayerView.initTopicCommentInfo(topicComments, Constants.TOPIC_COMMENTS_INIT_ORDER_BY_ASC);
                 return null;
             }
         };
@@ -343,9 +348,5 @@ public class TopicVideoPlayerPresenter {
     private String saveBitmap2File(String topicId, String url) {
         Bitmap bitmap = imageLoader.loadImageSync(url);
         return FileUtils.saveBitMap(bitmap, Constants.YILOS_NAILSTAR_PICTURE_PATH, buildPictureLocalFileName(topicId, url));
-    }
-
-    public void cleanTopicVideoPlayerView() {
-        topicVideoPlayerView = null;
     }
 }

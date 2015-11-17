@@ -52,6 +52,7 @@
         <activity android:name=".aboutme.view.LevelActivity" />
         <activity android:name=".aboutme.view.PersonInfoActivity" />
         <activity android:name=".aboutme.view.AboutUsActivity" />
+        <activity android:name=".aboutme.view.DownloadVideo"></activity>
         <activity android:name=".aboutme.view.UserAgreementActivity" />
         <activity
             android:name=".aboutme.view.LoginActivity"
