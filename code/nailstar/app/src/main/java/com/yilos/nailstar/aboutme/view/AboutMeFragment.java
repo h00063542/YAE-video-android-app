@@ -74,6 +74,8 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
 
     private TextView aboutMeLevel;//进入等级页面按钮
 
+    private View downloadVideoBtn;
+
     private static int experience;
     private static String myImageUrl;
 
@@ -210,6 +212,8 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
         myFansList = (LinearLayout)view.findViewById(R.id.my_fans_list);
 
         aboutMeLevel = (TextView)view.findViewById(R.id.about_me_level);
+
+        downloadVideoBtn = view.findViewById(R.id.downloadVideoBtn);
     }
 
     @Override
@@ -280,6 +284,14 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(),PersonInfoActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        downloadVideoBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(),DownloadVideo.class);
                 startActivity(intent);
             }
         });

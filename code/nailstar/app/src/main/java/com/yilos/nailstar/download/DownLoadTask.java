@@ -1,10 +1,7 @@
 package com.yilos.nailstar.download;
 
-import com.squareup.okhttp.Interceptor;
-import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Response;
-import com.squareup.okhttp.ResponseBody;
 import com.squareup.okhttp.Request;
 import com.yilos.nailstar.util.LoggerFactory;
 
@@ -15,11 +12,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import okio.Buffer;
-import okio.BufferedSource;
-import okio.ForwardingSource;
-import okio.Okio;
-import okio.Source;
 
 /**
  * Created by yilos on 15/11/11.

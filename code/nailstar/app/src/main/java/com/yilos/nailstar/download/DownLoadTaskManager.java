@@ -240,7 +240,6 @@ public class DownLoadTaskManager {
 
     public void resumeAllDownLoadTask() {
         // TODO
-        downLoadTaskList.addAll(new ArrayList<DownLoadTask>());
     }
 
 }

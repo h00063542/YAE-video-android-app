@@ -25,11 +25,6 @@ public class DownLoadInfo implements Serializable {
     private String iamge;
 
     /**
-     * 视频标签
-     */
-//    private List<String> tags;
-
-    /**
      * 讲师照片
      */
     private String photo;
@@ -149,16 +144,18 @@ public class DownLoadInfo implements Serializable {
     }
 
     public DownLoadInfo(TopicInfo topicInfo) {
-        this.topicId = topicInfo.getId();
-        this.title = topicInfo.getTitle();
-        this.name = topicInfo.getAuthor();
-        if (!topicInfo.getVideos().isEmpty()) {
-            if (topicInfo.getVideos().get(0).getOssUrl() != null && !"".equals(topicInfo.getVideos().get(0).getOssUrl())) {
-                this.url = topicInfo.getVideos().get(0).getOssUrl();
-            } else if (topicInfo.getVideos().get(0).getCcUrl() != null && !"".equals(topicInfo.getVideos().get(0).getCcUrl())) {
-                this.url = topicInfo.getVideos().get(0).getCcUrl();
-            }
+        if (topicInfo != null) {
+            this.topicId = topicInfo.getId();
+            this.title = topicInfo.getTitle();
+            this.name = topicInfo.getAuthor();
+            if (!topicInfo.getVideos().isEmpty()) {
+                if (topicInfo.getVideos().get(0).getOssUrl() != null && !"".equals(topicInfo.getVideos().get(0).getOssUrl())) {
+                    this.url = topicInfo.getVideos().get(0).getOssUrl();
+                } else if (topicInfo.getVideos().get(0).getCcUrl() != null && !"".equals(topicInfo.getVideos().get(0).getCcUrl())) {
+                    this.url = topicInfo.getVideos().get(0).getCcUrl();
+                }
 
+            }
         }
     }
 }
