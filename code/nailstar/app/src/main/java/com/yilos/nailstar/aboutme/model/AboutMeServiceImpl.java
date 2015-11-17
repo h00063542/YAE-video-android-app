@@ -4,7 +4,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import com.alibaba.sdk.android.oss.OSSService;
+import com.alibaba.sdk.android.oss.callback.GetFileCallback;
 import com.alibaba.sdk.android.oss.callback.SaveCallback;
+import com.alibaba.sdk.android.oss.storage.OSSBucket;
 import com.squareup.okhttp.FormEncodingBuilder;
 import com.squareup.okhttp.RequestBody;
 import com.yilos.nailstar.aboutme.entity.AboutMeNumber;
@@ -79,6 +81,15 @@ public class AboutMeServiceImpl implements AboutMeService {
         }
         OSSService ossService = OSSUtil.getDefaultOssService();
         OSSUtil.resumableUpload(ossService, ossService.getOssBucket(OSSUtil.BUCKET_YPICTURE), localFilePath, ossFileName, callback);
+    }
+
+    @Override
+    public void downloadOss2File(String localFilePath, String ossFileName, GetFileCallback callback) throws NetworkDisconnectException {
+        if (!NailStarApplicationContext.getInstance().isNetworkConnected()) {
+            throw new NetworkDisconnectException("网络没有连接");
+        }
+        OSSService ossService = OSSUtil.getDefaultOssService();
+        OSSUtil.resumableDownload(ossService, ossService.getOssBucket(OSSUtil.BUCKET_YPICTURE), localFilePath, ossFileName, callback);
     }
 
     @Override

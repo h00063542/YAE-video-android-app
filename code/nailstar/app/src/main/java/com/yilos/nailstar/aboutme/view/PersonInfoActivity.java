@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -58,7 +59,7 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
     private String profile;
     private String uid;
 
-    private PersonInfo personInfo = new PersonInfo();
+    PersonInfo personInfo = new PersonInfo();
 
     public void submitMyPhotoToOss(String ossUrl) {
         personInfo.setPhotoUrl(ossUrl);
@@ -79,17 +80,18 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_person_info);
         initViews();
-        Bundle getBundle = this.getIntent().getExtras();
-        myImageUrl = getBundle.getString("myImageUrl");
-        identityType = getBundle.getInt("identityType");
-        uid = "a8affd60-efe6-11e4-a908-3132fc2abe39";//getBundle.getString("uid");
-        profile = getBundle.getString("profile");
-        nickName = getBundle.getString("nickName");
+        Bundle bundle = this.getIntent().getExtras();
+//        myImageUrl = getBundle.getString("myImageUrl");
+//        identityType = getBundle.getInt("identityType");
+//        uid = "a8affd60-efe6-11e4-a908-3132fc2abe39";//getBundle.getString("uid");
+//        profile = getBundle.getString("profile");
+//        nickName = getBundle.getString("nickName");
+        personInfo = (PersonInfo)bundle.getSerializable("personInfo");
 
-        personInfo.setUid(uid);
-        personInfo.setPhotoUrl(myImageUrl);
-        personInfo.setProfile(profile);
-        personInfo.setNickname(nickName);
+//        personInfo.setUid(uid);
+//        personInfo.setPhotoUrl(myImageUrl);
+//        personInfo.setProfile(profile);
+//        personInfo.setNickname(nickName);
         setLoopView();
         initEvents();
     }
@@ -118,12 +120,13 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
     }
 
     private void initEvents() {
-        identityText.setText(IdentityUtil.getIdentity(identityType));
-        nickNameText.setText(nickName);
-        profileText.setText(profile);
+        identityText.setText(IdentityUtil.getIdentity(personInfo.getType()));
+        nickNameText.setText(personInfo.getNickname());
+        profileText.setText(personInfo.getProfile());
+        Bitmap bm = BitmapFactory.decodeFile(personInfo.getPhotoUrl());
+        circleImageView.setImageBitmap(bm);
         showError();
         final PersonInfoPresenter personInfoPresenter = PersonInfoPresenter.getInstance(this);
-        //personInfoPresenter.getImage(myImageUrl);
         titleBar.getBackButton(PersonInfoActivity.this);
         titleBarTitle = titleBar.getTitleView();
         titleBarTitle.setText(R.string.edit_person_info);
@@ -197,7 +200,7 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
         //设置初始位置
         loopView.setPosition(2);
         //设置字体大小
-        loopView.setTextSize(20);
+        loopView.setTextSize(17);
 
         loopView.setBackgroundColor(getResources().getColor(R.color.white));
         personInfoIdentityPopup.addView(loopView, layoutParams);

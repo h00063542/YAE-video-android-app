@@ -46,17 +46,20 @@
                         android:id="@+id/about_me_identity"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textSize="@dimen/middle_text_size"
                         android:text="@string/about_me_identity"/>
-                    <TextView
-                        android:id="@+id/about_me_level"
-                        android:layout_marginLeft="@dimen/about_me_other_padding"
-                        android:padding="@dimen/about_me_level_padding"
-                        android:clickable="true"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/about_me_level"
-                        android:textColor="@color/white"
-                        android:background="@color/tab_font_orange_color"/>
+
+                    <!-- 等级（暂时隐藏）-->
+                    <!--<TextView-->
+                        <!--android:id="@+id/about_me_level"-->
+                        <!--android:layout_marginLeft="@dimen/about_me_other_padding"-->
+                        <!--android:padding="@dimen/about_me_level_padding"-->
+                        <!--android:clickable="true"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:text="@string/about_me_level"-->
+                        <!--android:textColor="@color/white"-->
+                        <!--android:background="@color/tab_font_orange_color"/>-->
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
@@ -74,93 +77,93 @@
         </RelativeLayout>
 
         <!-- 数量数 -->
-        <LinearLayout
-            android:orientation="horizontal"
-            android:background="@color/white"
-            android:id="@+id/about_me_number_count"
-            android:layout_below="@id/about_me_gray_line"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/about_me_number_count_height">
-            <!-- 关注 -->
-            <LinearLayout
-                android:id="@+id/my_follow_list"
-                android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
-                android:orientation="vertical"
-                android:layout_weight="1"
-                android:clickable="true"
-                android:gravity="center">
-                <TextView
-                    android:id="@+id/about_me_attention_count"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/tab_font_orange_color"
-                    android:text="@string/about_me_attention_count"/>
-                <TextView
-                    android:id="@+id/about_me_attention"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/about_me_attention"/>
-            </LinearLayout>
+        <!--<LinearLayout-->
+            <!--android:orientation="horizontal"-->
+            <!--android:background="@color/white"-->
+            <!--android:id="@+id/about_me_number_count"-->
+            <!--android:layout_below="@id/about_me_gray_line"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="@dimen/about_me_number_count_height">-->
+            <!--&lt;!&ndash; 关注 &ndash;&gt;-->
+            <!--<LinearLayout-->
+                <!--android:id="@+id/my_follow_list"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="fill_parent"-->
+                <!--android:orientation="vertical"-->
+                <!--android:layout_weight="1"-->
+                <!--android:clickable="true"-->
+                <!--android:gravity="center">-->
+                <!--<TextView-->
+                    <!--android:id="@+id/about_me_attention_count"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:textColor="@color/tab_font_orange_color"-->
+                    <!--android:text="@string/about_me_attention_count"/>-->
+                <!--<TextView-->
+                    <!--android:id="@+id/about_me_attention"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:text="@string/about_me_attention"/>-->
+            <!--</LinearLayout>-->
 
-            <LinearLayout
-                android:layout_width="@dimen/about_me_text_gray_line"
-                android:layout_height="match_parent">
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@color/grey_line"/>
-            </LinearLayout>
+            <!--<LinearLayout-->
+                <!--android:layout_width="@dimen/about_me_text_gray_line"-->
+                <!--android:layout_height="match_parent">-->
+                <!--<TextView-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--android:background="@color/grey_line"/>-->
+            <!--</LinearLayout>-->
 
-            <!-- 粉丝 -->
-            <LinearLayout
-                android:id="@+id/my_fans_list"
-                android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
-                android:orientation="vertical"
-                android:layout_weight="1"
-                android:clickable="true"
-                android:gravity="center">
-                <TextView
-                    android:id="@+id/about_me_fans_count"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/tab_font_orange_color"
-                    android:text="@string/about_me_fans_count"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/about_me_fans"/>
-            </LinearLayout>
+            <!--&lt;!&ndash; 粉丝 &ndash;&gt;-->
+            <!--<LinearLayout-->
+                <!--android:id="@+id/my_fans_list"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="fill_parent"-->
+                <!--android:orientation="vertical"-->
+                <!--android:layout_weight="1"-->
+                <!--android:clickable="true"-->
+                <!--android:gravity="center">-->
+                <!--<TextView-->
+                    <!--android:id="@+id/about_me_fans_count"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:textColor="@color/tab_font_orange_color"-->
+                    <!--android:text="@string/about_me_fans_count"/>-->
+                <!--<TextView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:text="@string/about_me_fans"/>-->
+            <!--</LinearLayout>-->
 
-            <LinearLayout
-                android:layout_width="@dimen/about_me_text_gray_line"
-                android:layout_height="match_parent">
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@color/grey_line"/>
-            </LinearLayout>
-            <!-- 咖币-->
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
-                android:orientation="vertical"
-                android:layout_weight="1"
-                android:gravity="center"
-                >
-                <TextView
-                    android:id="@+id/about_me_ka_bi_count"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/tab_font_orange_color"
-                    android:text="@string/about_me_ka_bi_count"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/about_me_ka_bi"/>
-            </LinearLayout>
-        </LinearLayout>
+            <!--<LinearLayout-->
+                <!--android:layout_width="@dimen/about_me_text_gray_line"-->
+                <!--android:layout_height="match_parent">-->
+                <!--<TextView-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--android:background="@color/grey_line"/>-->
+            <!--</LinearLayout>-->
+            <!--&lt;!&ndash; 咖币&ndash;&gt;-->
+            <!--<LinearLayout-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="fill_parent"-->
+                <!--android:orientation="vertical"-->
+                <!--android:layout_weight="1"-->
+                <!--android:gravity="center"-->
+                <!-->-->
+                <!--<TextView-->
+                    <!--android:id="@+id/about_me_ka_bi_count"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:textColor="@color/tab_font_orange_color"-->
+                    <!--android:text="@string/about_me_ka_bi_count"/>-->
+                <!--<TextView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:text="@string/about_me_ka_bi"/>-->
+            <!--</LinearLayout>-->
+        <!--</LinearLayout>-->
 
         <!-- 选项 -->
         <ScrollView
@@ -169,7 +172,7 @@
             android:layout_height="fill_parent"
             android:scrollbars="vertical"
             android:fadingEdge="vertical"
-            android:layout_below="@id/about_me_number_count"
+            android:layout_below="@id/about_me_gray_line"
             android:layout_marginTop="@dimen/about_me_border_padding">
             <LinearLayout
                 android:layout_width="fill_parent"
@@ -205,6 +208,7 @@
                                 android:layout_marginLeft="@dimen/about_me_border_padding"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:textSize="@dimen/middle_text_size"
                                 android:text="@string/about_me_message"/>
                             <TextView
                                 android:id="@+id/about_me_message_count"
@@ -252,6 +256,7 @@
                                 android:layout_marginLeft="@dimen/about_me_border_padding"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:textSize="@dimen/middle_text_size"
                                 android:text="@string/about_me_person_info"/>
                             <ImageView
                                 android:layout_centerVertical="true"
@@ -290,6 +295,7 @@
                                 android:layout_marginLeft="@dimen/about_me_border_padding"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:textSize="@dimen/middle_text_size"
                                 android:text="@string/about_me_collect"/>
                             <ImageView
                                 android:layout_centerVertical="true"
@@ -327,6 +333,7 @@
                                 android:layout_marginLeft="@dimen/about_me_border_padding"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:textSize="@dimen/middle_text_size"
                                 android:text="@string/about_me_downloaded"/>
                             <ImageView
                                 android:layout_centerVertical="true"
@@ -364,6 +371,7 @@
                                 android:layout_marginLeft="@dimen/about_me_border_padding"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:textSize="@dimen/middle_text_size"
                                 android:text="@string/about_me_my_require_lesson"/>
                             <ImageView
                                 android:layout_centerVertical="true"
@@ -380,15 +388,16 @@
                         </RelativeLayout>
                     </LinearLayout>
 
-                    <LinearLayout
-                        android:background="@color/white"
-                        android:id="@+id/about_me_my_middle_list_item"
-                        android:orientation="vertical"
-                        android:layout_width="fill_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/about_me_border_padding">
+                    <!-- 该功能暂时隐藏 -->
+                    <!--<LinearLayout-->
+                        <!--android:background="@color/white"-->
+                        <!--android:id="@+id/about_me_my_middle_list_item"-->
+                        <!--android:orientation="vertical"-->
+                        <!--android:layout_width="fill_parent"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_marginTop="@dimen/about_me_border_padding">-->
 
-                        <!-- 给我们提意见 -->
+                         <!--&lt;!&ndash; 给我们提意见 &ndash;&gt;-->
                         <!--<RelativeLayout-->
                             <!--android:background="@drawable/selector"-->
                             <!--android:clickable="true"-->
@@ -425,7 +434,7 @@
                                 <!--android:layout_marginRight="@dimen/about_me_border_padding"/>-->
                         <!--</RelativeLayout>-->
 
-                        <!-- 分享美甲大咖给朋友 -->
+                         <!--&lt;!&ndash; 分享美甲大咖给朋友 &ndash;&gt;-->
                         <!--<RelativeLayout-->
                             <!--android:background="@drawable/selector"-->
                             <!--android:clickable="true"-->
@@ -459,7 +468,7 @@
                                 <!--android:layout_alignParentBottom="true"-->
                                 <!--android:background="@color/grey_line" />-->
                         <!--</RelativeLayout>-->
-                    </LinearLayout>
+                    <!--</LinearLayout>-->
 
                     <LinearLayout
                         android:background="@color/white"
@@ -490,6 +499,7 @@
                                 android:layout_marginLeft="@dimen/about_me_border_padding"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:textSize="@dimen/middle_text_size"
                                 android:text="@string/about_me_setting"/>
                             <ImageView
                                 android:layout_centerVertical="true"
