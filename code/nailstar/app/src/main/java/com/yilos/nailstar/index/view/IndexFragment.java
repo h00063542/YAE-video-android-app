@@ -105,6 +105,14 @@ public class IndexFragment extends Fragment implements IIndexView {
         logoImage.setImageResource(R.mipmap.daka_word_logo);
         ImageView searchButton = titleBar.getRightImageButtonOne();
         searchButton.setImageResource(R.mipmap.ic_search);
+        searchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), SearchActivity.class);
+                startActivity(intent);
+                getActivity().overridePendingTransition(R.anim.fade_in_center, R.anim.fade_out);
+            }
+        });
 
         // 初始化tab页
         final TabPageIndicator tabPageIndicator = (TabPageIndicator)view.findViewById(R.id.videoListPagerIndicator);
