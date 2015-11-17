@@ -69,6 +69,8 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
     private LinearLayout myFollowList;//关注列表
     private LinearLayout myFansList;//粉丝列表
 
+    private View downloadVideoBtn;
+
     private TextView aboutMeLevel;//进入等级页面按钮
 
     private int experience;
@@ -184,6 +186,8 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
         myFansList = (LinearLayout)view.findViewById(R.id.my_fans_list);
 
         aboutMeLevel = (TextView)view.findViewById(R.id.about_me_level);
+
+        downloadVideoBtn = view.findViewById(R.id.downloadVideoBtn);
     }
 
     @Override
@@ -215,6 +219,10 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
                 } else {
 
                 }
+                break;
+            case R.id.downloadVideoBtn:
+                    Intent DownloadIntent = new Intent(getActivity(),DownloadVideo.class);
+                    startActivity(DownloadIntent);
                 break;
             case R.id.about_me_person_info_layout:
                 Intent intent = new Intent(getActivity(),PersonInfoActivity.class);
@@ -251,6 +259,8 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
         aboutMeSetting.setOnClickListener(this);
 
         personInfoLayout.setOnClickListener(this);
+
+        downloadVideoBtn.setOnClickListener(this);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
