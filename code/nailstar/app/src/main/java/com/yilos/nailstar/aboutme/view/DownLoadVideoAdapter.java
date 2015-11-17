@@ -1,11 +1,14 @@
 package com.yilos.nailstar.aboutme.view;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.yilos.nailstar.R;
 import com.yilos.nailstar.aboutme.presenter.DownloadPresenter;
 import com.yilos.nailstar.download.DownLoadInfo;
@@ -21,12 +24,17 @@ public class DownLoadVideoAdapter extends BaseAdapter{
 
     private List<DownLoadInfo> downLoadInfoList;
 
+    private int screenWidth;
+
     private Activity context;
     private DownloadPresenter downloadPresenter;
 
     public DownLoadVideoAdapter (Activity context, DownloadPresenter downloadPresenter) {
         this.context = context;
         this.downloadPresenter = downloadPresenter;
+        DisplayMetrics metric = new DisplayMetrics();
+        context.getWindowManager().getDefaultDisplay().getMetrics(metric);
+        this.screenWidth = metric.widthPixels;
     }
 
     public void setDownLoadInfoList(List<DownLoadInfo> downLoadInfoList) {
@@ -58,7 +66,7 @@ public class DownLoadVideoAdapter extends BaseAdapter{
         if (position >= getCount()) {
             return null;
         }
-        ViewHolder holder;
+        final ViewHolder holder;
         if (convertView == null) {
             convertView = context.getLayoutInflater().inflate(R.layout.download_video_item, null);
             holder = new ViewHolder();
@@ -66,6 +74,9 @@ public class DownLoadVideoAdapter extends BaseAdapter{
             holder.downloadAuthorPhoto = (CircleImageView) convertView.findViewById(R.id.downloadAuthorPhoto);
             holder.downloadImage = (ImageCacheView) convertView.findViewById(R.id.downloadImage);
             holder.downloadTopic = (TextView) convertView.findViewById(R.id.downloadTopic);
+
+            holder.downloadImage.getLayoutParams().width = screenWidth * 25 / 100;
+            holder.downloadImage.getLayoutParams().height = screenWidth * 25 / 100;
 
             convertView.setTag(holder);
         } else {

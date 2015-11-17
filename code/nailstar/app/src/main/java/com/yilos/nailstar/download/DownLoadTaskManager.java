@@ -16,6 +16,7 @@ import com.yilos.nailstar.util.LoggerFactory;
 import org.apache.log4j.Logger;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -25,6 +26,12 @@ import java.util.List;
  * Created by yilos on 15/11/12.
  */
 public class DownLoadTaskManager {
+
+    public static final int DOWNLOADING = 0;
+
+    public static final int DOWNLOAD_STOP = -1;
+
+    public static final int DOWNLOAD_FINISH = 1;
 
     private static Logger logger = LoggerFactory.getLogger(DownLoadTaskManager.class);
 
@@ -44,13 +51,156 @@ public class DownLoadTaskManager {
 
     private static DownLoadTaskManager instance = new DownLoadTaskManager();
 
+    /**
+     * 获取下载信息列表
+     *
+     * @return
+     */
     public List<DownLoadInfo> getDownLoadInfoList() {
         return downLoadInfoList;
     }
 
-    public List<DownLoadTask> getDownLoadTaskList() {
-        return downLoadTaskList;
+    /**
+     * 获取DownLoadTaskManager实例
+     *
+     * @return
+     */
+    public static DownLoadTaskManager getInstance() {
+        return instance;
     }
+
+    /**
+     * 判断任务是否已经开始下载
+     *
+     * @param topicInfo
+     * @return
+     */
+    public boolean isDownLoad(TopicInfo topicInfo) {
+
+        // 判断文件是否存在
+        boolean isFileExist = false;
+        File file = new File(path, topicInfo.getTitle() + ".mp4");
+        if (file.exists()) {
+            isFileExist = true;
+        }
+
+        // 判断下载信息是否存在
+        boolean isDownloadInfoExist = false;
+        DownLoadInfo downLoadInfo = new DownLoadInfo(topicInfo);
+        for (Iterator<DownLoadInfo> iterator = downLoadInfoList.iterator(); iterator.hasNext(); ) {
+            DownLoadInfo item = iterator.next();
+            if (item.getUrl().equals(downLoadInfo.getUrl())) {
+                isDownloadInfoExist = true;
+                break;
+            }
+        }
+
+        return isFileExist || isDownloadInfoExist;
+    }
+
+    /**
+     * 添加下载任务
+     *
+     * @param topicInfo
+     */
+    public void addDownLoadTask(final TopicInfo topicInfo) {
+
+        final DownLoadInfo downLoadInfo = new DownLoadInfo(topicInfo);
+
+        // 如果之前保留了下载信息，则删除
+        for (Iterator<DownLoadInfo> iterator = downLoadInfoList.iterator(); iterator.hasNext(); ) {
+            DownLoadInfo item = iterator.next();
+            if (item.getUrl().equals(downLoadInfo.getUrl())) {
+                iterator.remove();
+                break;
+            }
+        }
+
+        // 保存下载信息
+        saveDownloadInfo(topicInfo, downLoadInfo);
+
+        // 如果之前存在下载任务，则删除下载任务
+        pauseDownLoadTask(downLoadInfo);
+
+        // 如果文件已经存在，则删除原有文件
+        File file = new File(path, downLoadInfo.getTitle() + ".mp4");
+        if (file.exists()) {
+            file.delete();
+        }
+        // 开始下载任务
+        startDownloadTask(downLoadInfo);
+    }
+
+    /**
+     * 暂停下载任务
+     *
+     * @param downLoadInfo
+     */
+    public void pauseDownLoadTask(DownLoadInfo downLoadInfo) {
+        for (Iterator<DownLoadTask> iterator = downLoadTaskList.iterator(); iterator.hasNext(); ) {
+            DownLoadTask downLoadTask = iterator.next();
+            if (downLoadTask.getUrl().equals(downLoadInfo.getUrl())) {
+                downLoadTask.cancel();
+                iterator.remove();
+                break;
+            }
+        }
+    }
+
+    /**
+     * 删除下载任务（同时删除下载文件）
+     *
+     * @param downLoadInfo
+     */
+    public void deleteDownLoadVideo(DownLoadInfo downLoadInfo) {
+
+        // 删除下载信息
+        for (Iterator<DownLoadInfo> iterator = downLoadInfoList.iterator(); iterator.hasNext(); ) {
+            DownLoadInfo item = iterator.next();
+            if (item.getUrl().equals(downLoadInfo.getUrl())) {
+                iterator.remove();
+                break;
+            }
+        }
+
+        try {
+            FileUtils.writeToFile(new File(path, DOWNLOAD_INFO_FILE), objectMapper.writeValueAsString(downLoadInfoList));
+        } catch (JsonProcessingException e) {
+            logger.error("deleteDownLoadVideo writeToFile failed", e);
+        }
+
+        // 删除下载任务
+        pauseDownLoadTask(downLoadInfo);
+
+        // 如果视频文件已经存在，则删除视频文件
+        File file = new File(path, downLoadInfo.getTitle() + ".mp4");
+        if (file.exists()) {
+            file.delete();
+        }
+    }
+
+    /**
+     * 继续下载任务
+     *
+     * @param downLoadInfo
+     */
+    public void resumeDownLoadTask(DownLoadInfo downLoadInfo) {
+        downLoadInfo.setStatus(DOWNLOADING);
+        startDownloadTask(downLoadInfo);
+    }
+
+    /**
+     * 继续所有未完成任务
+     */
+    public void resumeAllDownLoadTask() {
+        for (Iterator<DownLoadInfo> iterator = downLoadInfoList.iterator(); iterator.hasNext(); ) {
+            DownLoadInfo item = iterator.next();
+            if (item.getStatus() != DOWNLOAD_FINISH) {
+                resumeDownLoadTask(item);
+            }
+        }
+    }
+
 
     private DownLoadTaskManager() {
         initDownloadInfo();
@@ -86,45 +236,8 @@ public class DownLoadTaskManager {
         }).start();
     }
 
-    public static DownLoadTaskManager getInstance() {
-        return instance;
-    }
+    private void saveDownloadInfo(final TopicInfo topicInfo, final DownLoadInfo downLoadInfo) {
 
-    public boolean isDownLoad(TopicInfo topicInfo) {
-
-        // 判断文件是否存在
-        boolean isFileExist = false;
-        File file = new File(path, topicInfo.getTitle() + ".mp4");
-        if (file.exists()) {
-            isFileExist = true;
-        }
-
-        // 判断下载信息是否存在
-        boolean isDownloadInfoExist = false;
-        DownLoadInfo downLoadInfo = new DownLoadInfo(topicInfo);
-        for (Iterator<DownLoadInfo> iterator = downLoadInfoList.iterator(); iterator.hasNext(); ) {
-            DownLoadInfo item = iterator.next();
-            if (item.getUrl().equals(downLoadInfo.getUrl())) {
-                isDownloadInfoExist = true;
-                break;
-            }
-        }
-
-        return isFileExist || isDownloadInfoExist;
-    }
-
-    public void addDownLoadTask(final TopicInfo topicInfo) {
-
-        // 如果之前保留了下载信息，则删除
-        final DownLoadInfo downLoadInfo = new DownLoadInfo(topicInfo);
-
-        for (Iterator<DownLoadInfo> iterator = downLoadInfoList.iterator(); iterator.hasNext(); ) {
-            DownLoadInfo item = iterator.next();
-            if (item.getUrl().equals(downLoadInfo.getUrl())) {
-                iterator.remove();
-                break;
-            }
-        }
         // 添加下载信息
         downLoadInfoList.add(downLoadInfo);
 
@@ -137,49 +250,64 @@ public class DownLoadTaskManager {
 
                 // 保存视频图片，讲师图片
                 Bitmap image = imageLoader.loadImageSync(topicInfo.getThumbUrl());
+                File imageFile = new File(path, downLoadInfo.getTitle() + ".jpg");
+                if (imageFile.exists()) {
+                    imageFile.delete();
+                }
                 String imagePath = FileUtils.saveBitMap(image, path, downLoadInfo.getTitle() + ".jpg");
                 if (imagePath != null) {
                     downLoadInfo.setIamge(imagePath);
                 }
                 Bitmap photo = imageLoader.loadImageSync(topicInfo.getAuthorPhoto());
+                File photoFile = new File(path, downLoadInfo.getName() + ".jpg");
+                if (photoFile.exists()) {
+                    photoFile.delete();
+                }
                 String photoPath = FileUtils.saveBitMap(photo, path, downLoadInfo.getName() + ".jpg");
                 if (photoPath != null) {
                     downLoadInfo.setPhoto(photoPath);
                 }
-//                try {
-//                    long length = HttpClient.getFileLength(downLoadInfo.getUrl());
-//                    downLoadInfo.setFileSize(length);
-//                } catch (IOException e) {
-//                    logger.error("addDownLoadTask get file length failed", e);
-//                }
+
+                // 保存文件长度
+                try {
+                    long length = HttpClient.getFileLength(downLoadInfo.getUrl());
+                    downLoadInfo.setFileSize(length);
+                } catch (IOException e) {
+                    logger.error("saveDownloadInfo get file length failed", e);
+                }
 
                 // 下载信息保存
                 try {
                     FileUtils.writeToFile(new File(path, DOWNLOAD_INFO_FILE), objectMapper.writeValueAsString(downLoadInfoList));
                 } catch (JsonProcessingException e) {
-                    logger.error("addDownLoadTask save downLoadInfoList failed", e);
+                    logger.error("saveDownloadInfo writeToFile failed", e);
                 }
             }
         }).start();
 
-        // 如果之前存在下载任务，则删除下载任务
-        pauseDownLoadTask(downLoadInfo);
+    }
 
-        // 如果文件已经存在，则删除原有文件
-        File file = new File(path, downLoadInfo.getTitle() + ".mp4");
-        if (file.exists()) {
-            file.delete();
-        }
-        // 添加下载任务
+    private void startDownloadTask(final DownLoadInfo downLoadInfo) {
+
         final DownLoadTask downLoadTask = new DownLoadTask(client, downLoadInfo.getUrl(), path, downLoadInfo.getTitle() + ".mp4");
         downLoadTask.setProgressListener(new ProgressListener() {
             @Override
             public void update(long bytesRead, long contentLength, boolean done) {
                 downLoadInfo.setFileSize(contentLength);
                 downLoadInfo.setBytesRead(bytesRead);
-                if (bytesRead >= contentLength && done) {
-                    downLoadInfo.setFinished(true);
+                if (done) {
+                    if (bytesRead >= contentLength) {
+                        downLoadInfo.setStatus(DOWNLOAD_FINISH);
+                    } else {
+                        downLoadInfo.setStatus(DOWNLOAD_STOP);
+                    }
+                    try {
+                        FileUtils.writeToFile(new File(path, DOWNLOAD_INFO_FILE), objectMapper.writeValueAsString(downLoadInfoList));
+                    } catch (JsonProcessingException e) {
+                        logger.error("startDownloadTask writeToFile failed", e);
+                    }
                 }
+
             }
         });
         downLoadTaskList.add(downLoadTask);
@@ -194,52 +322,6 @@ public class DownLoadTaskManager {
                 }
             }
         }).start();
-    }
-
-    public void pauseDownLoadTask(DownLoadInfo downLoadInfo) {
-        for (Iterator<DownLoadTask> iterator = downLoadTaskList.iterator(); iterator.hasNext(); ) {
-            DownLoadTask downLoadTask = iterator.next();
-            if (downLoadTask.getUrl().equals(downLoadInfo.getUrl())) {
-                downLoadTask.cancel();
-                iterator.remove();
-                break;
-            }
-        }
-    }
-
-    public void deleteDownLoadVideo(DownLoadInfo downLoadInfo) {
-
-        // 删除下载信息
-        for (Iterator<DownLoadInfo> iterator = downLoadInfoList.iterator(); iterator.hasNext(); ) {
-            DownLoadInfo item = iterator.next();
-            if (item.getUrl().equals(downLoadInfo.getUrl())) {
-                iterator.remove();
-                break;
-            }
-        }
-
-        try {
-            FileUtils.writeToFile(new File(path, DOWNLOAD_INFO_FILE), objectMapper.writeValueAsString(downLoadInfoList));
-        } catch (JsonProcessingException e) {
-            logger.error("deleteDownLoadInfo save downLoadInfoList failed", e);
-        }
-
-        // 删除下载任务
-        pauseDownLoadTask(downLoadInfo);
-
-        // 如果视频文件已经存在，则删除视频文件
-        File file = new File(path, downLoadInfo.getTitle() + ".mp4");
-        if (file.exists()) {
-            file.delete();
-        }
-    }
-
-    public void resumeDownLoadTask(DownLoadInfo downLoadInfo) {
-        // TODO
-    }
-
-    public void resumeAllDownLoadTask() {
-        // TODO
     }
 
 }
