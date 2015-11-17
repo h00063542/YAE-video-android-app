@@ -14,6 +14,7 @@ import com.yilos.nailstar.aboutme.entity.MessageCount;
 import com.yilos.nailstar.aboutme.entity.PersonInfo;
 import com.yilos.nailstar.framework.entity.NailStarApplicationContext;
 import com.yilos.nailstar.framework.exception.NetworkDisconnectException;
+import com.yilos.nailstar.util.Constants;
 import com.yilos.nailstar.util.HttpClient;
 import com.yilos.nailstar.util.ImageUtil;
 import com.yilos.nailstar.util.JsonUtil;
@@ -83,7 +84,7 @@ public class AboutMeServiceImpl implements AboutMeService {
     @Override
     public PersonInfo setPersonInfo(String uid,String nickname,int type,String photoUrl,String profile) throws NetworkDisconnectException, JSONException {
         PersonInfo personInfo = new PersonInfo();
-        String jsonObject;
+        String result;
         JSONObject personInfoObject;
 
 //        String uid = "a8affd60-efe6-11e4-a908-3132fc2abe39";
@@ -98,22 +99,21 @@ public class AboutMeServiceImpl implements AboutMeService {
         personInfo.setPhotoUrl(photoUrl);
         personInfo.setUid(uid);
         String url = "/vapi2/nailstar/account/profile/" + personInfo.getUid();
-        RequestBody formBody = new FormEncodingBuilder()
-                .add("nickname", personInfo.getNickname())
-                .add("type", String.valueOf(personInfo.getType()))
-                .add("photoUrl", personInfo.getPhotoUrl())
-                .add("profile",personInfo.getProfile())
-                .build();
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("nickname", personInfo.getNickname());
+        jsonObject.put("type", String.valueOf(personInfo.getType()));
+        jsonObject.put("photoUrl", personInfo.getPhotoUrl());
+        jsonObject.put("profile", personInfo.getProfile());
         try {
-            jsonObject = HttpClient.post(url,formBody);
+            result = HttpClient.post(url,jsonObject.toString());
         } catch (IOException e) {
-            throw new NetworkDisconnectException("网络更新个人资料失败",e);
+            throw new NetworkDisconnectException("更新个人资料失败",e);
         }
-        personInfoObject = new JSONObject(jsonObject);
+        personInfoObject = new JSONObject(result);
         if (personInfoObject.getInt("code") != 0) {
             return null;
         }
-        if (personInfoObject.getJSONObject("result").getString("messages") == "ok" ) {
+        if (personInfoObject.getJSONObject("result").getString("messages").equals("ok")) {
             return personInfo;
         }
         return null;
