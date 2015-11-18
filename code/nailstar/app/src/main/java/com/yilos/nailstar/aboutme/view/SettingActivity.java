@@ -129,6 +129,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         LoginAPI.getInstance().logout(); //退出登录
         loginOut.setVisibility(View.GONE);
         showShortToast(R.string.has_been_login_out);
+        finish();
     }
 
     @Override

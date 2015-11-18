@@ -182,14 +182,14 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
             personInfo.setUid(loginAPI.getLoginUserId());
             personInfo.setNickname(loginAPI.getLoginUserNickname());
             personInfo.setType(loginAPI.getLoginUserType());
-            StringBuilder localPath = new StringBuilder()
-                    .append(Constants.YILOS_NAILSTAR_PICTURE_PATH)
-                    .append(personInfo.getUid())
-                    .append(Constants.JPG_SUFFIX);
-            aboutMePresenter.downloadOss2File(localPath.toString(), loginAPI.getLoginUserPhotourl());
+//            StringBuilder localPath = new StringBuilder()
+//                    .append(Constants.YILOS_NAILSTAR_PICTURE_PATH)
+//                    .append(personInfo.getUid())
+//                    .append(Constants.JPG_SUFFIX);
+//            aboutMePresenter.downloadOss2File(localPath.toString(), loginAPI.getLoginUserPhotourl());
 
-            Bitmap bm = BitmapFactory.decodeFile(personInfo.getPhotoUrl());
-            profileImage.setImageBitmap(bm);
+            //Bitmap bm = BitmapFactory.decodeFile(personInfo.getPhotoUrl());
+            profileImage.setImageSrc(loginAPI.getLoginUserPhotourl());
             nameText.setText(personInfo.getNickname());
             identityText.setText(IdentityUtil.getIdentity(personInfo.getType()));
             if (messageCountText.getText().toString().equals("0")) {
