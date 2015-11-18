@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <com.yilos.widget.titlebar.TitleBar
+        android:id="@+id/message_title_bar"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/common_1_dp"
+        android:background="@color/xk1"/>
+
+    <com.yilos.widget.pageindicator.TabPageIndicator
+        android:id="@+id/videoListPagerIndicator"
+        android:layout_height="@dimen/index_tab_height"
+        android:layout_width="fill_parent"/>
+    <com.yilos.widget.pageindicator.UnderlinePageIndicator
+        android:id="@+id/videoListPagerLineIndicator"
+        android:layout_width="fill_parent"
+        android:layout_height="2dp" />
+    <com.yilos.widget.view.MViewPager
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:id="@+id/videoListPager">
+    </com.yilos.widget.view.MViewPager>
+</LinearLayout>
