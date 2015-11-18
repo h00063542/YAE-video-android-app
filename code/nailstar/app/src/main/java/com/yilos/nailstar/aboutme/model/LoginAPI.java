@@ -40,7 +40,7 @@ public class LoginAPI {
      * @return
      */
     public boolean isLogin() {
-        return loginPersonInfo.getUid() != null;
+        return loginUserName != null;
     }
 
     public void gotoLoginPage(Activity activity) {
