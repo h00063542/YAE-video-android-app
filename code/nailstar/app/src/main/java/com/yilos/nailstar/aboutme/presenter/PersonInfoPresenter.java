@@ -35,43 +35,14 @@ public class PersonInfoPresenter {
         personInfoPresenter.personInfoActivity = personInfoActivity;
         return personInfoPresenter;
     }
-    //获取我的资料页面头像
-    public void getImage(final String photoUrl) {
-        TaskManager.Task loadImage = new TaskManager.BackgroundTask() {
-            @Override
-            public Object doWork(Object data) {
-                byte[] imageData;
-                Bitmap bitmap;
-                try {
-                    imageData = ImageUtil.getBytes(new URL(photoUrl).openStream());
-                    bitmap = BitmapFactory.decodeByteArray(imageData, 0, imageData.length);
-                    return bitmap;
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                return null;
-            }
-        };
-
-        TaskManager.UITask<Bitmap> imageUITask = new TaskManager.UITask<Bitmap>() {
-            @Override
-            public Bitmap doWork(Bitmap data) {
-                personInfoActivity.getImage(data);
-                return null;
-            }
-        };
-
-        new TaskManager().next(loadImage).next(imageUITask).start();
-    }
-
 
     //设置个人资料
-    public void setPersonInfo(final String uid, final String nickname, final int type, final String photoUrl, final String profile) {
+    public void setPersonInfo(final PersonInfo personInfo) {
         TaskManager.Task setPersonInfo = new TaskManager.BackgroundTask() {
             @Override
             public Object doWork(Object data) {
                 try {
-                    return aboutMeService.setPersonInfo(uid, nickname,type,photoUrl,profile);
+                    return aboutMeService.setPersonInfo(personInfo);
                 } catch (NetworkDisconnectException e) {
                     e.printStackTrace();
                 } catch (JSONException e) {

@@ -12,7 +12,5 @@ import java.net.MalformedURLException;
 public interface IAboutMeView {
     void initMessageCount(MessageCount messageCount);
     void getAboutMeNumber(AboutMeNumber aboutMeNumber);
-    void getPersonInfo(PersonInfo personInfo);
-    void getMyPhotoToLocalPath(String localPicUrl);
     void judgeLogin();
 }

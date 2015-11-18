@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import com.yilos.nailstar.R;
 import com.yilos.nailstar.aboutme.entity.PersonInfo;
+import com.yilos.nailstar.aboutme.model.LoginAPI;
 import com.yilos.nailstar.aboutme.presenter.PersonInfoPresenter;
 import com.yilos.nailstar.framework.view.BaseActivity;
 import com.yilos.nailstar.takeImage.TakeImage;
@@ -53,13 +54,8 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
     private EditText profileText;
     private LinearLayout errorClear;
 
-    private String myImageUrl;
-    private int identityType;
-    private String nickName;
-    private String profile;
-    private String uid;
-
     PersonInfo personInfo = new PersonInfo();
+    LoginAPI loginAPI = LoginAPI.getInstance();
 
     public void submitMyPhotoToOss(String ossUrl) {
         personInfo.setPhotoUrl(ossUrl);
@@ -67,31 +63,17 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
 
     public void setPersonInfo(PersonInfo personInfo) {
         showShortToast("个人资料更新成功");
+        loginAPI.saveLoginStatus(loginAPI.getLoginUserName(),personInfo);
+        finish();
     }
 
-    public void getImage(Bitmap bitmap) {
-        if (bitmap == null) {
-            return;
-        }
-        circleImageView.setImageBitmap(bitmap);
-    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_person_info);
         initViews();
         Bundle bundle = this.getIntent().getExtras();
-//        myImageUrl = getBundle.getString("myImageUrl");
-//        identityType = getBundle.getInt("identityType");
-//        uid = "a8affd60-efe6-11e4-a908-3132fc2abe39";//getBundle.getString("uid");
-//        profile = getBundle.getString("profile");
-//        nickName = getBundle.getString("nickName");
         personInfo = (PersonInfo)bundle.getSerializable("personInfo");
-
-//        personInfo.setUid(uid);
-//        personInfo.setPhotoUrl(myImageUrl);
-//        personInfo.setProfile(profile);
-//        personInfo.setNickname(nickName);
         setLoopView();
         initEvents();
     }
@@ -123,8 +105,7 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
         identityText.setText(IdentityUtil.getIdentity(personInfo.getType()));
         nickNameText.setText(personInfo.getNickname());
         profileText.setText(personInfo.getProfile());
-        Bitmap bm = BitmapFactory.decodeFile(personInfo.getPhotoUrl());
-        circleImageView.setImageBitmap(bm);
+        circleImageView.setImageSrc(personInfo.getPhotoUrl());
         showError();
         final PersonInfoPresenter personInfoPresenter = PersonInfoPresenter.getInstance(this);
         titleBar.getBackButton(PersonInfoActivity.this);
@@ -137,7 +118,7 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
             public void onClick(View v) {
                 personInfo.setNickname(nickNameText.getText().toString().trim());
                 personInfo.setProfile(profileText.getText().toString().trim());
-                personInfoPresenter.setPersonInfo(personInfo.getUid(), personInfo.getNickname(), personInfo.getType(), personInfo.getPhotoUrl(), personInfo.getProfile());
+                personInfoPresenter.setPersonInfo(personInfo);
             }
         });
 
@@ -164,12 +145,9 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
             @Override
             public void callback(Uri uri) {
                 circleImageView.setImageURI(uri);
-                String path = uri.getPath();
                 StringBuilder picName = new StringBuilder()
-                        .append(UUIDUtil.getUUID())
-                        .append(Constants.JPG_SUFFIX);
-                personInfo.setPicName(picName.toString());
-                personInfoPresenter.submitMyPhotoToOss(path,personInfo.getPicName());
+                        .append(UUIDUtil.getUUID());
+                personInfoPresenter.submitMyPhotoToOss(uri.getPath(),picName.toString());
             }
         }).build();
     }
@@ -190,8 +168,7 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
         loopView.setListener(new LoopListener() {
             @Override
             public void onItemSelect(int item) {
-                identityType = item + 1;
-                personInfo.setType(identityType);
+                personInfo.setType(item + 1);
                 personInfoIdentity.setText(IdentityUtil.getIdentity(personInfo.getType()));
             }
         });
