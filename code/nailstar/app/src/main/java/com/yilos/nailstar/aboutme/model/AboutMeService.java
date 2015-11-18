@@ -1,5 +1,6 @@
 package com.yilos.nailstar.aboutme.model;
 
+import com.alibaba.sdk.android.oss.callback.GetFileCallback;
 import com.alibaba.sdk.android.oss.callback.SaveCallback;
 import com.yilos.nailstar.aboutme.entity.AboutMeNumber;
 import com.yilos.nailstar.aboutme.entity.FansList;
@@ -17,8 +18,7 @@ import java.util.ArrayList;
  */
 public interface AboutMeService {
     MessageCount getMessageCount() throws NetworkDisconnectException, JSONException;
-    PersonInfo setPersonInfo(String uid,String nickname,int type,String photoUrl,String profile) throws NetworkDisconnectException,JSONException;
-    PersonInfo getPersonInfo() throws NetworkDisconnectException,JSONException;
+    PersonInfo setPersonInfo(PersonInfo personInfo) throws NetworkDisconnectException,JSONException;
     AboutMeNumber getAboutMeNumber() throws NetworkDisconnectException,JSONException;
     ArrayList<FollowList> getFollowList(String uid) throws NetworkDisconnectException;
     ArrayList<FansList> getFansList(String uid) throws NetworkDisconnectException;

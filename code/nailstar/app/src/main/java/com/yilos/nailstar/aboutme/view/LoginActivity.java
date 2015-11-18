@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.yilos.nailstar.R;
@@ -54,14 +53,7 @@ public class LoginActivity extends BaseActivity implements ILoginView {
     private void initViews() {
         final LoginActivity loginActivity = this;
         TitleBar titleBar = (TitleBar) findViewById(R.id.titleBar);
-        ImageView backButton = titleBar.getBackButton();
-        backButton.setClickable(true);
-        backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                loginActivity.finish();
-            }
-        });
+        titleBar.getBackButton(LoginActivity.this);
 
         TextView titleView = titleBar.getTitleView();
         titleView.setText(R.string.title_activity_login);

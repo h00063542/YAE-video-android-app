@@ -2,10 +2,12 @@ package com.yilos.nailstar.aboutme.entity;
 
 import android.graphics.Bitmap;
 
+import java.io.Serializable;
+
 /**
  * Created by sisilai on 15/10/30.
  */
-public class PersonInfo {
+public class PersonInfo implements Serializable {
     /**
      * uid : a8affd60-efe6-11e4-a908-3132fc2abe39
      * nickname : Lolo
@@ -19,25 +21,6 @@ public class PersonInfo {
     private int type;
     private String photoUrl;
     private String profile;
-    private String picName;
-    private Bitmap imageBitmap;
-
-    public void setPicName(String picName) {
-        this.picName = picName;
-    }
-
-    public String getPicName() {
-        return picName;
-    }
-
-
-    public void setImageBitmap(Bitmap bitmap) {
-        this.imageBitmap = bitmap;
-    }
-
-    public Bitmap getImageBitmap() {
-        return imageBitmap;
-    }
 
     public void setUid(String uid) {
         this.uid = uid;

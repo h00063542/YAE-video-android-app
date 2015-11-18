@@ -8,11 +8,8 @@ import android.os.Bundle;
 import android.os.StatFs;
 import android.view.Gravity;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.leaking.slideswitch.SlideSwitch;
 import com.nostra13.universalimageloader.utils.StorageUtils;
@@ -124,13 +121,6 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         return null;
     }
 
-    public void setLoginOutEvents() {
-        LoginAPI.getInstance().getLoginUserId();  //获取登录的用户ID
-        LoginAPI.getInstance().logout(); //退出登录
-        loginOut.setVisibility(View.GONE);
-        showShortToast(R.string.has_been_login_out);
-    }
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -149,7 +139,11 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 startActivity(aboutUsIntent);
                 break;
             case R.id.login_out:
-                setLoginOutEvents();
+                LoginAPI.getInstance().getLoginUserId();  //获取登录的用户ID
+                LoginAPI.getInstance().logout(); //退出登录
+                loginOut.setVisibility(View.GONE);
+                showShortToast(R.string.has_been_login_out);
+                finish();
                 break;
             case R.id.setting_folder:
                 final SettingFolderAdapter settingFolderAdapter = new SettingFolderAdapter(this,sdcardArrayList,SettingUtil.getSdcardName());

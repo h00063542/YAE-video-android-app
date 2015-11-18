@@ -3,6 +3,7 @@ package com.yilos.nailstar.aboutme.view;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
@@ -21,6 +22,8 @@ import com.yilos.nailstar.aboutme.entity.MessageCount;
 import com.yilos.nailstar.aboutme.entity.PersonInfo;
 import com.yilos.nailstar.aboutme.model.LoginAPI;
 import com.yilos.nailstar.aboutme.presenter.AboutMePresenter;
+import com.yilos.nailstar.aboutme.presenter.PersonInfoPresenter;
+import com.yilos.nailstar.util.Constants;
 import com.yilos.nailstar.util.IdentityUtil;
 import com.yilos.nailstar.util.LevelUtil;
 import com.yilos.widget.circleimageview.CircleImageView;
@@ -54,7 +57,6 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
     private TitleBar titleBar;//标题栏
     private TextView titleText;//标题栏标题
 
-    private AboutMePresenter aboutMePresenter;
     private RelativeLayout personInfoLayout;
 
     private TextView levelText;//等级
@@ -81,6 +83,8 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
     private String uid;
 
     LoginAPI loginAPI = LoginAPI.getInstance();
+    PersonInfo personInfo = new PersonInfo();
+    AboutMePresenter aboutMePresenter = AboutMePresenter.getInstance(this);
 
     /**
      * Use this factory method to create a new instance of
@@ -104,34 +108,13 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
         // Required empty public constructor
     }
 
+
     @Override
     public void initMessageCount(MessageCount messageCount) {
         if (messageCount == null) {
             return;
         }
         messageCountText.setText(String.valueOf(messageCount.getCount()));
-    }
-
-    @Override
-    public void getPersonInfo(PersonInfo personInfo) {
-        if (personInfo == null) {
-            return;
-        }
-        Bitmap bitmap = personInfo.getImageBitmap();
-        if(bitmap != null) {
-            profileImage.setImageBitmap(bitmap);
-        } else {
-            profileImage.setImageResource(R.mipmap.ic_default_photo);
-        }
-        profileImage.setImageSrc(personInfo.getPhotoUrl());
-
-        uid = personInfo.getUid();
-        profile = personInfo.getProfile();
-        myImageUrl = personInfo.getPhotoUrl();
-        identityType = personInfo.getType();
-        nickName = personInfo.getNickname();
-        identityText.setText(IdentityUtil.getIdentity(identityType));
-        nameText.setText(nickName);
     }
 
     @Override
@@ -166,6 +149,28 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
         return view;
     }
 
+    @Override
+    public void judgeLogin() {
+        if (loginAPI.isLogin()) {
+            personInfo.setUid(loginAPI.getLoginUserId());
+            personInfo.setNickname(loginAPI.getLoginUserNickname());
+            personInfo.setType(loginAPI.getLoginUserType());
+            personInfo.setPhotoUrl(loginAPI.getLoginUserPhotourl());
+            personInfo.setProfile(loginAPI.getLoginUserProfile());
+            profileImage.setImageSrc(personInfo.getPhotoUrl());
+            nameText.setText(personInfo.getNickname());
+            identityText.setText(IdentityUtil.getIdentity(personInfo.getType()));
+            if (messageCountText.getText().toString().equals("0")) {
+                messageCountText.setVisibility(View.GONE);
+            }
+        } else {
+            identityText.setText(R.string.about_me_identity);
+            nameText.setText(R.string.about_me_name);
+            profileImage.setImageResource(R.mipmap.ic_default_photo);
+            messageCountText.setVisibility(View.GONE);
+        }
+    }
+
     private void initViews(View view){
         aboutMeSetting = (RelativeLayout)view.findViewById(R.id.about_me_setting_group);
         aboutMeMyInfo = (LinearLayout)view.findViewById(R.id.about_me_my_info);
@@ -176,46 +181,46 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
         identityText = (TextView)view.findViewById(R.id.about_me_identity);
         profileImage = (CircleImageView)view.findViewById(R.id.profile_image);
 
-        levelText = (TextView) view.findViewById(R.id.about_me_level);
-        attentionText = (TextView) view.findViewById(R.id.about_me_attention_count);
-        fansText = (TextView) view.findViewById(R.id.about_me_fans_count);
-        kaBiText = (TextView) view.findViewById(R.id.about_me_ka_bi_count);
+//        levelText = (TextView) view.findViewById(R.id.about_me_level);
+//        attentionText = (TextView) view.findViewById(R.id.about_me_attention_count);
+//        fansText = (TextView) view.findViewById(R.id.about_me_fans_count);
+//        kaBiText = (TextView) view.findViewById(R.id.about_me_ka_bi_count);
 
         titleBar = (TitleBar)view.findViewById(R.id.about_me_header_nav);
         personInfoLayout = (RelativeLayout)view.findViewById(R.id.about_me_person_info_layout);
 
-        myFollowList = (LinearLayout)view.findViewById(R.id.my_follow_list);
-        myFansList = (LinearLayout)view.findViewById(R.id.my_fans_list);
-
-        aboutMeLevel = (TextView)view.findViewById(R.id.about_me_level);
+//        myFollowList = (LinearLayout)view.findViewById(R.id.my_follow_list);
+//        myFansList = (LinearLayout)view.findViewById(R.id.my_fans_list);
+//
+//        aboutMeLevel = (TextView)view.findViewById(R.id.about_me_level);
 
         downloadVideoBtn = view.findViewById(R.id.downloadVideoBtn);
     }
 
     @Override
     public void onClick(View v) {
+        LoginAPI loginAPI = LoginAPI.getInstance();
         switch (v.getId()) {
-            case R.id.my_follow_list:
-                Intent myFollowListIntent = new Intent(getActivity(),FollowListActivity.class);
-                startActivity(myFollowListIntent);
-                break;
-            case R.id.my_fans_list:
-                Intent myFansListIntent = new Intent(getActivity(),FansListActivity.class);
-                startActivity(myFansListIntent);
-                break;
-            case R.id.about_me_level:
-                Intent myLevelIntent = new Intent(getActivity(),LevelActivity.class);
-                myLevelIntent.putExtra("experience",experience);
-                myLevelIntent.putExtra("myImageUrl", myImageUrl);
-                startActivity(myLevelIntent);
-                break;
+//            case R.id.my_follow_list:
+//                Intent myFollowListIntent = new Intent(getActivity(),FollowListActivity.class);
+//                startActivity(myFollowListIntent);
+//                break;
+//            case R.id.my_fans_list:
+//                Intent myFansListIntent = new Intent(getActivity(),FansListActivity.class);
+//                startActivity(myFansListIntent);
+//                break;
+//            case R.id.about_me_level:
+//                Intent myLevelIntent = new Intent(getActivity(),LevelActivity.class);
+//                myLevelIntent.putExtra("experience",experience);
+//                myLevelIntent.putExtra("myImageUrl", myImageUrl);
+//                startActivity(myLevelIntent);
+//                break;
             case R.id.about_me_setting_group:
                 Intent settingIntent = new Intent(getActivity(),SettingActivity.class);
                 startActivity(settingIntent);
                 break;
             case R.id.about_me_my_info:
-                LoginAPI loginAPI = LoginAPI.getInstance();
-                if (loginAPI.isLogin() == false) {
+                if (!loginAPI.isLogin()) {
                     Intent goToLoginIntent = new Intent(getActivity(),LoginActivity.class);
                     startActivity(goToLoginIntent);
                 } else {
@@ -227,15 +232,15 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
                     startActivity(DownloadIntent);
                 break;
             case R.id.about_me_person_info_layout:
-                Intent intent = new Intent(getActivity(),PersonInfoActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putString("myImageUrl", myImageUrl);
-                bundle.putInt("identityType", identityType);
-                bundle.putString("uid", uid);
-                bundle.putString("profile",profile);
-                bundle.putString("nickName",nickName);
-                intent.putExtras(bundle);
-                startActivity(intent);
+                if (!loginAPI.isLogin()) {
+                    loginAPI.gotoLoginPage(getActivity());
+                } else {
+                    Intent intent = new Intent(getActivity(),PersonInfoActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("personInfo",personInfo);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                }
                 break;
             default:
                 break;
@@ -246,9 +251,9 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
         titleText = titleBar.getTitleView();
         titleText.setText(R.string.about_me_my);
 
-        myFollowList.setOnClickListener(this);
-        myFansList.setOnClickListener(this);
-        aboutMeLevel.setOnClickListener(this);
+//        myFollowList.setOnClickListener(this);
+//        myFansList.setOnClickListener(this);
+//        aboutMeLevel.setOnClickListener(this);
         aboutMeMyInfo.setOnClickListener(this);
         aboutMeSetting.setOnClickListener(this);
 
@@ -278,19 +283,7 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
     @Override
     public void onResume() {
         super.onResume();
-        if (loginAPI.isLogin()) {
-            identityType = loginAPI.getLoginUserType();
-            nickName = loginAPI.getLoginUserNickname();
-            identityText.setText(IdentityUtil.getIdentity(identityType));
-            nameText.setText(nickName);
-//            aboutMePresenter = AboutMePresenter.getInstance(this);
-//            aboutMePresenter.getMessageCount();
-//            aboutMePresenter.getAboutMeNumber();
-//            aboutMePresenter.getPersonInfo();
-        } else {
-            identityText.setText(R.string.about_me_identity);
-            nameText.setText(R.string.about_me_name);
-        }
+        judgeLogin();
     }
 
     @Override

@@ -51,12 +51,12 @@
     <dimen name="topic_comment_content_pic_margin_bottom">10dp</dimen>
     <dimen name="topic_comment_content_padding_bottom">10dp</dimen>
 
-    <dimen name="topic_comment_reply_padding_left">5dp</dimen>
+    <dimen name="topic_comment_reply_padding_left">8dp</dimen>
     <dimen name="topic_comment_reply_padding_top">5dp</dimen>
-    <dimen name="topic_comment_reply_padding_right">5dp</dimen>
-    <dimen name="topic_comment_reply_padding_bottom">2dp</dimen>
+    <dimen name="topic_comment_reply_padding_right">8dp</dimen>
+    <dimen name="topic_comment_reply_padding_bottom">5dp</dimen>
     <dimen name="topic_comment_reply_margin_bottom">2dp</dimen>
-    <dimen name="topic_comment_reply_line_height">8dp</dimen>
+    <dimen name="topic_comment_reply_line_height">5dp</dimen>
 
 
     <dimen name="topic_author_font_size">16sp</dimen>
