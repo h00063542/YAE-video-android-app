@@ -318,6 +318,7 @@ public class DownLoadTaskManager {
                 try {
                     downLoadTask.run();
                 } catch (Exception e) {
+                    downLoadInfo.setStatus(DOWNLOAD_STOP);
                     logger.error("download failed, url: " + downLoadTask.getUrl(), e);
                 }
             }

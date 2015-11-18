@@ -1,14 +1,12 @@
 package com.yilos.nailstar.aboutme.view;
 
 import android.app.Activity;
-import android.graphics.Bitmap;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.nostra13.universalimageloader.core.ImageLoader;
 import com.yilos.nailstar.R;
 import com.yilos.nailstar.aboutme.presenter.DownloadPresenter;
 import com.yilos.nailstar.download.DownLoadInfo;
@@ -30,8 +28,10 @@ public class DownLoadVideoAdapter extends BaseAdapter{
     private DownloadPresenter downloadPresenter;
 
     public DownLoadVideoAdapter (Activity context, DownloadPresenter downloadPresenter) {
+
         this.context = context;
         this.downloadPresenter = downloadPresenter;
+
         DisplayMetrics metric = new DisplayMetrics();
         context.getWindowManager().getDefaultDisplay().getMetrics(metric);
         this.screenWidth = metric.widthPixels;
