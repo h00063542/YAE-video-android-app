@@ -5,7 +5,6 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.Matrix;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
@@ -23,7 +22,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.view.animation.ScaleAnimation;
@@ -1252,14 +1250,14 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
                         int[] location = new int[2];
                         topicCommentHomeWorkIv.getLocationInWindow(location);
                         float imageWidth = topicCommentHomeWorkIv.getWidth();
-                        float imageHeight = topicCommentAuthorIV.getHeight();
+                        float imageHeight = topicCommentHomeWorkIv.getHeight();
                         float screenWidth = getResources().getDisplayMetrics().widthPixels;
                         float screenHeight = getResources().getDisplayMetrics().heightPixels;
                         //渐变尺寸缩放
                         //放大动画
-                        homeworkZoomInScaleAnimation = new ScaleAnimation(imageWidth / screenWidth, 1f, imageHeight / screenHeight, 1f, Animation.RELATIVE_TO_SELF, (float) location[0] / screenWidth, Animation.RELATIVE_TO_SELF, (float) location[1] / screenHeight);
+                        homeworkZoomInScaleAnimation = new ScaleAnimation(imageWidth / screenWidth, 1f, imageHeight / screenHeight, 1f, Animation.RELATIVE_TO_PARENT, (float) location[0] / screenWidth, Animation.RELATIVE_TO_PARENT, (float) location[1] / screenHeight);
                         //缩小动画
-                        homeworkZoomOutScaleAnimation = new ScaleAnimation(1f, imageWidth / screenWidth, 1f, imageHeight / screenHeight, Animation.RELATIVE_TO_SELF, (float) location[0] / screenWidth, Animation.RELATIVE_TO_SELF, (float) location[1] / screenHeight);
+                        homeworkZoomOutScaleAnimation = new ScaleAnimation(1f, imageWidth / screenWidth, 1f, imageHeight / screenHeight, Animation.RELATIVE_TO_PARENT, (float) location[0] / screenWidth, Animation.RELATIVE_TO_PARENT, (float) location[1] / screenHeight);
                         //设置动画时间
                         homeworkZoomInScaleAnimation.setDuration(HOMEWORK_IMAGE_ZOOM_ANIMATION_TIME);
                         homeworkZoomOutScaleAnimation.setDuration(HOMEWORK_IMAGE_ZOOM_ANIMATION_TIME);
@@ -1270,9 +1268,19 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
 
             // -----------------设置评论回复内容-----------------
             if (!CollectionUtil.isEmpty(topicCommentInfo.getReplies())) {
+                int index = 0;
                 for (TopicCommentReplyInfo topicCommentReplyInfo : topicCommentInfo.getReplies()) {
                     TextView topicCommentReplyTv = buildCommentReplyTextView(topicCommentInfo, topicCommentReplyInfo);
+                    if (index == 0) {
+                        // 设置padding
+                        topicCommentReplyTv.setPadding(mCommentReplyPaddingLeft, mCommentReplyPaddingTop
+                                , mCommentReplyPaddingRight, mCommentReplyPaddingBottom);
+                    } else {
+                        topicCommentReplyTv.setPadding(mCommentReplyPaddingLeft, 0
+                                , mCommentReplyPaddingRight, mCommentReplyPaddingBottom);
+                    }
                     topicCommentContentLayout.addView(topicCommentReplyTv);
+                    index++;
                 }
             }
 
@@ -1321,12 +1329,9 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         topicCommentReplyTv.setMovementMethod(LinkMovementMethod.getInstance());
 
         // 设置行高
-        topicCommentReplyTv.setLineSpacing(mCommentReplyLineHeight, 1);
+//        topicCommentReplyTv.setLineSpacing(mCommentReplyLineHeight, 1);
         topicCommentReplyTv.setTextSize(TypedValue.COMPLEX_UNIT_PX, mCommentReplyFontSize);
 
-        // 设置padding
-        topicCommentReplyTv.setPadding(mCommentReplyPaddingLeft, mCommentReplyPaddingTop
-                , mCommentReplyPaddingRight, mCommentReplyPaddingBottom);
         topicCommentReplyTv.setBackgroundColor(mCommentReplyBackgroundColor);
         topicCommentReplyTv.setTag(R.id.topic_comment_info, topicCommentInfo);
         topicCommentReplyTv.setTag(R.id.topic_comment_reply_info, topicCommentReplyInfo);
@@ -1585,6 +1590,23 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         if (null != view) {
             LinearLayout topicCommentContentLayout = ((LinearLayout) ((LinearLayout) view.getChildAt(1)).getChildAt(0));
             TextView topicCommentReplyTv = buildCommentReplyTextView((TopicCommentInfo) view.getTag(R.id.topic_comment_info), topicCommentReplyInfo);
+            int index = 0;
+            // 判断是否已经有评论了，如果已经有评论，则不需要设置paddingTop了
+            for (int i = 0, count = topicCommentContentLayout.getChildCount(); i < count; i++) {
+                View commentContentView = topicCommentContentLayout.getChildAt(i);
+                if (commentContentView instanceof TextView && null != commentContentView.getTag(R.id.topic_comment_reply_info)) {
+                    index = i;
+                    break;
+                }
+            }
+            if (index == 0) {
+                // 设置padding
+                topicCommentReplyTv.setPadding(mCommentReplyPaddingLeft, mCommentReplyPaddingTop
+                        , mCommentReplyPaddingRight, mCommentReplyPaddingBottom);
+            } else {
+                topicCommentReplyTv.setPadding(mCommentReplyPaddingLeft, 0
+                        , mCommentReplyPaddingRight, mCommentReplyPaddingBottom);
+            }
             topicCommentContentLayout.addView(topicCommentReplyTv);
         }
     }
