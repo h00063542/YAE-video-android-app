@@ -12,6 +12,7 @@
         android:layout_weight="1"
         android:gravity="center_vertical"
         android:text="0"
+        android:textColor="@color/z2"
         android:id="@+id/lessionRankingNo" />
 
     <com.yilos.widget.view.ImageCacheView
@@ -46,6 +47,7 @@
                 android:layout_marginLeft="5dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@color/z2"
                 android:id="@+id/lessionAuthorName" />
         </LinearLayout>
 
@@ -58,11 +60,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingRight="5dp"
+                android:textColor="@color/z2"
                 android:text="@string/vote_count" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/lessionVoteCount"
+                android:textColor="@color/z2"
                 android:text="0"/>
             <LinearLayout
                 android:orientation="horizontal"
@@ -79,11 +83,16 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/vote"
+                    android:textColor="@color/z3"
+                    android:layout_marginRight="5dp"
                     android:id="@+id/lessionVote"  />
                 <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="50dp"
+                    android:layout_height="30dp"
                     android:text="@string/canvass"
+                    android:textColor="@color/white"
+                    android:textSize="13sp"
+                    android:background="@drawable/orange_button"
                     android:id="@+id/lessionCanvass" />
             </LinearLayout>
         </LinearLayout>

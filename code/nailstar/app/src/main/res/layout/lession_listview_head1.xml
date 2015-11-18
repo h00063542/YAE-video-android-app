@@ -19,6 +19,7 @@
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/requireLessionBtn"
             android:layout_toStartOf="@+id/requireLessionBtn"
+            android:textColor="@color/z2"
             android:text="@string/upload_description"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
@@ -27,35 +28,38 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_marginLeft="15dp"
+            android:layout_marginLeft="10dp"
             android:drawableLeft="@mipmap/cross"
+            android:paddingLeft="5dp"
+            android:background="@drawable/orange_button"
+            android:textColor="@color/white"
             android:text="@string/require_lession" />
     </RelativeLayout>
 
-    <RadioGroup
-        android:id="@+id/switchLessionView"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/bottom_border"
         android:orientation="horizontal">
 
-        <RadioButton
+        <TextView
             android:id="@+id/goVotingBtn"
+            style="@style/CustomTabPageIndicator"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:checked="true"
             android:text="@string/vote" />
 
-        <RadioButton
+        <TextView
             android:id="@+id/goRankingBtn"
+            style="@style/CustomTabPageIndicator"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
             android:text="@string/ranking" />
 
-    </RadioGroup>
+    </LinearLayout>
 
 </LinearLayout>
