@@ -185,6 +185,10 @@ public class TopicVideoPlayerPresenter {
                 .start();
     }
 
+    public boolean isDownloadVideo(TopicInfo topicInfo) {
+        return DownLoadTaskManager.getInstance().isDownLoad(topicInfo);
+    }
+
     public void downloadVideo(TopicInfo topicInfo) {
         DownLoadTaskManager.getInstance().addDownLoadTask(topicInfo);
     }

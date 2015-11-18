@@ -15,6 +15,7 @@ import com.yilos.nailstar.topic.entity.AddCommentInfo;
 import com.yilos.nailstar.topic.presenter.TopicHomeworkPresenter;
 import com.yilos.nailstar.util.Constants;
 import com.yilos.nailstar.util.StringUtil;
+import com.yilos.nailstar.util.UUIDUtil;
 import com.yilos.widget.titlebar.TitleBar;
 
 /**
@@ -109,14 +110,7 @@ public class TopicHomeworkActivity extends BaseActivity implements ITopicHomewor
                 info.setContentPic(Constants.EMPTY_STRING);
                 info.setReady(Constants.READY_HOMEWORK);
                 info.setPicLocalPath(mContentPic);
-                StringBuilder picName = new StringBuilder()
-                        .append(mTopicId)
-                        .append(Constants.UNDERLINE)
-                        .append(userId)
-                        .append(Constants.UNDERLINE)
-                        .append(Constants.HOMEWORK)
-                        .append(Constants.JPG_SUFFIX);
-                info.setPicName(picName.toString());
+                info.setPicName(UUIDUtil.getUUID());
                 mTopicHomeworkPresenter.submittedHomework(info);
             }
         });
