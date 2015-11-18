@@ -347,7 +347,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         mCbTopicTabCollection = (CheckBox) findViewById(R.id.cb_topic_tab_collection);
         mTvTopicTabComment = (TextView) findViewById(R.id.tv_topic_tab_comment);
         mTvTopicSubmittedHomework = (TextView) findViewById(R.id.tv_submitted_homework);
-        // 上传照片
+        // 交作业截图
         mTakeImage = new TakeImage.Builder().context(this)
                 .uri(Constants.YILOS_NAILSTAR_PATH)
                 .aspectX(Constants.HOMEWORK_PIC_ASPECT_RATIO)
@@ -847,14 +847,6 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
                 mTvTopicAuthorTag3.setVisibility(View.VISIBLE);
                 mIvTopicAuthorTag3Icon.setVisibility(View.VISIBLE);
             }
-        } else {
-            // 从布局文件中删除tags区域
-            if (null != mLayoutTopicAuthorTags) {
-                LinearLayout topicAuthorTagsParent = (LinearLayout) mLayoutTopicAuthorTags.getParent();
-                if (null != topicAuthorTagsParent) {
-                    topicAuthorTagsParent.removeView(mLayoutTopicAuthorTags);
-                }
-            }
         }
 
         // 设置评论数量
@@ -1242,22 +1234,33 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
                         }
                         mDecorView.removeView(mZoomInImageLayout);
                         mDecorView.addView(mZoomInImageLayout);
-//                        // 渐变
-//                        AlphaAnimation alphaAnimation = new AlphaAnimation(0.1f, 1.0f);
-//                        //设置动画时间
-//                        alphaAnimation.setDuration(3000);
-//                        mDecorView.startAnimation(alphaAnimation);
                         int[] location = new int[2];
                         topicCommentHomeWorkIv.getLocationInWindow(location);
+                        float locationX = location[0];
+                        float locationY = location[1];
                         float imageWidth = topicCommentHomeWorkIv.getWidth();
                         float imageHeight = topicCommentHomeWorkIv.getHeight();
                         float screenWidth = getResources().getDisplayMetrics().widthPixels;
                         float screenHeight = getResources().getDisplayMetrics().heightPixels;
+
+                        if (locationY > screenHeight / 2) {
+                            locationX += imageHeight;
+                            locationY += imageHeight;
+                        }
+                        float fromX = imageWidth / screenWidth;
+                        float fromY = imageHeight / screenHeight;
+                        float pivotXValue = locationX / screenWidth;
+                        float pivotYValue = locationY / screenHeight;
+
+
                         //渐变尺寸缩放
                         //放大动画
-                        homeworkZoomInScaleAnimation = new ScaleAnimation(imageWidth / screenWidth, 1f, imageHeight / screenHeight, 1f, Animation.RELATIVE_TO_PARENT, (float) location[0] / screenWidth, Animation.RELATIVE_TO_PARENT, (float) location[1] / screenHeight);
+                        homeworkZoomInScaleAnimation = null;
+                        homeworkZoomOutScaleAnimation = null;
+
+                        homeworkZoomInScaleAnimation = new ScaleAnimation(fromX, 1f, fromY, 1f, Animation.RELATIVE_TO_PARENT, pivotXValue, Animation.RELATIVE_TO_PARENT, pivotYValue);
                         //缩小动画
-                        homeworkZoomOutScaleAnimation = new ScaleAnimation(1f, imageWidth / screenWidth, 1f, imageHeight / screenHeight, Animation.RELATIVE_TO_PARENT, (float) location[0] / screenWidth, Animation.RELATIVE_TO_PARENT, (float) location[1] / screenHeight);
+                        homeworkZoomOutScaleAnimation = new ScaleAnimation(1f, fromX, 1f, fromY, Animation.RELATIVE_TO_PARENT, pivotXValue, Animation.RELATIVE_TO_PARENT, pivotYValue);
                         //设置动画时间
                         homeworkZoomInScaleAnimation.setDuration(HOMEWORK_IMAGE_ZOOM_ANIMATION_TIME);
                         homeworkZoomOutScaleAnimation.setDuration(HOMEWORK_IMAGE_ZOOM_ANIMATION_TIME);
@@ -1485,17 +1488,11 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
                 ArrayList<TopicCommentInfo> topicCommentInfoList = new ArrayList<TopicCommentInfo>();
                 TopicCommentInfo topicCommentInfo = new TopicCommentInfo();
                 topicCommentInfo.setId(newCommentId);
-
-                // 获取登录用户userId
                 topicCommentInfo.setUserId(userId);
-                // 获取登录用户昵称
                 topicCommentInfo.setAuthor(userNickname);
-                // 获取登录用户头像url
                 topicCommentInfo.setAuthorPhoto(userPhotoUrl);
                 topicCommentInfo.setContent(content);
-                // 获取登录用户头像url
                 topicCommentInfo.setContentPic(Constants.EMPTY_STRING);
-                // 获取登录用户头像url
                 topicCommentInfo.setCreateDate(System.currentTimeMillis());
                 topicCommentInfo.setIsHomework(Constants.NOT_HOME_WORK_VALUE);
                 topicCommentInfo.setIsMine(0);
@@ -1553,17 +1550,11 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
             ArrayList<TopicCommentInfo> topicCommentInfoList = new ArrayList<TopicCommentInfo>();
             TopicCommentInfo topicCommentInfo = new TopicCommentInfo();
             topicCommentInfo.setId(newCommentId);
-
-            // 获取登录用户userId
             topicCommentInfo.setUserId(userId);
-            // 获取登录用户昵称
             topicCommentInfo.setAuthor(userNickname);
-            // 获取登录用户头像url
             topicCommentInfo.setAuthorPhoto(userPhotoUrl);
             topicCommentInfo.setContent(content);
-            // 获取登录用户头像url
             topicCommentInfo.setContentPic(contentPic);
-            // 获取登录用户头像url
             topicCommentInfo.setCreateDate(System.currentTimeMillis());
             topicCommentInfo.setIsHomework(Constants.IS_HOME_WORK_VALUE);
             topicCommentInfo.setIsMine(0);
@@ -1664,78 +1655,6 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         mVDVideoView.destroyDrawingCache();
         mVDVideoView.unRegisterSensorManager();
         mVDVideoView.release(false);
-
-        mDecorView = null;
-        mTopicInfo = null;
-
-        // 顶部返回、topic名称、分享
-        mTbVideoPlayerHead = null;
-        mIvVideoPlayerBack = null;
-        mIvVideoDownload = null;
-        mIvTopicShare = null;
-        mTvTopicName = null;
-
-        mTopicPullToRefreshView = null;
-        mSvVideoPlayer = null;
-        // 视频播放控件
-        mVDVideoView = null;
-        mPlayIconParent = null;
-        mIvVideoPlayIcon = null;
-        mLayoutVideoPlayNotWifi = null;
-        mTvVideoPlayNotWifi = null;
-
-        // 作者信息
-        mIvVideoAuthorPhoto = null;
-        mTvVideoAuthorPlayTimes = null;
-        mIvVideoImageTextIcon = null;
-        mTvTopicAuthorTag1 = null;
-        mTvTopicAuthorTag2 = null;
-        mTvTopicAuthorTag3 = null;
-
-        mLayoutTopicAuthorTags = null;
-        mIvTopicAuthorTag1Icon = null;
-        mIvTopicAuthorTag2Icon = null;
-        mIvTopicAuthorTag3Icon = null;
-
-        // 更多视频
-        mLayoutMoreVideosContent = null;
-
-        // 图文分解
-        mLayoutTopicImageTextContent = null;
-        mTvHideTopicImageTextContent = null;
-        mTvDownloadTopicImageTextContent = null;
-        mDownloadTopicImageTextDialog = null;
-        mRpbDownloadTopicImageText = null;
-        mTvDownloadTopicImageText = null;
-        mTopicImageTextInfo = null;
-
-        mLayoutShowTopicImageTextContent = null;
-        mLayoutTopicImageTextContentParent = null;
-
-        mZoomInImageTextLayout = null;
-        mTvZoomInImageTextIndex = null;
-        mTvZoomInImageSave = null;
-        mZoomInImageTextViewPager = null;
-
-
-        mTvTopicCommentCount = null;
-
-        // topic评论
-        mLayoutTopicComments = null;
-        mLayoutTopicBlankComment = null;
-        mZoomInImageLayout = null;
-        mIcvTopicCommentImage = null;
-
-
-        // 底部下载、收藏、评论、交作业
-        mCbTopicTabLike = null;
-        mCbTopicTabCollection = null;
-        mTvTopicTabComment = null;
-
-        mTvTopicSubmittedHomework = null;
-        mTakeImage = null;
-
-        mTopicVideoPlayerPresenter = null;
     }
 
     private void refreshMedia(String filePath) {
