@@ -1,5 +1,6 @@
 package com.yilos.nailstar.index.view;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,7 +50,6 @@ public class SearchResultItemHolder extends BaseViewHolder<Topic> {
     @Override
     public void setData(final Topic data) {
         videoImage.setImageSrc(data.getThumbUrl());
-        final SearchResultItemHolder holder = this;
         videoImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -58,7 +58,11 @@ public class SearchResultItemHolder extends BaseViewHolder<Topic> {
                 }
                 Intent intent = new Intent(parent.getContext(), TopicVideoPlayerActivity.class);
                 intent.putExtra(Constants.TOPIC_ID, data.getTopicId());
-                parent.getContext().startActivity(intent);
+                if(parent.getContext() instanceof Activity) {
+                    ((Activity) parent.getContext()).startActivityForResult(intent, 1);
+                } else {
+                    parent.getContext().startActivity(intent);
+                }
             }
         });
         titleView.setText(data.getTitle());

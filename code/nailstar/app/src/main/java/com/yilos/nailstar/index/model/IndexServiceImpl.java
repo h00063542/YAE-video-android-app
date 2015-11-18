@@ -1,6 +1,7 @@
 package com.yilos.nailstar.index.model;
 
 import com.yilos.nailstar.framework.entity.NailStarApplicationContext;
+import com.yilos.nailstar.framework.exception.CommonException;
 import com.yilos.nailstar.framework.exception.JSONParseException;
 import com.yilos.nailstar.framework.exception.NetworkDisconnectException;
 import com.yilos.nailstar.index.entity.Category;
@@ -42,8 +43,8 @@ public class IndexServiceImpl implements IndexService{
         final IndexContent indexContent = new IndexContent();
         indexContent.setPosters(getIndexPostersFromNet());
         indexContent.setCategories(getIndexCategoriesFromNet());
-        indexContent.setHotestTopics(getHotestTopicFromNet());
-        indexContent.setLatestTopics(getLatestTopicFromNet());
+        indexContent.setHotestTopics(getHotestTopicFromNet(1));
+        indexContent.setLatestTopics(getLatestTopicFromNet(1));
 
         return indexContent;
     }
@@ -92,10 +93,10 @@ public class IndexServiceImpl implements IndexService{
     }
 
     @Override
-    public List<Topic> getLatestTopicFromNet() throws NetworkDisconnectException, JSONParseException{
+    public List<Topic> getLatestTopicFromNet(int page) throws NetworkDisconnectException, JSONParseException{
         String latestTopicStringResult = null;
         try {
-            latestTopicStringResult = HttpClient.getJson("/vapi/nailstar/latestTopic");
+            latestTopicStringResult = HttpClient.getJson("/vapi/nailstar/moreTopics?type=latest&page=" + page + "&perPage=" + PAGE_SIZE);
         } catch (IOException e) {
             throw new NetworkDisconnectException("读取最新视频列表失败", e);
         } catch (Exception e){
@@ -113,11 +114,14 @@ public class IndexServiceImpl implements IndexService{
             for(int i = 0, length = latestTopicJsonArray.length(); i < length; i++) {
                 JSONObject topicObj = latestTopicJsonArray.getJSONObject(i);
                 Topic topic = new Topic();
+                topic.setThumbUrl(topicObj.getString("thumbUrl"));
+                topic.setSmallThumbUrl(topicObj.getString("smallThumbUrl"));
                 topic.setTopicId(topicObj.getString("topicId"));
-                topic.setAuthor(topicObj.getString("authorName"));
-                topic.setCreateDate(new Date(topicObj.getLong("time")));
-                topic.setAuthorPhoto(topicObj.getString("authorPhoto"));
-                topic.setPhotoUrl(topicObj.getString("picUrl"));
+                topic.setTitle(topicObj.getString("title"));
+                topic.setAuthor(topicObj.getString("author"));
+                topic.setCreateDate(new Date(topicObj.getLong("createDate")));
+                topic.setAuthorPhoto(topicObj.getString("photoUrl"));
+                topic.setPlayTimes(topicObj.getInt("playTimes"));
                 result.add(topic);
             }
 
@@ -129,10 +133,10 @@ public class IndexServiceImpl implements IndexService{
     }
 
     @Override
-    public List<Topic> getHotestTopicFromNet() throws NetworkDisconnectException, JSONParseException{
+    public List<Topic> getHotestTopicFromNet(int page) throws NetworkDisconnectException, JSONParseException{
         String hotestTopicStrResult = null;
         try {
-            hotestTopicStrResult = HttpClient.getJson("/vapi/nailstar/hotestTopic");
+            hotestTopicStrResult = HttpClient.getJson("/vapi/nailstar/moreTopics?type=hotest&page=" + page + "&perPage=" + PAGE_SIZE);
         } catch (IOException e) {
             throw new NetworkDisconnectException("读取最热视频列表失败", e);
         } catch (Exception e){
@@ -151,10 +155,13 @@ public class IndexServiceImpl implements IndexService{
             for(int i = 0, length = hotestTopicJsonArray.length(); i < length; i++) {
                 JSONObject topicObj = hotestTopicJsonArray.getJSONObject(i);
                 Topic topic = new Topic();
+                topic.setThumbUrl(topicObj.getString("thumbUrl"));
+                topic.setSmallThumbUrl(topicObj.getString("smallThumbUrl"));
                 topic.setTopicId(topicObj.getString("topicId"));
-                topic.setAuthor(topicObj.getString("authorName"));
-                topic.setAuthorPhoto(topicObj.getString("authorPhoto"));
-                topic.setPhotoUrl(topicObj.getString("picUrl"));
+                topic.setTitle(topicObj.getString("title"));
+                topic.setAuthor(topicObj.getString("author"));
+                topic.setCreateDate(new Date(topicObj.getLong("createDate")));
+                topic.setAuthorPhoto(topicObj.getString("photoUrl"));
                 topic.setPlayTimes(topicObj.getInt("playTimes"));
                 result.add(topic);
             }
@@ -163,6 +170,50 @@ public class IndexServiceImpl implements IndexService{
         }
         catch (JSONException e){
             throw new JSONParseException("解析最热视频列表失败", e);
+        }
+    }
+
+    @Override
+    public List<Topic> getWatchTopicFromNet(String uid, int page) throws NetworkDisconnectException, JSONParseException, CommonException {
+        String watchTopicStrResult = null;
+        try {
+            watchTopicStrResult = HttpClient.getJson("/vapi/nailstar/topics/getFollowTopics/" + uid + "?page=" + page + "&perPage=" + PAGE_SIZE);
+        } catch (IOException e) {
+            throw new NetworkDisconnectException("读取关注视频列表失败", e);
+        } catch (Exception e){
+            throw new NetworkDisconnectException("读取关注视频列表失败", e);
+        }
+
+        try{
+            JSONObject jsonResultObject = new JSONObject(watchTopicStrResult);
+            if(jsonResultObject.getInt("code") != 0){
+                if(jsonResultObject.getInt("code") == 1 && "该用户还没关注过其他用户".equals(jsonResultObject.getString("messages"))) {
+                    throw new CommonException("该用户还没关注过其他用户");
+                }
+                return null;
+            }
+
+            JSONArray watchTopicJsonArray = jsonResultObject.getJSONObject("result").getJSONArray("topics");
+
+            List<Topic> result = new ArrayList<Topic>(8);
+            for(int i = 0, length = watchTopicJsonArray.length(); i < length; i++) {
+                JSONObject topicObj = watchTopicJsonArray.getJSONObject(i);
+                Topic topic = new Topic();
+                topic.setThumbUrl(topicObj.getString("thumbUrl"));
+                topic.setSmallThumbUrl(topicObj.getString("smallThumbUrl"));
+                topic.setTopicId(topicObj.getString("topicId"));
+                topic.setTitle(topicObj.getString("title"));
+                topic.setAuthor(topicObj.getString("author"));
+                topic.setCreateDate(new Date(topicObj.getLong("createDate")));
+                topic.setAuthorPhoto(topicObj.getString("photoUrl"));
+                topic.setPlayTimes(topicObj.getInt("playTimes"));
+                result.add(topic);
+            }
+
+            return result;
+        }
+        catch (JSONException e){
+            throw new JSONParseException("解析关注视频列表失败", e);
         }
     }
 
