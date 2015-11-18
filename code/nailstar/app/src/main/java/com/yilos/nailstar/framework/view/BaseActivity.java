@@ -1,5 +1,6 @@
 package com.yilos.nailstar.framework.view;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
 import android.os.Build;
@@ -25,12 +26,18 @@ public class BaseActivity extends AppCompatActivity implements IView{
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
+        // 修改标题栏颜色
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             SystemBarTintManager systemBarTintManager = new SystemBarTintManager(this);
             systemBarTintManager.setStatusBarTintEnabled(true);
             systemBarTintManager.setStatusBarTintResource(R.color.orange);
         }
+    }
+
+    @Override
+    public Context getViewContext() {
+        return this;
     }
 
     @Override

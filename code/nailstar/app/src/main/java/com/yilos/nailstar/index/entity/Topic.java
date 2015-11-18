@@ -13,7 +13,15 @@ public class Topic implements Serializable {
      */
     private String topicId;
 
+    /**
+     * 视频图片地址
+     */
     private String thumbUrl;
+
+    /**
+     * 视频缩略图地址
+     */
+    private String smallThumbUrl;
 
     /**
      * 标题
@@ -30,43 +38,6 @@ public class Topic implements Serializable {
      */
     private String authorPhoto;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Topic topic = (Topic) o;
-
-        if (playTimes != topic.playTimes) return false;
-        if (!topicId.equals(topic.topicId)) return false;
-        if (thumbUrl != null ? !thumbUrl.equals(topic.thumbUrl) : topic.thumbUrl != null)
-            return false;
-        if (!title.equals(topic.title)) return false;
-        if (!author.equals(topic.author)) return false;
-        if (!authorPhoto.equals(topic.authorPhoto)) return false;
-        if (!photoUrl.equals(topic.photoUrl)) return false;
-        return createDate.equals(topic.createDate);
-
-    }
-
-    @Override
-    public int hashCode() {
-        int result = topicId.hashCode();
-        result = 31 * result + (thumbUrl != null ? thumbUrl.hashCode() : 0);
-        result = 31 * result + title.hashCode();
-        result = 31 * result + author.hashCode();
-        result = 31 * result + authorPhoto.hashCode();
-        result = 31 * result + photoUrl.hashCode();
-        result = 31 * result + createDate.hashCode();
-        result = 31 * result + playTimes;
-        return result;
-    }
-
-    /**
-     * 主题图片地址
-     */
-    private String photoUrl;
-
     /**
      * 创建日期
      */
@@ -76,6 +47,38 @@ public class Topic implements Serializable {
      * 播放次数
      */
     private int playTimes;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Topic topic = (Topic) o;
+
+        if (!topicId.equals(topic.topicId)) return false;
+        if (thumbUrl != null ? !thumbUrl.equals(topic.thumbUrl) : topic.thumbUrl != null)
+            return false;
+        if (smallThumbUrl != null ? !smallThumbUrl.equals(topic.smallThumbUrl) : topic.smallThumbUrl != null)
+            return false;
+        if (title != null ? !title.equals(topic.title) : topic.title != null) return false;
+        if (author != null ? !author.equals(topic.author) : topic.author != null) return false;
+        if (authorPhoto != null ? !authorPhoto.equals(topic.authorPhoto) : topic.authorPhoto != null)
+            return false;
+        return !(createDate != null ? !createDate.equals(topic.createDate) : topic.createDate != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = topicId.hashCode();
+        result = 31 * result + (thumbUrl != null ? thumbUrl.hashCode() : 0);
+        result = 31 * result + (smallThumbUrl != null ? smallThumbUrl.hashCode() : 0);
+        result = 31 * result + (title != null ? title.hashCode() : 0);
+        result = 31 * result + (author != null ? author.hashCode() : 0);
+        result = 31 * result + (authorPhoto != null ? authorPhoto.hashCode() : 0);
+        result = 31 * result + (createDate != null ? createDate.hashCode() : 0);
+        return result;
+    }
 
     public String getTopicId() {
         return topicId;
@@ -91,6 +94,14 @@ public class Topic implements Serializable {
 
     public void setThumbUrl(String thumbUrl) {
         this.thumbUrl = thumbUrl;
+    }
+
+    public String getSmallThumbUrl() {
+        return smallThumbUrl;
+    }
+
+    public void setSmallThumbUrl(String smallThumbUrl) {
+        this.smallThumbUrl = smallThumbUrl;
     }
 
     public String getTitle() {
@@ -109,20 +120,12 @@ public class Topic implements Serializable {
         this.author = author;
     }
 
-    public String getAuthorPhoto(){
+    public String getAuthorPhoto() {
         return authorPhoto;
     }
 
     public void setAuthorPhoto(String authorPhoto) {
         this.authorPhoto = authorPhoto;
-    }
-
-    public String getPhotoUrl() {
-        return photoUrl;
-    }
-
-    public void setPhotoUrl(String photoUrl) {
-        this.photoUrl = photoUrl;
     }
 
     public Date getCreateDate() {

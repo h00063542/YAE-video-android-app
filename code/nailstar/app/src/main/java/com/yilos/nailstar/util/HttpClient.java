@@ -1,5 +1,6 @@
 package com.yilos.nailstar.util;
 
+import com.squareup.okhttp.Call;
 import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
@@ -49,7 +50,12 @@ public class HttpClient {
             throw new IOException("Unexpected code " + response);
         }
 
-        return response.body().string();
+        String contentType = response.header("Content-Type");
+        if(contentType != null && contentType.contains("application\\json")) {
+            return response.body().string();
+        } else {
+            return escapeHtml(response.body().string());
+        }
     }
 
     /**
@@ -97,6 +103,26 @@ public class HttpClient {
             throw new IOException("Unexpected code " + response);
         }
         return response.body().string();
+    }
+
+    /**
+     * 获取下载文件的大小
+     *
+     * @param url
+     * @return
+     * @throws IOException
+     */
+    public static long getFileLength(String url) throws IOException {
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+        Call call = okHttpClient.newCall(request);
+        Response response = call.execute();
+        if (!response.isSuccessful()) {
+            throw new IOException("Unexpected code " + response);
+        }
+        call.cancel();
+        return response.body().contentLength();
     }
 
     public static void download(String url, String filePath) throws IOException {

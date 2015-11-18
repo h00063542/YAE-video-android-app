@@ -695,7 +695,7 @@ public class TopicServiceImpl implements ITopicService {
         File cacheDir = NailStarApplicationContext.getInstance().getCacheDir();
         String fileName = fileType + Constants.UNDERLINE + topicId + Constants.JSON_SUFFIX;
         File topicInfoFile = new File(cacheDir.getAbsolutePath() + "/" + fileName);
-        if (topicInfoFile.exists()) {
+        if (!topicInfoFile.exists()) {
             return Constants.EMPTY_JSON_STRING;
         }
         BufferedReader reader = null;

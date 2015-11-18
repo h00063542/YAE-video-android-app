@@ -4,7 +4,6 @@ import android.content.Context;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewParent;
 
@@ -49,18 +48,18 @@ public class MViewPager extends ViewPager{
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
 
-    @Override
-    public boolean onTouchEvent(MotionEvent ev) {
-        int action = ev.getAction();
-
-        if(action == MotionEvent.ACTION_DOWN || action == MotionEvent.ACTION_MOVE) {
-            requestDisallowParentInterceptTouchEvent(true);
-        } else {
-            requestDisallowParentInterceptTouchEvent(false);
-        }
-
-        return super.onTouchEvent(ev);
-    }
+//    @Override
+//    public boolean onTouchEvent(MotionEvent ev) {
+//        int action = ev.getAction();
+//
+//        if(action == MotionEvent.ACTION_DOWN || action == MotionEvent.ACTION_MOVE) {
+//            requestDisallowParentInterceptTouchEvent(true);
+//        } else {
+//            requestDisallowParentInterceptTouchEvent(false);
+//        }
+//
+//        return super.onTouchEvent(ev);
+//    }
 
     public void setAdapter(BannerAdapter adapter) {
         super.setAdapter(adapter);

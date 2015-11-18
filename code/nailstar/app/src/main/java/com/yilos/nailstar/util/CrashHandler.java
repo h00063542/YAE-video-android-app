@@ -75,6 +75,8 @@ public class CrashHandler implements UncaughtExceptionHandler {
         if (ex == null) {
             return false;
         }
+        // 记录日志
+        LOGGER.error("程序出现异常，即将退出。", ex);
         ex.printStackTrace();
         // 使用Toast来显示异常信息
         new Thread() {
@@ -87,8 +89,6 @@ public class CrashHandler implements UncaughtExceptionHandler {
                 Looper.loop();
             }
         }.start();
-        // 记录日志
-        LOGGER.error("程序出现异常，即将退出。", ex);
         return true;
     }
 }

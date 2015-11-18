@@ -107,8 +107,6 @@
                         </RelativeLayout>
 
                     </LinearLayout>
-
-
                 </FrameLayout>
 
 
@@ -411,7 +409,6 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tv_topic_comment_count"
                     android:orientation="vertical"></LinearLayout>
-
             </RelativeLayout>
         </ScrollView>
     </com.yilos.widget.pullrefresh.PullToRefreshView>

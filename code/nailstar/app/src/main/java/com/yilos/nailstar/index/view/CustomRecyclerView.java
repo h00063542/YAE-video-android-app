@@ -27,7 +27,7 @@ public class CustomRecyclerView extends RecyclerView {
     }
 
     public boolean reachTop() {
-        GridLayoutManager gridLayoutManager = (GridLayoutManager) getLayoutManager();
+        GridLayoutManager gridLayoutManager = (GridLayoutManager)getLayoutManager();
         return gridLayoutManager.findFirstVisibleItemPosition() == 0;
     }
 

@@ -42,6 +42,4 @@
         android:layout_toLeftOf="@id/pull_to_load_text"
         android:indeterminate="true"
         android:visibility="gone" />
-
-
 </RelativeLayout>
