@@ -57,6 +57,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/z2"
                 android:id="@+id/lessionUserName" />
             <LinearLayout
                 android:orientation="horizontal"
@@ -66,6 +67,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="@color/z2"
                     android:text="@string/vote_count" />
                 <TextView
                     android:layout_width="wrap_content"
@@ -73,6 +75,7 @@
                     android:layout_marginLeft="5dp"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:text="0"
+                    android:textColor="@color/z2"
                     android:id="@+id/lessionVoteCount" />
             </LinearLayout>
         </LinearLayout>
@@ -136,6 +139,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/z2"
                 android:id="@+id/lessionTopic" />
             <LinearLayout
                 android:layout_marginTop="5dp"
@@ -145,13 +149,14 @@
                 android:gravity="center_vertical">
                 <com.yilos.widget.circleimageview.CircleImageView
                     android:src="@mipmap/ic_default_photo"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
                     android:id="@+id/lessionAuthorPhoto" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="8dp"
+                    android:textColor="@color/z2"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:id="@+id/lessionAuthorName" />
             </LinearLayout>
@@ -171,6 +176,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:id="@+id/lessionCountDownText"
+            android:textColor="@color/z2"
             android:layout_marginRight="10dp" />
 
         <TextView
@@ -178,7 +184,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:id="@+id/lessionCountDownValue"
-            android:textColor="@color/submitted_homework_background_color"/>
+            android:textColor="@color/orange"/>
     </LinearLayout>
 
 </LinearLayout>

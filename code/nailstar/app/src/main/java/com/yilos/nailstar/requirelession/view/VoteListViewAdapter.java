@@ -426,11 +426,13 @@ public class VoteListViewAdapter extends BaseAdapter {
 
             holder.rankingItem.lessionVotePic.setImageResource(R.mipmap.voted);
             holder.rankingItem.lessionVote.setText(R.string.voted);
+            holder.rankingItem.lessionVote.setTextColor(context.getResources().getColor(R.color.orange));
 
         } else {
 
             holder.rankingItem.lessionVotePic.setImageResource(R.mipmap.vote_black);
             holder.rankingItem.lessionVote.setText(R.string.vote);
+            holder.rankingItem.lessionVote.setTextColor(context.getResources().getColor(R.color.z3));
         }
 
         // 当前阶段是否能投票
