@@ -6,6 +6,20 @@ package com.yilos.nailstar.aboutme.entity;
 public class UserMessage {
 
     /**
+     * 单例
+     */
+    private static UserMessage userMessage = new UserMessage();
+
+    /**
+     * 返回单例
+     *
+     * @return
+     */
+    public static UserMessage getInstance() {
+        return userMessage;
+    }
+
+    /**
      * id : 06a79050-83a7-11e5-8027-61091fab3b57
      * topicId : c8a5cfa0-312c-11e5-b553-d7e515311f8d
      * title : 第222期：牛仔贴纸
