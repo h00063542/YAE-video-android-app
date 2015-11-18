@@ -18,8 +18,7 @@ import java.util.ArrayList;
  */
 public interface AboutMeService {
     MessageCount getMessageCount() throws NetworkDisconnectException, JSONException;
-    PersonInfo setPersonInfo(String uid,String nickname,int type,String photoUrl,String profile) throws NetworkDisconnectException,JSONException;
-    PersonInfo getPersonInfo() throws NetworkDisconnectException,JSONException;
+    PersonInfo setPersonInfo(PersonInfo personInfo) throws NetworkDisconnectException,JSONException;
     AboutMeNumber getAboutMeNumber() throws NetworkDisconnectException,JSONException;
     ArrayList<FollowList> getFollowList(String uid) throws NetworkDisconnectException;
     ArrayList<FansList> getFansList(String uid) throws NetworkDisconnectException;
@@ -34,15 +33,5 @@ public interface AboutMeService {
      * @throws NetworkDisconnectException
      */
     void uploadFile2Oss(String localFilePath, String ossFileName, SaveCallback callback) throws NetworkDisconnectException;
-
-    /**
-     * 从oss下载文件到本地
-     *
-     * @param localFilePath
-     * @param ossFileName
-     * @param callback
-     * @throws NetworkDisconnectException
-     */
-    void downloadOss2File(String localFilePath, String ossFileName, GetFileCallback callback) throws NetworkDisconnectException;
 }
 

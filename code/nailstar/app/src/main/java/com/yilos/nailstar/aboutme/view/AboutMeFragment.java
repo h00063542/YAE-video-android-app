@@ -108,10 +108,6 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
         // Required empty public constructor
     }
 
-    @Override
-    public void getMyPhotoToLocalPath(String localPicUrl) {
-        personInfo.setPhotoUrl(localPicUrl);
-    }
 
     @Override
     public void initMessageCount(MessageCount messageCount) {
@@ -119,28 +115,6 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
             return;
         }
         messageCountText.setText(String.valueOf(messageCount.getCount()));
-    }
-
-    @Override
-    public void getPersonInfo(PersonInfo personInfo) {
-        if (personInfo == null) {
-            return;
-        }
-        Bitmap bitmap = personInfo.getImageBitmap();
-        if(bitmap != null) {
-            profileImage.setImageBitmap(bitmap);
-        } else {
-            profileImage.setImageResource(R.mipmap.ic_default_photo);
-        }
-        profileImage.setImageSrc(personInfo.getPhotoUrl());
-
-        uid = personInfo.getUid();
-        profile = personInfo.getProfile();
-        myImageUrl = personInfo.getPhotoUrl();
-        identityType = personInfo.getType();
-        nickName = personInfo.getNickname();
-        identityText.setText(IdentityUtil.getIdentity(identityType));
-        nameText.setText(nickName);
     }
 
     @Override
@@ -172,7 +146,6 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
         View view = inflater.inflate(R.layout.fragment_about_me, container, false);
         initViews(view);
         initEvents();
-        judgeLogin();
         return view;
     }
 
@@ -182,14 +155,9 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
             personInfo.setUid(loginAPI.getLoginUserId());
             personInfo.setNickname(loginAPI.getLoginUserNickname());
             personInfo.setType(loginAPI.getLoginUserType());
-//            StringBuilder localPath = new StringBuilder()
-//                    .append(Constants.YILOS_NAILSTAR_PICTURE_PATH)
-//                    .append(personInfo.getUid())
-//                    .append(Constants.JPG_SUFFIX);
-//            aboutMePresenter.downloadOss2File(localPath.toString(), loginAPI.getLoginUserPhotourl());
-
-            //Bitmap bm = BitmapFactory.decodeFile(personInfo.getPhotoUrl());
-            profileImage.setImageSrc(loginAPI.getLoginUserPhotourl());
+            personInfo.setPhotoUrl(loginAPI.getLoginUserPhotourl());
+            personInfo.setProfile(loginAPI.getLoginUserProfile());
+            profileImage.setImageSrc(personInfo.getPhotoUrl());
             nameText.setText(personInfo.getNickname());
             identityText.setText(IdentityUtil.getIdentity(personInfo.getType()));
             if (messageCountText.getText().toString().equals("0")) {
@@ -231,6 +199,7 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
 
     @Override
     public void onClick(View v) {
+        LoginAPI loginAPI = LoginAPI.getInstance();
         switch (v.getId()) {
 //            case R.id.my_follow_list:
 //                Intent myFollowListIntent = new Intent(getActivity(),FollowListActivity.class);
@@ -251,8 +220,7 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
                 startActivity(settingIntent);
                 break;
             case R.id.about_me_my_info:
-                LoginAPI loginAPI = LoginAPI.getInstance();
-                if (loginAPI.isLogin() == false) {
+                if (!loginAPI.isLogin()) {
                     Intent goToLoginIntent = new Intent(getActivity(),LoginActivity.class);
                     startActivity(goToLoginIntent);
                 } else {
@@ -264,16 +232,15 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
                     startActivity(DownloadIntent);
                 break;
             case R.id.about_me_person_info_layout:
-                Intent intent = new Intent(getActivity(),PersonInfoActivity.class);
-                Bundle bundle = new Bundle();
-//                bundle.putString("myImageUrl", myImageUrl);
-//                bundle.putInt("identityType", identityType);
-//                bundle.putString("uid", uid);
-//                bundle.putString("profile",profile);
-//                bundle.putString("nickName",nickName);
-                bundle.putSerializable("personInfo",personInfo);
-                intent.putExtras(bundle);
-                startActivity(intent);
+                if (!loginAPI.isLogin()) {
+                    loginAPI.gotoLoginPage(getActivity());
+                } else {
+                    Intent intent = new Intent(getActivity(),PersonInfoActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("personInfo",personInfo);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                }
                 break;
             default:
                 break;

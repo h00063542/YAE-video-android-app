@@ -102,6 +102,10 @@ public class LoginAPI {
         return loginPersonInfo == null ? null : loginPersonInfo.getPhotoUrl();
     }
 
+    public String getLoginUserProfile() {
+        return loginPersonInfo == null ? null : loginPersonInfo.getProfile();
+    }
+
     private void getLoginInfo() {
         SharedPreferences sharedPreferences = NailStarApplication.getApplication().getSharedPreferences(LOGIN_STATUS, Activity.MODE_PRIVATE);
 
