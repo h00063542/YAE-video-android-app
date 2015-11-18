@@ -1,16 +1,19 @@
 package com.yilos.nailstar.splash.view;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.app.AppCompatActivity;
+import android.view.Window;
+import android.view.WindowManager;
 
 import com.yilos.nailstar.R;
-import com.yilos.nailstar.framework.view.BaseActivity;
 import com.yilos.nailstar.main.MainActivity;
 import com.yilos.nailstar.splash.presenter.SplashPresenter;
 import com.yilos.nailstar.util.TaskManager;
 
-public class SplashActivity extends BaseActivity {
+public class SplashActivity extends AppCompatActivity {
 
     private final int SPLASH_DISPLAY_LENGHT = 2000; //延迟
 
@@ -18,6 +21,12 @@ public class SplashActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // 设置不显示状态栏
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        // 设置不允许旋转屏幕
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
         loadTime = System.currentTimeMillis();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);

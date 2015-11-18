@@ -1,5 +1,6 @@
 package com.yilos.nailstar.index.model;
 
+import com.yilos.nailstar.framework.exception.CommonException;
 import com.yilos.nailstar.framework.exception.JSONParseException;
 import com.yilos.nailstar.framework.exception.NetworkDisconnectException;
 import com.yilos.nailstar.index.entity.Category;
@@ -13,6 +14,11 @@ import java.util.List;
  * Created by yangdan on 15/10/16.
  */
 public interface IndexService {
+    /**
+     * 分页大小
+     */
+    int PAGE_SIZE = 20;
+
     /**
      * 从网络上获取最新的Index内容
      */
@@ -34,12 +40,20 @@ public interface IndexService {
     List<Poster> getIndexPostersFromNet() throws NetworkDisconnectException, JSONParseException;
 
     /**
+     * 获取首页主题分类列表
+     * @return
+     * @throws NetworkDisconnectException
+     * @throws JSONParseException
+     */
+    List<Category> getIndexCategoriesFromNet() throws NetworkDisconnectException, JSONParseException;
+
+    /**
      * 获取首页最新视频列表
      * @return
      * @throws NetworkDisconnectException
      * @throws JSONParseException
      */
-    List<Topic> getLatestTopicFromNet() throws NetworkDisconnectException, JSONParseException;
+    List<Topic> getLatestTopicFromNet(int page) throws NetworkDisconnectException, JSONParseException;
 
     /**
      * 获取首页最热主题列表
@@ -47,15 +61,15 @@ public interface IndexService {
      * @throws NetworkDisconnectException
      * @throws JSONParseException
      */
-    List<Topic> getHotestTopicFromNet() throws NetworkDisconnectException, JSONParseException;
+    List<Topic> getHotestTopicFromNet(int page) throws NetworkDisconnectException, JSONParseException;
 
     /**
-     * 获取首页主题分类列表
+     * 获取用户关注的视频列表
      * @return
      * @throws NetworkDisconnectException
      * @throws JSONParseException
      */
-    List<Category> getIndexCategoriesFromNet() throws NetworkDisconnectException, JSONParseException;
+    List<Topic> getWatchTopicFromNet(String uid, int page) throws NetworkDisconnectException, JSONParseException, CommonException;
 
     /**
      * 将首页内容保存到本地缓存中

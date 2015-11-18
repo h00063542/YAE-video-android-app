@@ -55,7 +55,7 @@ public class SearchServiceImpl {
                 Topic topic = new Topic();
                 topic.setTopicId(topicObj.getString("topicId"));
                 topic.setThumbUrl(topicObj.getString("thumbUrl"));
-                topic.setPhotoUrl(topicObj.getString("photoUrl"));
+                topic.setAuthorPhoto(topicObj.getString("photoUrl"));
                 topic.setAuthor(topicObj.getString("author"));
                 topic.setCreateDate(new Date(topicObj.getLong("createDate")));
                 topic.setTitle(topicObj.getString("title"));

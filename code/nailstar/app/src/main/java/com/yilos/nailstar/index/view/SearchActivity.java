@@ -1,13 +1,12 @@
 package com.yilos.nailstar.index.view;
 
 import android.content.Context;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -15,26 +14,21 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.jude.easyrecyclerview.EasyRecyclerView;
+import com.jude.easyrecyclerview.adapter.RecyclerArrayAdapter;
 import com.yilos.nailstar.R;
 import com.yilos.nailstar.framework.view.BaseActivity;
 import com.yilos.nailstar.index.presenter.SearchPresenter;
-import com.yilos.widget.view.ImageCacheView;
 
-public class SearchActivity extends BaseActivity implements ISearchView{
+public class SearchActivity extends BaseActivity implements ISearchView, RecyclerArrayAdapter.OnLoadMoreListener{
     private SearchPresenter presenter;
 
-    private LayoutInflater layoutInflater;
-
     private EditText searchText;
-
-    private RecyclerView.Adapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         presenter = SearchPresenter.getInstance(this);
-        layoutInflater = getLayoutInflater();
 
         initViews();
     }
@@ -73,64 +67,53 @@ public class SearchActivity extends BaseActivity implements ISearchView{
         });
 
         // 视频列表
+        final BaseActivity activity = this;
         final EasyRecyclerView videoListView = (EasyRecyclerView)findViewById(R.id.videoList);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
         videoListView.setLayoutManager(gridLayoutManager);
-        adapter = new RecyclerView.Adapter() {
-            @Override
-            public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-                View view = layoutInflater.inflate(R.layout.search_item, null);
-
-                return new RecyclerView.ViewHolder(view) {
-                    @Override
-                    public String toString() {
-                        return super.toString();
-                    }
-                };
-            }
-
-            @Override
-            public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-                View view = holder.itemView;
-                ImageCacheView videoImage = (ImageCacheView) view.findViewById(R.id.videoImage);
-                videoImage.setImageSrc(presenter.getSearchResultItem(position).getThumbUrl());
-                ((TextView) view.findViewById(R.id.titleView)).setText(presenter.getSearchResultItem(position).getTitle());
-            }
-
-            @Override
-            public int getItemCount() {
-                return presenter.getSearchResultCount();
-            }
-        };
-        videoListView.setAdapter(adapter);
-
-//        videoListView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-//            private int latestVisibleItem;
-//
+        final SearchResultAdapter adapter = presenter.getAdapter();
+        videoListView.setAdapterWithProgress(adapter);
+        adapter.setMore(R.layout.view_more, this);
+        adapter.setNoMore(R.layout.view_nomore);
+        adapter.setError(R.layout.view_error);
+//        adapter.setOnItemClickListener(new RecyclerArrayAdapter.OnItemClickListener() {
 //            @Override
-//            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-//                super.onScrolled(recyclerView, dx, dy);
-//
-//                latestVisibleItem = ((GridLayoutManager) videoListView.getLayoutManager()).findLastVisibleItemPosition();
-//            }
-//
-//            @Override
-//            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-//                super.onScrollStateChanged(recyclerView, newState);
-//                if(newState == RecyclerView.SCROLL_STATE_IDLE && latestVisibleItem + 1 == adapter.getItemCount()) {
-//
-//                }
+//            public void onItemClick(int i) {
+//                activity.showLoading(null);
+//                Intent intent = new Intent(activity, TopicVideoPlayerActivity.class);
+//                intent.putExtra(Constants.TOPIC_ID, adapter.getItem(i).getTopicId());
+//                startActivityForResult(intent, 1);
 //            }
 //        });
+        videoListView.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+                if(parent.getChildPosition(view) != 0)
+                    outRect.top = 5;
+            }
+        });
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        hideLoading();
 
         searchText.requestFocus();
         InputMethodManager inputManager = (InputMethodManager)searchText.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         inputManager.showSoftInput(searchText, 2);
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        hideLoading();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        hideLoading();
     }
 
     @Override
@@ -165,12 +148,7 @@ public class SearchActivity extends BaseActivity implements ISearchView{
     }
 
     @Override
-    public void notifyItemRangeInserted(int positionStart, int itemCount){
-        adapter.notifyItemRangeInserted(positionStart, itemCount);
-    }
-
-    @Override
-    public void notifyDataSetChanged() {
-        adapter.notifyDataSetChanged();
+    public void onLoadMore() {
+        presenter.search(false);
     }
 }

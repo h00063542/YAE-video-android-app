@@ -3,6 +3,10 @@ package com.yilos.nailstar.aboutme.model;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
+import com.alibaba.sdk.android.oss.OSSService;
+import com.alibaba.sdk.android.oss.callback.GetFileCallback;
+import com.alibaba.sdk.android.oss.callback.SaveCallback;
+import com.alibaba.sdk.android.oss.storage.OSSBucket;
 import com.squareup.okhttp.FormEncodingBuilder;
 import com.squareup.okhttp.RequestBody;
 import com.yilos.nailstar.aboutme.entity.AboutMeNumber;
@@ -12,10 +16,12 @@ import com.yilos.nailstar.aboutme.entity.MessageCount;
 import com.yilos.nailstar.aboutme.entity.PersonInfo;
 import com.yilos.nailstar.framework.entity.NailStarApplicationContext;
 import com.yilos.nailstar.framework.exception.NetworkDisconnectException;
+import com.yilos.nailstar.util.Constants;
 import com.yilos.nailstar.util.HttpClient;
 import com.yilos.nailstar.util.ImageUtil;
 import com.yilos.nailstar.util.JsonUtil;
 import com.yilos.nailstar.util.LoggerFactory;
+import com.yilos.nailstar.util.OSSUtil;
 
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
@@ -31,77 +37,36 @@ import java.util.ArrayList;
  */
 public class AboutMeServiceImpl implements AboutMeService {
     private static final Logger LOGGER = LoggerFactory.getLogger(AboutMeServiceImpl.class);
-    @Override
-    public PersonInfo getPersonInfo() throws NetworkDisconnectException, JSONException {
-        PersonInfo personInfo = new PersonInfo();
-        String jsonObject;
-        JSONObject personInfoObject;
-        JSONObject resultObject;
-        String uid = "a8affd60-efe6-11e4-a908-3132fc2abe39";
-        String url = "/vapi/nailstar/account/profile?uid=" + uid;
-        try {
-            jsonObject = //"{\"code\":0,\"result\":{\"uid\":\"a8affd60-efe6-11e4-a908-3132fc2abe39\",\"nickname\":\"Lolo\",\"type\":6,\"photoUrl\":\"http://pic.yilos.com/7e9ab6e7981380efb88c8ee19ecd0269\",\"profile\":null}}";
-            HttpClient.getJson(url);
-            personInfoObject = new JSONObject(jsonObject);
-            if (personInfoObject.getInt("code") != 0) {
-                return null;
-            }
-            resultObject = personInfoObject.getJSONObject("result");
-            personInfo.setUid(resultObject.getString("uid"));
-            personInfo.setNickname(resultObject.getString("nickname"));
-            personInfo.setPhotoUrl(resultObject.getString("photoUrl"));
-            personInfo.setType(resultObject.getInt("type"));
-            personInfo.setProfile(resultObject.getString("profile"));
-            byte[] data;
-            try {
-                data = ImageUtil.getBytes(new URL(personInfo.getPhotoUrl()).openStream());
-                personInfo.setImageBitmap(BitmapFactory.decodeByteArray(data, 0, data.length));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return personInfo;
-        } catch (IOException e) {
-            throw new NetworkDisconnectException("网络获取消息数失败", e);
-        } catch (JSONException e) {
-            throw new JSONException("消息数解析失败");
-        }
 
+    @Override
+    public void uploadFile2Oss(String localFilePath, String ossFileName, SaveCallback callback) throws NetworkDisconnectException {
+        if (!NailStarApplicationContext.getInstance().isNetworkConnected()) {
+            throw new NetworkDisconnectException("网络没有连接");
+        }
+        OSSService ossService = OSSUtil.getDefaultOssService();
+        OSSUtil.resumableUpload(ossService, ossService.getOssBucket(OSSUtil.BUCKET_YPICTURE), localFilePath, ossFileName, callback);
     }
 
     @Override
-    public PersonInfo setPersonInfo(String uid,String nickname,int type,String photoUrl,String profile) throws NetworkDisconnectException, JSONException {
-        PersonInfo personInfo = new PersonInfo();
-        String jsonObject;
+    public PersonInfo setPersonInfo(PersonInfo personInfo) throws NetworkDisconnectException, JSONException {
+        String result;
         JSONObject personInfoObject;
-
-//        String uid = "a8affd60-efe6-11e4-a908-3132fc2abe39";
-//        String nickname = "昵称";
-//        int type = 1;
-//        String photoUrl = "http://sssdsdsds/sdsdsdsd";
-//        String profile = "这是个人签名";
-
-        personInfo.setNickname(nickname);
-        personInfo.setType(type);
-        personInfo.setProfile(profile);
-        personInfo.setPhotoUrl(photoUrl);
-        personInfo.setUid(uid);
-        String url = "/vapi2/nailstar/account/profile/" + personInfo.getUid();
-        RequestBody formBody = new FormEncodingBuilder()
-                .add("nickname", personInfo.getNickname())
-                .add("type", String.valueOf(personInfo.getType()))
-                .add("photoUrl", personInfo.getPhotoUrl())
-                .add("profile",personInfo.getProfile())
-                .build();
+        String url = "/vapi/nailstar/account/profile/" + personInfo.getUid();
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("nickname", personInfo.getNickname());
+        jsonObject.put("type", String.valueOf(personInfo.getType()));
+        jsonObject.put("photoUrl", personInfo.getPhotoUrl());
+        jsonObject.put("profile", personInfo.getProfile());
         try {
-            jsonObject = HttpClient.post(url,formBody);
+            result = HttpClient.post(url,jsonObject.toString());
         } catch (IOException e) {
-            throw new NetworkDisconnectException("网络更新个人资料失败",e);
+            throw new NetworkDisconnectException("更新个人资料失败",e);
         }
-        personInfoObject = new JSONObject(jsonObject);
+        personInfoObject = new JSONObject(result);
         if (personInfoObject.getInt("code") != 0) {
             return null;
         }
-        if (personInfoObject.getJSONObject("result").getString("messages") == "ok" ) {
+        if (personInfoObject.getJSONObject("result").getString("messages").equals("ok")) {
             return personInfo;
         }
         return null;

@@ -8,11 +8,8 @@ import android.os.Bundle;
 import android.os.StatFs;
 import android.view.Gravity;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.leaking.slideswitch.SlideSwitch;
 import com.nostra13.universalimageloader.utils.StorageUtils;
@@ -146,6 +143,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 LoginAPI.getInstance().logout(); //退出登录
                 loginOut.setVisibility(View.GONE);
                 showShortToast(R.string.has_been_login_out);
+                finish();
                 break;
             case R.id.setting_folder:
                 final SettingFolderAdapter settingFolderAdapter = new SettingFolderAdapter(this,sdcardArrayList,SettingUtil.getSdcardName());

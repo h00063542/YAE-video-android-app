@@ -1,5 +1,7 @@
 package com.yilos.nailstar.aboutme.presenter;
 
+import com.alibaba.sdk.android.oss.callback.GetFileCallback;
+import com.alibaba.sdk.android.oss.model.OSSException;
 import com.yilos.nailstar.aboutme.entity.AboutMeNumber;
 import com.yilos.nailstar.aboutme.entity.MessageCount;
 import com.yilos.nailstar.aboutme.entity.PersonInfo;
@@ -7,8 +9,10 @@ import com.yilos.nailstar.aboutme.model.AboutMeServiceImpl;
 import com.yilos.nailstar.aboutme.model.AboutMeService;
 import com.yilos.nailstar.aboutme.view.IAboutMeView;
 import com.yilos.nailstar.framework.exception.NetworkDisconnectException;
+import com.yilos.nailstar.util.LoggerFactory;
 import com.yilos.nailstar.util.TaskManager;
 
+import org.apache.log4j.Logger;
 import org.json.JSONException;
 
 
@@ -16,6 +20,7 @@ import org.json.JSONException;
  * Created by sisilai on 15/10/24.
  */
 public class AboutMePresenter {
+    private static final Logger LOGGER = LoggerFactory.getLogger(AboutMePresenter.class);
     private static AboutMePresenter aboutMePresenter =new AboutMePresenter();
     private IAboutMeView aboutMeFragment;
     private AboutMeService aboutMeService = new AboutMeServiceImpl();
@@ -78,30 +83,4 @@ public class AboutMePresenter {
         new TaskManager().next(loadAboutMeNumber).next(aboutMeNumberUITask).start();
     }
 
-    //获取个人资料
-    public void getPersonInfo(){
-        TaskManager.Task loadPersonInfo = new TaskManager.BackgroundTask() {
-            @Override
-            public Object doWork(Object data) {
-                try {
-                    return aboutMeService.getPersonInfo();
-                } catch (NetworkDisconnectException e) {
-                    e.printStackTrace();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                return null;
-            }
-        };
-
-        TaskManager.UITask<PersonInfo> loadPersonInfoUITask = new TaskManager.UITask<PersonInfo>() {
-            @Override
-            public MessageCount doWork(PersonInfo data) {
-                aboutMeFragment.getPersonInfo(data);
-                return null;
-            }
-        };
-
-        new TaskManager().next(loadPersonInfo).next(loadPersonInfoUITask).start();
-    }
 }
