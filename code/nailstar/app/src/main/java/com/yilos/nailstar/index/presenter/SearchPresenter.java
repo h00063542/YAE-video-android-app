@@ -6,6 +6,7 @@ import com.yilos.nailstar.framework.exception.NetworkDisconnectException;
 import com.yilos.nailstar.index.entity.Topic;
 import com.yilos.nailstar.index.model.SearchServiceImpl;
 import com.yilos.nailstar.index.view.ISearchView;
+import com.yilos.nailstar.index.view.SearchResultAdapter;
 import com.yilos.nailstar.util.TaskManager;
 
 import java.util.List;
@@ -23,10 +24,7 @@ public class SearchPresenter {
     // 表示当前是第几次搜索，避免上次搜索结果回复慢时数据错乱
     private int searchTime;
 
-    // 表示是否正在搜索
-    private boolean searching;
-
-    private List<Topic> searchResult;
+    private SearchResultAdapter adapter;
 
     private int searchedPage = 0;
 
@@ -44,8 +42,14 @@ public class SearchPresenter {
     }
 
     public void search(boolean newSearch) {
+        final String keyWord = view.getSearchContent();
+        if(keyWord == null || keyWord.trim().equals("")) {
+            view.showShortToast("请输入要搜索的内容");
+            return;
+        }
+
         if(newSearch) {
-            searchResult = null;
+            adapter.clear();
             searchedPage = 0;
             lastPage = false;
             view.hideNoResultView();
@@ -57,7 +61,6 @@ public class SearchPresenter {
         }
 
         searchTime = (searchTime + 1) % 10000;
-        final String keyWord = view.getSearchContent();
         final int currentPage = searchedPage + 1;
         final int currentSearchTime = searchTime;
 
@@ -92,22 +95,22 @@ public class SearchPresenter {
                     return null;
                 }
                 if(data.getResult() == null || data.getResult().size() == 0) {
-                    if(currentPage == 0) {
+                    if(currentPage == 1) {
                         view.hideSearchResultView();
                         view.showNoResultView();
                     }
                     lastPage = true;
+                    adapter.stopMore();
                     return null;
                 }
 
-                if(currentPage == 0) {
-                    searchResult = data.getResult();
+                if(currentPage == 1) {
                     view.hideNoResultView();
                     view.showSearchResultView();
-                    view.notifyDataSetChanged();
+                    adapter.clear();
+                    adapter.addAll(data.getResult());
                 } else {
-                    searchResult.addAll(data.getResult());
-                    view.notifyItemRangeInserted(searchResult.size() - data.getResult().size(), data.getResult().size());
+                    adapter.addAll(data.getResult());
                 }
                 searchedPage++;
                 return null;
@@ -120,15 +123,11 @@ public class SearchPresenter {
                 .start();
     }
 
-    public Topic getSearchResultItem(int index) {
-        if(null != searchResult && searchResult.size() > index) {
-            return searchResult.get(index);
+    public SearchResultAdapter getAdapter() {
+        if(null == adapter) {
+            adapter = new SearchResultAdapter(view.getViewContext());
         }
 
-        return null;
-    }
-
-    public int getSearchResultCount() {
-        return null == searchResult ? 0 : searchResult.size();
+        return adapter;
     }
 }

@@ -3,6 +3,7 @@ package com.yilos.nailstar.aboutme.view;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
@@ -21,6 +22,8 @@ import com.yilos.nailstar.aboutme.entity.MessageCount;
 import com.yilos.nailstar.aboutme.entity.PersonInfo;
 import com.yilos.nailstar.aboutme.model.LoginAPI;
 import com.yilos.nailstar.aboutme.presenter.AboutMePresenter;
+import com.yilos.nailstar.aboutme.presenter.PersonInfoPresenter;
+import com.yilos.nailstar.util.Constants;
 import com.yilos.nailstar.util.IdentityUtil;
 import com.yilos.nailstar.util.LevelUtil;
 import com.yilos.widget.circleimageview.CircleImageView;
@@ -54,7 +57,6 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
     private TitleBar titleBar;//标题栏
     private TextView titleText;//标题栏标题
 
-    private AboutMePresenter aboutMePresenter;
     private RelativeLayout personInfoLayout;
 
     private TextView levelText;//等级
@@ -81,6 +83,8 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
     private String uid;
 
     LoginAPI loginAPI = LoginAPI.getInstance();
+    PersonInfo personInfo = new PersonInfo();
+    AboutMePresenter aboutMePresenter = AboutMePresenter.getInstance(this);
 
     /**
      * Use this factory method to create a new instance of
@@ -102,6 +106,11 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
 
     public AboutMeFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void getMyPhotoToLocalPath(String localPicUrl) {
+        personInfo.setPhotoUrl(localPicUrl);
     }
 
     @Override
@@ -163,7 +172,35 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
         View view = inflater.inflate(R.layout.fragment_about_me, container, false);
         initViews(view);
         initEvents();
+        judgeLogin();
         return view;
+    }
+
+    @Override
+    public void judgeLogin() {
+        if (loginAPI.isLogin()) {
+            personInfo.setUid(loginAPI.getLoginUserId());
+            personInfo.setNickname(loginAPI.getLoginUserNickname());
+            personInfo.setType(loginAPI.getLoginUserType());
+            StringBuilder localPath = new StringBuilder()
+                    .append(Constants.YILOS_NAILSTAR_PICTURE_PATH)
+                    .append(personInfo.getUid())
+                    .append(Constants.JPG_SUFFIX);
+            aboutMePresenter.downloadOss2File(localPath.toString(), loginAPI.getLoginUserPhotourl());
+
+            Bitmap bm = BitmapFactory.decodeFile(personInfo.getPhotoUrl());
+            profileImage.setImageBitmap(bm);
+            nameText.setText(personInfo.getNickname());
+            identityText.setText(IdentityUtil.getIdentity(personInfo.getType()));
+            if (messageCountText.getText().toString().equals("0")) {
+                messageCountText.setVisibility(View.GONE);
+            }
+        } else {
+            identityText.setText(R.string.about_me_identity);
+            nameText.setText(R.string.about_me_name);
+            profileImage.setImageResource(R.mipmap.ic_default_photo);
+            messageCountText.setVisibility(View.GONE);
+        }
     }
 
     private void initViews(View view){
@@ -176,18 +213,18 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
         identityText = (TextView)view.findViewById(R.id.about_me_identity);
         profileImage = (CircleImageView)view.findViewById(R.id.profile_image);
 
-        levelText = (TextView) view.findViewById(R.id.about_me_level);
-        attentionText = (TextView) view.findViewById(R.id.about_me_attention_count);
-        fansText = (TextView) view.findViewById(R.id.about_me_fans_count);
-        kaBiText = (TextView) view.findViewById(R.id.about_me_ka_bi_count);
+//        levelText = (TextView) view.findViewById(R.id.about_me_level);
+//        attentionText = (TextView) view.findViewById(R.id.about_me_attention_count);
+//        fansText = (TextView) view.findViewById(R.id.about_me_fans_count);
+//        kaBiText = (TextView) view.findViewById(R.id.about_me_ka_bi_count);
 
         titleBar = (TitleBar)view.findViewById(R.id.about_me_header_nav);
         personInfoLayout = (RelativeLayout)view.findViewById(R.id.about_me_person_info_layout);
 
-        myFollowList = (LinearLayout)view.findViewById(R.id.my_follow_list);
-        myFansList = (LinearLayout)view.findViewById(R.id.my_fans_list);
-
-        aboutMeLevel = (TextView)view.findViewById(R.id.about_me_level);
+//        myFollowList = (LinearLayout)view.findViewById(R.id.my_follow_list);
+//        myFansList = (LinearLayout)view.findViewById(R.id.my_fans_list);
+//
+//        aboutMeLevel = (TextView)view.findViewById(R.id.about_me_level);
 
         downloadVideoBtn = view.findViewById(R.id.downloadVideoBtn);
     }
@@ -195,20 +232,20 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.my_follow_list:
-                Intent myFollowListIntent = new Intent(getActivity(),FollowListActivity.class);
-                startActivity(myFollowListIntent);
-                break;
-            case R.id.my_fans_list:
-                Intent myFansListIntent = new Intent(getActivity(),FansListActivity.class);
-                startActivity(myFansListIntent);
-                break;
-            case R.id.about_me_level:
-                Intent myLevelIntent = new Intent(getActivity(),LevelActivity.class);
-                myLevelIntent.putExtra("experience",experience);
-                myLevelIntent.putExtra("myImageUrl", myImageUrl);
-                startActivity(myLevelIntent);
-                break;
+//            case R.id.my_follow_list:
+//                Intent myFollowListIntent = new Intent(getActivity(),FollowListActivity.class);
+//                startActivity(myFollowListIntent);
+//                break;
+//            case R.id.my_fans_list:
+//                Intent myFansListIntent = new Intent(getActivity(),FansListActivity.class);
+//                startActivity(myFansListIntent);
+//                break;
+//            case R.id.about_me_level:
+//                Intent myLevelIntent = new Intent(getActivity(),LevelActivity.class);
+//                myLevelIntent.putExtra("experience",experience);
+//                myLevelIntent.putExtra("myImageUrl", myImageUrl);
+//                startActivity(myLevelIntent);
+//                break;
             case R.id.about_me_setting_group:
                 Intent settingIntent = new Intent(getActivity(),SettingActivity.class);
                 startActivity(settingIntent);
@@ -229,11 +266,12 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
             case R.id.about_me_person_info_layout:
                 Intent intent = new Intent(getActivity(),PersonInfoActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putString("myImageUrl", myImageUrl);
-                bundle.putInt("identityType", identityType);
-                bundle.putString("uid", uid);
-                bundle.putString("profile",profile);
-                bundle.putString("nickName",nickName);
+//                bundle.putString("myImageUrl", myImageUrl);
+//                bundle.putInt("identityType", identityType);
+//                bundle.putString("uid", uid);
+//                bundle.putString("profile",profile);
+//                bundle.putString("nickName",nickName);
+                bundle.putSerializable("personInfo",personInfo);
                 intent.putExtras(bundle);
                 startActivity(intent);
                 break;
@@ -246,9 +284,9 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
         titleText = titleBar.getTitleView();
         titleText.setText(R.string.about_me_my);
 
-        myFollowList.setOnClickListener(this);
-        myFansList.setOnClickListener(this);
-        aboutMeLevel.setOnClickListener(this);
+//        myFollowList.setOnClickListener(this);
+//        myFansList.setOnClickListener(this);
+//        aboutMeLevel.setOnClickListener(this);
         aboutMeMyInfo.setOnClickListener(this);
         aboutMeSetting.setOnClickListener(this);
 
@@ -278,19 +316,7 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
     @Override
     public void onResume() {
         super.onResume();
-        if (loginAPI.isLogin()) {
-            identityType = loginAPI.getLoginUserType();
-            nickName = loginAPI.getLoginUserNickname();
-            identityText.setText(IdentityUtil.getIdentity(identityType));
-            nameText.setText(nickName);
-//            aboutMePresenter = AboutMePresenter.getInstance(this);
-//            aboutMePresenter.getMessageCount();
-//            aboutMePresenter.getAboutMeNumber();
-//            aboutMePresenter.getPersonInfo();
-        } else {
-            identityText.setText(R.string.about_me_identity);
-            nameText.setText(R.string.about_me_name);
-        }
+        judgeLogin();
     }
 
     @Override

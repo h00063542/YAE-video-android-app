@@ -1,5 +1,6 @@
 package com.yilos.nailstar.aboutme.model;
 
+import com.alibaba.sdk.android.oss.callback.GetFileCallback;
 import com.alibaba.sdk.android.oss.callback.SaveCallback;
 import com.yilos.nailstar.aboutme.entity.AboutMeNumber;
 import com.yilos.nailstar.aboutme.entity.FansList;
@@ -33,5 +34,15 @@ public interface AboutMeService {
      * @throws NetworkDisconnectException
      */
     void uploadFile2Oss(String localFilePath, String ossFileName, SaveCallback callback) throws NetworkDisconnectException;
+
+    /**
+     * 从oss下载文件到本地
+     *
+     * @param localFilePath
+     * @param ossFileName
+     * @param callback
+     * @throws NetworkDisconnectException
+     */
+    void downloadOss2File(String localFilePath, String ossFileName, GetFileCallback callback) throws NetworkDisconnectException;
 }
 

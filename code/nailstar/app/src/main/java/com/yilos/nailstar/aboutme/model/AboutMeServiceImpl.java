@@ -4,7 +4,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import com.alibaba.sdk.android.oss.OSSService;
+import com.alibaba.sdk.android.oss.callback.GetFileCallback;
 import com.alibaba.sdk.android.oss.callback.SaveCallback;
+import com.alibaba.sdk.android.oss.storage.OSSBucket;
 import com.squareup.okhttp.FormEncodingBuilder;
 import com.squareup.okhttp.RequestBody;
 import com.yilos.nailstar.aboutme.entity.AboutMeNumber;
@@ -82,17 +84,19 @@ public class AboutMeServiceImpl implements AboutMeService {
     }
 
     @Override
+    public void downloadOss2File(String localFilePath, String ossFileName, GetFileCallback callback) throws NetworkDisconnectException {
+        if (!NailStarApplicationContext.getInstance().isNetworkConnected()) {
+            throw new NetworkDisconnectException("网络没有连接");
+        }
+        OSSService ossService = OSSUtil.getDefaultOssService();
+        OSSUtil.resumableDownload(ossService, ossService.getOssBucket(OSSUtil.BUCKET_YPICTURE), localFilePath, ossFileName, callback);
+    }
+
+    @Override
     public PersonInfo setPersonInfo(String uid,String nickname,int type,String photoUrl,String profile) throws NetworkDisconnectException, JSONException {
         PersonInfo personInfo = new PersonInfo();
         String result;
         JSONObject personInfoObject;
-
-//        String uid = "a8affd60-efe6-11e4-a908-3132fc2abe39";
-//        String nickname = "昵称";
-//        int type = 1;
-//        String photoUrl = "http://sssdsdsds/sdsdsdsd";
-//        String profile = "这是个人签名";
-
         personInfo.setNickname(nickname);
         personInfo.setType(type);
         personInfo.setProfile(profile);
