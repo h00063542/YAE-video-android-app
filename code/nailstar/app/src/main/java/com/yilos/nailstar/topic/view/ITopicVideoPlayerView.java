@@ -5,6 +5,7 @@ import com.yilos.nailstar.topic.entity.TopicImageTextInfo;
 import com.yilos.nailstar.topic.entity.TopicInfo;
 import com.yilos.nailstar.topic.entity.TopicRelatedInfo;
 import com.yilos.nailstar.topic.entity.TopicStatusInfo;
+import com.yilos.nailstar.topic.entity.TopicRelatedProduct;
 
 import java.util.ArrayList;
 
@@ -41,6 +42,12 @@ public interface ITopicVideoPlayerView {
      * @param topicRelatedList
      */
     void initTopicRelatedInfo(ArrayList<TopicRelatedInfo> topicRelatedList);
+
+    /**
+     * 初始化topic关联的产品信息
+     * @param topicRelatedProductList
+     */
+    void initTopicRelatedUsedProductList(ArrayList<TopicRelatedProduct> topicRelatedProductList);
 
     void initUserTopicStatus(TopicStatusInfo topicStatusInfo);
 

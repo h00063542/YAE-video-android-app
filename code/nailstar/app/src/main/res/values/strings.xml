@@ -20,6 +20,7 @@
     <string name="hide_topic_image_text_content">收起图文</string>
     <string name="download_topic_image_text_content">下载图文到本地</string>
     <string name="more_videos">更多视频</string>
+    <string name="video_used_product">使用产品</string>
     <string name="download">下载</string>
     <string name="collection">收藏</string>
     <string name="comment">评论</string>

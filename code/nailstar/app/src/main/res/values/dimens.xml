@@ -76,6 +76,11 @@
     <dimen name="topic_footer_icon_size">30dp</dimen>
 
 
+    <dimen name="topic_related_used_product_height">48dp</dimen>
+    <dimen name="topic_related_used_product_width">5dp</dimen>
+
+
+
     <!-- fragment_about_me -->
     <dimen name="about_me_header_nav">55dp</dimen>
     <dimen name="about_me_header_nav_title">20dp</dimen>

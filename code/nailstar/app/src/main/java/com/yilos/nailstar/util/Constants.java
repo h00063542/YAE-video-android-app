@@ -30,6 +30,8 @@ public class Constants {
     public static final String PICTURES = "pictures";
     public static final String ARTICLES = "articles";
     public static final String RELATED = "related";
+    public static final String COMMODITY = "commodities";
+
     public static final String COMMENTS = "comments";
     public static final String USER_ID_LOWER = "userid";
     public static final String CONTENT = "content";
@@ -144,8 +146,14 @@ public class Constants {
      */
     public static final int HOMEWORK_PIC_PIXEL = 400;
 
+    /**
+     * 淘宝跳转ISV_CODE
+     */
+    public static final String ISV_CODE = "nailstar_app_android";
 
     public static final String YILOS_PIC_URL = "http://pic.yilos.com/";
     public static final String DEFAULT_OSS_HOST_ID = "oss-cn-hangzhou.aliyuncs.com";
+
+
 
 }
