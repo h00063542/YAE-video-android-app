@@ -242,6 +242,13 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
                     startActivity(intent);
                 }
                 break;
+            case R.id.about_me_message_group:
+                if (!loginAPI.isLogin()) {
+                    loginAPI.gotoLoginPage(getActivity());
+                } else {
+                    Intent intent = new Intent(getActivity(),MessageActivity.class);
+                    startActivity(intent);
+                }
             default:
                 break;
         }
@@ -260,6 +267,7 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
         personInfoLayout.setOnClickListener(this);
 
         downloadVideoBtn.setOnClickListener(this);
+        messageGroup.setOnClickListener(this);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
