@@ -50,7 +50,12 @@ public class HttpClient {
             throw new IOException("Unexpected code " + response);
         }
 
-        return response.body().string();
+        String contentType = response.header("Content-Type");
+        if(contentType != null && contentType.contains("application\\json")) {
+            return response.body().string();
+        } else {
+            return escapeHtml(response.body().string());
+        }
     }
 
     /**

@@ -1,120 +1,88 @@
 package com.yilos.nailstar.index.view;
 
-import android.app.Activity;
-import android.support.v4.view.PagerAdapter;
-import android.support.v7.widget.RecyclerView;
-import android.view.View;
+import android.content.Context;
 import android.view.ViewGroup;
 
+import com.jude.easyrecyclerview.adapter.BaseViewHolder;
+import com.jude.easyrecyclerview.adapter.RecyclerArrayAdapter;
 import com.yilos.nailstar.R;
-import com.yilos.nailstar.framework.application.NailStarApplication;
-import com.yilos.widget.view.MaxHeightGridLayoutManager;
+import com.yilos.nailstar.framework.entity.CommonResult;
+import com.yilos.nailstar.framework.exception.CommonException;
+import com.yilos.nailstar.index.entity.Topic;
+import com.yilos.nailstar.util.TaskManager;
+
+import java.util.List;
 
 /**
- * Created by yangdan on 15/11/13.
+ * Created by yangdan on 15/11/17.
  */
-public class VideoListAdapter extends PagerAdapter {
-    private Activity activity;
+public class VideoListAdapter extends RecyclerArrayAdapter<Topic> implements RecyclerArrayAdapter.OnLoadMoreListener {
+    private OnLoadPagedDataListener onLoadPagedDataListener;
 
-    // 最新、最热、关注的视频显示控件
-    private CustomRecyclerView latestListView;
-    private CustomRecyclerView hotestListView;
-    private CustomRecyclerView watchListView;
+    private int currentPage = 1;
 
-    public VideoListAdapter(Activity activity) {
-        this.activity = activity;
+    public VideoListAdapter(Context context, List<Topic> objects, OnLoadPagedDataListener onLoadPagedDataListener) {
+        super(context);
+        this.onLoadPagedDataListener = onLoadPagedDataListener;
 
-        // 初始化最热、最新、关注视频Tab页
-        latestListView = initVideoRecycleView();
-        hotestListView = initVideoRecycleView();
-        watchListView = initVideoRecycleView();
+        setMore(R.layout.view_more, this);
+        setNoMore(R.layout.view_nomore);
+        setError(R.layout.view_error);
+
+        addAll(objects);
     }
 
     @Override
-    public Object instantiateItem(ViewGroup container, int position) {
-        RecyclerView newView = null;
-        switch (position) {
-            case 0:
-                newView = latestListView;
-                break;
-            case 1:
-                newView = hotestListView;
-                break;
-            case 2:
-                newView = watchListView;
-                break;
-            default:
-                newView = new RecyclerView(activity);
-                break;
-        }
-
-        if (newView.getParent() != null) {
-            container.removeView(newView);
-        }
-
-        container.addView(newView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        return newView;
+    public BaseViewHolder OnCreateViewHolder(ViewGroup viewGroup, int i) {
+        return new VideoListItemHolder(viewGroup);
     }
 
     @Override
-    public int getCount() {
-        return 3;
+    public void onLoadMore() {
+        final int newPage = currentPage + 1;
+
+        TaskManager.BackgroundTask loadTask = new TaskManager.BackgroundTask() {
+            @Override
+            public Object doWork(Object data) {
+                CommonResult<List<Topic>> commonResult = new CommonResult<>();
+                try {
+                    List<Topic> result = onLoadPagedDataListener.loadPagedData(newPage);
+                    commonResult.setResult(result);
+                    return commonResult;
+                } catch (CommonException e) {
+                    commonResult.setError(true);
+                    commonResult.setErrorMsg(e.getMessage());
+                    return commonResult;
+                }
+            }
+        };
+
+        TaskManager.UITask<CommonResult<List<Topic>>> uiTask = new TaskManager.UITask<CommonResult<List<Topic>>>() {
+            @Override
+            public Object doWork(CommonResult<List<Topic>> data) {
+                if(data.isError()) {
+                    pauseMore();
+                    return null;
+                }
+
+                if(null == data.getResult() || data.getResult().size() == 0) {
+                    stopMore();
+                    return null;
+                }
+
+                currentPage = newPage;
+                addAll(data.getResult());
+                return null;
+            }
+        };
+
+        new TaskManager()
+                .next(loadTask)
+                .next(uiTask)
+                .start();
     }
 
-    @Override
-    public boolean isViewFromObject(View view, Object object) {
-        return view == object;
-    }
-
-    @Override
-    public CharSequence getPageTitle(int position) {
-        switch (position) {
-            case 0:
-                return "最新";
-            case 1:
-                return "热播";
-            case 2:
-                return "关注";
-            default:
-                return "";
-        }
-    }
-
-    @Override
-    public void destroyItem(ViewGroup container, int position, Object object) {
-    }
-
-    public CustomRecyclerView getLatestListView() {
-        return latestListView;
-    }
-
-    public CustomRecyclerView getHotestListView() {
-        return hotestListView;
-    }
-
-    public CustomRecyclerView getWatchListView() {
-        return watchListView;
-    }
-
-    private CustomRecyclerView initVideoRecycleView() {
-        final CustomRecyclerView view = new CustomRecyclerView(activity);
-
-        MaxHeightGridLayoutManager maxHeightGridLayoutManager = new MaxHeightGridLayoutManager(activity, 3, 1500);
-        maxHeightGridLayoutManager.setOrientation(MaxHeightGridLayoutManager.VERTICAL);
-        maxHeightGridLayoutManager.setSmoothScrollbarEnabled(true);
-
-        int result = 0;
-        int resourceId = activity.getResources().getIdentifier("status_bar_height", "dimen", "android");
-        if (resourceId > 0) {
-            result = activity.getResources().getDimensionPixelSize(resourceId);
-        }
-
-        maxHeightGridLayoutManager.setMaxHeight(NailStarApplication.getApplication().getScreenHeight(activity)
-                - activity.getResources().getDimensionPixelSize(R.dimen.index_tab_height)
-                - activity.getResources().getDimensionPixelSize(R.dimen.common_title_bar_height)
-                - activity.getResources().getDimensionPixelSize(R.dimen.common_main_tab_height) - result);
-        view.setLayoutManager(maxHeightGridLayoutManager);
-
-        return view;
+    public interface OnLoadPagedDataListener {
+        List<Topic> loadPagedData(int page) throws CommonException;
     }
 }
