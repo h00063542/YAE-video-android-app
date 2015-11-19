@@ -127,7 +127,7 @@ public class TitleBar extends RelativeLayout {
         int backButtonWidth = getBackButtonWidth();
         int rightImageButtonTwoWidth = getRightImageButtonTwoWidth();
         int rightImageButtonOneWidth = getRightImageButtonOneWidth();
-        w_screen = w_screen - 2 * backButtonWidth - 2 * rightImageButtonTwoWidth - rightImageButtonOneWidth - 100;
+        w_screen = w_screen - 2 * backButtonWidth - 2 * rightImageButtonTwoWidth - 2 * rightImageButtonOneWidth - 100;
         return w_screen;
     }
 

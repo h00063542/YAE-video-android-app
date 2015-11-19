@@ -120,14 +120,14 @@
             app:preLoadingText="@string/video_loading" />
     </com.sina.sinavideo.sdk.container.VDVideoControlLoadingContainer>
 
-    <com.sina.sinavideo.sdk.widgets.VDVideoLockScreenView
-        android:id="@+id/sv1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        app:LockCloseImg="@drawable/orientation_lock_close"
-        app:LockOpenImg="@drawable/orientation_lock_open"
-        app:orientation="vertical" />
+    <!--<com.sina.sinavideo.sdk.widgets.VDVideoLockScreenView-->
+        <!--android:id="@+id/sv1"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_centerInParent="true"-->
+        <!--app:LockCloseImg="@drawable/orientation_lock_close"-->
+        <!--app:LockOpenImg="@drawable/orientation_lock_open"-->
+        <!--app:orientation="vertical" />-->
 
     <com.sina.sinavideo.sdk.container.VDVideoControlProgressContainer
         android:layout_width="wrap_content"
@@ -150,7 +150,7 @@
     </com.sina.sinavideo.sdk.container.VDVideoControlProgressContainer>
     <!-- dlna返回占位图 -->
 
-    <include layout="@layout/dlna_connection_layout_include" />
+    <!--<include layout="@layout/dlna_connection_layout_include" />-->
 
     <com.sina.sinavideo.sdk.widgets.VDVideoTipLayout
         android:id="@id/tipLayout"
