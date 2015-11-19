@@ -23,7 +23,7 @@
 
     public TextView getTitleView()
 
-获取靠右对齐标题控件
+获取靠左对齐标题控件
 
     public TextView getLeftTitleView()
 
