@@ -1,6 +1,5 @@
 package com.yilos.nailstar.aboutme.view;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.widget.LinearLayoutManager;
@@ -8,10 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.yilos.nailstar.R;
-import com.yilos.nailstar.framework.application.NailStarApplication;
 import com.yilos.nailstar.index.view.CustomRecyclerView;
-import com.yilos.widget.view.MaxHeightGridLayoutManager;
 
 /**
  * Created by sisilai on 15/11/18.

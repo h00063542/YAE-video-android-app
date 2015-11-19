@@ -16,7 +16,12 @@ import android.widget.TextView;
 
 import com.yilos.nailstar.R;
 import com.yilos.nailstar.aboutme.entity.UserMessage;
+import com.yilos.widget.circleimageview.CircleImageView;
+import com.yilos.widget.view.ImageCacheView;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import static android.text.Spanned.SPAN_EXCLUSIVE_INCLUSIVE;
@@ -34,21 +39,48 @@ public class UserMessageListAdapter extends RecyclerView.Adapter<UserMessageList
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView messageText;
+        public TextView commentText;
+        public CircleImageView accountPhoto;
+        public TextView accountName;
+        public TextView replyCreateDate;
+        public TextView replyContent;
+        public ImageCacheView thumbUrl;
+        public TextView commentCreateDate;
+        public TextView title;
+        public TextView teacher;
 
-        public ViewHolder(View view) {
+        public ViewHolder(View view,int type) {
             super(view);
-            messageText = (TextView) view.findViewById(R.id.message_text);
+            if (type == 0) {
+                return;
+            }
+            commentText = (TextView) view.findViewById(R.id.commentText);
+            accountPhoto = (CircleImageView) view.findViewById(R.id.accountPhoto);
+            accountName = (TextView) view.findViewById(R.id.accountName);
+            replyCreateDate = (TextView) view.findViewById(R.id.replyCreateDate);
+            replyContent = (TextView) view.findViewById(R.id.replyContent);
+            thumbUrl = (ImageCacheView) view.findViewById(R.id.thumbUrl);
+            commentCreateDate = (TextView) view.findViewById(R.id.commentCreateDate);
+            title = (TextView) view.findViewById(R.id.title);
+            teacher = (TextView) view.findViewById(R.id.teacher);
         }
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        // create a new view
-        View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.activity_user_message_item, parent, false);
-        // set the view's size, margins, paddings and layout parameters
-        ViewHolder vh = new ViewHolder(v);
+        View view;
+        int type;
+        if (userMessageList.isEmpty()) {
+            // create a new view
+            view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.activity_user_message_empty_item, parent, false);
+            type = 0;
+        } else {
+            view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.activity_user_message_item, parent, false);
+            type = 1;
+        }
+        ViewHolder vh = new ViewHolder(view,type);
         return vh;
     }
 
@@ -58,7 +90,9 @@ public class UserMessageListAdapter extends RecyclerView.Adapter<UserMessageList
         UserMessage.CommentEntity commentEntity = userMessage.getComment();
         String commentContent = commentEntity.getContent();
         String atName = commentEntity.getAtName();
-        String commentCreateDate = String.valueOf(commentEntity.getCreateDate());
+
+        String commentTime = new SimpleDateFormat("MM月dd日").format(commentEntity.getCreateDate());
+        String commentCreateDate = String.valueOf(commentTime);
         String isHomework = String.valueOf(commentEntity.getIsHomework());
 
         String wo = "我 ";
@@ -95,22 +129,26 @@ public class UserMessageListAdapter extends RecyclerView.Adapter<UserMessageList
         spannableStringBuilder.setSpan(commentContentForegroundColorSpan,commentContentIndex,commentContentIndex + commentContent.length(), Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
         spannableStringBuilder.setSpan(commentContentAbsoluteSizeSpan,commentContentIndex,commentContentIndex + commentContent.length(), Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
 
-        holder.messageText.setText(spannableStringBuilder);
-        //comment : {"content":"这尽职尽责尽职尽责","atName":"在","createDate":1446709317872,"isHomework":1}
-
-//        * reply : {"accountId":"d77348c0-60d7-11e5-ade9-e3d220e2c964","accountName":"勿忘我",
-// "accountPhoto":"http://pic.yilos.com/ec9a2bbc1abb13166af6da31495bea0b",
-//             "content":"嗯嗯","createDate":1446718910072,
-// "replyTo":"9f59f430-8390-11e5-a74c-839a83b22973",
-// "lastReplyTo":"b1438670-8390-11e5-a74c-839a83b22973"}
+        holder.commentText.setText(spannableStringBuilder);
+        holder.commentCreateDate.setText(commentCreateDate);
 
         UserMessage.ReplyEntity replyEntity = userMessage.getReply();
         String accountId = replyEntity.getAccountId();
         String accountName = replyEntity.getAccountName();
         String accountPhoto = replyEntity.getAccountPhoto();
-        String content = replyEntity.getContent();
-        String createDate = String.valueOf(replyEntity.getCreateDate());
+        String replyContent = replyEntity.getContent();
+        String replyTime = new SimpleDateFormat("MM月dd日").format(replyEntity.getCreateDate());
+        String replyCreateDate = String.valueOf(replyTime);
         String replyTo = replyEntity.getReplyTo();
+
+        holder.accountPhoto.setImageSrc(accountPhoto);
+        holder.accountName.setText(accountName);
+        holder.replyCreateDate.setText(replyCreateDate);
+        holder.replyContent.setText(replyContent);
+        holder.thumbUrl.setImageSrc(userMessage.getThumbUrl());
+        holder.title.setText(userMessage.getTitle());
+        holder.teacher.setText(userMessage.getTeacher());
+
     }
 
 

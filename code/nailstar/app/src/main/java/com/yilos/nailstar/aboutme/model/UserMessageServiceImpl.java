@@ -1,18 +1,13 @@
 package com.yilos.nailstar.aboutme.model;
 
-import com.yilos.nailstar.aboutme.entity.MessageCount;
 import com.yilos.nailstar.aboutme.entity.UserMessage;
 import com.yilos.nailstar.framework.exception.NetworkDisconnectException;
-import com.yilos.nailstar.topic.entity.TopicVideoInfo;
-import com.yilos.nailstar.util.Constants;
-import com.yilos.nailstar.util.HttpClient;
 import com.yilos.nailstar.util.JsonUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
