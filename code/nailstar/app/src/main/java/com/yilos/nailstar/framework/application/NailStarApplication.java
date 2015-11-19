@@ -174,7 +174,6 @@ public class NailStarApplication extends MultiDexApplication {
 
             @Override
             public void onSuccess() {
-                Toast.makeText(NailStarApplication.this, "初始化成功 ", Toast.LENGTH_SHORT).show();
             }
 
             @Override
