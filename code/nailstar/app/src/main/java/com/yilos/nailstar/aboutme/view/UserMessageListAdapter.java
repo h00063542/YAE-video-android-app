@@ -104,13 +104,13 @@ public class UserMessageListAdapter extends RecyclerView.Adapter<UserMessageList
 // "replyTo":"9f59f430-8390-11e5-a74c-839a83b22973",
 // "lastReplyTo":"b1438670-8390-11e5-a74c-839a83b22973"}
 
-//        UserMessage.ReplyEntity replyEntity = userMessage.getReply();
-//        String accountId = replyEntity.getAccountId();
-//        String accountName = replyEntity.getAccountName();
-//        String accountPhoto = replyEntity.getAccountPhoto();
-//        String content = replyEntity.getContent();
-//        String createDate = String.valueOf(replyEntity.getCreateDate());
-//        String replyTo = replyEntity.getReplyTo();
+        UserMessage.ReplyEntity replyEntity = userMessage.getReply();
+        String accountId = replyEntity.getAccountId();
+        String accountName = replyEntity.getAccountName();
+        String accountPhoto = replyEntity.getAccountPhoto();
+        String content = replyEntity.getContent();
+        String createDate = String.valueOf(replyEntity.getCreateDate());
+        String replyTo = replyEntity.getReplyTo();
     }
 
 
