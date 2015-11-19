@@ -106,6 +106,12 @@ public class FileUtils {
         MediaScannerConnection.scanFile(context, new String[]{path}, null, null);
     }
 
+    /**
+     * 从指定文件中读取String
+     *
+     * @param fileName
+     * @return
+     */
     public static String readFromFile(File fileName) {
 
         StringBuilder sb = new StringBuilder();
@@ -134,6 +140,12 @@ public class FileUtils {
         return sb.toString();
     }
 
+    /**
+     * 把String写入指定文件
+     *
+     * @param fileName
+     * @param text
+     */
     public static void writeToFile(File fileName, String text) {
 
         BufferedWriter writer = null;

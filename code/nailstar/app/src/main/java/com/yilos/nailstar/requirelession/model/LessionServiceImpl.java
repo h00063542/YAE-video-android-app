@@ -2,6 +2,10 @@ package com.yilos.nailstar.requirelession.model;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.squareup.okhttp.FormEncodingBuilder;
+import com.squareup.okhttp.RequestBody;
+import com.yilos.nailstar.aboutme.model.LoginAPI;
+import com.yilos.nailstar.framework.exception.NotLoginException;
 import com.yilos.nailstar.requirelession.entity.CandidateLession;
 import com.yilos.nailstar.requirelession.entity.LessionActivity;
 import com.yilos.nailstar.requirelession.entity.VideoLession;
@@ -163,5 +167,25 @@ public class LessionServiceImpl implements LessionService {
     public void saveVotedRecord(File fileName, VotedRecord votedRecord) throws IOException {
         String stringVotedRecord = objectMapper.writeValueAsString(votedRecord);
         FileUtils.writeToFile(fileName, stringVotedRecord);
+    }
+
+    @Override
+    public void postCandidate(String imageUrl) throws IOException, JSONException, NotLoginException {
+
+        String url = "/vapi/nailstar/qjc/candidate";
+
+        String uid = LoginAPI.getInstance().getLoginUserId();
+        if (uid == null) {
+            throw new NotLoginException("not login");
+        }
+        RequestBody formBody = new FormEncodingBuilder().add("picUrl", imageUrl).add("uid", uid).build();
+
+        String stringResult = HttpClient.post(url, formBody);
+
+        JSONObject jsonResult = new JSONObject(stringResult);
+
+        if (jsonResult.getInt("code") != 0) {
+            throw new IOException("Unexpected code");
+        }
     }
 }

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.annotation.StringRes;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -16,8 +17,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.alibaba.sdk.android.oss.callback.SaveCallback;
+import com.alibaba.sdk.android.oss.model.OSSException;
 import com.yilos.nailstar.R;
+import com.yilos.nailstar.aboutme.model.LoginAPI;
 import com.yilos.nailstar.framework.entity.NailStarApplicationContext;
 import com.yilos.nailstar.requirelession.Presenter.LessionPresenter;
 import com.yilos.nailstar.requirelession.entity.CandidateLession;
@@ -31,8 +36,8 @@ import com.yilos.widget.circleimageview.CircleImageView;
 import com.yilos.widget.titlebar.TitleBar;
 import com.yilos.widget.view.ImageCacheView;
 
+import java.io.File;
 import java.util.List;
-import java.util.logging.Logger;
 
 import in.srain.cube.views.ptr.PtrClassicFrameLayout;
 import in.srain.cube.views.ptr.PtrFrameLayout;
@@ -228,17 +233,54 @@ public class RequireLessionFragment extends Fragment implements LessionView {
         goRankingBtn.setOnClickListener(onClickListener);
         goRankingBtnFloat.setOnClickListener(onClickListener);
 
-        // 上传照片
         takeImage = new TakeImage.Builder().context(this).uri(Constants.YILOS_PATH).callback(new TakeImageCallback() {
             @Override
             public void callback(Uri uri) {
-                // TODO
+                if (uri == null) {
+                    showMessage(R.string.upload_image_failed);
+                    return;
+                }
+                File uploadFile = new File(uri.getPath());
+                if (!uploadFile.exists()) {
+                    showMessage(R.string.upload_image_failed);
+                    return;
+                }
+                // 上传图片
+                lessionPresenter.uploadFile(uploadFile, new SaveCallback() {
+                    @Override
+                    public void onSuccess(String s) {
+                        // 上传图片成功，提交求教程请求
+                        lessionPresenter.postCandidate(s);
+                    }
+
+                    @Override
+                    public void onProgress(String s, int i, int i1) {
+
+                    }
+
+                    @Override
+                    public void onFailure(String s, OSSException e) {
+                        showMessage(R.string.upload_image_failed);
+                    }
+                });
             }
         }).build();
 
         View.OnClickListener requireLessionBtnListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                // 未登录不能求教程
+                if (!LoginAPI.getInstance().isLogin()) {
+                    gotoLoginPage();
+                    return;
+                }
+
+                // 网络不可用的时候提示用户
+                if (!NailStarApplicationContext.getInstance().isNetworkConnected()) {
+                    showMessage(R.string.network_disconnected);
+                }
+
                 takeImage.initTakeImage();
             }
         };
@@ -353,6 +395,9 @@ public class RequireLessionFragment extends Fragment implements LessionView {
     // 求教程第一阶段（求教程阶段）
     private void handleLessionTopic(final LessionActivity lessionActivity) {
 
+        requireLessionBtn.setEnabled(true);
+        requireLessionBtnFloat.setEnabled(true);
+
         // 设置图片
         ImageCacheView lessionPhoto = (ImageCacheView) view.findViewById(R.id.lessionPhoto);
         CircleImageView lessionAuthorPhoto = (CircleImageView) view.findViewById(R.id.lessionAuthorPhoto);
@@ -400,6 +445,9 @@ public class RequireLessionFragment extends Fragment implements LessionView {
 
     // 求教程第二阶段（视频制作阶段）
     private void handleCandidateTopic(LessionActivity lessionActivity) {
+
+        requireLessionBtn.setEnabled(false);
+        requireLessionBtnFloat.setEnabled(false);
 
         ImageCacheView lessionCandidatePic = (ImageCacheView) view.findViewById(R.id.lessionCandidatePic);
         CircleImageView lessionUserPhoto = (CircleImageView) view.findViewById(R.id.lessionUserPhoto);
@@ -466,4 +514,18 @@ public class RequireLessionFragment extends Fragment implements LessionView {
         FileUtils.mediaRefresh(this.getActivity(), filePath);
     }
 
+    @Override
+    public void showMessage(String text) {
+        Toast.makeText(getActivity(), text, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void showMessage(@StringRes int resId) {
+        Toast.makeText(getActivity(), resId, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void gotoLoginPage() {
+        LoginAPI.getInstance().gotoLoginPage(RequireLessionFragment.this.getActivity());
+    }
 }

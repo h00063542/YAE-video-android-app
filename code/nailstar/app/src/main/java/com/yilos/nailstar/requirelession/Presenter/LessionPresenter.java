@@ -3,7 +3,11 @@ package com.yilos.nailstar.requirelession.Presenter;
 import android.graphics.Bitmap;
 import android.os.Handler;
 
+import com.alibaba.sdk.android.oss.OSSService;
+import com.alibaba.sdk.android.oss.callback.SaveCallback;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.yilos.nailstar.R;
+import com.yilos.nailstar.framework.exception.NotLoginException;
 import com.yilos.nailstar.requirelession.entity.CandidateLession;
 import com.yilos.nailstar.requirelession.entity.LessionActivity;
 import com.yilos.nailstar.requirelession.entity.VotedRecord;
@@ -12,6 +16,7 @@ import com.yilos.nailstar.requirelession.model.LessionServiceImpl;
 import com.yilos.nailstar.requirelession.view.LessionView;
 import com.yilos.nailstar.util.FileUtils;
 import com.yilos.nailstar.util.LoggerFactory;
+import com.yilos.nailstar.util.OSSUtil;
 
 import org.apache.log4j.Logger;
 
@@ -84,6 +89,7 @@ public class LessionPresenter {
                     // 倒计时
                     startCountDown(lessionActivity.getEndTime());
                 } catch (Exception e) {
+                    logger.error("queryAndRefreshActivityTopic failed", e);
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
@@ -184,9 +190,11 @@ public class LessionPresenter {
                         }
                     });
                 } catch (Exception e) {
+                    logger.error("queryAndRefreshVoteLession failed", e);
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
+                            view.showMessage(R.string.query_failed);
                             view.refreshFailed();
                         }
                     });
@@ -222,9 +230,11 @@ public class LessionPresenter {
                         }
                     });
                 } catch (Exception e) {
+                    logger.error("queryAndRefreshRankingLession failed", e);
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
+                            view.showMessage(R.string.query_failed);
                             view.refreshFailed();
                         }
                     });
@@ -298,13 +308,15 @@ public class LessionPresenter {
                         @Override
                         public void run() {
                             view.notifyRefreshListView();
+                            view.showMessage(R.string.vote_success);
                         }
                     });
                 } catch (Exception e) {
+                    logger.error("vote failed", e);
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
-                            // TODO
+                            view.showMessage(R.string.vote_failed);
                         }
                     });
                 }
@@ -332,7 +344,7 @@ public class LessionPresenter {
                         @Override
                         public void run() {
                             view.mediaRefresh(result);
-                            // TODO
+                            view.showMessage(R.string.save_success);
                         }
                     });
                 } else {
@@ -340,7 +352,7 @@ public class LessionPresenter {
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
-                            // TODO
+                            view.showMessage(R.string.save_fail);
                         }
                     });
                 }
@@ -368,7 +380,7 @@ public class LessionPresenter {
                         @Override
                         public void run() {
                             view.mediaRefresh(result);
-                            // TODO
+                            view.showMessage(R.string.save_success);
                         }
                     });
                 } else {
@@ -376,7 +388,7 @@ public class LessionPresenter {
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
-                            // TODO
+                            view.showMessage(R.string.save_fail);
                         }
                     });
                 }
@@ -400,14 +412,15 @@ public class LessionPresenter {
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
-                            // TODO
+                            view.showMessage(R.string.report_success);
                         }
                     });
                 } catch (Exception e) {
+                    logger.error("reportIllegal failed", e);
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
-                            // TODO
+                            view.showMessage(R.string.report_failed);
                         }
                     });
                 }
@@ -415,6 +428,9 @@ public class LessionPresenter {
         }.start();
     }
 
+    /**
+     * 查询已投票列表
+     */
     public void queryVotedRecord() {
         new Thread() {
             @Override
@@ -429,6 +445,11 @@ public class LessionPresenter {
         }.start();
     }
 
+    /**
+     * 保存已投票列表
+     *
+     * @param candidateLession
+     */
     public void saveVotedRecord(CandidateLession candidateLession) {
 
         if (votedRecord == null || (lessionActivity != null && lessionActivity.getNo() != votedRecord.getNo())) {
@@ -443,6 +464,37 @@ public class LessionPresenter {
         } catch (IOException e) {
             logger.error("saveVotedRecord failed", e);
         }
+    }
+
+    /**
+     * 上传文件
+     *
+     * @param file
+     * @param callback
+     */
+    public void uploadFile(File file, SaveCallback callback) {
+        OSSService ossService = OSSUtil.getDefaultOssService();
+        OSSUtil.resumableUpload(ossService, ossService.getOssBucket(OSSUtil.BUCKET_YPICTURE), file.getParent(), file.getName(), callback);
+    }
+
+    /**
+     * 提交求教程请求
+     *
+     * @param url
+     */
+    public void postCandidate(final String url) {
+        new Thread() {
+            @Override
+            public void run() {
+                try {
+                    service.postCandidate(url);
+                } catch (NotLoginException notLoginException) {
+                    view.gotoLoginPage();
+                } catch (Exception e) {
+                    logger.error("postCandidate failed", e);
+                }
+            }
+        }.start();
     }
 
 }
