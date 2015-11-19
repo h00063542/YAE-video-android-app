@@ -1,155 +1,180 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="我是消息列表"/>
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_margin="10dp">
+        android:layout_margin="10dp"
+        android:background="@color/white"
+        android:orientation="horizontal">
+
         <com.yilos.widget.circleimageview.CircleImageView
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:src="@mipmap/ic_default_photo"
-            android:layout_marginRight="20dp"/>
+            android:layout_marginRight="20dp"
+            android:src="@mipmap/ic_default_photo" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="手机用户1111"
                     android:textColor="@color/z2"
-                    android:textSize="@dimen/small_text_size"/>
+                    android:textSize="@dimen/small_text_size" />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
                     android:text="回复我："
                     android:textColor="@color/z3"
-                    android:textSize="@dimen/small_text_size"
-                    android:layout_marginLeft="10dp"/>
+                    android:textSize="@dimen/small_text_size" />
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/z3"
-                    android:textSize="@dimen/very_small_text_size"
+                    android:gravity="right"
                     android:text="昨天"
-                    android:gravity="right"/>
+                    android:textColor="@color/z3"
+                    android:textSize="@dimen/very_small_text_size" />
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp">
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="噢噢，好的哦"
                     android:textColor="@color/z1"
-                    android:textSize="@dimen/middle_text_size"/>
+                    android:textSize="@dimen/middle_text_size" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="right">
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="已回复"
-                        android:textSize="@dimen/small_text_size"
-                        android:textColor="@color/z3"/>
+                        android:textColor="@color/z3"
+                        android:textSize="@dimen/small_text_size" />
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
                         android:text="回复"
                         android:textColor="@color/orange"
-                        android:textSize="@dimen/small_text_size"
-                        android:layout_marginLeft="10dp"/>
+                        android:textSize="@dimen/small_text_size" />
                 </LinearLayout>
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/border_line"
                 android:orientation="vertical"
                 android:padding="10dp">
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginBottom="10dp">
+                    android:layout_marginBottom="10dp"
+                    android:orientation="horizontal">
+
                     <ImageView
                         android:layout_width="60dp"
                         android:layout_height="60dp"
-                        android:src="@mipmap/ic_default_photo"/>
+                        android:src="@mipmap/ic_default_photo" />
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:layout_marginLeft="10dp">
+                        android:layout_marginLeft="10dp"
+                        android:orientation="vertical">
+
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="2天前"
-                            android:gravity="right"/>
+                            android:gravity="right"
+                            android:text="2天前" />
+
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="第130期：花样"/>
+                            android:text="第130期：花样" />
+
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="胡波老师"/>
+                            android:text="胡波老师" />
                     </LinearLayout>
                 </LinearLayout>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="@color/xk2"
                     android:orientation="horizontal">
+
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:id="@+id/message_text"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:padding="10dp"
                         android:text="我"
                         android:textColor="@color/z1"
-                        android:textSize="@dimen/small_text_size"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="回复"
-                        android:textSize="@dimen/small_text_size"
-                        android:textColor="@color/z2"
-                        android:layout_marginLeft="10dp"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="手机用户111"
-                        android:textColor="@color/z1"
-                        android:textSize="@dimen/small_text_size"
-                        android:layout_marginLeft="10dp"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text=":"
-                        android:textSize="@dimen/small_text_size"
-                        android:textColor="@color/z2"
-                        android:layout_marginLeft="5dp"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="我觉得你说的非常对我觉得你说的非常对我觉得你说的非常对"
-                        android:textSize="@dimen/small_text_size"
-                        android:textColor="@color/z2"
-                        android:layout_marginLeft="5dp"/>
+                        android:textSize="@dimen/small_text_size" />
+                    <!--<TextView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:text="回复"-->
+                    <!--android:textSize="@dimen/small_text_size"-->
+                    <!--android:textColor="@color/z2"-->
+                    <!--android:layout_marginLeft="10dp"/>-->
+                    <!--<TextView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:text="手机用户111"-->
+                    <!--android:textColor="@color/z1"-->
+                    <!--android:textSize="@dimen/small_text_size"-->
+                    <!--android:layout_marginLeft="10dp"/>-->
+                    <!--<TextView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:text=":"-->
+                    <!--android:textSize="@dimen/small_text_size"-->
+                    <!--android:textColor="@color/z2"-->
+                    <!--android:layout_marginLeft="5dp"/>-->
+                    <!--<TextView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:text="我觉得你说的非常对我觉得你说的非常对我觉得你说的非常对"-->
+                    <!--android:textSize="@dimen/small_text_size"-->
+                    <!--android:textColor="@color/z2"-->
+                    <!--android:layout_marginLeft="5dp"/>-->
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/common_1_dp"
+        android:background="@color/xk2"/>
 </LinearLayout>

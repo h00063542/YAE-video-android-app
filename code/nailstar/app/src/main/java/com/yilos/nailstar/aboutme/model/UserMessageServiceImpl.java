@@ -33,7 +33,61 @@ public class UserMessageServiceImpl implements UserMessageService {
         JSONArray userMessageArray;
         String url = "/vapi2/nailstar/replyMessages?uid=" + uid;
         jsonObject = //HttpClient.getJson(url);
-        "{\"code\":0,\"result\":{\"messages\":[{\"id\":\"06a79050-83a7-11e5-8027-61091fab3b57\",\"topicId\":\"c8a5cfa0-312c-11e5-b553-d7e515311f8d\",\"title\":\"第222期：牛仔贴纸\",\"teacher\":\"董亚坡老师\",\"thumbUrl\":\"http://pic.yilos.com/283be79417e0a310eb9ed95a13a71d43\",\"comment\":{\"content\":\"这尽职尽责尽职尽责\",\"atName\":\"在\",\"createDate\":1446709317872,\"isHomework\":1},\"reply\":{\"accountId\":\"d77348c0-60d7-11e5-ade9-e3d220e2c964\",\"accountName\":\"勿忘我\",\"accountPhoto\":\"http://pic.yilos.com/ec9a2bbc1abb13166af6da31495bea0b\",\"content\":\"嗯嗯\",\"createDate\":1446718910072,\"replyTo\":\"9f59f430-8390-11e5-a74c-839a83b22973\",\"lastReplyTo\":\"b1438670-8390-11e5-a74c-839a83b22973\"}}\n" +
+        "{\"code\":0,\"result\":{\"messages\":[" +
+
+                "{\"id\":\"06a79050-83a7-11e5-8027-61091fab3b57\"," +
+                "\"topicId\":\"c8a5cfa0-312c-11e5-b553-d7e515311f8d\"," +
+                "\"title\":\"第222期：牛仔贴纸\",\"teacher\":\"董亚坡老师\"," +
+                "\"thumbUrl\":\"http://pic.yilos.com/283be79417e0a310eb9ed95a13a71d43\"," +
+                "\"comment\":{\"content\":\"这尽职尽责尽职尽责\",\"atName\":\"在\"," +
+                "\"createDate\":1446709317872,\"isHomework\":1}," +
+                "\"reply\":{\"accountId\":\"d77348c0-60d7-11e5-ade9-e3d220e2c964\"," +
+                "\"accountName\":\"勿忘我\"," +
+                "\"accountPhoto\":\"http://pic.yilos.com/ec9a2bbc1abb13166af6da31495bea0b\"," +
+                "\"content\":\"嗯嗯\",\"createDate\":1446718910072," +
+                "\"replyTo\":\"9f59f430-8390-11e5-a74c-839a83b22973\"," +
+                "\"lastReplyTo\":\"b1438670-8390-11e5-a74c-839a83b22973\"}},\n" +
+
+                "{\"id\":\"06a79050-83a7-11e5-8027-61091fab3b57\"," +
+                "\"topicId\":\"c8a5cfa0-312c-11e5-b553-d7e515311f8d\"," +
+                "\"title\":\"第222期：牛仔贴纸\",\"teacher\":\"董亚坡老师\"," +
+                "\"thumbUrl\":\"http://pic.yilos.com/283be79417e0a310eb9ed95a13a71d43\"," +
+                "\"comment\":{\"content\":\"这尽职尽责尽职尽责这尽职尽责尽职尽责这尽职尽责尽职尽责这尽职尽责尽职尽责\",\"atName\":\"在\"," +
+                "\"createDate\":1446709317872,\"isHomework\":1}," +
+                "\"reply\":{\"accountId\":\"d77348c0-60d7-11e5-ade9-e3d220e2c964\"," +
+                "\"accountName\":\"勿忘我\"," +
+                "\"accountPhoto\":\"http://pic.yilos.com/ec9a2bbc1abb13166af6da31495bea0b\"," +
+                "\"content\":\"嗯嗯\",\"createDate\":1446718910072," +
+                "\"replyTo\":\"9f59f430-8390-11e5-a74c-839a83b22973\"," +
+                "\"lastReplyTo\":\"b1438670-8390-11e5-a74c-839a83b22973\"}},\n" +
+
+                "{\"id\":\"06a79050-83a7-11e5-8027-61091fab3b57\"," +
+                "\"topicId\":\"c8a5cfa0-312c-11e5-b553-d7e515311f8d\"," +
+                "\"title\":\"第222期：牛仔贴纸\",\"teacher\":\"董亚坡老师\"," +
+                "\"thumbUrl\":\"http://pic.yilos.com/283be79417e0a310eb9ed95a13a71d43\"," +
+                "\"comment\":{\"content\":\"这尽职尽责尽职尽责这尽职尽责尽职尽责这尽职尽责尽职尽责这尽职尽责尽职尽责\",\"atName\":\"在\"," +
+                "\"createDate\":1446709317872,\"isHomework\":1}," +
+                "\"reply\":{\"accountId\":\"d77348c0-60d7-11e5-ade9-e3d220e2c964\"," +
+                "\"accountName\":\"勿忘我\"," +
+                "\"accountPhoto\":\"http://pic.yilos.com/ec9a2bbc1abb13166af6da31495bea0b\"," +
+                "\"content\":\"嗯嗯\",\"createDate\":1446718910072," +
+                "\"replyTo\":\"9f59f430-8390-11e5-a74c-839a83b22973\"," +
+                "\"lastReplyTo\":\"b1438670-8390-11e5-a74c-839a83b22973\"}},\n" +
+
+                "{\"id\":\"06a79050-83a7-11e5-8027-61091fab3b57\"," +
+                "\"topicId\":\"c8a5cfa0-312c-11e5-b553-d7e515311f8d\"," +
+                "\"title\":\"第222期：牛仔贴纸\",\"teacher\":\"董亚坡老师\"," +
+                "\"thumbUrl\":\"http://pic.yilos.com/283be79417e0a310eb9ed95a13a71d43\"," +
+                "\"comment\":{\"content\":\"这尽职尽责尽职尽责这尽职尽责尽职尽责这尽职尽责尽职尽责这尽职尽责尽职尽责\",\"atName\":\"在\"," +
+                "\"createDate\":1446709317872,\"isHomework\":1}," +
+                "\"reply\":{\"accountId\":\"d77348c0-60d7-11e5-ade9-e3d220e2c964\"," +
+                "\"accountName\":\"勿忘我\"," +
+                "\"accountPhoto\":\"http://pic.yilos.com/ec9a2bbc1abb13166af6da31495bea0b\"," +
+                "\"content\":\"嗯嗯\",\"createDate\":1446718910072," +
+                "\"replyTo\":\"9f59f430-8390-11e5-a74c-839a83b22973\"," +
+                "\"lastReplyTo\":\"b1438670-8390-11e5-a74c-839a83b22973\"}}\n" +
+
+
                 "]}}";
         userMessageJSONObject = new JSONObject(jsonObject);
         if (userMessageJSONObject.getInt("code") != 0) {
@@ -56,7 +110,7 @@ public class UserMessageServiceImpl implements UserMessageService {
             String atName = JsonUtil.optString(userMessageCommentObject, "atName");
             long commentCreateDate = userMessageCommentObject.getLong("createDate");
             int isHomework = userMessageCommentObject.getInt("isHomework");
-            UserMessage.CommentEntity comment = new UserMessage.CommentEntity(commentContent,atName,commentCreateDate,isHomework);
+            UserMessage.CommentEntity comment = new UserMessage.CommentEntity(atName,commentContent,commentCreateDate,isHomework);
 
             String accountId = JsonUtil.optString(userMessageReplyObject, "accountId");
             String accountName = JsonUtil.optString(userMessageReplyObject, "accountName");
