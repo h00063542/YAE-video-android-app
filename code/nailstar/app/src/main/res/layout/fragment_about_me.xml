@@ -190,7 +190,7 @@
                         <!-- 消息 -->
                         <RelativeLayout
                             android:id="@+id/about_me_message_group"
-                            android:layout_width="fill_parent"
+                            android:layout_width="match_parent"
                             android:layout_height="@dimen/about_me_list_item_height"
                             android:orientation="horizontal"
                             android:background="@drawable/selector"

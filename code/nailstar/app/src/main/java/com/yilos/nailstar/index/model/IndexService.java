@@ -17,7 +17,7 @@ public interface IndexService {
     /**
      * 分页大小
      */
-    int PAGE_SIZE = 20;
+    int PAGE_SIZE = 18;
 
     /**
      * 从网络上获取最新的Index内容
