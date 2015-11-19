@@ -4,8 +4,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.annotation.StringRes;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,12 +16,14 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.alibaba.sdk.android.oss.callback.SaveCallback;
+import com.alibaba.sdk.android.oss.model.OSSException;
 import com.yilos.nailstar.R;
 import com.yilos.nailstar.aboutme.model.LoginAPI;
+import com.yilos.nailstar.category.model.CategoryListAPI;
 import com.yilos.nailstar.framework.entity.NailStarApplicationContext;
 import com.yilos.nailstar.requirelession.Presenter.LessionPresenter;
 import com.yilos.nailstar.requirelession.entity.CandidateLession;
@@ -35,8 +37,8 @@ import com.yilos.widget.circleimageview.CircleImageView;
 import com.yilos.widget.titlebar.TitleBar;
 import com.yilos.widget.view.ImageCacheView;
 
+import java.io.File;
 import java.util.List;
-import java.util.logging.Logger;
 
 import in.srain.cube.views.ptr.PtrClassicFrameLayout;
 import in.srain.cube.views.ptr.PtrFrameLayout;
@@ -47,23 +49,18 @@ import in.srain.cube.views.ptr.PtrHandler;
  */
 public class RequireLessionFragment extends Fragment implements LessionView {
 
+    private static final String QJC = "qjc";
     // 屏幕宽度
     private int screenWidth;
 
     // 下拉刷新
-    PtrClassicFrameLayout lessionPullRefresh;
+    private PtrClassicFrameLayout lessionPullRefresh;
 
     // title bar
-    TitleBar lessionTitleBar;
+    private TitleBar lessionTitleBar;
 
     // 求教程页面
     private View view;
-
-    // 页面头部（求教程榜首）
-    private View lessionViewHead0;
-
-    // 页面头部（求教程按钮）
-    private View lessionViewHead1;
 
     // 候选款式列表
     private ListView lessionVoteView;
@@ -92,23 +89,17 @@ public class RequireLessionFragment extends Fragment implements LessionView {
     // 悬浮页头的求教程按钮
     private Button requireLessionBtnFloat;
 
-    // 单选按钮group
-    private RadioGroup switchLessionView;
-
-    // 在悬浮头中的单选按钮group
-    private RadioGroup switchLessionViewFloat;
-
     // 投票列表按钮
-    private RadioButton goVotingBtn;
+    private TextView goVotingBtn;
 
     // 排行榜按钮
-    private RadioButton goRankingBtn;
+    private TextView goRankingBtn;
 
     // 在悬浮头中的投票列表按钮
-    private RadioButton goVotingBtnFloat;
+    private TextView goVotingBtnFloat;
 
     // 在悬浮头中的排行榜按钮
-    private RadioButton goRankingBtnFloat;
+    private TextView goRankingBtnFloat;
 
     private LessionPresenter lessionPresenter = new LessionPresenter(this);
 
@@ -143,8 +134,8 @@ public class RequireLessionFragment extends Fragment implements LessionView {
         // 初始化ListView
         lessionVoteView = (ListView) view.findViewById(R.id.lessionVoteView);
 
-        lessionViewHead0 = inflater.inflate(R.layout.lession_listview_head0, null);
-        lessionViewHead1 = inflater.inflate(R.layout.lession_listview_head1, null);
+        View lessionViewHead0 = inflater.inflate(R.layout.lession_listview_head0, null);
+        View lessionViewHead1 = inflater.inflate(R.layout.lession_listview_head1, null);
 
         lessionVoteView.addHeaderView(lessionViewHead0, null, false);
         lessionVoteView.addHeaderView(lessionViewHead1, null, false);
@@ -160,14 +151,12 @@ public class RequireLessionFragment extends Fragment implements LessionView {
         candidateBackground = view.findViewById(R.id.candidateBackground);
 
         // 页头的按钮
-        switchLessionView = (RadioGroup) lessionViewHead1.findViewById(R.id.switchLessionView);
-        goVotingBtn = (RadioButton) lessionViewHead1.findViewById(R.id.goVotingBtn);
-        goRankingBtn = (RadioButton) lessionViewHead1.findViewById(R.id.goRankingBtn);
+        goVotingBtn = (TextView) lessionViewHead1.findViewById(R.id.goVotingBtn);
+        goRankingBtn = (TextView) lessionViewHead1.findViewById(R.id.goRankingBtn);
 
         // 悬浮页头的按钮
-        switchLessionViewFloat = (RadioGroup) lessionViewHeadFloat.findViewById(R.id.switchLessionView);
-        goVotingBtnFloat = (RadioButton) lessionViewHeadFloat.findViewById(R.id.goVotingBtn);
-        goRankingBtnFloat = (RadioButton) lessionViewHeadFloat.findViewById(R.id.goRankingBtn);
+        goVotingBtnFloat = (TextView) lessionViewHeadFloat.findViewById(R.id.goVotingBtn);
+        goRankingBtnFloat = (TextView) lessionViewHeadFloat.findViewById(R.id.goRankingBtn);
 
         // 倒计时
         lessionCountDownText = (TextView) view.findViewById(R.id.lessionCountDownText);
@@ -183,6 +172,7 @@ public class RequireLessionFragment extends Fragment implements LessionView {
         // title bar
         lessionTitleBar = (TitleBar) view.findViewById(R.id.lessionTitleBar);
         lessionTitleBar.getTitleView().setText(getResources().getString(R.string.require_lession));
+        lessionTitleBar.getRightTextButton().setText(R.string.lession_collection);
 
     }
 
@@ -219,77 +209,87 @@ public class RequireLessionFragment extends Fragment implements LessionView {
             }
         });
 
+        lessionTitleBar.getRightTextButton().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CategoryListAPI.getInstance().gotoCategoryListView(RequireLessionFragment.this.getActivity(), getResources().getString(R.string.lession_collection_title), QJC);
+            }
+        });
+
         // 点击页头的列表切换
-        switchLessionView.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+        View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if (checkedId == goVotingBtn.getId()) {
-
-                    // 切换的时候先用notifyDataSetInvalidated通知Adapter数据暂时不可用，数据准备好之后再调用notifyDataSetChanged通知数据可用
-                    voteListViewAdapter.notifyDataSetInvalidated();
-                    voteListViewAdapter.setViewType(VoteListViewAdapter.ViewType.VOTE_LIST);
-
-                    lessionPresenter.goVoteLessionList();
-
-                    // 切换的时候，保证页首显示的是返回的第一条数据
-                    if (lessionVoteView.getFirstVisiblePosition() > 1) {
-                        lessionVoteView.setSelection(1);
-                    }
-
-                    // 更新悬浮页头的按钮状态
-                    goVotingBtnFloat.setChecked(true);
-
-                } else if (checkedId == goRankingBtn.getId()) {
-
-                    // 切换的时候先用notifyDataSetInvalidated通知Adapter数据暂时不可用，数据准备好之后再调用notifyDataSetChanged通知数据可用
-                    voteListViewAdapter.notifyDataSetInvalidated();
-                    voteListViewAdapter.setViewType(VoteListViewAdapter.ViewType.RANKING_LIST);
-
-                    lessionPresenter.goRankingLessionList();
-
-                    // 切换的时候，保证页首显示的是返回的第一条数据
-                    if (lessionVoteView.getFirstVisiblePosition() > 1) {
-                        lessionVoteView.setSelection(1);
-                    }
-
-                    // 更新悬浮页头的按钮状态
-                    goRankingBtnFloat.setChecked(true);
+            public void onClick(View v) {
+                switch (v.getId()) {
+                    case R.id.goVotingBtn:
+                        goVoting();
+                        break;
+                    case R.id.goRankingBtn:
+                        goRanking();
+                        break;
+                    default:
+                        break;
                 }
             }
-        });
 
-        // 点击悬浮页头的列表切换
-        switchLessionViewFloat.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
+        };
 
-                if (checkedId == goVotingBtnFloat.getId()) {
+        goVotingBtn.setSelected(true);
+        goVotingBtnFloat.setSelected(true);
 
-                    if (!goVotingBtn.isChecked()) {
-                        goVotingBtn.setChecked(true);
-                    }
+        goVotingBtn.setOnClickListener(onClickListener);
+        goVotingBtnFloat.setOnClickListener(onClickListener);
+        goRankingBtn.setOnClickListener(onClickListener);
+        goRankingBtnFloat.setOnClickListener(onClickListener);
 
-                } else if (checkedId == goRankingBtnFloat.getId()) {
-
-                    if (!goRankingBtn.isChecked()) {
-                        goRankingBtn.setChecked(true);
-                    }
-
-                }
-            }
-        });
-
-        // 上传照片
         takeImage = new TakeImage.Builder().context(this).uri(Constants.YILOS_PATH).callback(new TakeImageCallback() {
             @Override
             public void callback(Uri uri) {
-                // TODO
+                if (uri == null) {
+                    showMessage(R.string.upload_image_failed);
+                    return;
+                }
+                File uploadFile = new File(uri.getPath());
+                if (!uploadFile.exists()) {
+                    showMessage(R.string.upload_image_failed);
+                    return;
+                }
+                // 上传图片
+                lessionPresenter.uploadFile(uploadFile, new SaveCallback() {
+                    @Override
+                    public void onSuccess(String s) {
+                        // 上传图片成功，提交求教程请求
+                        lessionPresenter.postCandidate(s);
+                    }
+
+                    @Override
+                    public void onProgress(String s, int i, int i1) {
+
+                    }
+
+                    @Override
+                    public void onFailure(String s, OSSException e) {
+                        showMessage(R.string.upload_image_failed);
+                    }
+                });
             }
         }).build();
 
         View.OnClickListener requireLessionBtnListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                // 未登录不能求教程
+                if (!LoginAPI.getInstance().isLogin()) {
+                    gotoLoginPage();
+                    return;
+                }
+
+                // 网络不可用的时候提示用户
+                if (!NailStarApplicationContext.getInstance().isNetworkConnected()) {
+                    showMessage(R.string.network_disconnected);
+                }
+
                 takeImage.initTakeImage();
             }
         };
@@ -308,11 +308,11 @@ public class RequireLessionFragment extends Fragment implements LessionView {
                 lessionPresenter.queryAndRefreshActivityTopic();
 
                 // 刷新列表
-                if (goVotingBtn.isChecked()) {
+                if (goVotingBtn.isSelected()) {
 
                     lessionPresenter.queryAndRefreshVoteLession();
 
-                } else if (goRankingBtn.isChecked()) {
+                } else if (goRankingBtn.isSelected()) {
 
                     lessionPresenter.queryAndRefreshRankingLession();
 
@@ -328,6 +328,50 @@ public class RequireLessionFragment extends Fragment implements LessionView {
                 return !canScrollUp;
             }
         });
+    }
+
+    private void goVoting() {
+
+        if (goVotingBtn.isSelected()) {
+            return;
+        }
+        goVotingBtn.setSelected(true);
+        goVotingBtnFloat.setSelected(true);
+        goRankingBtn.setSelected(false);
+        goRankingBtnFloat.setSelected(false);
+
+        // 切换的时候先用notifyDataSetInvalidated通知Adapter数据暂时不可用，数据准备好之后再调用notifyDataSetChanged通知数据可用
+        voteListViewAdapter.notifyDataSetInvalidated();
+        voteListViewAdapter.setViewType(VoteListViewAdapter.ViewType.VOTE_LIST);
+
+        lessionPresenter.goVoteLessionList();
+
+        // 切换的时候，保证页首显示的是返回的第一条数据
+        if (lessionVoteView.getFirstVisiblePosition() > 1) {
+            lessionVoteView.setSelection(1);
+        }
+    }
+
+    private void goRanking() {
+
+        if (goRankingBtn.isSelected()) {
+            return;
+        }
+        goVotingBtn.setSelected(false);
+        goVotingBtnFloat.setSelected(false);
+        goRankingBtn.setSelected(true);
+        goRankingBtnFloat.setSelected(true);
+
+        // 切换的时候先用notifyDataSetInvalidated通知Adapter数据暂时不可用，数据准备好之后再调用notifyDataSetChanged通知数据可用
+        voteListViewAdapter.notifyDataSetInvalidated();
+        voteListViewAdapter.setViewType(VoteListViewAdapter.ViewType.RANKING_LIST);
+
+        lessionPresenter.goRankingLessionList();
+
+        // 切换的时候，保证页首显示的是返回的第一条数据
+        if (lessionVoteView.getFirstVisiblePosition() > 1) {
+            lessionVoteView.setSelection(1);
+        }
     }
 
     @Override
@@ -360,6 +404,9 @@ public class RequireLessionFragment extends Fragment implements LessionView {
     // 求教程第一阶段（求教程阶段）
     private void handleLessionTopic(final LessionActivity lessionActivity) {
 
+        requireLessionBtn.setEnabled(true);
+        requireLessionBtnFloat.setEnabled(true);
+
         // 设置图片
         ImageCacheView lessionPhoto = (ImageCacheView) view.findViewById(R.id.lessionPhoto);
         CircleImageView lessionAuthorPhoto = (CircleImageView) view.findViewById(R.id.lessionAuthorPhoto);
@@ -368,8 +415,8 @@ public class RequireLessionFragment extends Fragment implements LessionView {
         lessionAuthorPhoto.setImageSrc(lessionActivity.getPrevious().getAuthorPhoto());
 
         // 设置图片大小（按照屏幕大小的百分比计算）
-        lessionAuthorPhoto.getLayoutParams().width = screenWidth / 15;
-        lessionAuthorPhoto.getLayoutParams().height = screenWidth / 15;
+        lessionAuthorPhoto.getLayoutParams().width = screenWidth / 18;
+        lessionAuthorPhoto.getLayoutParams().height = screenWidth / 18;
 
         ImageView newVideoIcon = (ImageView) view.findViewById(R.id.newVideoIcon);
         newVideoIcon.getLayoutParams().width = screenWidth / 12;
@@ -408,6 +455,9 @@ public class RequireLessionFragment extends Fragment implements LessionView {
     // 求教程第二阶段（视频制作阶段）
     private void handleCandidateTopic(LessionActivity lessionActivity) {
 
+        requireLessionBtn.setEnabled(false);
+        requireLessionBtnFloat.setEnabled(false);
+
         ImageCacheView lessionCandidatePic = (ImageCacheView) view.findViewById(R.id.lessionCandidatePic);
         CircleImageView lessionUserPhoto = (CircleImageView) view.findViewById(R.id.lessionUserPhoto);
 
@@ -426,12 +476,12 @@ public class RequireLessionFragment extends Fragment implements LessionView {
 
         ImageView crownImage = (ImageView) view.findViewById(R.id.crownImage);
 
-        LinearLayout.LayoutParams crownImageLayoutLp = new LinearLayout.LayoutParams(screenWidth / 15, screenWidth / 15, 1);
+        LinearLayout.LayoutParams crownImageLayoutLp = new LinearLayout.LayoutParams(screenWidth / 18, screenWidth / 18, 1);
         crownImageLayoutLp.setMargins(0, 0, 0, 0);
         crownImage.setLayoutParams(crownImageLayoutLp);
 
-        LinearLayout.LayoutParams userPhotoLayoutLp = new LinearLayout.LayoutParams(screenWidth / 15, screenWidth / 15, 1);
-        userPhotoLayoutLp.setMargins(0, -(screenWidth / 52), 0, 0);
+        LinearLayout.LayoutParams userPhotoLayoutLp = new LinearLayout.LayoutParams(screenWidth / 18, screenWidth / 18, 1);
+        userPhotoLayoutLp.setMargins(0, -(screenWidth / 54), 0, 0);
         lessionUserPhoto.setLayoutParams(userPhotoLayoutLp);
 
         // 显示现阶段的页头，隐藏其它阶段页头
@@ -473,4 +523,18 @@ public class RequireLessionFragment extends Fragment implements LessionView {
         FileUtils.mediaRefresh(this.getActivity(), filePath);
     }
 
+    @Override
+    public void showMessage(String text) {
+        Toast.makeText(getActivity(), text, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void showMessage(@StringRes int resId) {
+        Toast.makeText(getActivity(), resId, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void gotoLoginPage() {
+        LoginAPI.getInstance().gotoLoginPage(RequireLessionFragment.this.getActivity());
+    }
 }

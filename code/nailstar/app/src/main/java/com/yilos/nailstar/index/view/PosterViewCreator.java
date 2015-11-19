@@ -50,6 +50,7 @@ public class PosterViewCreator implements Banner.ViewCreator<Poster> {
                 imageCacheView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        baseActivity.showLoading(null);
                         Intent intent = new Intent(baseActivity, TopicVideoPlayerActivity.class);
                         intent.putExtra(Constants.TOPIC_ID, poster.getTopicId());
                         baseActivity.startActivityForResult(intent, 1);

@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.RandomAccessFile;
 
 
 /**
@@ -51,25 +52,18 @@ public class DownLoadTask {
         this.client = client;
     }
 
-    public void run() throws IOException {
+    public void cancel() {
+
+        client.cancel(url);
+
+    }
+
+    private void start() throws IOException {
 
         Request request = new Request.Builder()
                 .url(url)
                 .tag(url)
                 .build();
-
-        if (progressListener == null) {
-            progressListener = new ProgressListener() {
-                @Override
-                public void update(long bytesRead, long contentLength, boolean done) {
-
-                }
-            };
-        }
-
-        if (client == null) {
-            client = new OkHttpClient();
-        }
 
         Response response = client.newCall(request).execute();
 
@@ -78,12 +72,6 @@ public class DownLoadTask {
         }
 
         saveFile(response, path, fileName);
-
-    }
-
-    public void cancel() {
-
-        client.cancel(url);
 
     }
 
@@ -133,4 +121,93 @@ public class DownLoadTask {
         }
     }
 
+    private void resume() throws IOException {
+
+        File existsFile = new File(path, fileName);
+
+        long startPosition = existsFile.length();
+
+        Request request = new Request.Builder()
+                .header("Range", "bytes=" + startPosition + "-")
+                .url(url)
+                .tag(url)
+                .build();
+
+        Response response = client.newCall(request).execute();
+
+        if (!response.isSuccessful()) {
+            throw new IOException("Unexpected code " + response);
+        }
+
+        resumeFile(response, path, fileName, startPosition);
+    }
+
+    private void resumeFile(Response response, String path, String fileName, long startPosition) throws IOException {
+        InputStream is = null;
+        byte[] buf = new byte[2048];
+        int len;
+        RandomAccessFile randomAccessFile = null;
+        try {
+
+            is = response.body().byteStream();
+
+            File dir = new File(path);
+            if (!dir.exists()) {
+                dir.mkdirs();
+            }
+
+            long totalBytesRead = startPosition;
+            long totalBytes = response.body().contentLength();
+
+            File file = new File(dir, fileName);
+            randomAccessFile = new RandomAccessFile(file, "rw");
+            randomAccessFile.seek(startPosition);
+            while ((len = is.read(buf)) != -1) {
+                randomAccessFile.write(buf, 0, len);
+                totalBytesRead += len != -1 ? len : 0;
+                progressListener.update(totalBytesRead, totalBytes, false);
+            }
+            progressListener.update(totalBytesRead, totalBytes, true);
+
+        } finally {
+            try {
+                if (is != null) {
+                    is.close();
+                }
+            } catch (IOException e) {
+                logger.error("resumeFile close InputStream failed", e);
+            }
+            try {
+                if (randomAccessFile != null) {
+                    randomAccessFile.close();
+                }
+            } catch (IOException e) {
+                logger.error("resumeFile close RandomAccessFile failed", e);
+            }
+
+        }
+    }
+
+    public void run() throws IOException {
+
+        if (progressListener == null) {
+            progressListener = new ProgressListener() {
+                @Override
+                public void update(long bytesRead, long contentLength, boolean done) {
+
+                }
+            };
+        }
+
+        if (client == null) {
+            client = new OkHttpClient();
+        }
+
+        if (new File(path, fileName).exists()) {
+            this.resume();
+        } else {
+            this.start();
+        }
+
+    }
 }

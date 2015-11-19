@@ -58,14 +58,4 @@ public class StringUtil {
         }
         return result;
     }
-
-    /**
-     * 检查是否为http://
-     *
-     * @param url 要检查的手机号码
-     */
-    public static boolean isHttpUrl(String url) {
-        return !isEmpty(url) && url.startsWith("http://");
-    }
-
 }

@@ -104,6 +104,9 @@
     <string name="vote_count">票数:</string>
     <string name="canvass">拉票</string>
     <string name="lession_collection">合集</string>
+    <string name="lession_collection_title">求教程合集</string>
+    <string name="vote_success">投票成功</string>
+    <string name="vote_failed">投票失败, 请稍后再试...</string>
 
     <string name="from_camera">拍照</string>
     <string name="from_library">从手机相册中挑选</string>
@@ -111,6 +114,12 @@
     <string name="report_illegal">举报</string>
     <string name="cancel">取消</string>
     <string name="select_image">选择图片</string>
+    <string name="network_disconnected">网络连接不可用</string>
+    <string name="upload_image_success">上传图片成功</string>
+    <string name="upload_image_failed">上传图片失败, 请稍后再试...</string>
+    <string name="query_failed">查询失败, 请稍后再试...</string>
+    <string name="report_success">举报成功</string>
+    <string name="report_failed">举报失败, 请稍后再试...</string>
 
     <!-- 登录注册 -->
     <string name="title_activity_login">账号登录</string>
@@ -156,4 +165,5 @@
     <string name="has_been_login_out">已退出登录</string>
     <string name="can_not_find_version_name">版本号没有找到</string>
     <string name="title_activity_search">SearchActivity</string>
+    <string name="title_activity_category_list">CategoryListActivity</string>
 </resources>

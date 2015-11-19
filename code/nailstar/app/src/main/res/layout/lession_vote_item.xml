@@ -44,6 +44,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/lessionvoteCount0"
+                    android:textColor="@color/z2"
                     android:text="0"/>
                 <TextView
                     android:layout_width="fill_parent"
@@ -87,6 +88,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/lessionvoteCount1"
+                    android:textColor="@color/z2"
                     android:text="0"/>
                 <TextView
                     android:layout_width="fill_parent"
@@ -130,6 +132,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/lessionvoteCount2"
+                    android:textColor="@color/z2"
                     android:text="0"/>
                 <TextView
                     android:layout_width="fill_parent"
