@@ -35,4 +35,5 @@ dependencies {
     compile 'com.jude:easyrecyclerview:3.2.3'
     compile 'com.umeng.analytics:analytics:latest.integration'
     compile project(':widget')
+    compile project(':umengsocialsdk')
 }

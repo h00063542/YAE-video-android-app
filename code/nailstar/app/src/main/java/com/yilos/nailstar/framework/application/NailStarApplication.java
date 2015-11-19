@@ -52,6 +52,7 @@ public class NailStarApplication extends android.app.Application {
 
         MobclickAgent.openActivityDurationTrack(false);
         MobclickAgent.setDebugMode(true);
+        com.umeng.socialize.utils.Log.LOG = true;
 
         initDir();
 
