@@ -8,6 +8,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.yilos.nailstar.R;
+import com.yilos.nailstar.category.model.CategoryListAPI;
 import com.yilos.nailstar.framework.view.BaseActivity;
 import com.yilos.nailstar.index.entity.Category;
 import com.yilos.widget.banner.Banner;
@@ -49,6 +50,15 @@ public class CategoriesMenuViewCreator implements Banner.ViewCreator<Category> {
                         circleImageView.setImageSrc(categories.get(j).getPicUrl());
                         ((TextView) menuView.findViewById(R.id.category_text_view)).setText(categories.get(j).getName());
                         circleImageView.setClickable(true);
+
+                        final int position = j;
+                        circleImageView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                baseActivity.showLoading(null);
+                                CategoryListAPI.getInstance().gotoCategoryListView(baseActivity, categories.get(position).getName(), categories.get(position).getId());
+                            }
+                        });
                     }
 
                     if (j - i < 4) {
