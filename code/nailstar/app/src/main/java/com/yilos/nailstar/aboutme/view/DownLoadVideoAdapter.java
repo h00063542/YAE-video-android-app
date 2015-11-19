@@ -5,11 +5,13 @@ import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.yilos.nailstar.R;
 import com.yilos.nailstar.aboutme.presenter.DownloadPresenter;
 import com.yilos.nailstar.download.DownLoadInfo;
+import com.yilos.nailstar.download.DownloadConstants;
 import com.yilos.widget.circleimageview.CircleImageView;
 import com.yilos.widget.view.ImageCacheView;
 
@@ -74,10 +76,13 @@ public class DownLoadVideoAdapter extends BaseAdapter{
             holder.downloadAuthorPhoto = (CircleImageView) convertView.findViewById(R.id.downloadAuthorPhoto);
             holder.downloadImage = (ImageCacheView) convertView.findViewById(R.id.downloadImage);
             holder.downloadTopic = (TextView) convertView.findViewById(R.id.downloadTopic);
+            holder.downloadProgressBar = (ProgressBar) convertView.findViewById(R.id.downloadProgressBar);
+            holder.downloadMessage = convertView.findViewById(R.id.downloadMessage);
+            holder.downloadBytes = (TextView) convertView.findViewById(R.id.downloadBytes);
 
             holder.downloadImage.getLayoutParams().width = screenWidth * 25 / 100;
             holder.downloadImage.getLayoutParams().height = screenWidth * 25 / 100;
-
+            
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -98,7 +103,27 @@ public class DownLoadVideoAdapter extends BaseAdapter{
 
         holder.downloadTopic.setText(downLoadInfo.getTitle());
 
+        handleDownloadProcess(downLoadInfo, holder);
+
         return convertView;
+    }
+
+    private void handleDownloadProcess(DownLoadInfo downLoadInfo, ViewHolder holder) {
+        if (downLoadInfo.getStatus() != DownloadConstants.DOWNLOADING || downLoadInfo.getFileSize() <= 0) {
+            holder.downloadProgressBar.setVisibility(View.GONE);
+            holder.downloadMessage.setVisibility(View.GONE);
+            return;
+        }
+
+        holder.downloadProgressBar.setMax((int) (downLoadInfo.getFileSize() / 1024));
+        holder.downloadProgressBar.setProgress((int) (downLoadInfo.getBytesRead() / 1024));
+
+        double totalMb = downLoadInfo.getFileSize() / (1024 * 1024);
+        double readMb = downLoadInfo.getBytesRead() / (1024 * 1024);
+        holder.downloadBytes.setText(String.format("%.1fM / %.1fM", readMb, totalMb));
+
+        holder.downloadProgressBar.setVisibility(View.VISIBLE);
+        holder.downloadMessage.setVisibility(View.VISIBLE);
     }
 
     class ViewHolder {
@@ -106,5 +131,8 @@ public class DownLoadVideoAdapter extends BaseAdapter{
         public TextView downloadTopic;
         public CircleImageView downloadAuthorPhoto;
         public TextView downloadAuthorName;
+        public ProgressBar downloadProgressBar;
+        public View downloadMessage;
+        public TextView downloadBytes;
     }
 }

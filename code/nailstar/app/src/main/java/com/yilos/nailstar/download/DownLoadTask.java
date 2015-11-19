@@ -158,6 +158,9 @@ public class DownLoadTask {
 
             long totalBytesRead = startPosition;
             long totalBytes = response.body().contentLength();
+            if (totalBytes > 0) {
+                totalBytes += startPosition;
+            }
 
             File file = new File(dir, fileName);
             randomAccessFile = new RandomAccessFile(file, "rw");

@@ -114,6 +114,7 @@
     <string name="query_failed">查询失败, 请稍后再试...</string>
     <string name="report_success">举报成功</string>
     <string name="report_failed">举报失败, 请稍后再试...</string>
+    <string name="downloading">正在下载</string>
 
     <!-- 登录注册 -->
     <string name="title_activity_login">账号登录</string>

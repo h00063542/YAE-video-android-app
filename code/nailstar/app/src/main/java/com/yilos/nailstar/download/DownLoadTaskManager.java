@@ -27,12 +27,6 @@ import java.util.List;
  */
 public class DownLoadTaskManager {
 
-    public static final int DOWNLOADING = 0;
-
-    public static final int DOWNLOAD_STOP = -1;
-
-    public static final int DOWNLOAD_FINISH = 1;
-
     private static Logger logger = LoggerFactory.getLogger(DownLoadTaskManager.class);
 
     private static final String DOWNLOAD_INFO_FILE = "download_info";
@@ -185,7 +179,7 @@ public class DownLoadTaskManager {
      * @param downLoadInfo
      */
     public void resumeDownLoadTask(DownLoadInfo downLoadInfo) {
-        downLoadInfo.setStatus(DOWNLOADING);
+        downLoadInfo.setStatus(DownloadConstants.DOWNLOADING);
         startDownloadTask(downLoadInfo);
     }
 
@@ -195,7 +189,7 @@ public class DownLoadTaskManager {
     public void resumeAllDownLoadTask() {
         for (Iterator<DownLoadInfo> iterator = downLoadInfoList.iterator(); iterator.hasNext(); ) {
             DownLoadInfo item = iterator.next();
-            if (item.getStatus() != DOWNLOAD_FINISH) {
+            if (item.getStatus() != DownloadConstants.DOWNLOAD_FINISH) {
                 resumeDownLoadTask(item);
             }
         }
@@ -293,13 +287,12 @@ public class DownLoadTaskManager {
         downLoadTask.setProgressListener(new ProgressListener() {
             @Override
             public void update(long bytesRead, long contentLength, boolean done) {
-                downLoadInfo.setFileSize(contentLength);
                 downLoadInfo.setBytesRead(bytesRead);
                 if (done) {
                     if (bytesRead >= contentLength) {
-                        downLoadInfo.setStatus(DOWNLOAD_FINISH);
+                        downLoadInfo.setStatus(DownloadConstants.DOWNLOAD_FINISH);
                     } else {
-                        downLoadInfo.setStatus(DOWNLOAD_STOP);
+                        downLoadInfo.setStatus(DownloadConstants.DOWNLOAD_STOP);
                     }
                     try {
                         FileUtils.writeToFile(new File(path, DOWNLOAD_INFO_FILE), objectMapper.writeValueAsString(downLoadInfoList));
@@ -318,7 +311,7 @@ public class DownLoadTaskManager {
                 try {
                     downLoadTask.run();
                 } catch (Exception e) {
-                    downLoadInfo.setStatus(DOWNLOAD_STOP);
+                    downLoadInfo.setStatus(DownloadConstants.DOWNLOAD_STOP);
                     logger.error("download failed, url: " + downLoadTask.getUrl(), e);
                 }
             }
