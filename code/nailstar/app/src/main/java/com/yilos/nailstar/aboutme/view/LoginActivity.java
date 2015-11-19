@@ -53,7 +53,7 @@ public class LoginActivity extends BaseActivity implements ILoginView {
     private void initViews() {
         final LoginActivity loginActivity = this;
         TitleBar titleBar = (TitleBar) findViewById(R.id.titleBar);
-        titleBar.getBackButton(LoginActivity.this);
+        titleBar.getBackButton(this);
 
         TextView titleView = titleBar.getTitleView();
         titleView.setText(R.string.title_activity_login);

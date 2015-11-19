@@ -51,7 +51,7 @@
         <activity android:name=".aboutme.view.LevelActivity" />
         <activity android:name=".aboutme.view.PersonInfoActivity" />
         <activity android:name=".aboutme.view.AboutUsActivity" />
-        <activity android:name=".aboutme.view.DownloadVideo"></activity>
+        <activity android:name=".aboutme.view.DownloadVideo" />
         <activity android:name=".aboutme.view.UserAgreementActivity" />
         <activity android:name=".aboutme.view.MessageActivity"/>
         <activity
@@ -69,6 +69,10 @@
         <activity
             android:name=".index.view.SearchActivity"
             android:label="@string/title_activity_search" >
+        </activity>
+        <activity
+            android:name=".category.view.CategoryListActivity"
+            android:label="@string/title_activity_category_list" >
         </activity>
     </application>
 
