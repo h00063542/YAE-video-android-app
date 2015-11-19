@@ -74,6 +74,9 @@
             android:label="@string/title_activity_search" >
         </activity>
         <activity
+            android:name=".framework.view.YLSWebViewActivity" >
+        </activity>
+        <activity
             android:name=".category.view.CategoryListActivity"
             android:label="@string/title_activity_category_list" >
         </activity>

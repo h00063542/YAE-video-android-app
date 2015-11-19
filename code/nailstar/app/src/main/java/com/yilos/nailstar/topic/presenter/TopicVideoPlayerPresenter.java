@@ -9,6 +9,7 @@ import com.yilos.nailstar.topic.entity.TopicCommentInfo;
 import com.yilos.nailstar.topic.entity.TopicImageTextInfo;
 import com.yilos.nailstar.topic.entity.TopicInfo;
 import com.yilos.nailstar.topic.entity.TopicRelatedInfo;
+import com.yilos.nailstar.topic.entity.TopicRelatedProduct;
 import com.yilos.nailstar.topic.entity.TopicStatusInfo;
 import com.yilos.nailstar.topic.entity.TopicVideoInfo;
 import com.yilos.nailstar.topic.model.ITopicService;
@@ -106,6 +107,34 @@ public class TopicVideoPlayerPresenter {
                 .next(updateUi)
                 .start();
 
+    }
+
+    public void initTopicRelatedUsedProductList(final String topicId){
+        TaskManager.Task loadTopicRelatedInfo = new TaskManager.BackgroundTask() {
+            @Override
+            public Object doWork(Object data) {
+                try {
+                    return topicsService.getTopicRelatedUsedProductList(topicId);
+                } catch (NetworkDisconnectException e) {
+                    e.printStackTrace();
+                    LOGGER.error(MessageFormat.format("获取topic图文信息失败，topicId:{0}", topicId), e);
+                }
+                return null;
+            }
+        };
+
+        TaskManager.UITask<ArrayList<TopicRelatedProduct>> updateUi = new TaskManager.UITask<ArrayList<TopicRelatedProduct>>() {
+            @Override
+            public Object doWork(ArrayList<TopicRelatedProduct> topicRelatedUsedProductList) {
+                topicVideoPlayerView.initTopicRelatedUsedProductList(topicRelatedUsedProductList);
+                return null;
+            }
+        };
+
+        new TaskManager()
+                .next(loadTopicRelatedInfo)
+                .next(updateUi)
+                .start();
     }
 
     public void initTopicImageTextInfo(final String topicId) {

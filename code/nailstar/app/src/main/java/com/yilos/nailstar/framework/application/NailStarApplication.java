@@ -2,8 +2,13 @@ package com.yilos.nailstar.framework.application;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.support.multidex.MultiDexApplication;
 import android.util.DisplayMetrics;
+import android.widget.Toast;
 
+import com.alibaba.sdk.android.AlibabaSDK;
+import com.alibaba.sdk.android.Environment;
+import com.alibaba.sdk.android.callback.InitResultCallback;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiskCache;
 import com.nostra13.universalimageloader.cache.disc.naming.HashCodeFileNameGenerator;
@@ -18,6 +23,7 @@ import com.nostra13.universalimageloader.utils.StorageUtils;
 import com.sina.sinavideo.sdk.utils.VDApplication;
 import com.sina.sinavideo.sdk.utils.VDResolutionManager;
 import com.umeng.analytics.MobclickAgent;
+import com.ut.mini.UTAnalytics;
 import com.yilos.nailstar.R;
 import com.yilos.nailstar.framework.entity.NailStarApplicationContext;
 import com.yilos.nailstar.framework.exception.JSONParseException;
@@ -31,7 +37,7 @@ import java.io.File;
 /**
  * Created by yangdan on 15/10/16.
  */
-public class NailStarApplication extends android.app.Application {
+public class NailStarApplication extends MultiDexApplication {
     /**
      * 单例
      */
@@ -46,15 +52,15 @@ public class NailStarApplication extends android.app.Application {
         return application;
     }
 
-    @Override
+
     public void onCreate() {
         super.onCreate();
-
         MobclickAgent.openActivityDurationTrack(false);
         MobclickAgent.setDebugMode(true);
         com.umeng.socialize.utils.Log.LOG = true;
 
         initDir();
+        initTaobaoSDK();
 
         CrashHandler.getInstance().init(this);
 
@@ -155,5 +161,26 @@ public class NailStarApplication extends android.app.Application {
         if (!sdPath.exists()) {
             sdPath.mkdirs();
         }
+    }
+
+    private void initTaobaoSDK(){
+        UTAnalytics.getInstance().turnOnDebug();
+        AlibabaSDK.turnOnDebug();
+
+
+        int envIndex = 1;
+        AlibabaSDK.setEnvironment(Environment.values()[envIndex]);
+        AlibabaSDK.asyncInit(this, new InitResultCallback() {
+
+            @Override
+            public void onSuccess() {
+                Toast.makeText(NailStarApplication.this, "初始化成功 ", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(int code, String message) {
+                Toast.makeText(NailStarApplication.this, "初始化异常" + message, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

@@ -1,0 +1,19 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:clipToPadding="true">
+    <com.yilos.widget.titlebar.TitleBar
+        android:id="@+id/common_webview_title_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"></com.yilos.widget.titlebar.TitleBar>
+
+
+    <WebView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:id="@+id/common_webview_content" />
+
+</LinearLayout>

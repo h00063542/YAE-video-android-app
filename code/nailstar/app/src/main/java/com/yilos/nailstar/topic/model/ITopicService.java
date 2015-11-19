@@ -7,6 +7,7 @@ import com.yilos.nailstar.topic.entity.TopicCommentInfo;
 import com.yilos.nailstar.topic.entity.TopicImageTextInfo;
 import com.yilos.nailstar.topic.entity.TopicInfo;
 import com.yilos.nailstar.topic.entity.TopicRelatedInfo;
+import com.yilos.nailstar.topic.entity.TopicRelatedProduct;
 import com.yilos.nailstar.topic.entity.TopicStatusInfo;
 import com.yilos.nailstar.topic.entity.UpdateReadyInfo;
 
@@ -43,6 +44,16 @@ public interface ITopicService {
      * @throws NetworkDisconnectException
      */
     ArrayList<TopicRelatedInfo> getTopicRelatedInfoList(String topicId) throws NetworkDisconnectException;
+
+    /**
+     * 获取视频关联的产品信息
+     * @param topicId
+     * @return
+     * @throws NetworkDisconnectException
+     */
+    ArrayList<TopicRelatedProduct> getTopicRelatedUsedProductList(String topicId) throws NetworkDisconnectException;
+
+
 
     /**
      * 获取主题评论
