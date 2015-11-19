@@ -177,20 +177,6 @@ public class NailStarApplication extends MultiDexApplication {
             @Override
             public void onSuccess() {
                 Toast.makeText(NailStarApplication.this, "初始化成功 ", Toast.LENGTH_SHORT).show();
-                LoginService loginService = AlibabaSDK.getService(LoginService.class);
-                loginService.setSessionListener(NailStarionListener() {
-
-                    @Override
-                    public void onStateChanged(Session session) {
-                        if (session != null) {
-                            Toast.makeText(NailStarApplication.this,
-                                    "sessiNailStar+ session.getUserId() + session.getUser() + session.isLogin(),
-                                    Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(NailStarApplication.this, "session is null", Toast.LENGTH_SHNailStarw();
-                        }
-                    }
-                });
             }
 
             @Override
