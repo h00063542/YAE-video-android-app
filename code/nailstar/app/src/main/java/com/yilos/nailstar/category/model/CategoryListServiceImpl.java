@@ -19,6 +19,9 @@ import java.util.List;
  * Created by yangdan on 15/11/18.
  */
 public class CategoryListServiceImpl {
+
+    private static final String QJC = "qjc";
+
     private static final CategoryListServiceImpl instance = new CategoryListServiceImpl();
 
     public static CategoryListServiceImpl getInstance() {
@@ -33,8 +36,13 @@ public class CategoryListServiceImpl {
         }
 
         String searchStrResult = null;
+        String url = "/vapi/nailstar/moreTopics?category=" + category + "&page=" + page + "&perPage=10";
+        // 求教程的url需要特殊处理
+        if (QJC.equals(category)) {
+            url = "/vapi/nailstar/moreTopics?type=" + category + "&page=" + page + "&perPage=10";
+        }
         try {
-            searchStrResult = HttpClient.getJson("/vapi/nailstar/moreTopics?category=" + category + "&page=" + page + "&perPage=10");
+            searchStrResult = HttpClient.getJson(url);
         } catch (IOException e) {
             throw new NetworkDisconnectException("网络不给力哦，请检查网络设置", e);
         } catch (Exception e){
