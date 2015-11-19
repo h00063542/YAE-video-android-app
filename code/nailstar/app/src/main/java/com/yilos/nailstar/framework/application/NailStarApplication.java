@@ -9,9 +9,6 @@ import android.widget.Toast;
 import com.alibaba.sdk.android.AlibabaSDK;
 import com.alibaba.sdk.android.Environment;
 import com.alibaba.sdk.android.callback.InitResultCallback;
-import com.alibaba.sdk.android.login.LoginService;
-import com.alibaba.sdk.android.session.SessionListener;
-import com.alibaba.sdk.android.session.model.Session;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiskCache;
 import com.nostra13.universalimageloader.cache.disc.naming.HashCodeFileNameGenerator;
@@ -25,8 +22,8 @@ import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
 import com.nostra13.universalimageloader.utils.StorageUtils;
 import com.sina.sinavideo.sdk.utils.VDApplication;
 import com.sina.sinavideo.sdk.utils.VDResolutionManager;
-import com.ut.mini.UTAnalytics;
 import com.umeng.analytics.MobclickAgent;
+import com.ut.mini.UTAnalytics;
 import com.yilos.nailstar.R;
 import com.yilos.nailstar.framework.entity.NailStarApplicationContext;
 import com.yilos.nailstar.framework.exception.JSONParseException;
@@ -58,10 +55,11 @@ public class NailStarApplication extends MultiDexApplication {
 
     public void onCreate() {
         super.onCreate();
-            MobclickAgent.openActivityDurationTrack(false);
-            MobclickAgent.setDebugMode(true);
+        MobclickAgent.openActivityDurationTrack(false);
+        MobclickAgent.setDebugMode(true);
+        com.umeng.socialize.utils.Log.LOG = true;
 
-         initDir();
+        initDir();
         initTaobaoSDK();
 
         CrashHandler.getInstance().init(this);
