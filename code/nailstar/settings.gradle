@@ -1,2 +1,2 @@
-include ':widget', ':app',':t' +
-        'aobaoSDKSimple'
+
+include ':widget', ':app', ':umengsocialsdk', ':taobaoSDKSimple'

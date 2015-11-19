@@ -55,10 +55,11 @@ public class NailStarApplication extends MultiDexApplication {
 
     public void onCreate() {
         super.onCreate();
-            MobclickAgent.openActivityDurationTrack(false);
-            MobclickAgent.setDebugMode(true);
+        MobclickAgent.openActivityDurationTrack(false);
+        MobclickAgent.setDebugMode(true);
+        com.umeng.socialize.utils.Log.LOG = true;
 
-         initDir();
+        initDir();
         initTaobaoSDK();
 
         CrashHandler.getInstance().init(this);
@@ -173,7 +174,6 @@ public class NailStarApplication extends MultiDexApplication {
 
             @Override
             public void onSuccess() {
-                Toast.makeText(NailStarApplication.this, "初始化成功 ", Toast.LENGTH_SHORT).show();
             }
 
             @Override
