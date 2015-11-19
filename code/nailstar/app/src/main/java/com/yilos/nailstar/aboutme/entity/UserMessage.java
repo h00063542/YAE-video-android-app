@@ -5,18 +5,18 @@ package com.yilos.nailstar.aboutme.entity;
  */
 public class UserMessage {
 
-    /**
-     * 单例
-     */
-    private static UserMessage userMessage = new UserMessage();
+    public UserMessage() {
 
-    /**
-     * 返回单例
-     *
-     * @return
-     */
-    public static UserMessage getInstance() {
-        return userMessage;
+    }
+
+    public UserMessage(CommentEntity comment, String id, ReplyEntity reply, String teacher, String thumbUrl, String title, String topicId) {
+        this.comment = comment;
+        this.id = id;
+        this.reply = reply;
+        this.teacher = teacher;
+        this.thumbUrl = thumbUrl;
+        this.title = title;
+        this.topicId = topicId;
     }
 
     /**
@@ -42,6 +42,7 @@ public class UserMessage {
      */
 
     private CommentEntity comment;
+
     /**
      * accountId : d77348c0-60d7-11e5-ade9-e3d220e2c964
      * accountName : 勿忘我
@@ -111,6 +112,13 @@ public class UserMessage {
     }
 
     public static class CommentEntity {
+        public CommentEntity(String atName, String content, long createDate, int isHomework) {
+            this.atName = atName;
+            this.content = content;
+            this.createDate = createDate;
+            this.isHomework = isHomework;
+        }
+
         private String content;
         private String atName;
         private long createDate;
@@ -150,6 +158,16 @@ public class UserMessage {
     }
 
     public static class ReplyEntity {
+        public ReplyEntity(String accountId, String accountName, String accountPhoto, String content, long createDate, String lastReplyTo, String replyTo) {
+            this.accountId = accountId;
+            this.accountName = accountName;
+            this.accountPhoto = accountPhoto;
+            this.content = content;
+            this.createDate = createDate;
+            this.lastReplyTo = lastReplyTo;
+            this.replyTo = replyTo;
+        }
+
         private String accountId;
         private String accountName;
         private String accountPhoto;
