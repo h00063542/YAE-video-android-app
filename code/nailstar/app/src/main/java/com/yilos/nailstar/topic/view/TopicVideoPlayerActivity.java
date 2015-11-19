@@ -26,6 +26,7 @@ import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
+import android.webkit.URLUtil;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.FrameLayout;
@@ -1211,7 +1212,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
                     && !StringUtil.isEmpty(topicCommentInfo.getContentPic())) {
                 final ImageCacheView topicCommentHomeWorkIv = new ImageCacheView(this);
                 // 交作业时，显示的是本地图片
-                if (!StringUtil.isHttpUrl(topicCommentInfo.getContentPic())) {
+                if (!URLUtil.isNetworkUrl(topicCommentInfo.getContentPic())) {
                     topicCommentHomeWorkIv.setImageURI(Uri.parse(topicCommentInfo.getContentPic()));
                 } else {
                     topicCommentHomeWorkIv.setImageSrc(topicCommentInfo.getContentPic());
@@ -1227,7 +1228,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
                     @Override
                     public void onClick(View v) {
                         // 交作业时，显示的是本地图片
-                        if (!StringUtil.isHttpUrl(topicCommentInfo.getContentPic())) {
+                        if (!URLUtil.isNetworkUrl(topicCommentInfo.getContentPic())) {
                             mIcvTopicCommentImage.setImageURI(Uri.parse(topicCommentInfo.getContentPic()));
                         } else {
                             mIcvTopicCommentImage.setImageSrc(topicCommentInfo.getContentPic());
