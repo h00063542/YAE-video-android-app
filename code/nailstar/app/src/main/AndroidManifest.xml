@@ -72,10 +72,12 @@
             android:label="@string/title_activity_search" >
         </activity>
         <activity
+            android:name=".framework.view.YLSWebViewActivity" >
+        </activity>
+        <activity
             android:name=".category.view.CategoryListActivity"
             android:label="@string/title_activity_category_list" >
         </activity>
-
         <meta-data android:value="5649378b67e58efafa0031fa" android:name="UMENG_APPKEY"></meta-data>
         <meta-data android:value="dev" android:name="UMENG_CHANNEL"/>
     </application>

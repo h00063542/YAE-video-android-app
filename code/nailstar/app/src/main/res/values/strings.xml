@@ -20,6 +20,7 @@
     <string name="hide_topic_image_text_content">收起图文</string>
     <string name="download_topic_image_text_content">下载图文到本地</string>
     <string name="more_videos">更多视频</string>
+    <string name="video_used_product">使用产品</string>
     <string name="download">下载</string>
     <string name="collection">收藏</string>
     <string name="comment">评论</string>
@@ -48,6 +49,11 @@
     <string name="add_topic_collection">成功添加至 我的 -> 已收藏</string>
     <string name="submitted_comment_fail">提交评论失败，请稍后再试...</string>
     <string name="submitted_homework_fail">交作业失败，请稍后再试...</string>
+
+    <string name="topic_shopping_helper">购物帮助</string>
+    <string name="order_finish_headertext">完成订单！</string>
+    <string name="order_finish_text">请在淘宝查看订单详情和发货进度</string>
+
 
     <!-- about me -->
     <string name="about_me_my">我的</string>

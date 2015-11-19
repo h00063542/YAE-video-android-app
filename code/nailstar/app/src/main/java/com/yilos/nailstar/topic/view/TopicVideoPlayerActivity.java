@@ -36,6 +36,13 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.alibaba.sdk.android.AlibabaSDK;
+import com.alibaba.sdk.android.dpa.util.DpaException;
+import com.alibaba.sdk.android.trade.ItemService;
+import com.alibaba.sdk.android.trade.callback.TradeProcessCallback;
+import com.alibaba.sdk.android.trade.item.ItemType;
+import com.alibaba.sdk.android.trade.model.TradeResult;
+import com.alibaba.sdk.android.webview.UiSettings;
 import com.sina.sinavideo.sdk.VDVideoExtListeners;
 import com.sina.sinavideo.sdk.VDVideoView;
 import com.sina.sinavideo.sdk.data.VDVideoInfo;
@@ -44,6 +51,7 @@ import com.yilos.nailstar.R;
 import com.yilos.nailstar.aboutme.model.LoginAPI;
 import com.yilos.nailstar.framework.entity.NailStarApplicationContext;
 import com.yilos.nailstar.framework.view.BaseActivity;
+import com.yilos.nailstar.framework.view.YLSWebViewActivity;
 import com.yilos.nailstar.main.MainActivity;
 import com.yilos.nailstar.takeImage.TakeImage;
 import com.yilos.nailstar.takeImage.TakeImageCallback;
@@ -53,6 +61,7 @@ import com.yilos.nailstar.topic.entity.TopicCommentReplyInfo;
 import com.yilos.nailstar.topic.entity.TopicImageTextInfo;
 import com.yilos.nailstar.topic.entity.TopicInfo;
 import com.yilos.nailstar.topic.entity.TopicRelatedInfo;
+import com.yilos.nailstar.topic.entity.TopicRelatedProduct;
 import com.yilos.nailstar.topic.entity.TopicStatusInfo;
 import com.yilos.nailstar.topic.entity.TopicVideoInfo;
 import com.yilos.nailstar.topic.presenter.TopicVideoPlayerPresenter;
@@ -70,6 +79,13 @@ import com.yilos.widget.view.RoundProgressBar;
 import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import static android.view.Gravity.*;
+import static com.alibaba.sdk.android.trade.TradeConstants.*;
 
 public class TopicVideoPlayerActivity extends BaseActivity implements
         ITopicVideoPlayerView,
@@ -118,6 +134,10 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
 
     // 更多视频
     private LinearLayout mLayoutMoreVideosContent;
+
+
+    // 使用产品
+    private LinearLayout mLayoutVideoUsedProductContent;
 
     // 图文分解
     private LinearLayout mLayoutTopicImageTextContent;
@@ -201,10 +221,18 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
 
     private int mCommentReplyBackgroundColor;
 
+
+    //关联商品的布局尺寸信息
+    private int mTopicRelateProductLineWidth;
+    private int mTopicRelateProductLineHeight;
+
+
     // topic信息是否初始化完成
     private boolean initTopicInfoFinish = false;
     // topic关联信息是否初始化完成
     private boolean initTopicRelatedInfoFinish = false;
+    // topic关联商品信息是否初始化完成
+    private boolean initTopicRelatedUsedProductsFinish = false;
     // topic图文信息是否初始化完成
     private boolean initTopicImageTextInfoFinish = false;
     // topic当前页评论信息是否初始化完成
@@ -239,6 +267,8 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         // 调用后台接口初始化界面数据
         mTopicVideoPlayerPresenter.initTopicInfo(mTopicId);
         mTopicVideoPlayerPresenter.initTopicRelatedInfo(mTopicId);
+        mTopicVideoPlayerPresenter.initTopicRelatedUsedProductList(mTopicId);
+
         mTopicVideoPlayerPresenter.initTopicImageTextInfo(mTopicId);
         mTopicVideoPlayerPresenter.initTopicComments(mTopicId, mPage);
         // 如果没有登录的话，则不需要查询用户的topic状态信息
@@ -304,6 +334,10 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
 
         // 更多视频
         mLayoutMoreVideosContent = (LinearLayout) findViewById(R.id.layout_more_videos_content);
+
+
+        //使用产品
+        mLayoutVideoUsedProductContent =  (LinearLayout) findViewById(R.id.layout_used_product_content);
 
         // 图文分解
         mLayoutShowTopicImageTextContent = (LinearLayout) findViewById(R.id.layout_show_topic_image_text_content);
@@ -661,7 +695,13 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         mCommentReplyPaddingBottom = getResources().getDimensionPixelSize(R.dimen.topic_comment_reply_padding_bottom);
 
         mCommentReplyBackgroundColor = getResources().getColor(R.color.topic_comment_reply_background_color);
+
+        mTopicRelateProductLineWidth = getResources().getDimensionPixelSize(R.dimen.topic_related_used_product_width);
+        mTopicRelateProductLineHeight  = getResources().getDimensionPixelSize(R.dimen.topic_related_used_product_height);
+
     }
+
+
 
 
     /**
@@ -1017,7 +1057,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         FrameLayout.LayoutParams topicRelateIvLp = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
         FrameLayout.LayoutParams playTopicRelateIvLp = new FrameLayout.LayoutParams(mTopicRelatedPlayImageSize, mTopicRelatedPlayImageSize);
-        playTopicRelateIvLp.gravity = Gravity.RIGHT | Gravity.BOTTOM;
+        playTopicRelateIvLp.gravity = RIGHT | BOTTOM;
         playTopicRelateIvLp.setMargins(0, 0, mAuthorPhotoMargin, mAuthorPhotoMargin);
 
         for (int i = 0; i < Constants.MORE_VIDEOS_COUNT; i++) {
@@ -1051,6 +1091,63 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         }
     }
 
+    //初始化关联的产品列表
+    @Override
+    public void initTopicRelatedUsedProductList(ArrayList<TopicRelatedProduct> topicRelatedProductList){
+        initTopicRelatedUsedProductsFinish = true;
+        checkInitFinish();
+        if (CollectionUtil.isEmpty(topicRelatedProductList)) {
+            LOGGER.warn(TAG + " topic没有关联商品信息，topicId:" + mTopicId);
+            //使用产品区隐藏
+            ((LinearLayout) findViewById(R.id.layout_used_products)).setVisibility(View.GONE);
+            return;
+        }
+        LinearLayout.LayoutParams topicRelateIvLp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, mTopicRelateProductLineHeight);
+
+        LinearLayout.LayoutParams topicRelateProduxtTextIvLp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        topicRelateProduxtTextIvLp.weight = 1;
+        LinearLayout.LayoutParams arrowsLp = new LinearLayout.LayoutParams(15*getResources().getDimensionPixelSize(R.dimen.common_1_dp),
+                15*getResources().getDimensionPixelSize(R.dimen.common_1_dp));
+        arrowsLp.setMargins(10*getResources().getDimensionPixelSize(R.dimen.common_1_dp),0,10*getResources().getDimensionPixelSize(R.dimen.common_1_dp),0);
+
+        for (int i = 0; i < topicRelatedProductList.size(); i++) {
+            LinearLayout topicRelateLayout = new LinearLayout(this);
+            topicRelateLayout.setLayoutParams(topicRelateIvLp);
+            topicRelateLayout.setBackgroundResource(R.drawable.bottom_border);
+            topicRelateLayout.setGravity(CENTER_VERTICAL);
+            TextView topicRelateUseProductv = new TextView(TopicVideoPlayerActivity.this);
+            topicRelateUseProductv.setLayoutParams(topicRelateProduxtTextIvLp);
+            topicRelateUseProductv.setText(topicRelatedProductList.get(i).getProductName());
+            topicRelateUseProductv.setTextColor(getResources().getColor(R.color.z1));
+            topicRelateUseProductv.setTextSize(15);
+            topicRelateUseProductv.setTag(R.id.topic_related_used_product, topicRelatedProductList.get(i));
+            topicRelateUseProductv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showTopicRelatedUsedProductDetail((TopicRelatedProduct) v.getTag(R.id.topic_related_used_product));
+                }
+            });
+            topicRelateLayout.addView(topicRelateUseProductv);
+            ImageView arrows = new ImageView(TopicVideoPlayerActivity.this);
+            arrows.setImageResource(R.mipmap.ic_right_button);
+            arrows.setLayoutParams(arrowsLp);
+            topicRelateLayout.addView(arrows);
+            mLayoutVideoUsedProductContent.addView(topicRelateLayout);
+
+            //设置购物帮助事件
+
+            ImageView helper = (ImageView)findViewById(R.id.video_used_product_helper);
+            helper.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    openHelper();
+                }
+            });
+
+        }
+    }
+
+
     @Override
     public void initUserTopicStatus(TopicStatusInfo topicStatusInfo) {
         initUserTopicStatusFinish = true;
@@ -1072,6 +1169,54 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         intent.putExtra(Constants.TOPIC_ID, topicRelatedInfo.getTopicId());
         startActivity(intent);
         finish();
+    }
+
+
+    /**
+     * 跳转到topic关联的商品详情界面
+     *
+     * @param topicRelatedProduct
+     */
+    private void showTopicRelatedUsedProductDetail(TopicRelatedProduct topicRelatedProduct) {
+        //跳转淘宝商品详情界面
+        Map<String, String> exParams = new HashMap<String, String>();
+        exParams.put(ITEM_DETAIL_VIEW_TYPE, BAICHUAN_H5_VIEW);
+        exParams.put(ISV_CODE, Constants.ISV_CODE);
+
+        ItemService itemService = AlibabaSDK.getService(ItemService.class);
+        UiSettings uiSetting = new UiSettings();
+        itemService.showItemDetailByItemId(this, new TradeProcessCallback() {
+            @Override
+            public void onPaySuccess(TradeResult tradeResult) {
+                //弹出框，提示购买成功，去淘宝查看订单信息
+                final OrderFinishDialog successDialog = new OrderFinishDialog(TopicVideoPlayerActivity.this);
+                successDialog.show();
+                final Timer timer = new Timer();
+                TimerTask task = new TimerTask() {
+                    @Override
+                    public void run() {
+                        successDialog.dismiss();
+                        timer.cancel();
+                    }
+                };
+                //3秒后消失
+                timer.schedule(task,3000);
+            }
+
+            @Override
+            public void onFailure(int code, String msg) {
+
+            }
+        }, uiSetting, Long.valueOf(topicRelatedProduct.getReal_id()), ItemType.TAOBAO, exParams);
+
+    }
+
+    private void openHelper(){
+        //打开webview，展示帮助信息
+        Intent intent = new Intent(this, YLSWebViewActivity.class);
+        intent.putExtra(Constants.WEBVIEW_TITLE, getString(R.string.topic_shopping_helper));
+        intent.putExtra(Constants.WEBVIEW_URL, Constants.TOPIC_PRODUCT_HELPER_URL);
+        startActivity(intent);
     }
 
     @Override
@@ -1462,7 +1607,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         return true;
     }
 
-    @Override
+
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (resultCode != RESULT_OK) {
             if (requestCode == TOPIC_COMMENT_REQUEST_CODE && resultCode == RESULT_FIRST_USER) {
@@ -1666,7 +1811,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
     }
 
     private void checkInitFinish() {
-        if (initTopicInfoFinish && initTopicRelatedInfoFinish && initTopicImageTextInfoFinish && initTopicCommentsFinish && initUserTopicStatusFinish) {
+        if (initTopicInfoFinish && initTopicRelatedInfoFinish && initTopicRelatedUsedProductsFinish && initTopicImageTextInfoFinish && initTopicCommentsFinish && initUserTopicStatusFinish) {
             hideLoading();
         }
     }
