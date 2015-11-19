@@ -17,6 +17,7 @@ import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
 import com.nostra13.universalimageloader.utils.StorageUtils;
 import com.sina.sinavideo.sdk.utils.VDApplication;
 import com.sina.sinavideo.sdk.utils.VDResolutionManager;
+import com.umeng.analytics.MobclickAgent;
 import com.yilos.nailstar.R;
 import com.yilos.nailstar.framework.entity.NailStarApplicationContext;
 import com.yilos.nailstar.framework.exception.JSONParseException;
@@ -48,6 +49,9 @@ public class NailStarApplication extends android.app.Application {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        MobclickAgent.openActivityDurationTrack(false);
+        MobclickAgent.setDebugMode(true);
 
         initDir();
 
