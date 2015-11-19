@@ -54,6 +54,7 @@
         <activity android:name=".aboutme.view.AboutUsActivity" />
         <activity android:name=".aboutme.view.DownloadVideo" />
         <activity android:name=".aboutme.view.UserAgreementActivity" />
+        <activity android:name=".aboutme.view.MessageActivity"/>
         <activity
             android:name=".aboutme.view.LoginActivity"
             android:label="@string/title_activity_login" />

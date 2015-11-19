@@ -45,14 +45,13 @@ public class DownLoadInfo implements Serializable {
     private String url;
 
     /**
+     * 下载状态 -1:停止中 0:下载中 1:下载完成
+     */
+    private int status;
+    /**
      * 已下载文件大小
      */
     private transient long bytesRead;
-
-    /**
-     * 是否下载完成
-     */
-    private transient boolean finished;
 
     /**
      * 保存路径
@@ -115,20 +114,20 @@ public class DownLoadInfo implements Serializable {
         this.url = url;
     }
 
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
     public long getBytesRead() {
         return bytesRead;
     }
 
     public void setBytesRead(long bytesRead) {
         this.bytesRead = bytesRead;
-    }
-
-    public boolean isFinished() {
-        return finished;
-    }
-
-    public void setFinished(boolean finished) {
-        this.finished = finished;
     }
 
     public String getPath() {
