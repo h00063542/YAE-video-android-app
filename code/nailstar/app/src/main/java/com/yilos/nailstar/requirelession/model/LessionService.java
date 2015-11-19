@@ -1,5 +1,6 @@
 package com.yilos.nailstar.requirelession.model;
 
+import com.yilos.nailstar.framework.exception.NotLoginException;
 import com.yilos.nailstar.requirelession.entity.CandidateLession;
 import com.yilos.nailstar.requirelession.entity.LessionActivity;
 import com.yilos.nailstar.requirelession.entity.VideoLession;
@@ -88,4 +89,12 @@ public interface LessionService {
      * @throws IOException
      */
     void saveVotedRecord(File fileName, VotedRecord votedRecord) throws IOException;
+
+    /**
+     * 提交求教程请求
+     *
+     * @param imageUrl
+     * @throws IOException
+     */
+    void postCandidate(String imageUrl) throws IOException, JSONException, NotLoginException;
 }
