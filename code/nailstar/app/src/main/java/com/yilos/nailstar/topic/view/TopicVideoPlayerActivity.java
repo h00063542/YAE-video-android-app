@@ -84,6 +84,10 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
     private final int TOPIC_HOMEWORK_REQUEST_CODE = 4;
     private final int HOMEWORK_IMAGE_ZOOM_ANIMATION_TIME = 200;
 
+    private int widthPixels;
+    private int heightPixels;
+    private float density;
+
     private ViewGroup mDecorView;
     private TopicInfo mTopicInfo;
 
@@ -161,7 +165,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
     private TakeImage mTakeImage;
 
     private String mTopicId;
-    private String mVideoLocalFilePath;
+    //    private String mVideoLocalFilePath;
     private String mVideoRemoteUrl;
     private int mPage = 1;
     // 是否最后一页评论
@@ -228,6 +232,12 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         // 获取topic id
         mTopicId = getIntent().getStringExtra(Constants.TOPIC_ID);
         mPage = 1;
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        widthPixels = displayMetrics.widthPixels;
+        heightPixels = displayMetrics.heightPixels;
+        density = displayMetrics.density;
+
         // 初始化控件
         initControl();
         // 初始化控件事件
@@ -287,7 +297,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         }
 
         // 根据视频宽高比例，重新计算视频播放器高度
-        mVDVideoView.getLayoutParams().height = (int) (getResources().getDisplayMetrics().widthPixels / Constants.VIDEO_ASPECT_RATIO);
+        mVDVideoView.getLayoutParams().height = (int) (widthPixels / Constants.VIDEO_ASPECT_RATIO);
 
         // 作者信息
         mIvVideoAuthorPhoto = (CircleImageView) findViewById(R.id.iv_video_author_photo);
@@ -366,9 +376,6 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
                 }).build();
 
         //  计算图文详情放大时文字的marginTop
-        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
-        int widthPixels = displayMetrics.widthPixels;
-        int heightPixels = displayMetrics.heightPixels;
         int zooInLayout = heightPixels - getResources().getDimensionPixelSize(R.dimen.zoomIn_layout_margin_bottom);
         int zoomInImageHeight = (int) (widthPixels / Constants.IMAGE_TEXT_ASPECT_RATIO);
         mZoomInTextViewMarginTop = (zooInLayout / 2) + (zoomInImageHeight / 2) + mImageTextMargin;
@@ -536,7 +543,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
                     return;
                 }
                 mDownloadTopicImageTextDialog.show();
-                mDownloadTopicImageTextDialog.getWindow().setLayout((int) (getResources().getDisplayMetrics().widthPixels * 0.6), ViewGroup.LayoutParams.WRAP_CONTENT);
+                mDownloadTopicImageTextDialog.getWindow().setLayout((int) (widthPixels * 0.6), ViewGroup.LayoutParams.WRAP_CONTENT);
                 mTvDownloadTopicImageText.setText(R.string.saving_photos);
                 mRpbDownloadTopicImageText.setMax(mTopicImageTextInfo.getPictures().size());
                 mRpbDownloadTopicImageText.setVisibility(View.VISIBLE);
@@ -660,7 +667,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         mCommentReplyPaddingRight = getResources().getDimensionPixelSize(R.dimen.topic_comment_reply_padding_right);
         mCommentReplyPaddingBottom = getResources().getDimensionPixelSize(R.dimen.topic_comment_reply_padding_bottom);
 
-        mCommentReplyBackgroundColor = getResources().getColor(R.color.topic_comment_reply_background_color);
+        mCommentReplyBackgroundColor = getResources().getColor(R.color.xk2);
     }
 
 
@@ -801,9 +808,9 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         VDVideoInfo info = new VDVideoInfo();
         TopicVideoInfo topicVideoInfo = topicInfo.getVideos().get(0);
         mVideoRemoteUrl = mTopicVideoPlayerPresenter.buildVideoRemoteUrl(topicVideoInfo);
-        mVideoLocalFilePath = mTopicVideoPlayerPresenter.buildVideoLocalFilePath(topicVideoInfo);
+//        mVideoLocalFilePath = mTopicVideoPlayerPresenter.buildVideoLocalFilePath(topicVideoInfo);
         info.mTitle = topicInfo.getTitle();
-        info.mPlayUrl = !mTopicVideoPlayerPresenter.checkHasLocalVideo(mVideoLocalFilePath) ? mVideoRemoteUrl : mVideoLocalFilePath;
+        info.mPlayUrl = mVideoRemoteUrl;//!mTopicVideoPlayerPresenter.checkHasLocalVideo(mVideoLocalFilePath) ? mVideoRemoteUrl : mVideoLocalFilePath;
         mVDVideoListInfo.addVideoInfo(info);
         mVDVideoView.open(this, mVDVideoListInfo);
     }
@@ -851,12 +858,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         }
 
         // 设置评论数量
-        StringBuilder stringBuild = new StringBuilder()
-                .append(getString(R.string.topic_comment_count))
-                .append(" (")
-                .append(topicInfo.getCommentCount())
-                .append(")");
-        mTvTopicCommentCount.setText(stringBuild);
+        mTvTopicCommentCount.setText(String.format(getString(R.string.topic_comment_count), topicInfo.getCommentCount()));
     }
 
 
@@ -948,7 +950,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
             tvText.setLayoutParams(textLp);
             views[i] = view;
         }
-        mZoomInImageTextViewPager.setPageMargin((int) (getResources().getDisplayMetrics().density * 15));
+        mZoomInImageTextViewPager.setPageMargin((int) (density * 15));
         mZoomInImageTextViewPager.setAdapter(new PagerAdapter() {
             @Override
             public int getCount() {
@@ -1241,17 +1243,15 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
                         float locationY = location[1];
                         float imageWidth = topicCommentHomeWorkIv.getWidth();
                         float imageHeight = topicCommentHomeWorkIv.getHeight();
-                        float screenWidth = getResources().getDisplayMetrics().widthPixels;
-                        float screenHeight = getResources().getDisplayMetrics().heightPixels;
 
-                        if (locationY > screenHeight / 2) {
+                        if (locationY > heightPixels / 2) {
                             locationX += imageHeight;
                             locationY += imageHeight;
                         }
-                        float fromX = imageWidth / screenWidth;
-                        float fromY = imageHeight / screenHeight;
-                        float pivotXValue = locationX / screenWidth;
-                        float pivotYValue = locationY / screenHeight;
+                        float fromX = imageWidth / widthPixels;
+                        float fromY = imageHeight / heightPixels;
+                        float pivotXValue = locationX / widthPixels;
+                        float pivotYValue = locationY / heightPixels;
 
 
                         //渐变尺寸缩放
