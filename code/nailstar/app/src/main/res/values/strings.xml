@@ -98,6 +98,7 @@
     <string name="vote_count">票数:</string>
     <string name="canvass">拉票</string>
     <string name="lession_collection">合集</string>
+    <string name="lession_collection_title">求教程合集</string>
     <string name="vote_success">投票成功</string>
     <string name="vote_failed">投票失败, 请稍后再试...</string>
 

@@ -23,6 +23,7 @@ import com.alibaba.sdk.android.oss.callback.SaveCallback;
 import com.alibaba.sdk.android.oss.model.OSSException;
 import com.yilos.nailstar.R;
 import com.yilos.nailstar.aboutme.model.LoginAPI;
+import com.yilos.nailstar.category.model.CategoryListAPI;
 import com.yilos.nailstar.framework.entity.NailStarApplicationContext;
 import com.yilos.nailstar.requirelession.Presenter.LessionPresenter;
 import com.yilos.nailstar.requirelession.entity.CandidateLession;
@@ -48,14 +49,15 @@ import in.srain.cube.views.ptr.PtrHandler;
  */
 public class RequireLessionFragment extends Fragment implements LessionView {
 
+    private static final String QJC = "qjc";
     // 屏幕宽度
     private int screenWidth;
 
     // 下拉刷新
-    PtrClassicFrameLayout lessionPullRefresh;
+    private PtrClassicFrameLayout lessionPullRefresh;
 
     // title bar
-    TitleBar lessionTitleBar;
+    private TitleBar lessionTitleBar;
 
     // 求教程页面
     private View view;
@@ -170,6 +172,7 @@ public class RequireLessionFragment extends Fragment implements LessionView {
         // title bar
         lessionTitleBar = (TitleBar) view.findViewById(R.id.lessionTitleBar);
         lessionTitleBar.getTitleView().setText(getResources().getString(R.string.require_lession));
+        lessionTitleBar.getRightTextButton().setText(R.string.lession_collection);
 
     }
 
@@ -206,6 +209,12 @@ public class RequireLessionFragment extends Fragment implements LessionView {
             }
         });
 
+        lessionTitleBar.getRightTextButton().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CategoryListAPI.getInstance().gotoCategoryListView(RequireLessionFragment.this.getActivity(), getResources().getString(R.string.lession_collection_title), QJC);
+            }
+        });
 
         // 点击页头的列表切换
         View.OnClickListener onClickListener = new View.OnClickListener() {
