@@ -6,6 +6,11 @@ import android.os.Environment;
  * Created by yilos on 2015-10-28.
  */
 public class Constants {
+
+    public static final String YILOS_API_SERVER= "http://api3.naildaka.com";
+    public static final String YILOS_STATIC_SERVER = "http://s.naildaka.com";
+
+
     public static final String YILOS_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/yilos/";
     public static final String YILOS_NAILSTAR_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/yilos/nailstar/";
     public static final String YILOS_NAILSTAR_VIDEOS_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/yilos/nailstar/videos/";
@@ -146,10 +151,22 @@ public class Constants {
      */
     public static final int HOMEWORK_PIC_PIXEL = 400;
 
+
+    public static final String TOPIC_PRODUCT_HELPER_URL = YILOS_STATIC_SERVER+"/shop/rule.html";
+
+    /**
+     * 通用WebView展示参数
+     */
+    public static final String WEBVIEW_TITLE = "title";
+    public static final String WEBVIEW_URL = "url";
+
+
     /**
      * 淘宝跳转ISV_CODE
      */
     public static final String ISV_CODE = "nailstar_app_android";
+
+
 
     public static final String YILOS_PIC_URL = "http://pic.yilos.com/";
     public static final String DEFAULT_OSS_HOST_ID = "oss-cn-hangzhou.aliyuncs.com";

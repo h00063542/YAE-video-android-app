@@ -50,6 +50,9 @@
     <string name="submitted_comment_fail">提交评论失败，请稍后再试...</string>
     <string name="submitted_homework_fail">交作业失败，请稍后再试...</string>
 
+    <string name="topic_shopping_helper">购物帮助</string>
+
+
     <!-- about me -->
     <string name="about_me_my">我的</string>
     <string name="about_me_name">昵称</string>

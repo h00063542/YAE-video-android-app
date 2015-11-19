@@ -36,6 +36,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.alibaba.sdk.android.AlibabaSDK;
+import com.alibaba.sdk.android.dpa.util.DpaException;
 import com.alibaba.sdk.android.trade.ItemService;
 import com.alibaba.sdk.android.trade.callback.TradeProcessCallback;
 import com.alibaba.sdk.android.trade.item.ItemType;
@@ -49,6 +50,7 @@ import com.yilos.nailstar.R;
 import com.yilos.nailstar.aboutme.model.LoginAPI;
 import com.yilos.nailstar.framework.entity.NailStarApplicationContext;
 import com.yilos.nailstar.framework.view.BaseActivity;
+import com.yilos.nailstar.framework.view.YLSWebViewActivity;
 import com.yilos.nailstar.main.MainActivity;
 import com.yilos.nailstar.takeImage.TakeImage;
 import com.yilos.nailstar.takeImage.TakeImageCallback;
@@ -1093,33 +1095,28 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         checkInitFinish();
         if (CollectionUtil.isEmpty(topicRelatedProductList)) {
             LOGGER.warn(TAG + " topic没有关联商品信息，topicId:" + mTopicId);
+            //使用产品区隐藏
+            ((LinearLayout) findViewById(R.id.layout_used_products)).setVisibility(View.GONE);
             return;
         }
         LinearLayout.LayoutParams topicRelateIvLp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, mTopicRelateProductLineHeight);
 
-
         LinearLayout.LayoutParams topicRelateProduxtTextIvLp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         topicRelateProduxtTextIvLp.weight = 1;
-
-
-
         LinearLayout.LayoutParams arrowsLp = new LinearLayout.LayoutParams(15*getResources().getDimensionPixelSize(R.dimen.common_1_dp),
                 15*getResources().getDimensionPixelSize(R.dimen.common_1_dp));
         arrowsLp.setMargins(10*getResources().getDimensionPixelSize(R.dimen.common_1_dp),0,10*getResources().getDimensionPixelSize(R.dimen.common_1_dp),0);
-
 
         for (int i = 0; i < topicRelatedProductList.size(); i++) {
             LinearLayout topicRelateLayout = new LinearLayout(this);
             topicRelateLayout.setLayoutParams(topicRelateIvLp);
             topicRelateLayout.setBackgroundResource(R.drawable.bottom_border);
             topicRelateLayout.setGravity(CENTER_VERTICAL);
-
-
             TextView topicRelateUseProductv = new TextView(TopicVideoPlayerActivity.this);
             topicRelateUseProductv.setLayoutParams(topicRelateProduxtTextIvLp);
             topicRelateUseProductv.setText(topicRelatedProductList.get(i).getProductName());
-            topicRelateUseProductv.setTextColor( getResources().getColor(R.color.z1));
-            topicRelateUseProductv.setTextSize(15*getResources().getDimensionPixelSize(R.dimen.common_1_dp));
+            topicRelateUseProductv.setTextColor(getResources().getColor(R.color.z1));
+            topicRelateUseProductv.setTextSize(15);
             topicRelateUseProductv.setTag(R.id.topic_related_used_product, topicRelatedProductList.get(i));
             topicRelateUseProductv.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -1128,15 +1125,21 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
                 }
             });
             topicRelateLayout.addView(topicRelateUseProductv);
-
             ImageView arrows = new ImageView(TopicVideoPlayerActivity.this);
             arrows.setImageResource(R.mipmap.ic_right_button);
             arrows.setLayoutParams(arrowsLp);
-
             topicRelateLayout.addView(arrows);
-
-
             mLayoutVideoUsedProductContent.addView(topicRelateLayout);
+
+            //设置购物帮助事件
+
+            ImageView helper = (ImageView)findViewById(R.id.video_used_product_helper);
+            helper.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    openHelper();
+                }
+            });
 
         }
     }
@@ -1182,6 +1185,8 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         itemService.showItemDetailByItemId(this, new TradeProcessCallback() {
             @Override
             public void onPaySuccess(TradeResult tradeResult) {
+                //弹出框，提示购买成功，去淘宝查看订单信息
+
                 finish();
             }
 
@@ -1189,8 +1194,16 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
             public void onFailure(int code, String msg) {
                 finish();
             }
-        }, uiSetting, Long.valueOf(topicRelatedProduct.getReal_id()), ItemType.TAOBAO , exParams);
+        }, uiSetting, Long.valueOf(topicRelatedProduct.getReal_id()), ItemType.TAOBAO, exParams);
 
+    }
+
+    private void openHelper(){
+        //打开webview，展示帮助信息
+        Intent intent = new Intent(this, YLSWebViewActivity.class);
+        intent.putExtra(Constants.WEBVIEW_TITLE, getString(R.string.topic_shopping_helper));
+        intent.putExtra(Constants.WEBVIEW_URL, Constants.TOPIC_PRODUCT_HELPER_URL);
+        startActivity(intent);
     }
 
     @Override
