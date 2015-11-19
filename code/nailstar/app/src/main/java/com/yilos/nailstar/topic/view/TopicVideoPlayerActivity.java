@@ -80,6 +80,8 @@ import org.apache.log4j.Logger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import static android.view.Gravity.*;
 import static com.alibaba.sdk.android.trade.TradeConstants.*;
@@ -1186,13 +1188,23 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
             @Override
             public void onPaySuccess(TradeResult tradeResult) {
                 //弹出框，提示购买成功，去淘宝查看订单信息
-
-                finish();
+                final OrderFinishDialog successDialog = new OrderFinishDialog(TopicVideoPlayerActivity.this);
+                successDialog.show();
+                final Timer timer = new Timer();
+                TimerTask task = new TimerTask() {
+                    @Override
+                    public void run() {
+                        successDialog.dismiss();
+                        timer.cancel();
+                    }
+                };
+                //3秒后消失
+                timer.schedule(task,3000);
             }
 
             @Override
             public void onFailure(int code, String msg) {
-                finish();
+
             }
         }, uiSetting, Long.valueOf(topicRelatedProduct.getReal_id()), ItemType.TAOBAO, exParams);
 

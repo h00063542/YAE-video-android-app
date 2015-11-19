@@ -51,6 +51,8 @@
     <string name="submitted_homework_fail">交作业失败，请稍后再试...</string>
 
     <string name="topic_shopping_helper">购物帮助</string>
+    <string name="order_finish_headertext">完成订单！</string>
+    <string name="order_finish_text">请在淘宝查看订单详情和发货进度</string>
 
 
     <!-- about me -->
