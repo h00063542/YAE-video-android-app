@@ -9,19 +9,13 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
-import com.umeng.socialize.controller.UMServiceFactory;
-import com.umeng.socialize.controller.UMSocialService;
-import com.umeng.socialize.weixin.controller.UMWXHandler;
-import com.umeng.socialize.weixin.media.CircleShareContent;
-import com.umeng.socialize.weixin.media.WeiXinShareContent;
 import com.yilos.nailstar.R;
 import com.yilos.nailstar.aboutme.presenter.LoginPresenter;
 import com.yilos.nailstar.framework.view.BaseActivity;
+import com.yilos.nailstar.social.model.SocialAPI;
 import com.yilos.widget.titlebar.TitleBar;
 
 public class LoginActivity extends BaseActivity implements ILoginView {
-    final UMSocialService mController = UMServiceFactory.getUMSocialService("com.umeng.share");
-
     private LoginPresenter presenter;
     private Button loginButton;
 
@@ -98,47 +92,12 @@ public class LoginActivity extends BaseActivity implements ILoginView {
             }
         });
 
-        String appId = "wxeedd9356af3a78b3";
-        String appSecret = "0f3bb78c72569ad1ab64a83e24c69c46";
-// 添加微信平台
-        UMWXHandler wxHandler = new UMWXHandler(this,appId,appSecret);
-        wxHandler.addToSocialSDK();
-// 添加微信朋友圈
-        UMWXHandler wxCircleHandler = new UMWXHandler(this,appId,appSecret);
-        wxCircleHandler.setToCircle(true);
-        wxCircleHandler.addToSocialSDK();
-
-        //设置微信好友分享内容
-        WeiXinShareContent weixinContent = new WeiXinShareContent();
-        //设置分享文字
-        weixinContent.setShareContent("来自友盟社会化组件（SDK）让移动应用快速整合社交分享功能，微信");
-        //设置title
-        weixinContent.setTitle("友盟社会化分享组件-微信");
-        //设置分享内容跳转URL
-        weixinContent.setTargetUrl("http://www.yilos.com");
-        //设置分享图片
-        //weixinContent.setShareImage(localImage);
-        mController.setShareMedia(weixinContent);
-
-        //设置微信朋友圈分享内容
-        CircleShareContent circleMedia = new CircleShareContent();
-        circleMedia.setShareContent("来自友盟社会化组件（SDK）让移动应用快速整合社交分享功能，朋友圈");
-//设置朋友圈title
-        circleMedia.setTitle("友盟社会化分享组件-朋友圈");
-//        circleMedia.setShareImage(localImage);
-        circleMedia.setTargetUrl("http://www.yilos.com");
-        mController.setShareMedia(circleMedia);
-
-//        mController.setShareContent("友盟社会化组件（SDK）让移动应用快速整合社交分享功能，http://www.umeng.com/social");
-//        // 设置分享图片, 参数2为图片的url地址
-//        mController.setShareMedia(new UMImage(this,
-//                "http://www.umeng.com/images/404.png"));
         final Activity activity = this;
         RadioButton weiboLoginButton = (RadioButton)findViewById(R.id.weiboLoginButton);
         weiboLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mController.openShare(activity, false);
+                SocialAPI.getInstance().share(activity, "美甲大咖，行业最专业的视频教学App", "我试过很多美甲App，最后还是选择了美甲大咖。真爱，经得起等待！", "http://s.naildaka.com/site/share_app.html", R.mipmap.ic_default_photo);
             }
         });
     }

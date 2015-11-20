@@ -1,5 +1,5 @@
 
-package com.yilos.nailstar.wxapi;
+package com.yilos.nailstar.social.view;
 
 import com.umeng.socialize.weixin.view.WXCallbackActivity;
 
