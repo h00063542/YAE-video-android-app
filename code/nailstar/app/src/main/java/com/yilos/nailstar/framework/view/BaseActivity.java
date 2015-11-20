@@ -3,8 +3,12 @@ package com.yilos.nailstar.framework.view;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
+import android.graphics.Bitmap;
+import android.media.MediaMetadataRetriever;
+import android.media.ThumbnailUtils;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.StringRes;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -16,10 +20,12 @@ import com.umeng.analytics.MobclickAgent;
 import com.yilos.nailstar.R;
 import com.yilos.widget.dialog.LoadingDialog;
 
+import java.util.HashMap;
+
 /**
  * Created by yangdan on 15/10/20.
  */
-public class BaseActivity extends AppCompatActivity implements IView{
+public class BaseActivity extends AppCompatActivity implements IView {
     private LoadingDialog loadingDialog;
 
     @Override
@@ -28,7 +34,7 @@ public class BaseActivity extends AppCompatActivity implements IView{
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         // 修改标题栏颜色
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             SystemBarTintManager systemBarTintManager = new SystemBarTintManager(this);
             systemBarTintManager.setStatusBarTintEnabled(true);
@@ -67,14 +73,14 @@ public class BaseActivity extends AppCompatActivity implements IView{
     }
 
     /**
-     * @param title 弹框标题
-     * @param content 弹框内容
-     * @param sureEvent 确定事件
+     * @param title       弹框标题
+     * @param content     弹框内容
+     * @param sureEvent   确定事件
      * @param cancelEvent 取消事件
      */
     public void showMessageDialogWithEvent(String title, String content, DialogInterface.OnClickListener sureEvent, DialogInterface.OnClickListener cancelEvent) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        if(title != null) {
+        if (title != null) {
             builder.setTitle(title);
         }
         builder.setMessage(content);
@@ -132,5 +138,34 @@ public class BaseActivity extends AppCompatActivity implements IView{
 
     public void showLongToast(@StringRes int resId) {
         Toast.makeText(this, resId, Toast.LENGTH_LONG).show();
+    }
+
+    public Bitmap createVideoThumbnail(String url, int width, int height) {
+        Bitmap bitmap = null;
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        int kind = MediaStore.Video.Thumbnails.MINI_KIND;
+        try {
+            if (Build.VERSION.SDK_INT >= 14) {
+                retriever.setDataSource(url, new HashMap<String, String>());
+            } else {
+                retriever.setDataSource(url);
+            }
+            bitmap = retriever.getFrameAtTime();
+        } catch (IllegalArgumentException ex) {
+            // Assume this is a corrupt video file
+        } catch (RuntimeException ex) {
+            // Assume this is a corrupt video file.
+        } finally {
+            try {
+                retriever.release();
+            } catch (RuntimeException ex) {
+                // Ignore failures while cleaning up.
+            }
+        }
+        if (kind == MediaStore.Images.Thumbnails.MICRO_KIND && bitmap != null) {
+            bitmap = ThumbnailUtils.extractThumbnail(bitmap, width, height,
+                    ThumbnailUtils.OPTIONS_RECYCLE_INPUT);
+        }
+        return bitmap;
     }
 }
