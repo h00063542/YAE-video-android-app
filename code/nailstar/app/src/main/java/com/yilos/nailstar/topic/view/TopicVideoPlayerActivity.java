@@ -865,9 +865,8 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
 //        mVideoLocalFilePath = mTopicVideoPlayerPresenter.buildVideoLocalFilePath(topicVideoInfo);
         info.mTitle = topicInfo.getTitle();
         info.mPlayUrl = mVideoRemoteUrl;//!mTopicVideoPlayerPresenter.checkHasLocalVideo(mVideoLocalFilePath) ? mVideoRemoteUrl : mVideoLocalFilePath;
-
-        Bitmap bitmap = createVideoThumbnail(mVideoRemoteUrl, 700, 394);
-//        mPlayIconParent.setBackground(new BitmapDrawable(bitmap));
+        // 获取视频缩略图
+        Bitmap bitmap = createVideoThumbnail(mVideoRemoteUrl, 700, (int) (700 / Constants.VIDEO_ASPECT_RATIO));
         mPlayIconParent.setBackgroundDrawable(new BitmapDrawable(bitmap));
         mVDVideoListInfo.addVideoInfo(info);
         mVDVideoView.open(this, mVDVideoListInfo);
@@ -1062,7 +1061,6 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
             mDecorView.removeView(mZoomInImageTextLayout);
             mDecorView.addView(mZoomInImageTextLayout);
         }
-
     }
 
     @Override
