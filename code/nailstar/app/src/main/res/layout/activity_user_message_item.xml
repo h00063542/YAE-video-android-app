@@ -79,18 +79,21 @@
                         android:gravity="right">
 
                         <TextView
+                            android:visibility="gone"
+                            android:id="@+id/has_been_reply"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="已回复"
+                            android:text="@string/has_been_reply"
                             android:textColor="@color/z3"
                             android:textSize="@dimen/small_text_size" />
 
                         <TextView
+                            android:visibility="gone"
                             android:id="@+id/reply_button"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="10dp"
-                            android:text="回复"
+                            android:text="@string/reply"
                             android:textColor="@color/orange"
                             android:textSize="@dimen/small_text_size" />
                     </LinearLayout>

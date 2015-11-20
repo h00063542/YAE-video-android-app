@@ -48,12 +48,11 @@ public class UserMessageListAdapter extends RecyclerView.Adapter<UserMessageList
         public TextView commentCreateDate;
         public TextView title;
         public TextView teacher;
+        public TextView hasBeenReply;
+        public TextView replyButton;
 
-        public ViewHolder(View view,int type) {
+        public ViewHolder(View view) {
             super(view);
-            if (type == 0) {
-                return;
-            }
             commentText = (TextView) view.findViewById(R.id.commentText);
             accountPhoto = (CircleImageView) view.findViewById(R.id.accountPhoto);
             accountName = (TextView) view.findViewById(R.id.accountName);
@@ -63,24 +62,17 @@ public class UserMessageListAdapter extends RecyclerView.Adapter<UserMessageList
             commentCreateDate = (TextView) view.findViewById(R.id.commentCreateDate);
             title = (TextView) view.findViewById(R.id.title);
             teacher = (TextView) view.findViewById(R.id.teacher);
+            hasBeenReply = (TextView) view.findViewById(R.id.has_been_reply);
+            replyButton = (TextView) view.findViewById(R.id.reply_button);
         }
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view;
-        int type;
-        if (userMessageList.isEmpty()) {
-            // create a new view
-            view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.activity_user_message_empty_item, parent, false);
-            type = 0;
-        } else {
-            view = LayoutInflater.from(parent.getContext())
+        View view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.activity_user_message_item, parent, false);
-            type = 1;
-        }
-        ViewHolder vh = new ViewHolder(view,type);
+
+        ViewHolder vh = new ViewHolder(view);
         return vh;
     }
 
@@ -140,6 +132,13 @@ public class UserMessageListAdapter extends RecyclerView.Adapter<UserMessageList
         String replyTime = new SimpleDateFormat("MM月dd日").format(replyEntity.getCreateDate());
         String replyCreateDate = String.valueOf(replyTime);
         String replyTo = replyEntity.getReplyTo();
+        boolean hasBeenReply = userMessage.getHasBeenReply();
+
+        if (hasBeenReply) {
+            holder.hasBeenReply.setVisibility(View.VISIBLE);
+        } else {
+            holder.replyButton.setVisibility(View.VISIBLE);
+        }
 
         holder.accountPhoto.setImageSrc(accountPhoto);
         holder.accountName.setText(accountName);

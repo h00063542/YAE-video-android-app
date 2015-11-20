@@ -1,15 +1,54 @@
 package com.yilos.nailstar.aboutme.entity;
 
+import com.yilos.nailstar.util.Constants;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 /**
  * Created by sisilai on 15/11/18.
  */
 public class UserMessage {
 
+
+    public static CommentEntity parseCommentEntity(JSONObject commentJson) throws JSONException{
+        String atName = commentJson.getString(Constants.ATNAME);
+        String content = commentJson.getString(Constants.CONTENT);
+        long createDate = commentJson.getLong(Constants.CREATE_DATE);
+        int isHomework = commentJson.getInt(Constants.IS_HOME_WORK);
+
+        CommentEntity commentEntity = new CommentEntity(atName, content, createDate, isHomework);
+        return commentEntity;
+    }
+
+
+
+    /**
+     * accountId : d77348c0-60d7-11e5-ade9-e3d220e2c964
+     * accountName : 勿忘我
+     * accountPhoto : http://pic.yilos.com/ec9a2bbc1abb13166af6da31495bea0b
+     * content : 嗯嗯
+     * createDate : 1446718910072
+     * replyTo : 9f59f430-8390-11e5-a74c-839a83b22973
+     * lastReplyTo : b1438670-8390-11e5-a74c-839a83b22973
+     */
+    public static ReplyEntity parseReplyEntity(JSONObject replyJson) throws JSONException{
+        String accountId = replyJson.getString(Constants.ACCOUNTID);
+        String accountName = replyJson.getString(Constants.ACCOUNTNAME);
+        String accountPhoto = replyJson.getString(Constants.ACCOUNTPHOTO);
+        String content = replyJson.getString(Constants.CONTENT);
+        long createDate = replyJson.getLong(Constants.CREATE_DATE);
+        String lastReplyTo = replyJson.getString(Constants.LAST_REPLY_TO);
+        String replyTo = replyJson.getString(Constants.REPLY_TO);
+        ReplyEntity replyEntity = new ReplyEntity(accountId, accountName, accountPhoto, content,createDate, lastReplyTo, replyTo);
+        return replyEntity;
+    }
+
     public UserMessage() {
 
     }
 
-    public UserMessage(CommentEntity comment, String id, ReplyEntity reply, String teacher, String thumbUrl, String title, String topicId) {
+    public UserMessage(CommentEntity comment, String id, ReplyEntity reply, String teacher, String thumbUrl, String title, String topicId, boolean hasBeenReply) {
         this.comment = comment;
         this.id = id;
         this.reply = reply;
@@ -17,6 +56,7 @@ public class UserMessage {
         this.thumbUrl = thumbUrl;
         this.title = title;
         this.topicId = topicId;
+        this.hasBeenReply = hasBeenReply;
     }
 
     /**
@@ -54,6 +94,11 @@ public class UserMessage {
      */
 
     private ReplyEntity reply;
+    private boolean hasBeenReply;
+
+    public void setHasBeenReply(boolean hasBeenReply) {
+        this.hasBeenReply = hasBeenReply;
+    }
 
     public void setId(String id) {
         this.id = id;
@@ -81,6 +126,10 @@ public class UserMessage {
 
     public void setReply(ReplyEntity reply) {
         this.reply = reply;
+    }
+
+    public boolean getHasBeenReply() {
+        return hasBeenReply;
     }
 
     public String getId() {

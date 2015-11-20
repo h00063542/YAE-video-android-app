@@ -9,4 +9,6 @@ import java.util.ArrayList;
  */
 public interface IMessageView {
     void getUserMessageList(ArrayList<UserMessage> userMessageArrayList);
+    void setLocalReplyMessage(ArrayList<UserMessage> userMessageArrayList);
+    ArrayList<UserMessage> getLocalReplyMessage();
 }
