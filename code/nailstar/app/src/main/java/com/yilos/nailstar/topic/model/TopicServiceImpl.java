@@ -15,6 +15,7 @@ import com.yilos.nailstar.topic.entity.TopicCommentReplyInfo;
 import com.yilos.nailstar.topic.entity.TopicImageTextInfo;
 import com.yilos.nailstar.topic.entity.TopicInfo;
 import com.yilos.nailstar.topic.entity.TopicRelatedInfo;
+import com.yilos.nailstar.topic.entity.TopicRelatedProduct;
 import com.yilos.nailstar.topic.entity.TopicStatusInfo;
 import com.yilos.nailstar.topic.entity.TopicVideoInfo;
 import com.yilos.nailstar.topic.entity.UpdateReadyInfo;
@@ -47,6 +48,7 @@ import java.util.ArrayList;
 public class TopicServiceImpl implements ITopicService {
     private static final Logger LOGGER = LoggerFactory.getLogger(TopicServiceImpl.class);
     private static final String URL_PREFIX = "/vapi/nailstar/";
+
 
     /**
      * @param topicId
@@ -218,6 +220,55 @@ public class TopicServiceImpl implements ITopicService {
             for (int i = 0; i < jsonRelated.length(); i++) {
                 result.add(new TopicRelatedInfo(JsonUtil.optString(jsonRelated.optJSONObject(i), Constants.TOPIC_ID)
                         , JsonUtil.optString(jsonRelated.optJSONObject(i), Constants.THUMB_URL)));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+            LOGGER.error(MessageFormat.format("获取topic关联信息失败，topicId:{0}，strResult:{1}", topicId, strResult), e);
+        }
+
+        return result;
+    }
+
+
+    public ArrayList<TopicRelatedProduct> getTopicRelatedUsedProductList(String topicId) throws NetworkDisconnectException {
+
+        if (!NailStarApplicationContext.getInstance().isNetworkConnected()) {
+            String strResult = getLocalJsonResult(topicId, Constants.FILE_NAME_TOPIC_RELATE_USED_PRODUCT_INFO);
+            return buildTopicRelatedUsedProduct(topicId, strResult);
+        }
+        String url = URL_PREFIX + "topics/" + topicId + "/commodities";
+        try {
+            String strResult = HttpClient.getJson(url);
+            ArrayList<TopicRelatedProduct> result = buildTopicRelatedUsedProduct(topicId, strResult);
+            if (!CollectionUtil.isEmpty(result)) {
+                writeLocalJsonResult(topicId, strResult, Constants.FILE_NAME_TOPIC_RELATE_USED_PRODUCT_INFO);
+            }
+            return result;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return new ArrayList<TopicRelatedProduct>();
+
+    }
+
+    @NonNull
+    private ArrayList<TopicRelatedProduct> buildTopicRelatedUsedProduct(String topicId, String strResult) {
+        ArrayList<TopicRelatedProduct> result = new ArrayList<TopicRelatedProduct>();
+
+        try {
+            JSONObject jsonObject = buildJSONObject(strResult);
+            if (null == jsonObject) {
+                return result;
+            }
+            JSONObject jsonResult = jsonObject.optJSONObject(Constants.RESULT);
+
+            JSONArray jsonRelated = jsonResult.optJSONArray(Constants.COMMODITY);
+            for (int i = 0; i < jsonRelated.length(); i++) {
+                result.add(new TopicRelatedProduct(JsonUtil.optString(jsonRelated.optJSONObject(i), "name")
+                        , JsonUtil.optString(jsonRelated.optJSONObject(i), "description")
+                        , JsonUtil.optString(jsonRelated.optJSONObject(i), "price")
+                        , JsonUtil.optString(jsonRelated.optJSONObject(i), "real_id")));
             }
         } catch (JSONException e) {
             e.printStackTrace();

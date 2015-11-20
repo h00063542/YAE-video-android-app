@@ -6,6 +6,11 @@ import android.os.Environment;
  * Created by yilos on 2015-10-28.
  */
 public class Constants {
+
+    public static final String YILOS_API_SERVER= "http://api3.naildaka.com";
+    public static final String YILOS_STATIC_SERVER = "http://s.naildaka.com";
+
+
     public static final String YILOS_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/yilos/";
     public static final String YILOS_NAILSTAR_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/yilos/nailstar/";
     public static final String YILOS_NAILSTAR_VIDEOS_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/yilos/nailstar/videos/";
@@ -30,6 +35,8 @@ public class Constants {
     public static final String PICTURES = "pictures";
     public static final String ARTICLES = "articles";
     public static final String RELATED = "related";
+    public static final String COMMODITY = "commodities";
+
     public static final String COMMENTS = "comments";
     public static final String USER_ID_LOWER = "userid";
     public static final String CONTENT = "content";
@@ -127,6 +134,7 @@ public class Constants {
     public static final String FILE_NAME_TOPIC_INFO = "topic_info";
     public static final String FILE_NAME_TOPIC_IMAGE_TEXT_INFO = "topic_image_text_info";
     public static final String FILE_NAME_TOPIC_RELATE_INFO = "topic_relate_info";
+    public static final String FILE_NAME_TOPIC_RELATE_USED_PRODUCT_INFO = "topic_relate_used_product_info";
     public static final String FILE_NAME_TOPIC_COMMENT_INFO = "topic_comment_info";
 
     public static final String UNDERLINE = "_";
@@ -145,7 +153,25 @@ public class Constants {
     public static final int HOMEWORK_PIC_PIXEL = 400;
 
 
+    public static final String TOPIC_PRODUCT_HELPER_URL = YILOS_STATIC_SERVER+"/shop/rule.html";
+
+    /**
+     * 通用WebView展示参数
+     */
+    public static final String WEBVIEW_TITLE = "title";
+    public static final String WEBVIEW_URL = "url";
+
+
+    /**
+     * 淘宝跳转ISV_CODE
+     */
+    public static final String ISV_CODE = "nailstar_app_android";
+
+
+
     public static final String YILOS_PIC_URL = "http://pic.yilos.com/";
     public static final String DEFAULT_OSS_HOST_ID = "oss-cn-hangzhou.aliyuncs.com";
+
+
 
 }

@@ -1,0 +1,37 @@
+apply plugin: 'com.android.library'
+
+dependencies {
+    compile fileTree(include: '*.jar', dir: 'libs')
+}
+
+android {
+    signingConfigs {
+        config {
+            keyAlias 'meijiadaka'
+            keyPassword 'meijiadaka'
+            storeFile file('/Users/yangdan/loslife/YAE-video-android-app/code/nailstar/app/keystore/nailstar_keystore.jks')
+            storePassword 'meijiadaka'
+        }
+    }
+    compileSdkVersion 23
+    buildToolsVersion "23.0.1"
+    defaultConfig {
+        minSdkVersion 15
+        targetSdkVersion 23
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
+    lintOptions {
+        abortOnError false
+    }
+    sourceSets {
+        main {
+            manifest.srcFile 'AndroidManifest.xml'
+            java.srcDirs = ['src']
+            res.srcDirs = ['res']
+            jniLibs.srcDirs = ['libs']
+        }
+    }
+}

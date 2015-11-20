@@ -7,10 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.yilos.nailstar.R;
-import com.yilos.nailstar.framework.application.NailStarApplication;
 import com.yilos.nailstar.index.view.CustomRecyclerView;
-import com.yilos.widget.view.MaxHeightGridLayoutManager;
 
 /**
  * Created by sisilai on 15/11/18.
@@ -89,24 +86,9 @@ public class MessageListAdapter extends PagerAdapter {
 
     private CustomRecyclerView initMessageRecycleView() {
         final CustomRecyclerView view = new CustomRecyclerView(activity);
-//        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(activity,LinearLayoutManager.VERTICAL,false);
-//        view.setLayoutManager(linearLayoutManager);
-        MaxHeightGridLayoutManager maxHeightGridLayoutManager = new MaxHeightGridLayoutManager(activity, 1, 1500);
-        maxHeightGridLayoutManager.setOrientation(MaxHeightGridLayoutManager.VERTICAL);
-        maxHeightGridLayoutManager.setSmoothScrollbarEnabled(true);
-
-        int result = 0;
-        int resourceId = activity.getResources().getIdentifier("status_bar_height", "dimen", "android");
-        if (resourceId > 0) {
-            result = activity.getResources().getDimensionPixelSize(resourceId);
-        }
-
-        maxHeightGridLayoutManager.setMaxHeight(NailStarApplication.getApplication().getScreenHeight(activity)
-                - activity.getResources().getDimensionPixelSize(R.dimen.index_tab_height)
-                - activity.getResources().getDimensionPixelSize(R.dimen.common_title_bar_height)
-                - activity.getResources().getDimensionPixelSize(R.dimen.common_main_tab_height) - result);
-        view.setLayoutManager(maxHeightGridLayoutManager);
-
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(activity,LinearLayoutManager.VERTICAL,false);
+        linearLayoutManager.setSmoothScrollbarEnabled(true);
+        view.setLayoutManager(linearLayoutManager);
         return view;
     }
 }

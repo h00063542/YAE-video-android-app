@@ -5,6 +5,8 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
@@ -36,6 +38,13 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.alibaba.sdk.android.AlibabaSDK;
+import com.alibaba.sdk.android.trade.ItemService;
+import com.alibaba.sdk.android.trade.TradeConstants;
+import com.alibaba.sdk.android.trade.callback.TradeProcessCallback;
+import com.alibaba.sdk.android.trade.item.ItemType;
+import com.alibaba.sdk.android.trade.model.TradeResult;
+import com.alibaba.sdk.android.webview.UiSettings;
 import com.sina.sinavideo.sdk.VDVideoExtListeners;
 import com.sina.sinavideo.sdk.VDVideoView;
 import com.sina.sinavideo.sdk.data.VDVideoInfo;
@@ -44,6 +53,7 @@ import com.yilos.nailstar.R;
 import com.yilos.nailstar.aboutme.model.LoginAPI;
 import com.yilos.nailstar.framework.entity.NailStarApplicationContext;
 import com.yilos.nailstar.framework.view.BaseActivity;
+import com.yilos.nailstar.framework.view.YLSWebViewActivity;
 import com.yilos.nailstar.main.MainActivity;
 import com.yilos.nailstar.takeImage.TakeImage;
 import com.yilos.nailstar.takeImage.TakeImageCallback;
@@ -53,6 +63,7 @@ import com.yilos.nailstar.topic.entity.TopicCommentReplyInfo;
 import com.yilos.nailstar.topic.entity.TopicImageTextInfo;
 import com.yilos.nailstar.topic.entity.TopicInfo;
 import com.yilos.nailstar.topic.entity.TopicRelatedInfo;
+import com.yilos.nailstar.topic.entity.TopicRelatedProduct;
 import com.yilos.nailstar.topic.entity.TopicStatusInfo;
 import com.yilos.nailstar.topic.entity.TopicVideoInfo;
 import com.yilos.nailstar.topic.presenter.TopicVideoPlayerPresenter;
@@ -70,6 +81,10 @@ import com.yilos.widget.view.RoundProgressBar;
 import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class TopicVideoPlayerActivity extends BaseActivity implements
         ITopicVideoPlayerView,
@@ -83,6 +98,10 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
     private final int TOPIC_COMMENT_REQUEST_CODE = 3;
     private final int TOPIC_HOMEWORK_REQUEST_CODE = 4;
     private final int HOMEWORK_IMAGE_ZOOM_ANIMATION_TIME = 200;
+
+    private int widthPixels;
+    private int heightPixels;
+    private float density;
 
     private ViewGroup mDecorView;
     private TopicInfo mTopicInfo;
@@ -118,6 +137,10 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
 
     // 更多视频
     private LinearLayout mLayoutMoreVideosContent;
+
+
+    // 使用产品
+    private LinearLayout mLayoutVideoUsedProductContent;
 
     // 图文分解
     private LinearLayout mLayoutTopicImageTextContent;
@@ -161,7 +184,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
     private TakeImage mTakeImage;
 
     private String mTopicId;
-    private String mVideoLocalFilePath;
+    //    private String mVideoLocalFilePath;
     private String mVideoRemoteUrl;
     private int mPage = 1;
     // 是否最后一页评论
@@ -169,42 +192,59 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
 
     private TopicVideoPlayerPresenter mTopicVideoPlayerPresenter;
 
-    private float mCommentAuthorFontSize;
-    private float mCommentIsHomeWorkFontSize;
-    private float mCommentCreateDateFontSize;
-    private float mCommentContentFontSize;
-    private float mCommentReplyFontSize;
+    //    private float mCommentAuthorFontSize;
+//    private float mCommentIsHomeWorkFontSize;
+//    private float mCommentCreateDateFontSize;
+//    private float mCommentContentFontSize;
+//    private float mCommentReplyFontSize;
+//    private float mFontSizeLarge;
+    private float mFontSizeMiddle;
+    private float mFontSizeSmall;
+//    private float mFontSizeVerySmall;
 
-    private int mAuthorPhotoSize;
-    private int mAuthorPhotoMargin;
 
+    private int mImageTextMargin;
+
+
+    // 主题关联
     private int mTopicRelatedMarginRight;
     private int mTopicRelatedPlayImageSize;
+    private int mMoresVideoMargin;
 
+
+    // 主题评论
+    private int mCommentAuthorPhotoSize;
+    private int mCommentAuthorPhotoMargin;
+    private int mCommentAuthorPhotoMarginTop;
     private int mCommentMarginTop;
     private int mCommentMarginRight;
     private int mCommentMarginBottom;
     private int mCommentContentMarginTop;
     private int mCommentContentMarginBottom;
+    private int mCommentContentLineHeight;
     private int mCommentContentPicMarginBottom;
 
-    private int mImageTextMargin;
-
-
+    // 主题评论回复
     private int mCommentReplyMarginBottom;
     private int mCommentReplyLineHeight;
-
     private int mCommentReplyPaddingLeft;
     private int mCommentReplyPaddingTop;
     private int mCommentReplyPaddingRight;
     private int mCommentReplyPaddingBottom;
-
     private int mCommentReplyBackgroundColor;
+
+
+    //关联商品的布局尺寸信息
+    private int mTopicRelateProductLineWidth;
+    private int mTopicRelateProductLineHeight;
+
 
     // topic信息是否初始化完成
     private boolean initTopicInfoFinish = false;
     // topic关联信息是否初始化完成
     private boolean initTopicRelatedInfoFinish = false;
+    // topic关联商品信息是否初始化完成
+    private boolean initTopicRelatedUsedProductsFinish = false;
     // topic图文信息是否初始化完成
     private boolean initTopicImageTextInfoFinish = false;
     // topic当前页评论信息是否初始化完成
@@ -228,6 +268,12 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         // 获取topic id
         mTopicId = getIntent().getStringExtra(Constants.TOPIC_ID);
         mPage = 1;
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        widthPixels = displayMetrics.widthPixels;
+        heightPixels = displayMetrics.heightPixels;
+        density = displayMetrics.density;
+
         // 初始化控件
         initControl();
         // 初始化控件事件
@@ -239,6 +285,8 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         // 调用后台接口初始化界面数据
         mTopicVideoPlayerPresenter.initTopicInfo(mTopicId);
         mTopicVideoPlayerPresenter.initTopicRelatedInfo(mTopicId);
+        mTopicVideoPlayerPresenter.initTopicRelatedUsedProductList(mTopicId);
+
         mTopicVideoPlayerPresenter.initTopicImageTextInfo(mTopicId);
         mTopicVideoPlayerPresenter.initTopicComments(mTopicId, mPage);
         // 如果没有登录的话，则不需要查询用户的topic状态信息
@@ -287,7 +335,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         }
 
         // 根据视频宽高比例，重新计算视频播放器高度
-        mVDVideoView.getLayoutParams().height = (int) (getResources().getDisplayMetrics().widthPixels / Constants.VIDEO_ASPECT_RATIO);
+        mVDVideoView.getLayoutParams().height = (int) (widthPixels / Constants.VIDEO_ASPECT_RATIO);
 
         // 作者信息
         mIvVideoAuthorPhoto = (CircleImageView) findViewById(R.id.iv_video_author_photo);
@@ -304,6 +352,10 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
 
         // 更多视频
         mLayoutMoreVideosContent = (LinearLayout) findViewById(R.id.layout_more_videos_content);
+
+
+        //使用产品
+        mLayoutVideoUsedProductContent = (LinearLayout) findViewById(R.id.layout_used_product_content);
 
         // 图文分解
         mLayoutShowTopicImageTextContent = (LinearLayout) findViewById(R.id.layout_show_topic_image_text_content);
@@ -366,9 +418,6 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
                 }).build();
 
         //  计算图文详情放大时文字的marginTop
-        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
-        int widthPixels = displayMetrics.widthPixels;
-        int heightPixels = displayMetrics.heightPixels;
         int zooInLayout = heightPixels - getResources().getDimensionPixelSize(R.dimen.zoomIn_layout_margin_bottom);
         int zoomInImageHeight = (int) (widthPixels / Constants.IMAGE_TEXT_ASPECT_RATIO);
         mZoomInTextViewMarginTop = (zooInLayout / 2) + (zoomInImageHeight / 2) + mImageTextMargin;
@@ -536,7 +585,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
                     return;
                 }
                 mDownloadTopicImageTextDialog.show();
-                mDownloadTopicImageTextDialog.getWindow().setLayout((int) (getResources().getDisplayMetrics().widthPixels * 0.6), ViewGroup.LayoutParams.WRAP_CONTENT);
+                mDownloadTopicImageTextDialog.getWindow().setLayout((int) (widthPixels * 0.6), ViewGroup.LayoutParams.WRAP_CONTENT);
                 mTvDownloadTopicImageText.setText(R.string.saving_photos);
                 mRpbDownloadTopicImageText.setMax(mTopicImageTextInfo.getPictures().size());
                 mRpbDownloadTopicImageText.setVisibility(View.VISIBLE);
@@ -629,14 +678,21 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
     }
 
     private void initControlLayoutParams() {
-        mCommentAuthorFontSize = getResources().getDimensionPixelSize(R.dimen.topic_comment_author_font_size);
-        mCommentIsHomeWorkFontSize = getResources().getDimensionPixelSize(R.dimen.topic_comment_is_home_work_font_size);
-        mCommentCreateDateFontSize = getResources().getDimensionPixelSize(R.dimen.topic_comment_create_date_font_size);
-        mCommentContentFontSize = getResources().getDimensionPixelSize(R.dimen.topic_comment_content_font_size);
-        mCommentReplyFontSize = getResources().getDimensionPixelSize(R.dimen.topic_comment_reply_font_size);
+//        mCommentAuthorFontSize = getResources().getDimensionPixelSize(R.dimen.topic_comment_author_font_size);
+//        mCommentIsHomeWorkFontSize = getResources().getDimensionPixelSize(R.dimen.topic_comment_is_home_work_font_size);
+//        mCommentCreateDateFontSize = getResources().getDimensionPixelSize(R.dimen.topic_comment_create_date_font_size);
+//        mCommentContentFontSize = getResources().getDimensionPixelSize(R.dimen.topic_comment_content_font_size);
+//        mCommentReplyFontSize = getResources().getDimensionPixelSize(R.dimen.topic_comment_reply_font_size);
 
-        mAuthorPhotoSize = getResources().getDimensionPixelSize(R.dimen.topic_comment_author_photo_size);
-        mAuthorPhotoMargin = getResources().getDimensionPixelSize(R.dimen.topic_comment_author_photo_margin);
+//        mFontSizeLarge = getResources().getDimensionPixelSize(R.dimen.large_text_size);
+        mFontSizeMiddle = getResources().getDimensionPixelSize(R.dimen.middle_text_size);
+        mFontSizeSmall = getResources().getDimensionPixelSize(R.dimen.small_text_size);
+//        mFontSizeVerySmall = getResources().getDimensionPixelSize(R.dimen.very_small_text_size);
+
+        mCommentAuthorPhotoSize = getResources().getDimensionPixelSize(R.dimen.topic_comment_author_photo_size);
+        mCommentAuthorPhotoMargin = getResources().getDimensionPixelSize(R.dimen.topic_comment_author_photo_margin);
+        mCommentAuthorPhotoMarginTop = getResources().getDimensionPixelSize(R.dimen.topic_comment_author_photo_margin_top);
+        mMoresVideoMargin = getResources().getDimensionPixelSize(R.dimen.topic_mores_video_margin_right);
 
         mTopicRelatedMarginRight = getResources().getDimensionPixelSize(R.dimen.topic_related_margin_right);
         mTopicRelatedPlayImageSize = getResources().getDimensionPixelSize(R.dimen.topic_related_play_image_size);
@@ -648,6 +704,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
 
         mCommentContentMarginTop = getResources().getDimensionPixelSize(R.dimen.topic_comment_content_margin_top);
         mCommentContentMarginBottom = getResources().getDimensionPixelSize(R.dimen.topic_comment_content_margin_bottom);
+        mCommentContentLineHeight = getResources().getDimensionPixelSize(R.dimen.topic_comment_content_line_height);
         mCommentContentPicMarginBottom = getResources().getDimensionPixelSize(R.dimen.topic_comment_content_pic_margin_bottom);
 
         mImageTextMargin = getResources().getDimensionPixelSize(R.dimen.topic_image_text_margin);
@@ -660,7 +717,11 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         mCommentReplyPaddingRight = getResources().getDimensionPixelSize(R.dimen.topic_comment_reply_padding_right);
         mCommentReplyPaddingBottom = getResources().getDimensionPixelSize(R.dimen.topic_comment_reply_padding_bottom);
 
-        mCommentReplyBackgroundColor = getResources().getColor(R.color.topic_comment_reply_background_color);
+
+        mCommentReplyBackgroundColor = getResources().getColor(R.color.xk2);
+
+        mTopicRelateProductLineWidth = getResources().getDimensionPixelSize(R.dimen.topic_related_used_product_width);
+        mTopicRelateProductLineHeight = getResources().getDimensionPixelSize(R.dimen.topic_related_used_product_height);
     }
 
 
@@ -801,9 +862,13 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         VDVideoInfo info = new VDVideoInfo();
         TopicVideoInfo topicVideoInfo = topicInfo.getVideos().get(0);
         mVideoRemoteUrl = mTopicVideoPlayerPresenter.buildVideoRemoteUrl(topicVideoInfo);
-        mVideoLocalFilePath = mTopicVideoPlayerPresenter.buildVideoLocalFilePath(topicVideoInfo);
+//        mVideoLocalFilePath = mTopicVideoPlayerPresenter.buildVideoLocalFilePath(topicVideoInfo);
         info.mTitle = topicInfo.getTitle();
-        info.mPlayUrl = !mTopicVideoPlayerPresenter.checkHasLocalVideo(mVideoLocalFilePath) ? mVideoRemoteUrl : mVideoLocalFilePath;
+        info.mPlayUrl = mVideoRemoteUrl;//!mTopicVideoPlayerPresenter.checkHasLocalVideo(mVideoLocalFilePath) ? mVideoRemoteUrl : mVideoLocalFilePath;
+
+        Bitmap bitmap = createVideoThumbnail(mVideoRemoteUrl, 700, 394);
+//        mPlayIconParent.setBackground(new BitmapDrawable(bitmap));
+        mPlayIconParent.setBackgroundDrawable(new BitmapDrawable(bitmap));
         mVDVideoListInfo.addVideoInfo(info);
         mVDVideoView.open(this, mVDVideoListInfo);
     }
@@ -821,9 +886,8 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         // 作者和播放次数名称
         StringBuilder stringBuilder = new StringBuilder()
                 .append(buildStartFont(R.color.z2))
-                .append("<big>")
                 .append(topicInfo.getAuthor())
-                .append("</big></font>")
+                .append("</font>")
                 .append("  ")
                 .append(buildStartFont(R.color.z3))
                 .append(String.format(getString(R.string.video_play_times), topicInfo.getVideos().get(0).getPlayTimes()))
@@ -833,6 +897,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         // 设置作者的tags
         ArrayList tags = topicInfo.getTags();
         if (!CollectionUtil.isEmpty(tags)) {
+            mLayoutTopicAuthorTags.setVisibility(View.VISIBLE);
             if (tags.size() > 0 && null != tags.get(0)) {
                 mTvTopicAuthorTag1.setText(tags.get(0).toString());
                 mTvTopicAuthorTag1.setVisibility(View.VISIBLE);
@@ -848,15 +913,12 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
                 mTvTopicAuthorTag3.setVisibility(View.VISIBLE);
                 mIvTopicAuthorTag3Icon.setVisibility(View.VISIBLE);
             }
+        } else {
+            mLayoutTopicAuthorTags.setVisibility(View.GONE);
         }
 
         // 设置评论数量
-        StringBuilder stringBuild = new StringBuilder()
-                .append(getString(R.string.topic_comment_count))
-                .append(" (")
-                .append(topicInfo.getCommentCount())
-                .append(")");
-        mTvTopicCommentCount.setText(stringBuild);
+        mTvTopicCommentCount.setText(String.format(getString(R.string.topic_comment_count), topicInfo.getCommentCount()));
     }
 
 
@@ -948,7 +1010,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
             tvText.setLayoutParams(textLp);
             views[i] = view;
         }
-        mZoomInImageTextViewPager.setPageMargin((int) (getResources().getDisplayMetrics().density * 15));
+        mZoomInImageTextViewPager.setPageMargin((int) (density * 15));
         mZoomInImageTextViewPager.setAdapter(new PagerAdapter() {
             @Override
             public int getCount() {
@@ -1018,7 +1080,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
 
         FrameLayout.LayoutParams playTopicRelateIvLp = new FrameLayout.LayoutParams(mTopicRelatedPlayImageSize, mTopicRelatedPlayImageSize);
         playTopicRelateIvLp.gravity = Gravity.RIGHT | Gravity.BOTTOM;
-        playTopicRelateIvLp.setMargins(0, 0, mAuthorPhotoMargin, mAuthorPhotoMargin);
+        playTopicRelateIvLp.setMargins(0, 0, mMoresVideoMargin, mMoresVideoMargin);
 
         for (int i = 0; i < Constants.MORE_VIDEOS_COUNT; i++) {
             FrameLayout topicRelateLayout = new FrameLayout(this);
@@ -1051,6 +1113,66 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         }
     }
 
+    //初始化关联的产品列表
+    @Override
+    public void initTopicRelatedUsedProductList(ArrayList<TopicRelatedProduct> topicRelatedProductList) {
+        initTopicRelatedUsedProductsFinish = true;
+        checkInitFinish();
+        if (CollectionUtil.isEmpty(topicRelatedProductList)) {
+            LOGGER.warn(TAG + " topic没有关联商品信息，topicId:" + mTopicId);
+            //使用产品区隐藏
+            ((LinearLayout) findViewById(R.id.layout_used_products)).setVisibility(View.GONE);
+            ((LinearLayout) findViewById(R.id.layout_used_product_line)).setVisibility(View.GONE);
+            return;
+        }
+        LinearLayout.LayoutParams topicRelateIvLp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, mTopicRelateProductLineHeight);
+        topicRelateIvLp.setMargins(10 * getResources().getDimensionPixelSize(R.dimen.common_1_dp), 0, 0, 0);
+        LinearLayout.LayoutParams topicRelateProduxtTextIvLp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        topicRelateProduxtTextIvLp.weight = 1;
+        LinearLayout.LayoutParams arrowsLp = new LinearLayout.LayoutParams(15 * getResources().getDimensionPixelSize(R.dimen.common_1_dp),
+                15 * getResources().getDimensionPixelSize(R.dimen.common_1_dp));
+        arrowsLp.setMargins(10 * getResources().getDimensionPixelSize(R.dimen.common_1_dp), 0, 10 * getResources().getDimensionPixelSize(R.dimen.common_1_dp), 0);
+
+        for (int i = 0; i < topicRelatedProductList.size(); i++) {
+            LinearLayout topicRelateLayout = new LinearLayout(this);
+            topicRelateLayout.setLayoutParams(topicRelateIvLp);
+            if (i != topicRelatedProductList.size() - 1) {
+                topicRelateLayout.setBackgroundResource(R.drawable.bottom_border);
+            }
+            topicRelateLayout.setGravity(Gravity.CENTER_VERTICAL);
+            TextView topicRelateUseProductv = new TextView(TopicVideoPlayerActivity.this);
+            topicRelateUseProductv.setLayoutParams(topicRelateProduxtTextIvLp);
+            topicRelateUseProductv.setText(topicRelatedProductList.get(i).getProductName());
+            topicRelateUseProductv.setTextColor(getResources().getColor(R.color.z1));
+            topicRelateUseProductv.setTextSize(15);
+            topicRelateUseProductv.setTag(R.id.topic_related_used_product, topicRelatedProductList.get(i));
+            topicRelateUseProductv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    showTopicRelatedUsedProductDetail((TopicRelatedProduct) v.getTag(R.id.topic_related_used_product));
+                }
+            });
+            topicRelateLayout.addView(topicRelateUseProductv);
+            ImageView arrows = new ImageView(TopicVideoPlayerActivity.this);
+            arrows.setImageResource(R.mipmap.ic_right_button);
+            arrows.setLayoutParams(arrowsLp);
+            topicRelateLayout.addView(arrows);
+            mLayoutVideoUsedProductContent.addView(topicRelateLayout);
+
+            //设置购物帮助事件
+
+            ImageView helper = (ImageView) findViewById(R.id.video_used_product_helper);
+            helper.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    openHelper();
+                }
+            });
+
+        }
+    }
+
+
     @Override
     public void initUserTopicStatus(TopicStatusInfo topicStatusInfo) {
         initUserTopicStatusFinish = true;
@@ -1072,6 +1194,54 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         intent.putExtra(Constants.TOPIC_ID, topicRelatedInfo.getTopicId());
         startActivity(intent);
         finish();
+    }
+
+
+    /**
+     * 跳转到topic关联的商品详情界面
+     *
+     * @param topicRelatedProduct
+     */
+    private void showTopicRelatedUsedProductDetail(TopicRelatedProduct topicRelatedProduct) {
+        //跳转淘宝商品详情界面
+        Map<String, String> exParams = new HashMap<String, String>();
+        exParams.put(TradeConstants.ITEM_DETAIL_VIEW_TYPE, TradeConstants.BAICHUAN_H5_VIEW);
+        exParams.put(TradeConstants.ISV_CODE, Constants.ISV_CODE);
+
+        ItemService itemService = AlibabaSDK.getService(ItemService.class);
+        UiSettings uiSetting = new UiSettings();
+        itemService.showItemDetailByItemId(this, new TradeProcessCallback() {
+            @Override
+            public void onPaySuccess(TradeResult tradeResult) {
+                //弹出框，提示购买成功，去淘宝查看订单信息
+                final OrderFinishDialog successDialog = new OrderFinishDialog(TopicVideoPlayerActivity.this);
+                successDialog.show();
+                final Timer timer = new Timer();
+                TimerTask task = new TimerTask() {
+                    @Override
+                    public void run() {
+                        successDialog.dismiss();
+                        timer.cancel();
+                    }
+                };
+                //3秒后消失
+                timer.schedule(task, 3000);
+            }
+
+            @Override
+            public void onFailure(int code, String msg) {
+
+            }
+        }, uiSetting, Long.valueOf(topicRelatedProduct.getReal_id()), ItemType.TAOBAO, exParams);
+
+    }
+
+    private void openHelper() {
+        //打开webview，展示帮助信息
+        Intent intent = new Intent(this, YLSWebViewActivity.class);
+        intent.putExtra(Constants.WEBVIEW_TITLE, getString(R.string.topic_shopping_helper));
+        intent.putExtra(Constants.WEBVIEW_URL, Constants.TOPIC_PRODUCT_HELPER_URL);
+        startActivity(intent);
     }
 
     @Override
@@ -1111,8 +1281,8 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
 
 
             // -----------------设置评论人头像-----------------
-            LinearLayout.LayoutParams imageViewLp = new LinearLayout.LayoutParams(mAuthorPhotoSize, mAuthorPhotoSize);
-            imageViewLp.setMargins(mAuthorPhotoMargin, mAuthorPhotoMargin, mAuthorPhotoMargin, 0);
+            LinearLayout.LayoutParams imageViewLp = new LinearLayout.LayoutParams(mCommentAuthorPhotoSize, mCommentAuthorPhotoSize);
+            imageViewLp.setMargins(mCommentAuthorPhotoMargin, mCommentAuthorPhotoMarginTop, mCommentAuthorPhotoMargin, 0);
             final CircleImageView topicCommentAuthorIV = new CircleImageView(this);
             topicCommentAuthorIV.setLayoutParams(imageViewLp);
             if (!StringUtil.isEmpty(topicCommentInfo.getAuthorPhoto())) {//使用用户自定义头像
@@ -1135,7 +1305,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
             LinearLayout topicCommentContentLayout = new LinearLayout(this);
             LinearLayout.LayoutParams layoutTopicCommentsLp = new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            layoutTopicCommentsLp.setMargins(0, mCommentMarginTop, mCommentMarginRight, mCommentMarginBottom);
+            layoutTopicCommentsLp.setMargins(0, mCommentAuthorPhotoMarginTop, mCommentMarginRight, mCommentMarginBottom);
             topicCommentContentLayout.setOrientation(LinearLayout.VERTICAL);
             topicCommentContentLayout.setLayoutParams(layoutTopicCommentsLp);
 
@@ -1154,7 +1324,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
             topicCommentAuthorTv.setLayoutParams(tvTopicCommentAuthorLp);
             topicCommentAuthorTv.setText(topicCommentInfo.getAuthor());
             topicCommentAuthorTv.setTextColor(getResources().getColor(R.color.z2));
-            topicCommentAuthorTv.setTextSize(TypedValue.COMPLEX_UNIT_PX, mCommentAuthorFontSize);
+            topicCommentAuthorTv.setTextSize(TypedValue.COMPLEX_UNIT_PX, mFontSizeSmall);
             relativeLayout.addView(topicCommentAuthorTv);
 
             // 设置评论时间
@@ -1177,7 +1347,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
 
 
             topicCommentCreateDateTv.setText(Html.fromHtml(contentText.toString()));
-            topicCommentAuthorTv.setTextSize(TypedValue.COMPLEX_UNIT_PX, mCommentCreateDateFontSize);
+            topicCommentAuthorTv.setTextSize(TypedValue.COMPLEX_UNIT_PX, mFontSizeSmall);
             relativeLayout.addView(topicCommentCreateDateTv);
 
             topicCommentContentLayout.addView(relativeLayout);
@@ -1187,14 +1357,15 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
             TextView topicCommentContentTv = new TextView(this);
             LinearLayout.LayoutParams tvTopicCommentContentLp = new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            tvTopicCommentContentLp.setMargins(0, mCommentContentMarginTop, 0, mCommentContentMarginBottom);
+            tvTopicCommentContentLp.setMargins(0, mCommentContentMarginTop, 0, CollectionUtil.isEmpty(topicCommentInfo.getReplies()) ? 0 : mCommentContentMarginBottom);
             topicCommentContentTv.setLayoutParams(tvTopicCommentContentLp);
 
             topicCommentContentTv.setText(Html.fromHtml(StringUtil.buildTelNumberHtmlText(topicCommentInfo.getContent())));
             topicCommentContentTv.setMovementMethod(LinkMovementMethod.getInstance());
+            topicCommentContentTv.setLineSpacing(mCommentContentLineHeight, 1);
 
-            topicCommentContentTv.setTextSize(TypedValue.COMPLEX_UNIT_PX, mCommentContentFontSize);
-            topicCommentContentTv.setTextColor(getResources().getColor(R.color.black));
+            topicCommentContentTv.setTextSize(TypedValue.COMPLEX_UNIT_PX, mFontSizeMiddle);
+            topicCommentContentTv.setTextColor(getResources().getColor(R.color.z1));
             topicCommentContentTv.setTag(R.id.topic_comment_info, topicCommentInfo);
             topicCommentContentTv.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -1241,17 +1412,15 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
                         float locationY = location[1];
                         float imageWidth = topicCommentHomeWorkIv.getWidth();
                         float imageHeight = topicCommentHomeWorkIv.getHeight();
-                        float screenWidth = getResources().getDisplayMetrics().widthPixels;
-                        float screenHeight = getResources().getDisplayMetrics().heightPixels;
 
-                        if (locationY > screenHeight / 2) {
+                        if (locationY > heightPixels / 2) {
                             locationX += imageHeight;
                             locationY += imageHeight;
                         }
-                        float fromX = imageWidth / screenWidth;
-                        float fromY = imageHeight / screenHeight;
-                        float pivotXValue = locationX / screenWidth;
-                        float pivotYValue = locationY / screenHeight;
+                        float fromX = imageWidth / widthPixels;
+                        float fromY = imageHeight / heightPixels;
+                        float pivotXValue = locationX / widthPixels;
+                        float pivotYValue = locationY / heightPixels;
 
 
                         //渐变尺寸缩放
@@ -1334,7 +1503,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
 
         // 设置行高
 //        topicCommentReplyTv.setLineSpacing(mCommentReplyLineHeight, 1);
-        topicCommentReplyTv.setTextSize(TypedValue.COMPLEX_UNIT_PX, mCommentReplyFontSize);
+        topicCommentReplyTv.setTextSize(TypedValue.COMPLEX_UNIT_PX, mFontSizeMiddle);
 
         topicCommentReplyTv.setBackgroundColor(mCommentReplyBackgroundColor);
         topicCommentReplyTv.setTag(R.id.topic_comment_info, topicCommentInfo);
@@ -1454,7 +1623,9 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
             }
             mDecorView.removeView(mZoomInImageTextLayout);
             mDecorView.removeView(mZoomInImageLayout);
-            return !hasZoomInLayout;
+            if (hasZoomInLayout) {
+                return false;
+            }
         }
         if (!mVDVideoView.onVDKeyDown(keyCode, event)) {
             return super.onKeyDown(keyCode, event);
@@ -1462,7 +1633,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         return true;
     }
 
-    @Override
+
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (resultCode != RESULT_OK) {
             if (requestCode == TOPIC_COMMENT_REQUEST_CODE && resultCode == RESULT_FIRST_USER) {
@@ -1666,7 +1837,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
     }
 
     private void checkInitFinish() {
-        if (initTopicInfoFinish && initTopicRelatedInfoFinish && initTopicImageTextInfoFinish && initTopicCommentsFinish && initUserTopicStatusFinish) {
+        if (initTopicInfoFinish && initTopicRelatedInfoFinish && initTopicRelatedUsedProductsFinish && initTopicImageTextInfoFinish && initTopicCommentsFinish && initUserTopicStatusFinish) {
             hideLoading();
         }
     }
