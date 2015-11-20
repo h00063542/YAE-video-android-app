@@ -8,18 +8,26 @@
     <FrameLayout
         android:layout_width="0px"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
         android:layout_marginRight="20dp"
-        android:layout_weight="30"
-        android:orientation="vertical">
+        android:layout_weight="30">
 
-        <com.yilos.widget.view.ImageCacheView
+        <ImageView
             android:id="@+id/downloadImage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
             android:scaleType="fitCenter"
             android:src="@mipmap/ic_default_photo" />
+
+        <ImageView
+            android:id="@+id/downloadOperation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
+            android:src="@mipmap/ic_default_photo" />
+
     </FrameLayout>
 
     <LinearLayout
@@ -63,6 +71,34 @@
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
         </LinearLayout>
+
+        <ProgressBar
+            android:visibility="gone"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/downloadProgressBar" />
+
+        <LinearLayout
+            android:visibility="gone"
+            android:orientation="horizontal"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/downloadMessage">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/downloading" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:text="0.0M/0.0M"
+                android:id="@+id/downloadBytes" />
+        </LinearLayout>
+
     </LinearLayout>
 
 

@@ -28,10 +28,25 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="5dp"
             android:drawableLeft="@mipmap/cross"
             android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:textSize="18sp"
             android:background="@drawable/orange_button"
+            android:textColor="@color/white"
+            android:text="@string/require_lession" />
+        <Button
+            android:id="@+id/requireLessionGrayBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="5dp"
+            android:drawableLeft="@mipmap/cross"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:textSize="18sp"
+            android:background="@drawable/gray_button"
             android:textColor="@color/white"
             android:text="@string/require_lession" />
     </RelativeLayout>
