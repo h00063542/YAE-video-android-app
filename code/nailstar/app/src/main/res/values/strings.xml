@@ -35,7 +35,7 @@
     <string name="submitted">提交</string>
     <string name="write_down_your_learning_experience">写下你的学习心得</string>
     <string name="like">喜欢</string>
-    <string name="topic_comment_count">评论数 (%1$s)</string>
+    <string name="topic_comment_count">评论数 %1$s</string>
     <string name="saving_photos">正在保存图片</string>
     <string name="no_topic_image_text_info">暂无图文信息</string>
     <string name="download_topic_image_text_index">保存了第%1$s张</string>
