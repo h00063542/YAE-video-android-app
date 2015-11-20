@@ -23,6 +23,8 @@ public class UserMessageServiceImpl implements UserMessageService {
 
     @Override
     public List<UserMessage> getUserMessageList(String uid) throws NetworkDisconnectException, JSONException{
+
+        List<UserMessage> userMessageList = new ArrayList<>();
         String jsonObject;
         JSONObject userMessageJSONObject;
         JSONArray userMessageArray;
@@ -86,10 +88,9 @@ public class UserMessageServiceImpl implements UserMessageService {
                 "]}}";
         userMessageJSONObject = new JSONObject(jsonObject);
         if (userMessageJSONObject.getInt("code") != 0) {
-            return null;
+            return userMessageList;
         }
         userMessageArray = userMessageJSONObject.getJSONObject("result").getJSONArray("messages");
-        List<UserMessage> userMessageList = new ArrayList<>();
         for(int i=0;i<userMessageArray.length();i++){
             JSONObject userMessageObject = userMessageArray.getJSONObject(i);
             JSONObject userMessageCommentObject = userMessageObject.getJSONObject("comment");
