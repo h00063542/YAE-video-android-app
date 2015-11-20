@@ -1,10 +1,12 @@
 package com.yilos.nailstar.aboutme.view;
 
 import android.app.Activity;
+import android.net.Uri;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -74,7 +76,8 @@ public class DownLoadVideoAdapter extends BaseAdapter{
             holder = new ViewHolder();
             holder.downloadAuthorName = (TextView) convertView.findViewById(R.id.downloadAuthorName);
             holder.downloadAuthorPhoto = (CircleImageView) convertView.findViewById(R.id.downloadAuthorPhoto);
-            holder.downloadImage = (ImageCacheView) convertView.findViewById(R.id.downloadImage);
+            holder.downloadImage = (ImageView) convertView.findViewById(R.id.downloadImage);
+            holder.downloadOperation = (ImageView) convertView.findViewById(R.id.downloadOperation);
             holder.downloadTopic = (TextView) convertView.findViewById(R.id.downloadTopic);
             holder.downloadProgressBar = (ProgressBar) convertView.findViewById(R.id.downloadProgressBar);
             holder.downloadMessage = convertView.findViewById(R.id.downloadMessage);
@@ -82,13 +85,16 @@ public class DownLoadVideoAdapter extends BaseAdapter{
 
             holder.downloadImage.getLayoutParams().width = screenWidth * 25 / 100;
             holder.downloadImage.getLayoutParams().height = screenWidth * 25 / 100;
-            
+
+            holder.downloadOperation.getLayoutParams().width = screenWidth * 10 / 100;
+            holder.downloadOperation.getLayoutParams().height = screenWidth * 10 / 100;
+
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        DownLoadInfo downLoadInfo = downLoadInfoList.get(position);
+        final DownLoadInfo downLoadInfo = downLoadInfoList.get(position);
         holder.downloadAuthorName.setText(downLoadInfo.getName());
         if (downLoadInfo.getPhoto() != null) {
             holder.downloadAuthorPhoto.setImageSrc("file://" + downLoadInfo.getPhoto());
@@ -96,9 +102,37 @@ public class DownLoadVideoAdapter extends BaseAdapter{
             holder.downloadAuthorPhoto.setImageResource(R.mipmap.ic_default_photo);
         }
         if (downLoadInfo.getIamge() != null) {
-            holder.downloadImage.setImageSrc("file://" + downLoadInfo.getIamge());
+            holder.downloadImage.setImageURI(Uri.parse(downLoadInfo.getIamge()));
         } else {
-            holder.downloadImage.setImageResource(R.mipmap.ic_default_image);
+            holder.downloadImage.setImageURI(null);
+        }
+
+        if (downLoadInfo.getStatus() == DownloadConstants.DOWNLOADING) {
+            holder.downloadOperation.setImageResource(R.mipmap.suspend_video);
+            holder.downloadOperation.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    downloadPresenter.pauseDownLoadTask(downLoadInfo);
+                }
+            });
+        } else if (downLoadInfo.getStatus() == DownloadConstants.DOWNLOAD_FINISH) {
+            holder.downloadOperation.setImageResource(R.mipmap.play_video);
+            holder.downloadOperation.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // TODO
+                }
+            });
+        } else if (downLoadInfo.getStatus() == DownloadConstants.DOWNLOAD_STOP) {
+            holder.downloadOperation.setImageResource(R.mipmap.icon_download_white);
+            holder.downloadOperation.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    downloadPresenter.resumeDownLoadTask(downLoadInfo);
+                }
+            });
+        } else {
+            holder.downloadImage.setVisibility(View.GONE);
         }
 
         holder.downloadTopic.setText(downLoadInfo.getTitle());
@@ -109,7 +143,7 @@ public class DownLoadVideoAdapter extends BaseAdapter{
     }
 
     private void handleDownloadProcess(DownLoadInfo downLoadInfo, ViewHolder holder) {
-        if (downLoadInfo.getStatus() != DownloadConstants.DOWNLOADING || downLoadInfo.getFileSize() <= 0) {
+        if (downLoadInfo.getStatus() == DownloadConstants.DOWNLOAD_FINISH || downLoadInfo.getFileSize() <= 0) {
             holder.downloadProgressBar.setVisibility(View.GONE);
             holder.downloadMessage.setVisibility(View.GONE);
             return;
@@ -127,7 +161,8 @@ public class DownLoadVideoAdapter extends BaseAdapter{
     }
 
     class ViewHolder {
-        public ImageCacheView downloadImage;
+        public ImageView downloadImage;
+        public ImageView downloadOperation;
         public TextView downloadTopic;
         public CircleImageView downloadAuthorPhoto;
         public TextView downloadAuthorName;

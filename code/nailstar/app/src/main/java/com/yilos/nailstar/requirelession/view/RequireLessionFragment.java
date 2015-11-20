@@ -242,38 +242,29 @@ public class RequireLessionFragment extends Fragment implements LessionView {
         goRankingBtn.setOnClickListener(onClickListener);
         goRankingBtnFloat.setOnClickListener(onClickListener);
 
-        takeImage = new TakeImage.Builder().context(this).uri(Constants.YILOS_PATH).callback(new TakeImageCallback() {
-            @Override
-            public void callback(Uri uri) {
-                if (uri == null) {
-                    showMessage(R.string.upload_image_failed);
-                    return;
-                }
-                File uploadFile = new File(uri.getPath());
-                if (!uploadFile.exists()) {
-                    showMessage(R.string.upload_image_failed);
-                    return;
-                }
-                // 上传图片
-                lessionPresenter.uploadFile(uploadFile, new SaveCallback() {
+        takeImage = new TakeImage.Builder()
+                .context(this)
+                .aspectX(500)
+                .aspectY(400)
+                .outputX(500)
+                .outputY(400)
+                .uri(Constants.YILOS_NAILSTAR_PICTURE_PATH)
+                .callback(new TakeImageCallback() {
                     @Override
-                    public void onSuccess(String s) {
-                        // 上传图片成功，提交求教程请求
-                        lessionPresenter.postCandidate(s);
+                    public void callback(Uri uri) {
+                        if (uri == null) {
+                            showMessage(R.string.upload_image_failed);
+                            return;
+                        }
+                        File uploadFile = new File(uri.getPath());
+                        if (!uploadFile.exists()) {
+                            showMessage(R.string.upload_image_failed);
+                            return;
+                        }
+                        // 上传图片
+                        lessionPresenter.postCandidate(uploadFile);
                     }
-
-                    @Override
-                    public void onProgress(String s, int i, int i1) {
-
-                    }
-
-                    @Override
-                    public void onFailure(String s, OSSException e) {
-                        showMessage(R.string.upload_image_failed);
-                    }
-                });
-            }
-        }).build();
+                }).build();
 
         View.OnClickListener requireLessionBtnListener = new View.OnClickListener() {
             @Override

@@ -1,5 +1,9 @@
 package com.yilos.nailstar.download;
 
+import android.util.Log;
+
+import com.squareup.okhttp.Call;
+import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Response;
 import com.squareup.okhttp.Request;
@@ -26,6 +30,8 @@ public class DownLoadTask {
     private String path;
     private String fileName;
     private ProgressListener progressListener;
+
+    private Call call;
 
     public DownLoadTask(String url, String path, String fileName) {
         this.url = url;
@@ -54,7 +60,9 @@ public class DownLoadTask {
 
     public void cancel() {
 
-        client.cancel(url);
+        if (call != null) {
+            call.cancel();
+        }
 
     }
 
@@ -62,10 +70,11 @@ public class DownLoadTask {
 
         Request request = new Request.Builder()
                 .url(url)
-                .tag(url)
                 .build();
 
-        Response response = client.newCall(request).execute();
+        call = client.newCall(request);
+
+        Response response = call.execute();
 
         if (!response.isSuccessful()) {
             throw new IOException("Unexpected code " + response);
@@ -98,6 +107,9 @@ public class DownLoadTask {
                 fos.write(buf, 0, len);
                 totalBytesRead += len != -1 ? len : 0;
                 progressListener.update(totalBytesRead, totalBytes, false);
+                if (call.isCanceled()) {
+                    break;
+                }
             }
             fos.flush();
             progressListener.update(totalBytesRead, totalBytes, true);
@@ -130,10 +142,11 @@ public class DownLoadTask {
         Request request = new Request.Builder()
                 .header("Range", "bytes=" + startPosition + "-")
                 .url(url)
-                .tag(url)
                 .build();
 
-        Response response = client.newCall(request).execute();
+        call = client.newCall(request);
+
+        Response response = call.execute();
 
         if (!response.isSuccessful()) {
             throw new IOException("Unexpected code " + response);
@@ -169,6 +182,9 @@ public class DownLoadTask {
                 randomAccessFile.write(buf, 0, len);
                 totalBytesRead += len != -1 ? len : 0;
                 progressListener.update(totalBytesRead, totalBytes, false);
+                if (call.isCanceled()) {
+                    break;
+                }
             }
             progressListener.update(totalBytesRead, totalBytes, true);
 

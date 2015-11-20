@@ -100,6 +100,7 @@ public class DownLoadTaskManager {
     public void addDownLoadTask(final TopicInfo topicInfo) {
 
         final DownLoadInfo downLoadInfo = new DownLoadInfo(topicInfo);
+        downLoadInfo.setStatus(DownloadConstants.DOWNLOADING);
 
         // 如果之前保留了下载信息，则删除
         for (Iterator<DownLoadInfo> iterator = downLoadInfoList.iterator(); iterator.hasNext(); ) {
@@ -131,6 +132,7 @@ public class DownLoadTaskManager {
      * @param downLoadInfo
      */
     public void pauseDownLoadTask(DownLoadInfo downLoadInfo) {
+        downLoadInfo.setStatus(DownloadConstants.DOWNLOAD_STOP);
         for (Iterator<DownLoadTask> iterator = downLoadTaskList.iterator(); iterator.hasNext(); ) {
             DownLoadTask downLoadTask = iterator.next();
             if (downLoadTask.getUrl().equals(downLoadInfo.getUrl())) {
@@ -179,6 +181,10 @@ public class DownLoadTaskManager {
      * @param downLoadInfo
      */
     public void resumeDownLoadTask(DownLoadInfo downLoadInfo) {
+
+        // 异常原因导致停止下载不会删除任务，所以在这里需要再次删除
+        pauseDownLoadTask(downLoadInfo);
+
         downLoadInfo.setStatus(DownloadConstants.DOWNLOADING);
         startDownloadTask(downLoadInfo);
     }
@@ -288,12 +294,24 @@ public class DownLoadTaskManager {
             @Override
             public void update(long bytesRead, long contentLength, boolean done) {
                 downLoadInfo.setBytesRead(bytesRead);
+                downLoadInfo.setStatus(DownloadConstants.DOWNLOADING);
                 if (done) {
+                    // 已完成
                     if (bytesRead >= contentLength) {
                         downLoadInfo.setStatus(DownloadConstants.DOWNLOAD_FINISH);
+                        // 完成之后删除下载任务
+                        for (Iterator<DownLoadTask> iterator = downLoadTaskList.iterator(); iterator.hasNext(); ) {
+                            DownLoadTask downLoadTask = iterator.next();
+                            if (downLoadTask.getUrl().equals(downLoadInfo.getUrl())) {
+                                iterator.remove();
+                                break;
+                            }
+                        }
                     } else {
+                        // 已经没有数据，但没下载完，设置为停止状态
                         downLoadInfo.setStatus(DownloadConstants.DOWNLOAD_STOP);
                     }
+
                     try {
                         FileUtils.writeToFile(new File(path, DOWNLOAD_INFO_FILE), objectMapper.writeValueAsString(downLoadInfoList));
                     } catch (JsonProcessingException e) {
