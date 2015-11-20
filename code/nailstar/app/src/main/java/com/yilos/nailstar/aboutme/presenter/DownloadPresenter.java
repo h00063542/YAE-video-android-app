@@ -30,7 +30,7 @@ public class DownloadPresenter {
         initRefreshTask();
     }
 
-    public void initRefreshTask() {
+    private void initRefreshTask() {
 
         Runnable refreshProgress = new Runnable() {
             @Override
@@ -51,6 +51,14 @@ public class DownloadPresenter {
 
     private void queryDownLoadInfoList() {
         downLoadInfoList = downLoadTaskManager.getDownLoadInfoList();
+    }
+
+    public void pauseDownLoadTask(DownLoadInfo downLoadInfo) {
+        downLoadTaskManager.pauseDownLoadTask(downLoadInfo);
+    }
+
+    public void resumeDownLoadTask(DownLoadInfo downLoadInfo) {
+        downLoadTaskManager.resumeDownLoadTask(downLoadInfo);
     }
 
 }

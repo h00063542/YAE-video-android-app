@@ -27,12 +27,6 @@ import java.util.List;
  */
 public class DownLoadTaskManager {
 
-    public static final int DOWNLOADING = 0;
-
-    public static final int DOWNLOAD_STOP = -1;
-
-    public static final int DOWNLOAD_FINISH = 1;
-
     private static Logger logger = LoggerFactory.getLogger(DownLoadTaskManager.class);
 
     private static final String DOWNLOAD_INFO_FILE = "download_info";
@@ -106,6 +100,7 @@ public class DownLoadTaskManager {
     public void addDownLoadTask(final TopicInfo topicInfo) {
 
         final DownLoadInfo downLoadInfo = new DownLoadInfo(topicInfo);
+        downLoadInfo.setStatus(DownloadConstants.DOWNLOADING);
 
         // 如果之前保留了下载信息，则删除
         for (Iterator<DownLoadInfo> iterator = downLoadInfoList.iterator(); iterator.hasNext(); ) {
@@ -137,6 +132,7 @@ public class DownLoadTaskManager {
      * @param downLoadInfo
      */
     public void pauseDownLoadTask(DownLoadInfo downLoadInfo) {
+        downLoadInfo.setStatus(DownloadConstants.DOWNLOAD_STOP);
         for (Iterator<DownLoadTask> iterator = downLoadTaskList.iterator(); iterator.hasNext(); ) {
             DownLoadTask downLoadTask = iterator.next();
             if (downLoadTask.getUrl().equals(downLoadInfo.getUrl())) {
@@ -185,7 +181,11 @@ public class DownLoadTaskManager {
      * @param downLoadInfo
      */
     public void resumeDownLoadTask(DownLoadInfo downLoadInfo) {
-        downLoadInfo.setStatus(DOWNLOADING);
+
+        // 异常原因导致停止下载不会删除任务，所以在这里需要再次删除
+        pauseDownLoadTask(downLoadInfo);
+
+        downLoadInfo.setStatus(DownloadConstants.DOWNLOADING);
         startDownloadTask(downLoadInfo);
     }
 
@@ -195,7 +195,7 @@ public class DownLoadTaskManager {
     public void resumeAllDownLoadTask() {
         for (Iterator<DownLoadInfo> iterator = downLoadInfoList.iterator(); iterator.hasNext(); ) {
             DownLoadInfo item = iterator.next();
-            if (item.getStatus() != DOWNLOAD_FINISH) {
+            if (item.getStatus() != DownloadConstants.DOWNLOAD_FINISH) {
                 resumeDownLoadTask(item);
             }
         }
@@ -293,14 +293,25 @@ public class DownLoadTaskManager {
         downLoadTask.setProgressListener(new ProgressListener() {
             @Override
             public void update(long bytesRead, long contentLength, boolean done) {
-                downLoadInfo.setFileSize(contentLength);
                 downLoadInfo.setBytesRead(bytesRead);
+                downLoadInfo.setStatus(DownloadConstants.DOWNLOADING);
                 if (done) {
+                    // 已完成
                     if (bytesRead >= contentLength) {
-                        downLoadInfo.setStatus(DOWNLOAD_FINISH);
+                        downLoadInfo.setStatus(DownloadConstants.DOWNLOAD_FINISH);
+                        // 完成之后删除下载任务
+                        for (Iterator<DownLoadTask> iterator = downLoadTaskList.iterator(); iterator.hasNext(); ) {
+                            DownLoadTask downLoadTask = iterator.next();
+                            if (downLoadTask.getUrl().equals(downLoadInfo.getUrl())) {
+                                iterator.remove();
+                                break;
+                            }
+                        }
                     } else {
-                        downLoadInfo.setStatus(DOWNLOAD_STOP);
+                        // 已经没有数据，但没下载完，设置为停止状态
+                        downLoadInfo.setStatus(DownloadConstants.DOWNLOAD_STOP);
                     }
+
                     try {
                         FileUtils.writeToFile(new File(path, DOWNLOAD_INFO_FILE), objectMapper.writeValueAsString(downLoadInfoList));
                     } catch (JsonProcessingException e) {
@@ -318,7 +329,7 @@ public class DownLoadTaskManager {
                 try {
                     downLoadTask.run();
                 } catch (Exception e) {
-                    downLoadInfo.setStatus(DOWNLOAD_STOP);
+                    downLoadInfo.setStatus(DownloadConstants.DOWNLOAD_STOP);
                     logger.error("download failed, url: " + downLoadTask.getUrl(), e);
                 }
             }
