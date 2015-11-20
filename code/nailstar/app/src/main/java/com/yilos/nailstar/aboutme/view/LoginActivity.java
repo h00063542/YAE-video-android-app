@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.yilos.nailstar.R;
 import com.yilos.nailstar.aboutme.presenter.LoginPresenter;
 import com.yilos.nailstar.framework.view.BaseActivity;
+import com.yilos.nailstar.social.model.SocialLoginAPI;
 import com.yilos.widget.titlebar.TitleBar;
 
 public class LoginActivity extends BaseActivity implements ILoginView {
@@ -132,9 +133,6 @@ public class LoginActivity extends BaseActivity implements ILoginView {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         /**使用SSO授权必须添加如下代码 */
-//        UMSsoHandler ssoHandler = mController.getConfig().getSsoHandler(requestCode) ;
-//        if(ssoHandler != null){
-//            ssoHandler.authorizeCallBack(requestCode, resultCode, data);
-//        }
+        SocialLoginAPI.getInstance().authorizeCallbackSina(requestCode, resultCode, data);
     }
 }
