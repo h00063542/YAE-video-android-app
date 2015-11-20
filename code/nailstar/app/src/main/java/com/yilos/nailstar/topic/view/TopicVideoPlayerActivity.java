@@ -1623,7 +1623,9 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
             }
             mDecorView.removeView(mZoomInImageTextLayout);
             mDecorView.removeView(mZoomInImageLayout);
-            return !hasZoomInLayout;
+            if (hasZoomInLayout) {
+                return false;
+            }
         }
         if (!mVDVideoView.onVDKeyDown(keyCode, event)) {
             return super.onKeyDown(keyCode, event);
