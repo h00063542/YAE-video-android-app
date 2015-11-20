@@ -1,5 +1,6 @@
 package com.yilos.nailstar.aboutme.model;
 
+import com.yilos.nailstar.aboutme.entity.MessageComment;
 import com.yilos.nailstar.aboutme.entity.UserMessage;
 import com.yilos.nailstar.framework.exception.NetworkDisconnectException;
 
@@ -12,4 +13,5 @@ import java.util.List;
  */
 public interface UserMessageService {
     List<UserMessage> getUserMessageList(String uid) throws NetworkDisconnectException, JSONException;
+    MessageComment setComment(MessageComment messageComment, String topicId) throws NetworkDisconnectException, JSONException;
 }
