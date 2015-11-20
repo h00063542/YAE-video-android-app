@@ -185,5 +185,8 @@ public class Constants {
      * 未回复：false
      */
     public static final String HASBEENREPLY = "hasBeenReply";
+    public static final String SCORE = "score";
+    public static final String MESSAGES = "messages";
+    public static final String OK = "ok";
 
 }

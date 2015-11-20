@@ -1,10 +1,9 @@
 package com.yilos.nailstar.aboutme.view;
 
 import android.content.Context;
-import android.graphics.Color;
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
-import android.text.Spannable;
-import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.AbsoluteSizeSpan;
@@ -20,12 +19,7 @@ import com.yilos.widget.circleimageview.CircleImageView;
 import com.yilos.widget.view.ImageCacheView;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-
-import static android.text.Spanned.SPAN_EXCLUSIVE_INCLUSIVE;
-import static com.yilos.nailstar.R.dimen.small_text_size;
 
 /**
  * Created by sisilai on 15/11/18.
@@ -78,7 +72,7 @@ public class UserMessageListAdapter extends RecyclerView.Adapter<UserMessageList
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        UserMessage userMessage = userMessageList.get(position);
+        final UserMessage userMessage = userMessageList.get(position);
         UserMessage.CommentEntity commentEntity = userMessage.getComment();
         String commentContent = commentEntity.getContent();
         String atName = commentEntity.getAtName();
@@ -148,6 +142,16 @@ public class UserMessageListAdapter extends RecyclerView.Adapter<UserMessageList
         holder.title.setText(userMessage.getTitle());
         holder.teacher.setText(userMessage.getTeacher());
 
+        holder.replyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context,UserMessageReplyActivity.class);
+                Bundle bundle =new Bundle();
+                bundle.putSerializable("userMessage",userMessage);
+                intent.putExtras(bundle);
+                context.startActivity(intent);
+            }
+        });
     }
 
 

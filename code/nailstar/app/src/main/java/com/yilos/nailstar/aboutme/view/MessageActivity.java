@@ -1,12 +1,10 @@
 package com.yilos.nailstar.aboutme.view;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.yilos.nailstar.R;
 import com.yilos.nailstar.aboutme.entity.UserMessage;
@@ -83,6 +81,11 @@ public class MessageActivity extends BaseActivity implements IMessageView {
         }
         ArrayList<UserMessage> userMessageList = getLocalReplyMessage();
         initUserMessageList(userMessageList);
+    }
+
+    @Override
+    public void replyUserMessage(UserMessage userMessage) {
+        showShortToast("回复成功！");
     }
 
     @Override
@@ -173,7 +176,7 @@ public class MessageActivity extends BaseActivity implements IMessageView {
             jsonArray.put(userMessageJSONObject);
         }
         SharedPreferences.Editor editor = mySharedPreferences.edit();
-        editor.putString("userMessageArrayList",jsonObject.toString());
+        editor.putString("userMessageArrayList", jsonObject.toString());
         editor.commit();
     }
 }

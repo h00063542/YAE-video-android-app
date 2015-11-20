@@ -5,10 +5,12 @@ import com.yilos.nailstar.util.Constants;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
+
 /**
  * Created by sisilai on 15/11/18.
  */
-public class UserMessage {
+public class UserMessage implements Serializable{
 
 
     public static CommentEntity parseCommentEntity(JSONObject commentJson) throws JSONException{

@@ -1,14 +1,18 @@
 package com.yilos.nailstar.aboutme.model;
 
+import com.yilos.nailstar.aboutme.entity.MessageComment;
+import com.yilos.nailstar.aboutme.entity.PersonInfo;
 import com.yilos.nailstar.aboutme.entity.UserMessage;
 import com.yilos.nailstar.framework.exception.NetworkDisconnectException;
 import com.yilos.nailstar.util.Constants;
+import com.yilos.nailstar.util.HttpClient;
 import com.yilos.nailstar.util.JsonUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -132,5 +136,34 @@ public class UserMessageServiceImpl implements UserMessageService {
             userMessageList.add(userMessage);
         }
         return userMessageList;
+    }
+
+    @Override
+    public MessageComment setComment(MessageComment messageComment, String topicId) throws NetworkDisconnectException, JSONException {
+        String result;
+        JSONObject messageCommentObject;
+        String url = "/vapi2/nailstar/topics/" + topicId + "/comments";
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put(Constants.AUTHOR, messageComment.getAuthor());
+        jsonObject.put(Constants.AT_USER, messageComment.getAtUser());
+        jsonObject.put(Constants.CONTENT, messageComment.getContent());
+        jsonObject.put(Constants.CONTENT_PIC, messageComment.getContentPic());
+        jsonObject.put(Constants.REPLY_TO, messageComment.getReplyTo());
+        jsonObject.put(Constants.LAST_REPLY_TO, messageComment.getLastReplyTo());
+        jsonObject.put(Constants.SCORE, messageComment.getScore());
+        jsonObject.put(Constants.READY, messageComment.getReady());
+        try {
+            result = HttpClient.post(url, jsonObject.toString());
+        } catch (IOException e) {
+            throw new NetworkDisconnectException("回复失败",e);
+        }
+        messageCommentObject = new JSONObject(result);
+        if (messageCommentObject.getInt(Constants.CODE) != 0) {
+            return null;
+        }
+        if (messageCommentObject.getJSONObject(Constants.RESULT).getString(Constants.MESSAGES).equals(Constants.OK)) {
+            return messageComment;
+        }
+        return messageComment;
     }
 }
