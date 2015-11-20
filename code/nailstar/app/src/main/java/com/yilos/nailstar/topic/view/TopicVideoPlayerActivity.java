@@ -326,13 +326,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         //&& SharedPreferencesUtil.getAllowNoWifi(this)
 
         // WIFI环境下显示播放按钮
-        if (NailStarApplicationContext.getInstance().isWifi()) {
-            mIvVideoPlayIcon.setVisibility(View.VISIBLE);
-            mLayoutVideoPlayNotWifi.setVisibility(View.GONE);
-        } else {//否则给用户选择提示
-            mIvVideoPlayIcon.setVisibility(View.GONE);
-            mLayoutVideoPlayNotWifi.setVisibility(View.VISIBLE);
-        }
+        initVideoPlayerIcon();
 
         // 根据视频宽高比例，重新计算视频播放器高度
         mVDVideoView.getLayoutParams().height = (int) (widthPixels / Constants.VIDEO_ASPECT_RATIO);
@@ -445,7 +439,6 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
                 //下载视频
                 showShortToast(getString(R.string.add_video_download));
                 mTopicVideoPlayerPresenter.downloadVideo(mTopicInfo);
-                // TODO 提示视频已经在下载了
             }
         });
 
@@ -458,18 +451,20 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
             }
         });
 
-//        mVDVideoView.setPlayerChangeListener(new VDVideoExtListeners.OnVDVideoPlayerChangeListener() {
-//            @Override
-//            public void OnVDVideoPlayerChangeSwitch(int index, long position) {
-//                Log.e(TAG, "setPlayerChangeListener,index:" + index + ",position:" + position);
-//            }
-//        });
-//        mVDVideoView.setCompletionListener(new VDVideoExtListeners.OnVDVideoCompletionListener() {
-//            @Override
-//            public void onVDVideoCompletion(VDVideoInfo info, int status) {
-//                Log.e(TAG, "setCompletionListener");
-//            }
-//        });
+        // 设置视频播放监听
+        mVDVideoView.setCompletionListener(new VDVideoExtListeners.OnVDVideoCompletionListener() {
+            @Override
+            public void onVDVideoCompletion(VDVideoInfo info, int status) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+//                        showLongToast("视频播放结束");
+                        mPlayIconParent.setVisibility(View.VISIBLE);
+                        initVideoPlayerIcon();
+                    }
+                });
+            }
+        });
 
 
 //        // 添加滚动监听
@@ -722,6 +717,17 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
 
         mTopicRelateProductLineWidth = getResources().getDimensionPixelSize(R.dimen.topic_related_used_product_width);
         mTopicRelateProductLineHeight = getResources().getDimensionPixelSize(R.dimen.topic_related_used_product_height);
+    }
+
+    private void initVideoPlayerIcon() {
+        //WIFI环境下显示播放按钮
+        if (NailStarApplicationContext.getInstance().isWifi()) {
+            mIvVideoPlayIcon.setVisibility(View.VISIBLE);
+            mLayoutVideoPlayNotWifi.setVisibility(View.GONE);
+        } else {//否则给用户选择提示
+            mIvVideoPlayIcon.setVisibility(View.GONE);
+            mLayoutVideoPlayNotWifi.setVisibility(View.VISIBLE);
+        }
     }
 
 
