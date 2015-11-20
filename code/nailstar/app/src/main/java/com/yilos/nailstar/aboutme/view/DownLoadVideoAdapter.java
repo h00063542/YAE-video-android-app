@@ -22,7 +22,7 @@ import java.util.List;
 /**
  * Created by yilos on 15/11/16.
  */
-public class DownLoadVideoAdapter extends BaseAdapter{
+public class DownLoadVideoAdapter extends BaseAdapter {
 
     private List<DownLoadInfo> downLoadInfoList;
 
@@ -31,7 +31,7 @@ public class DownLoadVideoAdapter extends BaseAdapter{
     private Activity context;
     private DownloadPresenter downloadPresenter;
 
-    public DownLoadVideoAdapter (Activity context, DownloadPresenter downloadPresenter) {
+    public DownLoadVideoAdapter(Activity context, DownloadPresenter downloadPresenter) {
 
         this.context = context;
         this.downloadPresenter = downloadPresenter;
@@ -152,8 +152,8 @@ public class DownLoadVideoAdapter extends BaseAdapter{
         holder.downloadProgressBar.setMax((int) (downLoadInfo.getFileSize() / 1024));
         holder.downloadProgressBar.setProgress((int) (downLoadInfo.getBytesRead() / 1024));
 
-        double totalMb = downLoadInfo.getFileSize() / (1024 * 1024);
-        double readMb = downLoadInfo.getBytesRead() / (1024 * 1024);
+        double totalMb = (double) downLoadInfo.getFileSize() / (1024 * 1024);
+        double readMb = (double) downLoadInfo.getBytesRead() / (1024 * 1024);
         holder.downloadBytes.setText(String.format("%.1fM / %.1fM", readMb, totalMb));
 
         holder.downloadProgressBar.setVisibility(View.VISIBLE);
