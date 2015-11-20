@@ -37,7 +37,7 @@ public class DownLoadInfo implements Serializable {
     /**
      * 视频大小
      */
-    private Long fileSize;
+    private long fileSize;
 
     /**
      * 视频url
@@ -102,7 +102,7 @@ public class DownLoadInfo implements Serializable {
         return fileSize;
     }
 
-    public void setFileSize(Long fileSize) {
+    public void setFileSize(long fileSize) {
         this.fileSize = fileSize;
     }
 

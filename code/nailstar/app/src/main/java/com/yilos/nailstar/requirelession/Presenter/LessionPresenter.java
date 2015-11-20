@@ -5,6 +5,7 @@ import android.os.Handler;
 
 import com.alibaba.sdk.android.oss.OSSService;
 import com.alibaba.sdk.android.oss.callback.SaveCallback;
+import com.alibaba.sdk.android.oss.model.OSSException;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.yilos.nailstar.R;
 import com.yilos.nailstar.framework.exception.NotLoginException;
@@ -14,9 +15,11 @@ import com.yilos.nailstar.requirelession.entity.VotedRecord;
 import com.yilos.nailstar.requirelession.model.LessionService;
 import com.yilos.nailstar.requirelession.model.LessionServiceImpl;
 import com.yilos.nailstar.requirelession.view.LessionView;
+import com.yilos.nailstar.util.Constants;
 import com.yilos.nailstar.util.FileUtils;
 import com.yilos.nailstar.util.LoggerFactory;
 import com.yilos.nailstar.util.OSSUtil;
+import com.yilos.nailstar.util.UUIDUtil;
 
 import org.apache.log4j.Logger;
 
@@ -467,34 +470,38 @@ public class LessionPresenter {
     }
 
     /**
-     * 上传文件
-     *
-     * @param file
-     * @param callback
-     */
-    public void uploadFile(File file, SaveCallback callback) {
-        OSSService ossService = OSSUtil.getDefaultOssService();
-        OSSUtil.resumableUpload(ossService, ossService.getOssBucket(OSSUtil.BUCKET_YPICTURE), file.getParent(), file.getName(), callback);
-    }
-
-    /**
      * 提交求教程请求
      *
-     * @param url
+     * @param file
      */
-    public void postCandidate(final String url) {
-        new Thread() {
+    public void postCandidate(final File file) {
+        OSSService ossService = OSSUtil.getDefaultOssService();
+        OSSUtil.resumableUpload(ossService, ossService.getOssBucket(OSSUtil.BUCKET_YPICTURE), file.getAbsolutePath(), UUIDUtil.getUUID(), new SaveCallback() {
             @Override
-            public void run() {
+            public void onSuccess(String s) {
                 try {
-                    service.postCandidate(url);
+                    service.postCandidate(Constants.YILOS_PIC_URL + s);
                 } catch (NotLoginException notLoginException) {
                     view.gotoLoginPage();
                 } catch (Exception e) {
                     logger.error("postCandidate failed", e);
                 }
             }
-        }.start();
-    }
 
+            @Override
+            public void onProgress(String s, int i, int i1) {
+
+            }
+
+            @Override
+            public void onFailure(String s, OSSException e) {
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        view.showMessage(R.string.upload_image_failed);
+                    }
+                });
+            }
+        });
+    }
 }
