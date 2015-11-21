@@ -11,6 +11,8 @@ public class Commodity {
     private String advdesc;
     private String imageUrl;
 
+    public Commodity() {
+    }
     public Commodity(String name, long price, String advdesc,String imageUrl) {
         this.name = name;
         this.price = price;
