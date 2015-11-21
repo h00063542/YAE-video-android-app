@@ -7,14 +7,16 @@
     android:layout_weight="1">
 
     <com.yilos.widget.circleimageview.CircleImageView
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="@dimen/index_category_menu_length"
+        android:layout_height="@dimen/index_category_menu_length"
         android:id="@+id/category_circle_image_view"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="5dp"
+        android:padding="0dp"
+        android:layout_marginTop="@dimen/index_category_menu_image_text_space"
         android:textAlignment="center"
+        android:textSize="@dimen/index_category_menu_text_size"
+        android:textColor="@color/z2"
         android:id="@+id/category_text_view"/>
-
 </LinearLayout>

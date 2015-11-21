@@ -24,16 +24,21 @@ public class VideoListItemHolder extends BaseViewHolder<Topic> {
 
     private TextView titleView;
 
-    public VideoListItemHolder(ViewGroup parent) {
-        this(parent, R.layout.fragment_index_topic_item);
-    }
+    private int imageLength;
 
-    public VideoListItemHolder(ViewGroup parent, int res) {
-        super(parent, res);
+    public VideoListItemHolder(ViewGroup parent, int width) {
+        super(parent, R.layout.fragment_index_topic_item);
         this.parent = parent;
 
         videoImage = $(R.id.videoImage);
         titleView = $(R.id.titleView);
+        View view = $(R.id.imageLayout);
+        ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
+        layoutParams.width = width;
+        layoutParams.height = width;
+        view.setLayoutParams(layoutParams);
+
+        imageLength = width;
     }
 
     @Override
@@ -54,6 +59,19 @@ public class VideoListItemHolder extends BaseViewHolder<Topic> {
                 }
             }
         });
-        titleView.setText(data.getTitle());
+
+        if(data.getTitle() != null && data.getTitle().length() > 0) {
+            if(data.getTitle().indexOf("期：") >= 0) {
+                titleView.setText(data.getTitle().substring(data.getTitle().indexOf("期：") + 2));
+            } else if(data.getTitle().indexOf("期榜首：") >= 0) {
+                titleView.setText(data.getTitle().substring(data.getTitle().indexOf("期榜首：") + 4));
+            } else if(data.getTitle().indexOf("期:") >= 0) {
+                titleView.setText(data.getTitle().substring(data.getTitle().indexOf("期:") + 2));
+            } else if(data.getTitle().indexOf("期榜首:") >= 0) {
+                titleView.setText(data.getTitle().substring(data.getTitle().indexOf("期榜首:") + 4));
+            } else {
+                titleView.setText(data.getTitle());
+            }
+        }
     }
 }
