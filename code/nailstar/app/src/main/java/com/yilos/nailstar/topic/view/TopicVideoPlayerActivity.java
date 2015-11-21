@@ -330,6 +330,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
 
         // 根据视频宽高比例，重新计算视频播放器高度
         mVDVideoView.getLayoutParams().height = (int) (widthPixels / Constants.VIDEO_ASPECT_RATIO);
+        findViewById(R.id.video_player_icon_tips_layout).getLayoutParams().height = mVDVideoView.getLayoutParams().height;
 
         // 作者信息
         mIvVideoAuthorPhoto = (CircleImageView) findViewById(R.id.iv_video_author_photo);

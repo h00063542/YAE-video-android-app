@@ -56,8 +56,9 @@
                     </com.sina.sinavideo.sdk.VDVideoView>
 
                     <LinearLayout
+                        android:id="@+id/video_player_icon_tips_layout"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="@dimen/topic_video_player_height"
                         android:gravity="center_horizontal|center_vertical"
                         android:orientation="horizontal">
 
