@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.support.v4.view.PagerAdapter;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -21,7 +22,6 @@ public class MessageListAdapter extends PagerAdapter {
 
     public MessageListAdapter(Activity activity) {
         this.activity = activity;
-
         // 初始化回复我的、系统消息Tab页
         userMessageListView = initMessageRecycleView();
         SystemMessageListView = initMessageRecycleView();

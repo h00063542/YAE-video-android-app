@@ -1,10 +1,7 @@
 package com.yilos.nailstar.aboutme.presenter;
 
-import com.alibaba.sdk.android.oss.callback.GetFileCallback;
-import com.alibaba.sdk.android.oss.model.OSSException;
 import com.yilos.nailstar.aboutme.entity.AboutMeNumber;
 import com.yilos.nailstar.aboutme.entity.MessageCount;
-import com.yilos.nailstar.aboutme.entity.PersonInfo;
 import com.yilos.nailstar.aboutme.model.AboutMeServiceImpl;
 import com.yilos.nailstar.aboutme.model.AboutMeService;
 import com.yilos.nailstar.aboutme.view.IAboutMeView;
