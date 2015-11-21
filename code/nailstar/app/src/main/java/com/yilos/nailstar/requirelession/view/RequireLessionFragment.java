@@ -19,8 +19,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.alibaba.sdk.android.oss.callback.SaveCallback;
-import com.alibaba.sdk.android.oss.model.OSSException;
 import com.yilos.nailstar.R;
 import com.yilos.nailstar.aboutme.model.LoginAPI;
 import com.yilos.nailstar.category.model.CategoryListAPI;
