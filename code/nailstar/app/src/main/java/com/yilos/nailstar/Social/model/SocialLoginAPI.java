@@ -1,6 +1,7 @@
 package com.yilos.nailstar.social.model;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -12,6 +13,7 @@ import com.umeng.socialize.controller.listener.SocializeListeners;
 import com.umeng.socialize.exception.SocializeException;
 import com.umeng.socialize.sso.SinaSsoHandler;
 import com.umeng.socialize.sso.UMQQSsoHandler;
+import com.umeng.socialize.sso.UMSsoHandler;
 import com.umeng.socialize.weixin.controller.UMWXHandler;
 import com.yilos.nailstar.framework.application.NailStarApplication;
 
@@ -40,6 +42,14 @@ public class SocialLoginAPI {
         mController.getConfig().setSsoHandler(new SinaSsoHandler());
     }
 
+    // 新浪微博SSO回调
+    public void authorizeCallbackSina(int requestCode, int resultCode, Intent data) {
+        UMSsoHandler ssoHandler = mController.getConfig().getSsoHandler(requestCode) ;
+        if(ssoHandler != null){
+            ssoHandler.authorizeCallBack(requestCode, resultCode, data);
+        }
+    }
+
     public void weixinLogin(final Activity activity, final SocialLoginResultListener<LoginData> loginListener) {
         login(activity, new WeixinResultParser(), loginListener);
     }
@@ -64,16 +74,15 @@ public class SocialLoginAPI {
 
             @Override
             public void onComplete(final Bundle bundle, SHARE_MEDIA share_media) {
-                Toast.makeText(activity, "授权完成", Toast.LENGTH_SHORT).show();
                 loginListener.beginLoadData();
                 mController.getPlatformInfo(activity, share_media, new SocializeListeners.UMDataListener() {
                     @Override
                     public void onStart() {
-                        Toast.makeText(activity, "获取平台数据开始...", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
                     public void onComplete(int status, Map<String, Object> info) {
+                        Toast.makeText(activity, "授权完成", Toast.LENGTH_SHORT).show();
                         if (status == 200 && info != null) {
                             loginListener.loginSuccess(resultParser.parse(bundle, info));
                         } else {

@@ -47,7 +47,7 @@
         <item name="android:paddingRight">8dp</item>
 
         <item name="android:textAppearance">@style/CustomTabPageIndicator_text</item>
-        <item name="android:textSize">18sp</item>
+        <item name="android:textSize">15sp</item>
 
         <!-- Tab之间的分割线 -->
         <!--<item name="android:divider">@mipmap/vote_black</item>-->
