@@ -27,6 +27,7 @@ public class DownloadPresenter {
 
     public DownloadPresenter(IDownloadVideo downloadVideo) {
         this.downloadVideo = downloadVideo;
+        queryDownLoadInfoList();
         initRefreshTask();
     }
 
@@ -59,6 +60,10 @@ public class DownloadPresenter {
 
     public void resumeDownLoadTask(DownLoadInfo downLoadInfo) {
         downLoadTaskManager.resumeDownLoadTask(downLoadInfo);
+    }
+
+    public List<DownLoadInfo> getDownLoadInfoList() {
+        return downLoadInfoList;
     }
 
 }

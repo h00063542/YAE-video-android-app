@@ -228,8 +228,8 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
                 }
                 break;
             case R.id.downloadVideoBtn:
-                    Intent DownloadIntent = new Intent(getActivity(),DownloadVideo.class);
-                    startActivity(DownloadIntent);
+                    Intent downloadIntent = new Intent(getActivity(),DownloadVideo.class);
+                    startActivity(downloadIntent);
                 break;
             case R.id.about_me_person_info_layout:
                 if (!loginAPI.isLogin()) {
