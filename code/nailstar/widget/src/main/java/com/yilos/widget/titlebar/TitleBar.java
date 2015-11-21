@@ -77,6 +77,12 @@ public class TitleBar extends RelativeLayout {
         return titleView;
     }
 
+    public TextView getTitleView(int resId) {
+        showWidget(titleView);
+        titleView.setText(resId);
+        return titleView;
+    }
+
     public TextView getLeftTitleView() {
         showWidget(leftTitleView);
         return leftTitleView;

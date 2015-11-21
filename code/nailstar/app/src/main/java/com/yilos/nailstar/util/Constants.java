@@ -7,7 +7,7 @@ import android.os.Environment;
  */
 public class Constants {
 
-    public static final String YILOS_API_SERVER= "http://api3.naildaka.com";
+    public static final String YILOS_API_SERVER= "http://192.168.1.113:5013";//"http://api3.naildaka.com";
     public static final String YILOS_STATIC_SERVER = "http://s.naildaka.com";
 
 
@@ -189,5 +189,10 @@ public class Constants {
     public static final String SCORE = "score";
     public static final String MESSAGES = "messages";
     public static final String OK = "ok";
-
+    public static final String USERMESSAGE = "userMessage";
+    public static final String PUBLISH_DATE = "publishDate";
+    public static final String LATEST_MESSAGE_TIME = "latestMessageTime";
+    public static final String USER_MESSAGE_ARRAY_LIST = "userMessageArrayList";
+    public static final String SYSTEM_MESSAGE_LIST = "systemMessageList";
+    public static final String HAS_BEEN_READ = "hasBeenRead";
 }

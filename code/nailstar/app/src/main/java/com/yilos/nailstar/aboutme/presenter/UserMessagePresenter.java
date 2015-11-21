@@ -1,6 +1,5 @@
 package com.yilos.nailstar.aboutme.presenter;
 
-import com.yilos.nailstar.aboutme.entity.MessageComment;
 import com.yilos.nailstar.aboutme.entity.UserMessage;
 import com.yilos.nailstar.aboutme.model.UserMessageService;
 import com.yilos.nailstar.aboutme.model.UserMessageServiceImpl;

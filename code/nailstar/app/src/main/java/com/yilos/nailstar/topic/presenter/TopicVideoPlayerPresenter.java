@@ -358,22 +358,6 @@ public class TopicVideoPlayerPresenter {
         return new StringBuffer().append(imageSrc.substring(imageSrc.lastIndexOf("/"), imageSrc.length())).append(Constants.PNG_SUFFIX).toString();
     }
 
-    public String getTopicCommentDateStr(long time) {
-        Date date = new Date(time);
-        Date today = new Date();
-        long result = today.getTime() - time;
-        if (result / 1000 <= 60) {
-            return "刚刚";
-        } else if (result / 1000 > 60 && result / 1000 <= 3600) {
-            return (int) Math.floor((result / 1000) / 60) + "分钟前";
-        } else if (result / 1000 > 3600 && result / 1000 <= 86400) {
-            return date.getHours() + "点" + date.getMinutes() + "分";
-        } else {
-            return (date.getMonth() + 1) + "月" + date.getDate() + "日";
-        }
-
-    }
-
     public boolean checkHasLocalVideo(String filePath) {
         return StringUtil.isEmpty(filePath) ? false : new File(filePath).exists();
     }

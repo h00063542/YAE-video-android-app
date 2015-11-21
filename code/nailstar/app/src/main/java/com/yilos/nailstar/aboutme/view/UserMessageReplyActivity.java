@@ -1,5 +1,7 @@
 package com.yilos.nailstar.aboutme.view;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.view.View;
@@ -13,6 +15,7 @@ import com.yilos.nailstar.aboutme.model.LoginAPI;
 import com.yilos.nailstar.aboutme.presenter.ReplyUserMessagePresenter;
 import com.yilos.nailstar.aboutme.presenter.UserMessagePresenter;
 import com.yilos.nailstar.framework.view.BaseActivity;
+import com.yilos.nailstar.util.Constants;
 import com.yilos.widget.titlebar.TitleBar;
 
 /**
@@ -32,19 +35,23 @@ public class UserMessageReplyActivity extends BaseActivity implements IReplyMess
         setContentView(R.layout.activity_user_message_reply);
         titleBar = (TitleBar) findViewById(R.id.messageReplyHead);
         titleBar.getBackButton(UserMessageReplyActivity.this);
+        titleBar.getTitleView(R.string.reply);
         sureButton = titleBar.getRightTextButton();
+        sureButton.setText(R.string.sureButtonText);
         messageReplyContent = (EditText) findViewById(R.id.messageReplyContent);
-        UserMessage userMessage = (UserMessage) getIntent().getSerializableExtra("userMessage");
+        final UserMessage userMessage = (UserMessage) getIntent().getSerializableExtra(Constants.USERMESSAGE);
         final String atUser = userMessage.getReply().getAccountName();
         messageReplyContent.setHint("回复" + atUser + ":");
         topicId = userMessage.getTopicId();
         sureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                messageComment.setAtUser(atUser);
-                messageComment.setAuthor(loginAPI.getLoginUserNickname());
+                messageComment.setAtUser(userMessage.getReply().getAccountId());
+                messageComment.setAuthor(loginAPI.getLoginUserId());
                 messageComment.setContent(messageReplyContent.getText().toString().trim());
                 messageComment.setReady(1);
+                messageComment.setLastReplyTo(userMessage.getId());
+                messageComment.setReplyTo(userMessage.getReply().getReplyTo());
                 replyUserMessagePresenter.replyUserMessage(messageComment, topicId);
             }
         });
@@ -52,7 +59,11 @@ public class UserMessageReplyActivity extends BaseActivity implements IReplyMess
 
     @Override
     public void replyUserMessage(MessageComment messageComment) {
-        showShortToast("回复成功");
+        showShortToast(messageComment.getContent() + "回复成功");
+        String id = messageComment.getLastReplyTo();
+        Intent intent = new Intent(UserMessageReplyActivity.this,MessageActivity.class);
+        intent.putExtra(Constants.ID, id);
+        setResult(1, intent);
         finish();
     }
 }
