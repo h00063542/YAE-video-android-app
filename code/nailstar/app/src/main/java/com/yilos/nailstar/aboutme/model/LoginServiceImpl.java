@@ -170,6 +170,83 @@ public class LoginServiceImpl {
         }
     }
 
+    public String weixinLogin(String unionId, String openId, String nickName, String avatar) throws CommonException, NetworkDisconnectException {
+        if (!NailStarApplicationContext.getInstance().isNetworkConnected()) {
+            throw new NetworkDisconnectException("网络好像不给力哦，请检查网络设置");
+        }
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("openId", openId);
+            jsonObject.put("unionId", unionId);
+            jsonObject.put("nickname", nickName);
+            jsonObject.put("avatar", avatar);
+            String result = HttpClient.post("/vapi/nailstar/account/wxLogin", jsonObject.toString());
+            JSONObject resultObject = new JSONObject(result);
+            if (!resultObject.has("code") || resultObject.optInt("code") != 0) {
+                throw new CommonException("登陆失败，请联系客服");
+            } else {
+                JSONObject loginResult = resultObject.getJSONObject("result");
+                return loginResult.getString("userId");
+            }
+        } catch (JSONException e) {
+            throw new CommonException("登录失败，请稍后重试", e);
+        } catch (IOException e) {
+            throw new CommonException("网络好像不给力哦，请检查网络设置", e);
+        }
+    }
+
+    public String weiboLogin(String unionId, String openId, String nickName, String avatar, String weiboUserId) throws CommonException, NetworkDisconnectException {
+        if (!NailStarApplicationContext.getInstance().isNetworkConnected()) {
+            throw new NetworkDisconnectException("网络好像不给力哦，请检查网络设置");
+        }
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("openId", openId);
+            jsonObject.put("unionId", unionId);
+            jsonObject.put("nickname", nickName);
+            jsonObject.put("avatar", avatar);
+            jsonObject.put("weiboUserId", weiboUserId);
+            String result = HttpClient.post("/vapi/nailstar/account/weiboLogin", jsonObject.toString());
+            JSONObject resultObject = new JSONObject(result);
+            if (!resultObject.has("code") || resultObject.optInt("code") != 0) {
+                throw new CommonException("登陆失败，请联系客服");
+            } else {
+                JSONObject loginResult = resultObject.getJSONObject("result");
+                return loginResult.getString("userId");
+            }
+        } catch (JSONException e) {
+            throw new CommonException("登录失败，请稍后重试", e);
+        } catch (IOException e) {
+            throw new CommonException("网络好像不给力哦，请检查网络设置", e);
+        }
+    }
+
+    public String qqLogin(String unionId, String openId, String nickName, String avatar, String qqUserId) throws CommonException, NetworkDisconnectException {
+        if (!NailStarApplicationContext.getInstance().isNetworkConnected()) {
+            throw new NetworkDisconnectException("网络好像不给力哦，请检查网络设置");
+        }
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("openId", openId);
+            jsonObject.put("unionId", unionId);
+            jsonObject.put("nickname", nickName);
+            jsonObject.put("avatar", avatar);
+            jsonObject.put("qqUserId", qqUserId);
+            String result = HttpClient.post("/vapi/nailstar/account/qqLogin", jsonObject.toString());
+            JSONObject resultObject = new JSONObject(result);
+            if (!resultObject.has("code") || resultObject.optInt("code") != 0) {
+                throw new CommonException("登陆失败，请联系客服");
+            } else {
+                JSONObject loginResult = resultObject.getJSONObject("result");
+                return loginResult.getString("userId");
+            }
+        } catch (JSONException e) {
+            throw new CommonException("登录失败，请稍后重试", e);
+        } catch (IOException e) {
+            throw new CommonException("网络好像不给力哦，请检查网络设置", e);
+        }
+    }
+
     /**
      * 查询用户的个人信息
      *

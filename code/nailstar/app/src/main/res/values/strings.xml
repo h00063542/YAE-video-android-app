@@ -169,4 +169,6 @@
     <string name="can_not_find_version_name">版本号没有找到</string>
     <string name="title_activity_search">SearchActivity</string>
     <string name="title_activity_category_list">CategoryListActivity</string>
+
+    <string name="has_been_reply">已回复</string>
 </resources>

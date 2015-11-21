@@ -3,6 +3,7 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:padding="@dimen/common_20_dp"
     android:gravity="center">
     <ProgressBar
         android:id="@+id/pull_to_load_progress"

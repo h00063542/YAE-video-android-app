@@ -5,7 +5,7 @@ android {
         config {
             keyAlias 'meijiadaka'
             keyPassword 'meijiadaka'
-            storeFile file('/Users/yangdan/loslife/YAE-video-android-app/code/nailstar/app/keystore/nailstar_keystore.jks')
+            storeFile file('./keystore/nailstar_keystore.jks')
             storePassword 'meijiadaka'
         }
     }

@@ -173,5 +173,21 @@ public class Constants {
     public static final String DEFAULT_OSS_HOST_ID = "oss-cn-hangzhou.aliyuncs.com";
 
 
+    public static final String TEACHER = "teacher";
+    public static final String COMMENT = "comment";
+    public static final String ATNAME = "atName";
+    public static final String REPLY  = "reply";
+    public static final String ACCOUNTID = "accountId";
+    public static final String ACCOUNTNAME = "accountName";
+    public static final String ACCOUNTPHOTO = "accountPhoto";
+
+    /**
+     * 已回复：true
+     * 未回复：false
+     */
+    public static final String HASBEENREPLY = "hasBeenReply";
+    public static final String SCORE = "score";
+    public static final String MESSAGES = "messages";
+    public static final String OK = "ok";
 
 }

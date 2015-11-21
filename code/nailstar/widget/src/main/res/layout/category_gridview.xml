@@ -5,7 +5,7 @@
     android:numColumns="4"
     android:gravity="center"
     android:orientation="vertical"
-    android:padding="10dp"
+    android:padding="15dp"
     android:background="@color/white">
 
     <TableRow
@@ -18,7 +18,7 @@
     <TableRow
         android:id="@+id/downLayout"
         android:layout_width="match_parent"
-        android:layout_marginTop="10dp">
+        android:layout_marginTop="15dp">
 
     </TableRow>
 
