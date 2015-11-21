@@ -207,7 +207,7 @@ public class CirclePageIndicator extends View {
         return containerWidth - tabItemsLength;
     }
     private void layoutMovingItem(int position,final float positionOffset){
-        if(movingItem == null){
+        if(movingItem == null || tabItems == null || tabItems.size() == 0){
             //throw new IllegalStateException("forget to create movingItem?");
             return;
         }

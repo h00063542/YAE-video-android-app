@@ -156,6 +156,10 @@ public class IndexFragment extends Fragment implements IIndexView {
 
     @Override
     public void initPosters(final List<Poster> posters) {
+        if(null == posters) {
+            return;
+        }
+
         posterBanner.setViewCreator(new PosterViewCreator((BaseActivity)getActivity(), posters));
         ((CirclePageIndicator)view.findViewById(R.id.indicator)).setViewPager(posterBanner);
         posterBanner.play();
