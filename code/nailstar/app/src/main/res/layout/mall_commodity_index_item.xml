@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <com.yilos.widget.view.ImageCacheView
+        android:id="@+id/index_commodity_item_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+    <TextView
+        android:id="@+id/index_commodity_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="10dp"
+        android:textColor="@color/orange"
+        android:textSize="15sp"
+        android:layout_gravity="bottom"
+        />
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/index_commodity_price_unit"
+            android:layout_width="wrap_content"
+            android:layout_height="24dp"
+            android:paddingLeft="10dp"
+            android:textColor="@color/orange"
+            android:textSize="15sp"
+            android:text="@string/index_commodity_hot_1_price_unit"
+            android:layout_gravity="bottom"
+            />
+        <TextView
+            android:id="@+id/index_commodity_price"
+            android:layout_width="wrap_content"
+            android:layout_height="24dp"
+            android:paddingLeft="10dp"
+            android:textColor="@color/orange"
+            android:textSize="15sp"
+            android:layout_gravity="bottom"
+            />
+    </LinearLayout>
+</LinearLayout>
