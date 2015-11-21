@@ -1,6 +1,7 @@
 package com.yilos.nailstar.aboutme.view;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.net.Uri;
 import android.util.DisplayMetrics;
 import android.view.View;
@@ -76,7 +77,7 @@ public class DownLoadVideoAdapter extends BaseAdapter {
             holder = new ViewHolder();
             holder.downloadAuthorName = (TextView) convertView.findViewById(R.id.downloadAuthorName);
             holder.downloadAuthorPhoto = (CircleImageView) convertView.findViewById(R.id.downloadAuthorPhoto);
-            holder.downloadImage = (ImageView) convertView.findViewById(R.id.downloadImage);
+            holder.downloadImage = (ImageCacheView) convertView.findViewById(R.id.downloadImage);
             holder.downloadOperation = (ImageView) convertView.findViewById(R.id.downloadOperation);
             holder.downloadTopic = (TextView) convertView.findViewById(R.id.downloadTopic);
             holder.downloadProgressBar = (ProgressBar) convertView.findViewById(R.id.downloadProgressBar);
@@ -102,7 +103,7 @@ public class DownLoadVideoAdapter extends BaseAdapter {
             holder.downloadAuthorPhoto.setImageResource(R.mipmap.ic_default_photo);
         }
         if (downLoadInfo.getIamge() != null) {
-            holder.downloadImage.setImageURI(Uri.parse(downLoadInfo.getIamge()));
+            holder.downloadImage.setImageSrc("file://" + downLoadInfo.getIamge());
         } else {
             holder.downloadImage.setImageURI(null);
         }
@@ -120,7 +121,10 @@ public class DownLoadVideoAdapter extends BaseAdapter {
             holder.downloadOperation.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    // TODO
+                    Intent downloadVideoPlayer = new Intent(context, DownloadVideoPlayer.class);
+                    downloadVideoPlayer.putExtra(DownloadVideoPlayer.TITLE, downLoadInfo.getTitle());
+                    downloadVideoPlayer.putExtra(DownloadVideoPlayer.URL, downLoadInfo.getPath());
+                    context.startActivity(downloadVideoPlayer);
                 }
             });
         } else if (downLoadInfo.getStatus() == DownloadConstants.DOWNLOAD_STOP) {
@@ -161,7 +165,7 @@ public class DownLoadVideoAdapter extends BaseAdapter {
     }
 
     class ViewHolder {
-        public ImageView downloadImage;
+        public ImageCacheView downloadImage;
         public ImageView downloadOperation;
         public TextView downloadTopic;
         public CircleImageView downloadAuthorPhoto;

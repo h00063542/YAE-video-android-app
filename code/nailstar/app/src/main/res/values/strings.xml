@@ -74,6 +74,8 @@
     <string name="about_me_person_info">个人资料</string>
     <string name="about_me_collect">收藏</string>
     <string name="about_me_downloaded">已下载</string>
+    <string name="downloaded_no_video">还没有下载视频</string>
+    <string name="downloaded_no_video_description">下载视频可以随时观看，不用担心流量</string>
     <string name="about_me_my_require_lesson">我的求教程</string>
     <string name="about_me_give_us_advice">给我们提意见</string>
     <string name="about_me_share">分享美甲大咖给朋友</string>
