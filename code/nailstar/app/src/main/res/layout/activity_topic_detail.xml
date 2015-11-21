@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:clipToPadding="true"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
+    tools:context=".topic.view.TopicDetailActivity">
+
+    <!--视频播放界面顶部控件，返回按钮，视频名称，下载按钮,分享按钮-->
+    <com.yilos.widget.titlebar.TitleBar
+        android:id="@+id/tb_video_player_head"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <!--<LinearLayout-->
+        <!--android:id="@+id/webView_layout"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="500dp"-->
+        <!--android:orientation="horizontal"></LinearLayout>-->
+
+    <!--视频播放界面中间部分，视频播放框，图文分解，更多视频，评论-->
+    <com.yilos.widget.pullrefresh.PullToRefreshView
+        android:id="@+id/topic_pull_refresh_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <ListView
+            android:id="@+id/lv_topic_detail"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@null">
+
+        </ListView>
+
+    </com.yilos.widget.pullrefresh.PullToRefreshView>
+
+    <!--视频播放界面底部，下载，收藏，评论，交作业-->
+    <LinearLayout
+        android:id="@+id/layout_video_player_footer"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/common_main_tab_height"
+        android:background="@drawable/top_border"
+        android:orientation="horizontal">
+
+        <CheckBox
+            android:id="@+id/cb_topic_tab_like"
+            style="@style/MMTabButton"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/topic_tab_like_menus"
+            android:text="@string/like"
+            android:textColor="@drawable/main_tab_text_color" />
+
+        <CheckBox
+            android:id="@+id/cb_topic_tab_collection"
+            style="@style/MMTabButton"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/topic_tab_collection_menus"
+            android:text="@string/collection"
+            android:textColor="@drawable/main_tab_text_color" />
+
+        <TextView
+            android:id="@+id/tv_topic_tab_comment"
+            style="@style/MMTabButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/topic_tab_comment_menus"
+            android:gravity="center_horizontal"
+            android:text="@string/comment"
+            android:textColor="@drawable/main_tab_text_color" />
+
+        <TextView
+            android:id="@+id/tv_submitted_homework"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal|center_vertical"
+            android:layout_marginTop="2px"
+            android:layout_weight="1"
+            android:background="@color/submitted_homework_background_color"
+            android:gravity="center_horizontal|center_vertical"
+            android:text="@string/submitted_homework"
+            android:textColor="@color/white" />
+
+    </LinearLayout>
+
+
+</LinearLayout>

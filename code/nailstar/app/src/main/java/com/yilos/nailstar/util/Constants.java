@@ -7,7 +7,7 @@ import android.os.Environment;
  */
 public class Constants {
 
-    public static final String YILOS_API_SERVER= "http://192.168.1.113:5013";//"http://api3.naildaka.com";
+    public static final String YILOS_API_SERVER = "http://api3.naildaka.com";//"http://api3.naildaka.com";
     public static final String YILOS_STATIC_SERVER = "http://s.naildaka.com";
 
 
@@ -153,7 +153,7 @@ public class Constants {
     public static final int HOMEWORK_PIC_PIXEL = 400;
 
 
-    public static final String TOPIC_PRODUCT_HELPER_URL = YILOS_STATIC_SERVER+"/shop/rule.html";
+    public static final String TOPIC_PRODUCT_HELPER_URL = YILOS_STATIC_SERVER + "/shop/rule.html";
 
     /**
      * 通用WebView展示参数
@@ -168,15 +168,15 @@ public class Constants {
     public static final String ISV_CODE = "nailstar_app_android";
 
 
-
     public static final String YILOS_PIC_URL = "http://pic.yilos.com/";
     public static final String DEFAULT_OSS_HOST_ID = "oss-cn-hangzhou.aliyuncs.com";
+    public static final String TOPIC_SHARE_URL = "http://s.naildaka.com/site/video_detail.html?topicId=%1$s&allowBack=1";
 
 
     public static final String TEACHER = "teacher";
     public static final String COMMENT = "comment";
     public static final String ATNAME = "atName";
-    public static final String REPLY  = "reply";
+    public static final String REPLY = "reply";
     public static final String ACCOUNTID = "accountId";
     public static final String ACCOUNTNAME = "accountName";
     public static final String ACCOUNTPHOTO = "accountPhoto";
