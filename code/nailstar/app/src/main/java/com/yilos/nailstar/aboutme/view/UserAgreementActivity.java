@@ -1,9 +1,7 @@
 package com.yilos.nailstar.aboutme.view;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.webkit.WebView;
-import android.widget.TextView;
 
 import com.yilos.nailstar.R;
 import com.yilos.nailstar.framework.view.BaseActivity;
@@ -14,7 +12,6 @@ import com.yilos.widget.titlebar.TitleBar;
  */
 public class UserAgreementActivity extends BaseActivity {
     private TitleBar titleBar;
-    private TextView titleText;
     private WebView webView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,7 +20,7 @@ public class UserAgreementActivity extends BaseActivity {
         titleBar = (TitleBar) findViewById(R.id.user_agreement_title_bar);
         titleBar.getBackButton(UserAgreementActivity.this);
         String title = getResources().getString(R.string.title_activity_licence);
-        titleText = titleBar.getTitleView(title);
+        titleBar.getTitleView(title);
         webView = (WebView) findViewById(R.id.user_agreement_web_view);
         webView.loadUrl("file:///android_asset/licence.html");
     }

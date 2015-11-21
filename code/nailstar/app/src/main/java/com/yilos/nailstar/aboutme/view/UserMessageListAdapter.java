@@ -131,8 +131,10 @@ public class UserMessageListAdapter extends RecyclerView.Adapter<UserMessageList
 
         if (hasBeenReply) {
             holder.hasBeenReply.setVisibility(View.VISIBLE);
+            holder.replyButton.setVisibility(View.GONE);
         } else {
             holder.replyButton.setVisibility(View.VISIBLE);
+            holder.hasBeenReply.setVisibility(View.GONE);
         }
 
         holder.accountPhoto.setImageSrc(accountPhoto);
