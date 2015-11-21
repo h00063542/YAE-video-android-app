@@ -93,8 +93,6 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         PullToRefreshView.OnFooterRefreshListener {
     private final Logger LOGGER = LoggerFactory.getLogger(TopicVideoPlayerActivity.class);
 
-    private final String TAG = "TopicVideoPlayerActivity";
-
     private final int TOPIC_COMMENT_REQUEST_CODE = 3;
     private final int TOPIC_HOMEWORK_REQUEST_CODE = 4;
     private final int HOMEWORK_IMAGE_ZOOM_ANIMATION_TIME = 200;
@@ -860,7 +858,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         checkInitFinish();
         //TODO 提示获取视频信息失败
         if (null == topicInfo) {
-            LOGGER.error(TAG + " 获取topic信息为null，topicId:" + mTopicId);
+            LOGGER.error("获取topic信息为null，topicId:" + mTopicId);
             return;
         }
         mTopicInfo = topicInfo;
@@ -934,7 +932,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         checkInitFinish();
         //TODO 提示获取视频图文信息失败
         if (null == topicImageTextInfo) {
-            LOGGER.error(TAG + " 获取topic图文信息为null，topicId:" + mTopicId);
+            LOGGER.error("获取topic图文信息为null，topicId:" + mTopicId);
             return;
         }
         mTopicImageTextInfo = topicImageTextInfo;
@@ -1075,7 +1073,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         initTopicRelatedInfoFinish = true;
         checkInitFinish();
         if (CollectionUtil.isEmpty(topicRelatedList)) {
-            LOGGER.error(TAG + " topic没有关联其他的的topics，topicId:" + mTopicId);
+            LOGGER.error("topic没有关联其他的的topics，topicId:" + mTopicId);
             return;
         }
         LinearLayout.LayoutParams layoutLp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1.0f);
@@ -1124,7 +1122,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         initTopicRelatedUsedProductsFinish = true;
         checkInitFinish();
         if (CollectionUtil.isEmpty(topicRelatedProductList)) {
-            LOGGER.warn(TAG + " topic没有关联商品信息，topicId:" + mTopicId);
+            LOGGER.warn("topic没有关联商品信息，topicId:" + mTopicId);
             //使用产品区隐藏
             ((LinearLayout) findViewById(R.id.layout_used_products)).setVisibility(View.GONE);
             ((LinearLayout) findViewById(R.id.layout_used_product_line)).setVisibility(View.GONE);
@@ -1347,7 +1345,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
                         .append(getString(R.string.submitted_homework))
                         .append("#    ");
             }
-            contentText.append(mTopicVideoPlayerPresenter.getTopicCommentDateStr(topicCommentInfo.getCreateDate()))
+            contentText.append(StringUtil.getTopicCommentDateStr(topicCommentInfo.getCreateDate()))
                     .append("</font>");
 
 
