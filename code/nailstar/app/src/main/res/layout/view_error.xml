@@ -3,6 +3,7 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:padding="@dimen/common_20_dp"
     android:gravity="center">
     <TextView
         android:layout_width="wrap_content"
@@ -11,5 +12,4 @@
         android:textColor="@android:color/black"
         android:textStyle="bold"
         android:text="网络不给力哦，请点击重试"/>
-
 </LinearLayout>

@@ -60,9 +60,11 @@
     <com.jude.easyrecyclerview.EasyRecyclerView
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
-        android:padding="@dimen/common_10_dp"
         android:visibility="gone"
+        android:padding="@dimen/common_5_dp"
         app:layout_progress="@layout/view_progress"
+        android:layout_gravity="center"
+        android:gravity="center"
         android:id="@+id/videoList">
     </com.jude.easyrecyclerview.EasyRecyclerView>
 </LinearLayout>

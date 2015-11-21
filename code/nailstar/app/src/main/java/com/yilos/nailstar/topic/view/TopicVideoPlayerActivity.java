@@ -93,8 +93,6 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         PullToRefreshView.OnFooterRefreshListener {
     private final Logger LOGGER = LoggerFactory.getLogger(TopicVideoPlayerActivity.class);
 
-    private final String TAG = "TopicVideoPlayerActivity";
-
     private final int TOPIC_COMMENT_REQUEST_CODE = 3;
     private final int TOPIC_HOMEWORK_REQUEST_CODE = 4;
     private final int HOMEWORK_IMAGE_ZOOM_ANIMATION_TIME = 200;
@@ -326,16 +324,11 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         //&& SharedPreferencesUtil.getAllowNoWifi(this)
 
         // WIFI环境下显示播放按钮
-        if (NailStarApplicationContext.getInstance().isWifi()) {
-            mIvVideoPlayIcon.setVisibility(View.VISIBLE);
-            mLayoutVideoPlayNotWifi.setVisibility(View.GONE);
-        } else {//否则给用户选择提示
-            mIvVideoPlayIcon.setVisibility(View.GONE);
-            mLayoutVideoPlayNotWifi.setVisibility(View.VISIBLE);
-        }
+        initVideoPlayerIcon();
 
         // 根据视频宽高比例，重新计算视频播放器高度
         mVDVideoView.getLayoutParams().height = (int) (widthPixels / Constants.VIDEO_ASPECT_RATIO);
+        findViewById(R.id.video_player_icon_tips_layout).getLayoutParams().height = mVDVideoView.getLayoutParams().height;
 
         // 作者信息
         mIvVideoAuthorPhoto = (CircleImageView) findViewById(R.id.iv_video_author_photo);
@@ -445,7 +438,6 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
                 //下载视频
                 showShortToast(getString(R.string.add_video_download));
                 mTopicVideoPlayerPresenter.downloadVideo(mTopicInfo);
-                // TODO 提示视频已经在下载了
             }
         });
 
@@ -458,18 +450,20 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
             }
         });
 
-//        mVDVideoView.setPlayerChangeListener(new VDVideoExtListeners.OnVDVideoPlayerChangeListener() {
-//            @Override
-//            public void OnVDVideoPlayerChangeSwitch(int index, long position) {
-//                Log.e(TAG, "setPlayerChangeListener,index:" + index + ",position:" + position);
-//            }
-//        });
-//        mVDVideoView.setCompletionListener(new VDVideoExtListeners.OnVDVideoCompletionListener() {
-//            @Override
-//            public void onVDVideoCompletion(VDVideoInfo info, int status) {
-//                Log.e(TAG, "setCompletionListener");
-//            }
-//        });
+        // 设置视频播放监听
+        mVDVideoView.setCompletionListener(new VDVideoExtListeners.OnVDVideoCompletionListener() {
+            @Override
+            public void onVDVideoCompletion(VDVideoInfo info, int status) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+//                        showLongToast("视频播放结束");
+                        mPlayIconParent.setVisibility(View.VISIBLE);
+                        initVideoPlayerIcon();
+                    }
+                });
+            }
+        });
 
 
 //        // 添加滚动监听
@@ -724,6 +718,17 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         mTopicRelateProductLineHeight = getResources().getDimensionPixelSize(R.dimen.topic_related_used_product_height);
     }
 
+    private void initVideoPlayerIcon() {
+        //WIFI环境下显示播放按钮
+        if (NailStarApplicationContext.getInstance().isWifi()) {
+            mIvVideoPlayIcon.setVisibility(View.VISIBLE);
+            mLayoutVideoPlayNotWifi.setVisibility(View.GONE);
+        } else {//否则给用户选择提示
+            mIvVideoPlayIcon.setVisibility(View.GONE);
+            mLayoutVideoPlayNotWifi.setVisibility(View.VISIBLE);
+        }
+    }
+
 
     /**
      * 显示或隐藏图文分解详情
@@ -853,7 +858,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         checkInitFinish();
         //TODO 提示获取视频信息失败
         if (null == topicInfo) {
-            LOGGER.error(TAG + " 获取topic信息为null，topicId:" + mTopicId);
+            LOGGER.error("获取topic信息为null，topicId:" + mTopicId);
             return;
         }
         mTopicInfo = topicInfo;
@@ -927,7 +932,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         checkInitFinish();
         //TODO 提示获取视频图文信息失败
         if (null == topicImageTextInfo) {
-            LOGGER.error(TAG + " 获取topic图文信息为null，topicId:" + mTopicId);
+            LOGGER.error("获取topic图文信息为null，topicId:" + mTopicId);
             return;
         }
         mTopicImageTextInfo = topicImageTextInfo;
@@ -1068,7 +1073,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         initTopicRelatedInfoFinish = true;
         checkInitFinish();
         if (CollectionUtil.isEmpty(topicRelatedList)) {
-            LOGGER.error(TAG + " topic没有关联其他的的topics，topicId:" + mTopicId);
+            LOGGER.error("topic没有关联其他的的topics，topicId:" + mTopicId);
             return;
         }
         LinearLayout.LayoutParams layoutLp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1.0f);
@@ -1117,7 +1122,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         initTopicRelatedUsedProductsFinish = true;
         checkInitFinish();
         if (CollectionUtil.isEmpty(topicRelatedProductList)) {
-            LOGGER.warn(TAG + " topic没有关联商品信息，topicId:" + mTopicId);
+            LOGGER.warn("topic没有关联商品信息，topicId:" + mTopicId);
             //使用产品区隐藏
             ((LinearLayout) findViewById(R.id.layout_used_products)).setVisibility(View.GONE);
             ((LinearLayout) findViewById(R.id.layout_used_product_line)).setVisibility(View.GONE);
@@ -1340,7 +1345,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
                         .append(getString(R.string.submitted_homework))
                         .append("#    ");
             }
-            contentText.append(mTopicVideoPlayerPresenter.getTopicCommentDateStr(topicCommentInfo.getCreateDate()))
+            contentText.append(StringUtil.getTopicCommentDateStr(topicCommentInfo.getCreateDate()))
                     .append("</font>");
 
 

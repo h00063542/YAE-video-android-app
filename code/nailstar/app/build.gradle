@@ -5,7 +5,7 @@ android {
         config {
             keyAlias 'meijiadaka'
             keyPassword 'meijiadaka'
-            storeFile file('/Users/yangdan/loslife/YAE-video-android-app/code/nailstar/app/keystore/nailstar_keystore.jks')
+            storeFile file('./keystore/nailstar_keystore.jks')
             storePassword 'meijiadaka'
         }
     }
@@ -45,6 +45,7 @@ dependencies {
     compile 'com.readystatesoftware.systembartint:systembartint:1.0.3'
     compile 'com.jude:easyrecyclerview:3.2.3'
     compile 'com.umeng.analytics:analytics:latest.integration'
+    compile 'com.etsy.android.grid:library:1.0.5'
     compile project(':widget')
     compile project(':umengsocialsdk')
     compile project(':taobaoSDKSimple')

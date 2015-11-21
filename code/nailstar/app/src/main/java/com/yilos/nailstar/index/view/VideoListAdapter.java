@@ -1,11 +1,12 @@
 package com.yilos.nailstar.index.view;
 
-import android.content.Context;
+import android.app.Activity;
 import android.view.ViewGroup;
 
 import com.jude.easyrecyclerview.adapter.BaseViewHolder;
 import com.jude.easyrecyclerview.adapter.RecyclerArrayAdapter;
 import com.yilos.nailstar.R;
+import com.yilos.nailstar.framework.application.NailStarApplication;
 import com.yilos.nailstar.framework.entity.CommonResult;
 import com.yilos.nailstar.framework.exception.CommonException;
 import com.yilos.nailstar.index.entity.Topic;
@@ -21,20 +22,24 @@ public class VideoListAdapter extends RecyclerArrayAdapter<Topic> implements Rec
 
     private int currentPage = 1;
 
-    public VideoListAdapter(Context context, List<Topic> objects, OnLoadPagedDataListener onLoadPagedDataListener) {
-        super(context);
+    private int topicWidth;
+
+    public VideoListAdapter(Activity activity, List<Topic> objects, OnLoadPagedDataListener onLoadPagedDataListener) {
+        super(activity);
         this.onLoadPagedDataListener = onLoadPagedDataListener;
 
         setMore(R.layout.view_more, this);
         setNoMore(R.layout.view_nomore);
         setError(R.layout.view_error);
 
+        topicWidth = (NailStarApplication.getApplication().getScreenWidth(activity) - 4 * activity.getResources().getDimensionPixelSize(R.dimen.common_10_dp)) / 3;
+
         addAll(objects);
     }
 
     @Override
     public BaseViewHolder OnCreateViewHolder(ViewGroup viewGroup, int i) {
-        return new VideoListItemHolder(viewGroup);
+        return new VideoListItemHolder(viewGroup, topicWidth);
     }
 
     @Override

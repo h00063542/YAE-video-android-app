@@ -1,9 +1,6 @@
 package com.yilos.nailstar.download;
 
-import android.util.Log;
-
 import com.squareup.okhttp.Call;
-import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Response;
 import com.squareup.okhttp.Request;

@@ -11,6 +11,7 @@ import com.yilos.nailstar.aboutme.view.AboutMeFragment;
 import com.yilos.nailstar.circle.CircleFragment;
 import com.yilos.nailstar.framework.view.BaseActivity;
 import com.yilos.nailstar.index.view.IndexFragment;
+import com.yilos.nailstar.mall.view.MallIndexFragment;
 import com.yilos.nailstar.requirelession.view.RequireLessionFragment;
 
 public class MainActivity extends BaseActivity {
@@ -18,7 +19,7 @@ public class MainActivity extends BaseActivity {
     private TextView mainTabNewMessage;
 
     private IndexFragment indexFragment;
-    private CircleFragment circleFragment;
+    private MallIndexFragment mallFragment;
     private RequireLessionFragment requireLessionFragment;
     private AboutMeFragment aboutMeFragment;
 
@@ -42,7 +43,7 @@ public class MainActivity extends BaseActivity {
                     case R.id.main_tab_requirelession:
                         setTabSelection(1);
                         break;
-                    case R.id.main_tab_circle:
+                    case R.id.main_tab_mall:
                         setTabSelection(2);
                         break;
                     case R.id.main_tab_aboutme:
@@ -94,13 +95,13 @@ public class MainActivity extends BaseActivity {
                 }
                 break;
             case 2:
-                if (circleFragment == null) {
+                if (mallFragment == null) {
                     // 如果indexFragment为空，则创建一个并添加到界面上
-                    circleFragment = new CircleFragment();
-                    transaction.add(R.id.tabcontent, circleFragment);
+                    mallFragment = new MallIndexFragment();
+                    transaction.add(R.id.tabcontent, mallFragment);
                 } else {
                     // 如果MessageFragment不为空，则直接将它显示出来
-                    transaction.show(circleFragment);
+                    transaction.show(mallFragment);
                 }
                 break;
             case 3:
@@ -131,8 +132,8 @@ public class MainActivity extends BaseActivity {
         if (requireLessionFragment != null) {
             transaction.hide(requireLessionFragment);
         }
-        if (circleFragment != null) {
-            transaction.hide(circleFragment);
+        if (mallFragment != null) {
+            transaction.hide(mallFragment);
         }
         if (aboutMeFragment != null) {
             transaction.hide(aboutMeFragment);

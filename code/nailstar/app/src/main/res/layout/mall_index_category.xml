@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="wrap_content"
+    android:gravity="center_vertical"
+    android:layout_height="match_parent">
+    <TextView
+        android:id="@+id/index_commodity_catetory_name"
+        android:layout_width="80dp"
+        android:layout_height="24dp"
+        android:textColor="@color/z1"
+        android:text="类别"
+        android:textSize="12sp"
+        android:gravity="center_vertical|center_horizontal"
+
+        />
+</LinearLayout>

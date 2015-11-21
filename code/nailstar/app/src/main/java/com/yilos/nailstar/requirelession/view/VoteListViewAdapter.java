@@ -350,55 +350,54 @@ public class VoteListViewAdapter extends BaseAdapter {
     @NonNull
     private View handleRankingList(final int position, View convertView) {
 
-        ViewHolder holder;
+        RankingViewHolder holder;
 
-        if (convertView == null || !((ViewHolder) convertView.getTag()).viewType.equals(ViewType.RANKING_LIST)) {
+        if (convertView == null || convertView.getTag(R.id.lession_ranking_type) == null) {
 
             convertView = layoutInflater.inflate(R.layout.lession_ranking_item, null);
 
-            holder = new ViewHolder();
-            holder.viewType = ViewType.RANKING_LIST;
-            holder.rankingItem.lessionRankingNo = (TextView) convertView.findViewById(R.id.lessionRankingNo);
-            holder.rankingItem.lessionRankingImg = (ImageCacheView) convertView.findViewById(R.id.lessionRankingImg);
-            holder.rankingItem.lessionAuthorPhoto = (CircleImageView) convertView.findViewById(R.id.lessionAuthorPhoto);
-            holder.rankingItem.lessionAuthorName = (TextView) convertView.findViewById(R.id.lessionAuthorName);
-            holder.rankingItem.lessionVoteCount = (TextView) convertView.findViewById(R.id.lessionVoteCount);
-            holder.rankingItem.lessionVotePic = (ImageView) convertView.findViewById(R.id.lessionVotePic);
-            holder.rankingItem.lessionVote = (TextView) convertView.findViewById(R.id.lessionVote);
-            holder.rankingItem.lessionCanvass = (Button) convertView.findViewById(R.id.lessionCanvass);
+            holder = new RankingViewHolder();
+            holder.lessionRankingNo = (TextView) convertView.findViewById(R.id.lessionRankingNo);
+            holder.lessionRankingImg = (ImageCacheView) convertView.findViewById(R.id.lessionRankingImg);
+            holder.lessionAuthorPhoto = (CircleImageView) convertView.findViewById(R.id.lessionAuthorPhoto);
+            holder.lessionAuthorName = (TextView) convertView.findViewById(R.id.lessionAuthorName);
+            holder.lessionVoteCount = (TextView) convertView.findViewById(R.id.lessionVoteCount);
+            holder.lessionVotePic = (ImageView) convertView.findViewById(R.id.lessionVotePic);
+            holder.lessionVote = (TextView) convertView.findViewById(R.id.lessionVote);
+            holder.lessionCanvass = (Button) convertView.findViewById(R.id.lessionCanvass);
 
             // 设置头像大小
-            holder.rankingItem.lessionAuthorPhoto.getLayoutParams().width = screenWidth / 18;
-            holder.rankingItem.lessionAuthorPhoto.getLayoutParams().height = screenWidth / 18;
+            holder.lessionAuthorPhoto.getLayoutParams().width = screenWidth / 18;
+            holder.lessionAuthorPhoto.getLayoutParams().height = screenWidth / 18;
 
-            convertView.setTag(holder);
+            convertView.setTag(R.id.lession_ranking_type, holder);
 
         } else {
 
-            holder = (ViewHolder) convertView.getTag();
+            holder = (RankingViewHolder) convertView.getTag(R.id.lession_ranking_type);
 
         }
 
         final CandidateLession candidateLession = rankingLessionList.get(position);
 
-        holder.rankingItem.lessionRankingNo.setText(String.valueOf(position + 1));
-        holder.rankingItem.lessionAuthorName.setText(candidateLession.getAuthorName());
-        holder.rankingItem.lessionVoteCount.setText(String.valueOf(candidateLession.getVoteCount()));
+        holder.lessionRankingNo.setText(String.valueOf(position + 1));
+        holder.lessionAuthorName.setText(candidateLession.getAuthorName());
+        holder.lessionVoteCount.setText(String.valueOf(candidateLession.getVoteCount()));
 
         if (candidateLession.getPicUrl() != null && !"".equals(candidateLession.getPicUrl())) {
-            holder.rankingItem.lessionRankingImg.setImageSrc(candidateLession.getPicUrl());
+            holder.lessionRankingImg.setImageSrc(candidateLession.getPicUrl());
         } else {
-            holder.rankingItem.lessionRankingImg.setImageResource(R.mipmap.ic_default_image);
+            holder.lessionRankingImg.setImageResource(R.mipmap.ic_default_image);
         }
 
         if (candidateLession.getAuthorPhoto() != null && !"".equals(candidateLession.getAuthorPhoto())) {
-            holder.rankingItem.lessionAuthorPhoto.setImageSrc(candidateLession.getAuthorPhoto());
+            holder.lessionAuthorPhoto.setImageSrc(candidateLession.getAuthorPhoto());
         } else {
-            holder.rankingItem.lessionAuthorPhoto.setImageResource(R.mipmap.ic_default_photo);
+            holder.lessionAuthorPhoto.setImageResource(R.mipmap.ic_default_photo);
         }
 
         // 点击图片显示大图
-        holder.rankingItem.lessionRankingImg.setOnClickListener(new View.OnClickListener() {
+        holder.lessionRankingImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // 点击的时候记录当前打开的图，以便保存或者举报的时候用
@@ -418,32 +417,32 @@ public class VoteListViewAdapter extends BaseAdapter {
             }
         };
 
-        holder.rankingItem.lessionVotePic.setOnClickListener(voteBtnListener);
-        holder.rankingItem.lessionVote.setOnClickListener(voteBtnListener);
+        holder.lessionVotePic.setOnClickListener(voteBtnListener);
+        holder.lessionVote.setOnClickListener(voteBtnListener);
 
         // 是否已投票
         if (candidateLession.getVoted() > 0) {
 
-            holder.rankingItem.lessionVotePic.setImageResource(R.mipmap.voted);
-            holder.rankingItem.lessionVote.setText(R.string.voted);
-            holder.rankingItem.lessionVote.setTextColor(context.getResources().getColor(R.color.orange));
+            holder.lessionVotePic.setImageResource(R.mipmap.voted);
+            holder.lessionVote.setText(R.string.voted);
+            holder.lessionVote.setTextColor(context.getResources().getColor(R.color.orange));
 
         } else {
 
-            holder.rankingItem.lessionVotePic.setImageResource(R.mipmap.vote_black);
-            holder.rankingItem.lessionVote.setText(R.string.vote);
-            holder.rankingItem.lessionVote.setTextColor(context.getResources().getColor(R.color.z3));
+            holder.lessionVotePic.setImageResource(R.mipmap.vote_black);
+            holder.lessionVote.setText(R.string.vote);
+            holder.lessionVote.setTextColor(context.getResources().getColor(R.color.z3));
         }
 
         // 当前阶段是否能投票
         if (canVote(stage)) {
-            holder.rankingItem.lessionVotePic.setVisibility(View.VISIBLE);
-            holder.rankingItem.lessionVote.setVisibility(View.VISIBLE);
-            holder.rankingItem.lessionCanvass.setVisibility(View.VISIBLE);
+            holder.lessionVotePic.setVisibility(View.VISIBLE);
+            holder.lessionVote.setVisibility(View.VISIBLE);
+            holder.lessionCanvass.setVisibility(View.VISIBLE);
         } else {
-            holder.rankingItem.lessionVotePic.setVisibility(View.GONE);
-            holder.rankingItem.lessionVote.setVisibility(View.GONE);
-            holder.rankingItem.lessionCanvass.setVisibility(View.GONE);
+            holder.lessionVotePic.setVisibility(View.GONE);
+            holder.lessionVote.setVisibility(View.GONE);
+            holder.lessionCanvass.setVisibility(View.GONE);
         }
 
         return convertView;
@@ -452,16 +451,15 @@ public class VoteListViewAdapter extends BaseAdapter {
     @NonNull
     private View handleVoteList(final int position, View convertView) {
 
-        ViewHolder holder;
+        VoteItemViewHolder holder;
 
         Long now = System.currentTimeMillis();
 
-        if (convertView == null || !((ViewHolder) convertView.getTag()).viewType.equals(ViewType.VOTE_LIST)) {
+        if (convertView == null || convertView.getTag(R.id.lession_vote_type) == null) {
 
             convertView = layoutInflater.inflate(R.layout.lession_vote_item, null);
 
-            holder = new ViewHolder();
-            holder.viewType = ViewType.VOTE_LIST;
+            holder = new VoteItemViewHolder();
             VoteItem voteItem = new VoteItem();
             voteItem.voteItem = convertView.findViewById(R.id.voteItem0);
             voteItem.lessionVoteImg = (ImageCacheView) convertView.findViewById(R.id.lessionVoteImg0);
@@ -493,11 +491,11 @@ public class VoteListViewAdapter extends BaseAdapter {
                 holder.voteItemList.get(i).lessionVoteImg.setLayoutParams(laParams);
             }
 
-            convertView.setTag(holder);
+            convertView.setTag(R.id.lession_vote_type, holder);
 
         } else {
 
-            holder = (ViewHolder) convertView.getTag();
+            holder = (VoteItemViewHolder) convertView.getTag(R.id.lession_vote_type);
 
         }
 
@@ -626,21 +624,17 @@ public class VoteListViewAdapter extends BaseAdapter {
         return view != null;
     }
 
-    class ViewHolder {
-
-        public ViewType viewType;
-
-        public RankingItem rankingItem;
+    class VoteItemViewHolder {
 
         public List<VoteItem> voteItemList;
 
-        public ViewHolder() {
-            this.rankingItem = new RankingItem();
+        public VoteItemViewHolder() {
+
             this.voteItemList = new ArrayList<>(3);
         }
     }
 
-    class RankingItem {
+    class RankingViewHolder {
 
         // 排行榜的页面组件
 

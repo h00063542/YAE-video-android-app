@@ -14,9 +14,42 @@
         android:orientation="vertical">
 
         <com.yilos.widget.titlebar.TitleBar
-            android:id="@+id/lessionTitleBar"
+            android:id="@+id/downloadVideoTitleBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
+
+        <LinearLayout
+            android:layout_margin="20dp"
+            android:id="@+id/noDownloadVideo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/download_video"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter"
+                android:layout_gravity="center_horizontal" />
+
+            <TextView
+                android:padding="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/downloaded_no_video"
+                android:layout_gravity="center_horizontal" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/downloaded_no_video_description"
+                android:layout_gravity="center_horizontal" />
+
+        </LinearLayout>
 
         <ListView
             android:id="@+id/downloadVideoList"
