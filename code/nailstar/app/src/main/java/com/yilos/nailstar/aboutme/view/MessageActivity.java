@@ -1,6 +1,7 @@
 package com.yilos.nailstar.aboutme.view;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -37,10 +38,6 @@ public class MessageActivity extends BaseActivity implements IMessageView {
 
     private TitleBar titleBar;
     private TextView titleText;
-
-    // Provide a reference to the type of views that you are using
-    // (custom viewholder)
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,11 +78,6 @@ public class MessageActivity extends BaseActivity implements IMessageView {
         }
         ArrayList<UserMessage> userMessageList = getLocalReplyMessage();
         initUserMessageList(userMessageList);
-    }
-
-    @Override
-    public void replyUserMessage(UserMessage userMessage) {
-        showShortToast("回复成功！");
     }
 
     @Override
@@ -178,5 +170,26 @@ public class MessageActivity extends BaseActivity implements IMessageView {
         SharedPreferences.Editor editor = mySharedPreferences.edit();
         editor.putString("userMessageArrayList", jsonObject.toString());
         editor.commit();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (resultCode) {
+            case 1:
+                String id = data.getStringExtra(Constants.ID);
+                ArrayList<UserMessage> userMessageArrayList = getLocalReplyMessage();
+                for (UserMessage userMessage : userMessageArrayList) {
+                    if (userMessage.getId().equals(id)) {
+                        userMessage.setHasBeenReply(true);
+                        break;
+                    }
+                }
+                initUserMessageList(userMessageArrayList);
+                break;
+            default:
+                break;
+        }
     }
 }

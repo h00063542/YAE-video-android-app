@@ -4,7 +4,6 @@ package com.yilos.nailstar.aboutme.view;
  * Created by sisilai on 15/11/12.
  */
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;

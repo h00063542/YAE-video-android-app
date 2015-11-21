@@ -1,7 +1,6 @@
 package com.yilos.nailstar.aboutme.model;
 
 import com.yilos.nailstar.aboutme.entity.MessageComment;
-import com.yilos.nailstar.aboutme.entity.PersonInfo;
 import com.yilos.nailstar.aboutme.entity.UserMessage;
 import com.yilos.nailstar.framework.exception.NetworkDisconnectException;
 import com.yilos.nailstar.util.Constants;
@@ -158,10 +157,7 @@ public class UserMessageServiceImpl implements UserMessageService {
             throw new NetworkDisconnectException("回复失败",e);
         }
         messageCommentObject = new JSONObject(result);
-        if (messageCommentObject.getInt(Constants.CODE) != 0) {
-            return null;
-        }
-        if (messageCommentObject.getJSONObject(Constants.RESULT).getString(Constants.MESSAGES).equals(Constants.OK)) {
+        if (messageCommentObject.getInt(Constants.CODE) == 0) {
             return messageComment;
         }
         return messageComment;
