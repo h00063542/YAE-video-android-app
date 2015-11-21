@@ -14,5 +14,11 @@ public interface ILoginView extends IView {
 
     void setLoginButtonEnable(boolean enable);
 
+    void setWeiboLoginButtonEnable(boolean enable);
+
+    void setWeixinLoginButtonEnable(boolean enable);
+
+    void setQQLoginButtonEnable(boolean enable);
+
     void close();
 }

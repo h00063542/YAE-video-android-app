@@ -142,6 +142,15 @@
         <item>@layout/video_ui_ad_layer</item>
         <item>@layout/video_ui_ad_layer_horizon</item>
     </array>
+    <!-- 只有横屏没有竖屏 -->
+    <array name="sv_videoview_layer_controllayer2">
+        <item>@null</item>
+        <item>@layout/control_layer_horizon</item>
+    </array>
+    <!-- 只横不竖 -->
+    <array name="only_horizon">
+        <item>@array/sv_videoview_layer_controllayer2</item>
+    </array>
 
     <declare-styleable name="CirclePageIndicator">
         <attr name="ci_radius" format="dimension" />

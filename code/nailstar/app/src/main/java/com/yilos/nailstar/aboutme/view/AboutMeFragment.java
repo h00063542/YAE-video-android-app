@@ -1,17 +1,13 @@
 package com.yilos.nailstar.aboutme.view;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
-import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -22,8 +18,7 @@ import com.yilos.nailstar.aboutme.entity.MessageCount;
 import com.yilos.nailstar.aboutme.entity.PersonInfo;
 import com.yilos.nailstar.aboutme.model.LoginAPI;
 import com.yilos.nailstar.aboutme.presenter.AboutMePresenter;
-import com.yilos.nailstar.aboutme.presenter.PersonInfoPresenter;
-import com.yilos.nailstar.util.Constants;
+import com.yilos.nailstar.social.model.SocialAPI;
 import com.yilos.nailstar.util.IdentityUtil;
 import com.yilos.nailstar.util.LevelUtil;
 import com.yilos.widget.circleimageview.CircleImageView;
@@ -195,6 +190,14 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
 //        aboutMeLevel = (TextView)view.findViewById(R.id.about_me_level);
 
         downloadVideoBtn = view.findViewById(R.id.downloadVideoBtn);
+
+        final Activity activity = getActivity();
+        view.findViewById(R.id.about_me_share_group).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SocialAPI.getInstance().share(activity, "美甲大咖，行业最专业的视频教学App", "我试过很多美甲App，最后还是选择了美甲大咖。真爱，经得起等待！", "http://s.naildaka.com/site/share_app.html", R.mipmap.ic_daka_share_image);
+            }
+        });
     }
 
     @Override
@@ -228,8 +231,8 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
                 }
                 break;
             case R.id.downloadVideoBtn:
-                    Intent DownloadIntent = new Intent(getActivity(),DownloadVideo.class);
-                    startActivity(DownloadIntent);
+                    Intent downloadIntent = new Intent(getActivity(),DownloadVideo.class);
+                    startActivity(downloadIntent);
                 break;
             case R.id.about_me_person_info_layout:
                 if (!loginAPI.isLogin()) {
@@ -247,6 +250,7 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
                     loginAPI.gotoLoginPage(getActivity());
                 } else {
                     Intent intent = new Intent(getActivity(),MessageActivity.class);
+                    intent.putExtra("uid",personInfo.getUid());
                     startActivity(intent);
                 }
             default:

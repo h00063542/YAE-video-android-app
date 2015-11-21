@@ -13,6 +13,7 @@ import java.util.List;
  * Created by yangdan on 15/11/17.
  */
 public class SearchResultAdapter extends RecyclerArrayAdapter<Topic> {
+    private int itemLength;
     public SearchResultAdapter(Context context) {
         super(context);
     }
@@ -27,6 +28,10 @@ public class SearchResultAdapter extends RecyclerArrayAdapter<Topic> {
 
     @Override
     public BaseViewHolder OnCreateViewHolder(ViewGroup viewGroup, int i) {
-        return new SearchResultItemHolder(viewGroup);
+        return new SearchResultItemHolder(viewGroup, itemLength);
+    }
+
+    public void setItemWidth(int itemWidth) {
+        this.itemLength = itemWidth;
     }
 }

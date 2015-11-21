@@ -123,11 +123,11 @@ public class TitleBar extends RelativeLayout {
 
     private int setTitleWidthPixels() {
         DisplayMetrics dm = getResources().getDisplayMetrics();
-        int w_screen = dm.widthPixels;
+        int w_screen = dm.widthPixels > dm.heightPixels ? dm.heightPixels : dm.widthPixels;
         int backButtonWidth = getBackButtonWidth();
         int rightImageButtonTwoWidth = getRightImageButtonTwoWidth();
         int rightImageButtonOneWidth = getRightImageButtonOneWidth();
-        w_screen = w_screen - 2 * backButtonWidth - 2 * rightImageButtonTwoWidth - rightImageButtonOneWidth - 100;
+        w_screen = w_screen - 2 * backButtonWidth - 2 * rightImageButtonTwoWidth - 2 * rightImageButtonOneWidth - 100;
         return w_screen;
     }
 

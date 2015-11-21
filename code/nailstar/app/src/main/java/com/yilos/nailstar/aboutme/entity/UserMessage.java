@@ -1,22 +1,64 @@
 package com.yilos.nailstar.aboutme.entity;
 
+import com.yilos.nailstar.util.Constants;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.Serializable;
+
 /**
  * Created by sisilai on 15/11/18.
  */
-public class UserMessage {
+public class UserMessage implements Serializable{
+
+
+    public static CommentEntity parseCommentEntity(JSONObject commentJson) throws JSONException{
+        String atName = commentJson.getString(Constants.ATNAME);
+        String content = commentJson.getString(Constants.CONTENT);
+        long createDate = commentJson.getLong(Constants.CREATE_DATE);
+        int isHomework = commentJson.getInt(Constants.IS_HOME_WORK);
+
+        CommentEntity commentEntity = new CommentEntity(atName, content, createDate, isHomework);
+        return commentEntity;
+    }
+
+
 
     /**
-     * 单例
+     * accountId : d77348c0-60d7-11e5-ade9-e3d220e2c964
+     * accountName : 勿忘我
+     * accountPhoto : http://pic.yilos.com/ec9a2bbc1abb13166af6da31495bea0b
+     * content : 嗯嗯
+     * createDate : 1446718910072
+     * replyTo : 9f59f430-8390-11e5-a74c-839a83b22973
+     * lastReplyTo : b1438670-8390-11e5-a74c-839a83b22973
      */
-    private static UserMessage userMessage = new UserMessage();
+    public static ReplyEntity parseReplyEntity(JSONObject replyJson) throws JSONException{
+        String accountId = replyJson.getString(Constants.ACCOUNTID);
+        String accountName = replyJson.getString(Constants.ACCOUNTNAME);
+        String accountPhoto = replyJson.getString(Constants.ACCOUNTPHOTO);
+        String content = replyJson.getString(Constants.CONTENT);
+        long createDate = replyJson.getLong(Constants.CREATE_DATE);
+        String lastReplyTo = replyJson.getString(Constants.LAST_REPLY_TO);
+        String replyTo = replyJson.getString(Constants.REPLY_TO);
+        ReplyEntity replyEntity = new ReplyEntity(accountId, accountName, accountPhoto, content,createDate, lastReplyTo, replyTo);
+        return replyEntity;
+    }
 
-    /**
-     * 返回单例
-     *
-     * @return
-     */
-    public static UserMessage getInstance() {
-        return userMessage;
+    public UserMessage() {
+
+    }
+
+    public UserMessage(CommentEntity comment, String id, ReplyEntity reply, String teacher, String thumbUrl, String title, String topicId, boolean hasBeenReply) {
+        this.comment = comment;
+        this.id = id;
+        this.reply = reply;
+        this.teacher = teacher;
+        this.thumbUrl = thumbUrl;
+        this.title = title;
+        this.topicId = topicId;
+        this.hasBeenReply = hasBeenReply;
     }
 
     /**
@@ -42,6 +84,7 @@ public class UserMessage {
      */
 
     private CommentEntity comment;
+
     /**
      * accountId : d77348c0-60d7-11e5-ade9-e3d220e2c964
      * accountName : 勿忘我
@@ -53,6 +96,11 @@ public class UserMessage {
      */
 
     private ReplyEntity reply;
+    private boolean hasBeenReply;
+
+    public void setHasBeenReply(boolean hasBeenReply) {
+        this.hasBeenReply = hasBeenReply;
+    }
 
     public void setId(String id) {
         this.id = id;
@@ -80,6 +128,10 @@ public class UserMessage {
 
     public void setReply(ReplyEntity reply) {
         this.reply = reply;
+    }
+
+    public boolean getHasBeenReply() {
+        return hasBeenReply;
     }
 
     public String getId() {
@@ -111,6 +163,13 @@ public class UserMessage {
     }
 
     public static class CommentEntity {
+        public CommentEntity(String atName, String content, long createDate, int isHomework) {
+            this.atName = atName;
+            this.content = content;
+            this.createDate = createDate;
+            this.isHomework = isHomework;
+        }
+
         private String content;
         private String atName;
         private long createDate;
@@ -150,6 +209,16 @@ public class UserMessage {
     }
 
     public static class ReplyEntity {
+        public ReplyEntity(String accountId, String accountName, String accountPhoto, String content, long createDate, String lastReplyTo, String replyTo) {
+            this.accountId = accountId;
+            this.accountName = accountName;
+            this.accountPhoto = accountPhoto;
+            this.content = content;
+            this.createDate = createDate;
+            this.lastReplyTo = lastReplyTo;
+            this.replyTo = replyTo;
+        }
+
         private String accountId;
         private String accountName;
         private String accountPhoto;

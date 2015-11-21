@@ -204,6 +204,7 @@ public class TopicServiceImpl implements ITopicService {
         }
         return new ArrayList<TopicRelatedInfo>();
     }
+
     @NonNull
     private ArrayList<TopicRelatedInfo> buildTopicRelatedInfo(String topicId, String strResult) {
         ArrayList<TopicRelatedInfo> result = new ArrayList<TopicRelatedInfo>();
@@ -229,12 +230,10 @@ public class TopicServiceImpl implements ITopicService {
     }
 
 
-
-
-    public ArrayList<TopicRelatedProduct> getTopicRelatedUsedProductList(String topicId) throws NetworkDisconnectException{
+    public ArrayList<TopicRelatedProduct> getTopicRelatedUsedProductList(String topicId) throws NetworkDisconnectException {
 
         if (!NailStarApplicationContext.getInstance().isNetworkConnected()) {
-            String strResult = getLocalJsonResult(topicId, Constants.FILE_NAME_TOPIC_RELATE_INFO);
+            String strResult = getLocalJsonResult(topicId, Constants.FILE_NAME_TOPIC_RELATE_USED_PRODUCT_INFO);
             return buildTopicRelatedUsedProduct(topicId, strResult);
         }
         String url = URL_PREFIX + "topics/" + topicId + "/commodities";
@@ -242,7 +241,7 @@ public class TopicServiceImpl implements ITopicService {
             String strResult = HttpClient.getJson(url);
             ArrayList<TopicRelatedProduct> result = buildTopicRelatedUsedProduct(topicId, strResult);
             if (!CollectionUtil.isEmpty(result)) {
-                writeLocalJsonResult(topicId, strResult, Constants.FILE_NAME_TOPIC_RELATE_INFO);
+                writeLocalJsonResult(topicId, strResult, Constants.FILE_NAME_TOPIC_RELATE_USED_PRODUCT_INFO);
             }
             return result;
 
@@ -252,6 +251,7 @@ public class TopicServiceImpl implements ITopicService {
         return new ArrayList<TopicRelatedProduct>();
 
     }
+
     @NonNull
     private ArrayList<TopicRelatedProduct> buildTopicRelatedUsedProduct(String topicId, String strResult) {
         ArrayList<TopicRelatedProduct> result = new ArrayList<TopicRelatedProduct>();
@@ -265,7 +265,7 @@ public class TopicServiceImpl implements ITopicService {
 
             JSONArray jsonRelated = jsonResult.optJSONArray(Constants.COMMODITY);
             for (int i = 0; i < jsonRelated.length(); i++) {
-                result.add(new TopicRelatedProduct( JsonUtil.optString(jsonRelated.optJSONObject(i), "name")
+                result.add(new TopicRelatedProduct(JsonUtil.optString(jsonRelated.optJSONObject(i), "name")
                         , JsonUtil.optString(jsonRelated.optJSONObject(i), "description")
                         , JsonUtil.optString(jsonRelated.optJSONObject(i), "price")
                         , JsonUtil.optString(jsonRelated.optJSONObject(i), "real_id")));
@@ -277,9 +277,6 @@ public class TopicServiceImpl implements ITopicService {
 
         return result;
     }
-
-
-
 
 
     /**

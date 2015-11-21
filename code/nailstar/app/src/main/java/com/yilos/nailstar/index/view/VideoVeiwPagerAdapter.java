@@ -2,6 +2,8 @@ package com.yilos.nailstar.index.view;
 
 import android.app.Activity;
 import android.support.v4.view.PagerAdapter;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -119,6 +121,7 @@ public class VideoVeiwPagerAdapter extends PagerAdapter {
         MaxHeightGridLayoutManager maxHeightGridLayoutManager = new MaxHeightGridLayoutManager(activity, 3, 1500);
         maxHeightGridLayoutManager.setOrientation(MaxHeightGridLayoutManager.VERTICAL);
         maxHeightGridLayoutManager.setSmoothScrollbarEnabled(true);
+        maxHeightGridLayoutManager.setSpanSizeLookup(new SpanSizeLookup(view));
 
         int result = 0;
         int resourceId = activity.getResources().getIdentifier("status_bar_height", "dimen", "android");
@@ -133,5 +136,32 @@ public class VideoVeiwPagerAdapter extends PagerAdapter {
         view.setLayoutManager(maxHeightGridLayoutManager);
 
         return view;
+    }
+
+    private class SpanSizeLookup extends GridLayoutManager.SpanSizeLookup {
+        private VideoListAdapter videoListAdapter;
+
+        private RecyclerView recyclerView;
+
+        public SpanSizeLookup(RecyclerView recyclerView) {
+            this.recyclerView = recyclerView;
+        }
+
+        @Override
+        public int getSpanSize(int position) {
+            if(null != recyclerView) {
+                if(recyclerView.getAdapter() instanceof VideoListAdapter) {
+                    videoListAdapter = (VideoListAdapter)recyclerView.getAdapter();
+                }
+            }
+
+            if(null != videoListAdapter) {
+                if(position == videoListAdapter.getItemCount() - 1) {
+                    return 3;
+                }
+            }
+
+            return 1;
+        }
     }
 }

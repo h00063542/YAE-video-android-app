@@ -31,12 +31,8 @@ public class SearchResultItemHolder extends BaseViewHolder<Topic> {
     private TextView teacherNameView;
     private TextView createDateView;
 
-    public SearchResultItemHolder(ViewGroup parent) {
-        this(parent, R.layout.search_item);
-    }
-
-    public SearchResultItemHolder(ViewGroup parent, int res) {
-        super(parent, res);
+    public SearchResultItemHolder(ViewGroup parent, int itemWidth) {
+        super(parent, R.layout.search_item);
         this.parent = parent;
 
         videoImage = $(R.id.videoImage);
@@ -45,6 +41,16 @@ public class SearchResultItemHolder extends BaseViewHolder<Topic> {
         teacherPhotoView = $(R.id.teacherPhoto);
         teacherNameView = $(R.id.teacherName);
         createDateView = $(R.id.createDateView);
+
+        ViewGroup viewGroup = $(R.id.parentLayout);
+        ViewGroup.LayoutParams lineraLayoutParams = viewGroup.getLayoutParams();
+        lineraLayoutParams.width = itemWidth;
+        viewGroup.setLayoutParams(lineraLayoutParams);
+
+        ViewGroup.LayoutParams layoutParams = videoImage.getLayoutParams();
+        layoutParams.height = itemWidth;
+        layoutParams.width = itemWidth;
+        videoImage.setLayoutParams(layoutParams);
     }
 
     @Override

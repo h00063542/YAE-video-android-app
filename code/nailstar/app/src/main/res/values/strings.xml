@@ -35,7 +35,7 @@
     <string name="submitted">提交</string>
     <string name="write_down_your_learning_experience">写下你的学习心得</string>
     <string name="like">喜欢</string>
-    <string name="topic_comment_count">评论数</string>
+    <string name="topic_comment_count">评论数 %1$s</string>
     <string name="saving_photos">正在保存图片</string>
     <string name="no_topic_image_text_info">暂无图文信息</string>
     <string name="download_topic_image_text_index">保存了第%1$s张</string>
@@ -74,6 +74,8 @@
     <string name="about_me_person_info">个人资料</string>
     <string name="about_me_collect">收藏</string>
     <string name="about_me_downloaded">已下载</string>
+    <string name="downloaded_no_video">还没有下载视频</string>
+    <string name="downloaded_no_video_description">下载视频可以随时观看，不用担心流量</string>
     <string name="about_me_my_require_lesson">我的求教程</string>
     <string name="about_me_give_us_advice">给我们提意见</string>
     <string name="about_me_share">分享美甲大咖给朋友</string>
@@ -120,6 +122,7 @@
     <string name="query_failed">查询失败, 请稍后再试...</string>
     <string name="report_success">举报成功</string>
     <string name="report_failed">举报失败, 请稍后再试...</string>
+    <string name="downloading">正在下载</string>
 
     <!-- 登录注册 -->
     <string name="title_activity_login">账号登录</string>
@@ -174,4 +177,5 @@
     <string name="index_commodity_hot_1_price_unit">¥</string>
 
 
+    <string name="has_been_reply">已回复</string>
 </resources>

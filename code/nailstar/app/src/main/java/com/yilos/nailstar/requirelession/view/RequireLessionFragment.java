@@ -19,8 +19,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.alibaba.sdk.android.oss.callback.SaveCallback;
-import com.alibaba.sdk.android.oss.model.OSSException;
 import com.yilos.nailstar.R;
 import com.yilos.nailstar.aboutme.model.LoginAPI;
 import com.yilos.nailstar.category.model.CategoryListAPI;
@@ -85,9 +83,11 @@ public class RequireLessionFragment extends Fragment implements LessionView {
 
     // 求教程按钮
     private Button requireLessionBtn;
+    private Button requireLessionGrayBtn;
 
     // 悬浮页头的求教程按钮
     private Button requireLessionBtnFloat;
+    private Button requireLessionGrayBtnFloat;
 
     // 投票列表按钮
     private TextView goVotingBtn;
@@ -165,6 +165,8 @@ public class RequireLessionFragment extends Fragment implements LessionView {
         // 求教程按钮
         requireLessionBtn = (Button) lessionViewHead1.findViewById(R.id.requireLessionBtn);
         requireLessionBtnFloat = (Button) lessionViewHeadFloat.findViewById(R.id.requireLessionBtn);
+        requireLessionGrayBtn = (Button) lessionViewHead1.findViewById(R.id.requireLessionGrayBtn);
+        requireLessionGrayBtnFloat = (Button) lessionViewHeadFloat.findViewById(R.id.requireLessionGrayBtn);
 
         // 下拉刷新
         lessionPullRefresh = (PtrClassicFrameLayout) view.findViewById(R.id.lessionPullRefresh);
@@ -242,38 +244,29 @@ public class RequireLessionFragment extends Fragment implements LessionView {
         goRankingBtn.setOnClickListener(onClickListener);
         goRankingBtnFloat.setOnClickListener(onClickListener);
 
-        takeImage = new TakeImage.Builder().context(this).uri(Constants.YILOS_PATH).callback(new TakeImageCallback() {
-            @Override
-            public void callback(Uri uri) {
-                if (uri == null) {
-                    showMessage(R.string.upload_image_failed);
-                    return;
-                }
-                File uploadFile = new File(uri.getPath());
-                if (!uploadFile.exists()) {
-                    showMessage(R.string.upload_image_failed);
-                    return;
-                }
-                // 上传图片
-                lessionPresenter.uploadFile(uploadFile, new SaveCallback() {
+        takeImage = new TakeImage.Builder()
+                .context(this)
+                .aspectX(500)
+                .aspectY(400)
+                .outputX(500)
+                .outputY(400)
+                .uri(Constants.YILOS_NAILSTAR_PICTURE_PATH)
+                .callback(new TakeImageCallback() {
                     @Override
-                    public void onSuccess(String s) {
-                        // 上传图片成功，提交求教程请求
-                        lessionPresenter.postCandidate(s);
+                    public void callback(Uri uri) {
+                        if (uri == null) {
+                            showMessage(R.string.upload_image_failed);
+                            return;
+                        }
+                        File uploadFile = new File(uri.getPath());
+                        if (!uploadFile.exists()) {
+                            showMessage(R.string.upload_image_failed);
+                            return;
+                        }
+                        // 上传图片
+                        lessionPresenter.postCandidate(uploadFile);
                     }
-
-                    @Override
-                    public void onProgress(String s, int i, int i1) {
-
-                    }
-
-                    @Override
-                    public void onFailure(String s, OSSException e) {
-                        showMessage(R.string.upload_image_failed);
-                    }
-                });
-            }
-        }).build();
+                }).build();
 
         View.OnClickListener requireLessionBtnListener = new View.OnClickListener() {
             @Override
@@ -404,8 +397,10 @@ public class RequireLessionFragment extends Fragment implements LessionView {
     // 求教程第一阶段（求教程阶段）
     private void handleLessionTopic(final LessionActivity lessionActivity) {
 
-        requireLessionBtn.setEnabled(true);
-        requireLessionBtnFloat.setEnabled(true);
+        requireLessionBtn.setVisibility(View.VISIBLE);
+        requireLessionBtnFloat.setVisibility(View.VISIBLE);
+        requireLessionGrayBtn.setVisibility(View.GONE);
+        requireLessionGrayBtnFloat.setVisibility(View.GONE);
 
         // 设置图片
         ImageCacheView lessionPhoto = (ImageCacheView) view.findViewById(R.id.lessionPhoto);
@@ -455,8 +450,10 @@ public class RequireLessionFragment extends Fragment implements LessionView {
     // 求教程第二阶段（视频制作阶段）
     private void handleCandidateTopic(LessionActivity lessionActivity) {
 
-        requireLessionBtn.setEnabled(false);
-        requireLessionBtnFloat.setEnabled(false);
+        requireLessionBtn.setVisibility(View.GONE);
+        requireLessionBtnFloat.setVisibility(View.GONE);
+        requireLessionGrayBtn.setVisibility(View.VISIBLE);
+        requireLessionGrayBtnFloat.setVisibility(View.VISIBLE);
 
         ImageCacheView lessionCandidatePic = (ImageCacheView) view.findViewById(R.id.lessionCandidatePic);
         CircleImageView lessionUserPhoto = (CircleImageView) view.findViewById(R.id.lessionUserPhoto);

@@ -1,9 +1,16 @@
 apply plugin: 'com.android.library'
 
 android {
+    signingConfigs {
+        config {
+            keyAlias 'meijiadaka'
+            keyPassword 'meijiadaka'
+            storeFile file('/Users/yangdan/loslife/YAE-video-android-app/code/nailstar/app/keystore/nailstar_keystore.jks')
+            storePassword 'meijiadaka'
+        }
+    }
     compileSdkVersion 23
     buildToolsVersion "23.0.1"
-
     defaultConfig {
         minSdkVersion 15
         targetSdkVersion 23
@@ -24,7 +31,7 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:23.0.1'
     compile 'com.android.support:recyclerview-v7:23.+'
     compile 'in.srain.cube:ultra-ptr:1.0.11'

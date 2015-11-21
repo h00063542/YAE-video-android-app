@@ -134,6 +134,7 @@ public class Constants {
     public static final String FILE_NAME_TOPIC_INFO = "topic_info";
     public static final String FILE_NAME_TOPIC_IMAGE_TEXT_INFO = "topic_image_text_info";
     public static final String FILE_NAME_TOPIC_RELATE_INFO = "topic_relate_info";
+    public static final String FILE_NAME_TOPIC_RELATE_USED_PRODUCT_INFO = "topic_relate_used_product_info";
     public static final String FILE_NAME_TOPIC_COMMENT_INFO = "topic_comment_info";
 
     public static final String UNDERLINE = "_";
@@ -172,5 +173,21 @@ public class Constants {
     public static final String DEFAULT_OSS_HOST_ID = "oss-cn-hangzhou.aliyuncs.com";
 
 
+    public static final String TEACHER = "teacher";
+    public static final String COMMENT = "comment";
+    public static final String ATNAME = "atName";
+    public static final String REPLY  = "reply";
+    public static final String ACCOUNTID = "accountId";
+    public static final String ACCOUNTNAME = "accountName";
+    public static final String ACCOUNTPHOTO = "accountPhoto";
+
+    /**
+     * 已回复：true
+     * 未回复：false
+     */
+    public static final String HASBEENREPLY = "hasBeenReply";
+    public static final String SCORE = "score";
+    public static final String MESSAGES = "messages";
+    public static final String OK = "ok";
 
 }

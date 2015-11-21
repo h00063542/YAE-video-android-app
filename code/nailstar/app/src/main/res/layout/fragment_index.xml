@@ -53,16 +53,16 @@
                     </com.yilos.widget.banner.Banner>
                     <com.yilos.widget.pageindicator.CirclePageIndicator xmlns:CirclePageIndicator="http://schemas.android.com/apk/res-auto"
                         android:layout_width="match_parent"
-                        android:layout_height="10dp"
+                        android:layout_height="@dimen/circle_page_indicator_height"
                         android:layout_alignBottom="@+id/posterBanner"
-                        android:layout_marginBottom="5dp"
+                        android:layout_marginBottom="@dimen/circle_page_indicator_space"
                         android:id="@+id/indicator"
                         CirclePageIndicator:ci_background="@android:color/white"
                         CirclePageIndicator:ci_selected_background="@color/orange"
                         CirclePageIndicator:ci_mode="solo"
                         CirclePageIndicator:ci_gravity="center"
-                        CirclePageIndicator:ci_radius="5dp"
-                        CirclePageIndicator:ci_margin="5dp" />
+                        CirclePageIndicator:ci_radius="@dimen/circle_page_indicator_radius"
+                        CirclePageIndicator:ci_margin="@dimen/circle_page_indicator_space" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -77,16 +77,16 @@
                     </com.yilos.widget.banner.Banner>
                     <com.yilos.widget.pageindicator.CirclePageIndicator xmlns:CirclePageIndicator="http://schemas.android.com/apk/res-auto"
                         android:layout_width="match_parent"
-                        android:layout_height="10dp"
+                        android:layout_height="@dimen/circle_page_indicator_height"
                         android:layout_alignBottom="@+id/categoryBanner"
-                        android:layout_marginBottom="5dp"
+                        android:layout_marginBottom="@dimen/circle_page_indicator_space"
                         android:id="@+id/categoryBannerIndicator"
                         CirclePageIndicator:ci_background="@android:color/white"
                         CirclePageIndicator:ci_selected_background="@color/orange"
                         CirclePageIndicator:ci_mode="solo"
                         CirclePageIndicator:ci_gravity="center"
-                        CirclePageIndicator:ci_radius="5dp"
-                        CirclePageIndicator:ci_margin="5dp" />
+                        CirclePageIndicator:ci_radius="@dimen/circle_page_indicator_radius"
+                        CirclePageIndicator:ci_margin="@dimen/circle_page_indicator_space" />
                 </RelativeLayout>
 
                 <TextView
@@ -102,11 +102,11 @@
                 <com.yilos.widget.pageindicator.UnderlinePageIndicator
                     android:id="@+id/videoListPagerLineIndicator"
                     android:layout_width="fill_parent"
-                    android:layout_height="2dp" />
+                    android:layout_height="@dimen/index_tab_line_indicator_height" />
                 <com.yilos.widget.view.MViewPager
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="5dp"
+                    android:padding="@dimen/index_video_list_view_padding"
                     android:id="@+id/videoListPager">
                 </com.yilos.widget.view.MViewPager>
 

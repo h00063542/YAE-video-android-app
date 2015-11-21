@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.jude.easyrecyclerview.EasyRecyclerView;
 import com.jude.easyrecyclerview.adapter.RecyclerArrayAdapter;
 import com.yilos.nailstar.R;
+import com.yilos.nailstar.framework.application.NailStarApplication;
 import com.yilos.nailstar.framework.view.BaseActivity;
 import com.yilos.nailstar.index.presenter.SearchPresenter;
 
@@ -48,7 +49,7 @@ public class SearchActivity extends BaseActivity implements ISearchView, Recycle
         searchText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if(actionId == EditorInfo.IME_ACTION_SEARCH || (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)){
+                if (actionId == EditorInfo.IME_ACTION_SEARCH || (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
                     presenter.search(true);
                     return true;
                 }
@@ -67,31 +68,25 @@ public class SearchActivity extends BaseActivity implements ISearchView, Recycle
         });
 
         // 视频列表
-        final BaseActivity activity = this;
+        final int itemSpace = getResources().getDimensionPixelSize(R.dimen.common_5_dp);
         final EasyRecyclerView videoListView = (EasyRecyclerView)findViewById(R.id.videoList);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
+        gridLayoutManager.setSpanSizeLookup(new SpanSizeLookup(videoListView.getRecyclerView()));
+        videoListView.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+                if(parent.getChildAdapterPosition(view) % 2 != 0) {
+                    outRect.left = itemSpace;
+                }
+            }
+        });
         videoListView.setLayoutManager(gridLayoutManager);
         final SearchResultAdapter adapter = presenter.getAdapter();
+        adapter.setItemWidth((NailStarApplication.getApplication().getScreenWidth(this) - 3 * itemSpace) / 2);
         videoListView.setAdapterWithProgress(adapter);
         adapter.setMore(R.layout.view_more, this);
         adapter.setNoMore(R.layout.view_nomore);
         adapter.setError(R.layout.view_error);
-//        adapter.setOnItemClickListener(new RecyclerArrayAdapter.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(int i) {
-//                activity.showLoading(null);
-//                Intent intent = new Intent(activity, TopicVideoPlayerActivity.class);
-//                intent.putExtra(Constants.TOPIC_ID, adapter.getItem(i).getTopicId());
-//                startActivityForResult(intent, 1);
-//            }
-//        });
-        videoListView.addItemDecoration(new RecyclerView.ItemDecoration() {
-            @Override
-            public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-                if(parent.getChildPosition(view) != 0)
-                    outRect.top = 5;
-            }
-        });
     }
 
     @Override
@@ -150,5 +145,32 @@ public class SearchActivity extends BaseActivity implements ISearchView, Recycle
     @Override
     public void onLoadMore() {
         presenter.search(false);
+    }
+
+    private class SpanSizeLookup extends GridLayoutManager.SpanSizeLookup {
+        private RecyclerArrayAdapter videoListAdapter;
+
+        private RecyclerView recyclerView;
+
+        public SpanSizeLookup(RecyclerView recyclerView) {
+            this.recyclerView = recyclerView;
+        }
+
+        @Override
+        public int getSpanSize(int position) {
+            if(null != recyclerView) {
+                if(recyclerView.getAdapter() instanceof RecyclerArrayAdapter) {
+                    videoListAdapter = (RecyclerArrayAdapter)recyclerView.getAdapter();
+                }
+            }
+
+            if(null != videoListAdapter) {
+                if(position == videoListAdapter.getItemCount() - 1) {
+                    return 2;
+                }
+            }
+
+            return 1;
+        }
     }
 }
