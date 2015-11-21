@@ -84,8 +84,15 @@ public class IndexFragment extends Fragment implements IIndexView {
     @Override
     public void onResume() {
         super.onResume();
+        posterBanner.play();
         ((BaseActivity)getActivity()).hideLoading();
         refreshData();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        posterBanner.stop();
     }
 
     private void initViews() {

@@ -3,13 +3,13 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_gravity="center">
+    android:id="@+id/parentLayout"
+    android:layout_marginBottom="@dimen/common_10_dp">
 
     <com.yilos.widget.view.ImageCacheView
         android:layout_width="180dp"
         android:layout_height="180dp"
         android:scaleType="centerCrop"
-        android:layout_gravity="center"
         android:clickable="true"
         android:id="@+id/videoImage">
     </com.yilos.widget.view.ImageCacheView>
@@ -26,21 +26,20 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
         <com.yilos.widget.circleimageview.CircleImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:id="@+id/teacherPhoto"
             />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_marginLeft="@dimen/common_5_dp"
             android:textColor="@color/z2"
             android:id="@+id/teacherName"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginLeft="@dimen/common_10_dp"
+            android:layout_marginLeft="@dimen/common_5_dp"
             android:textColor="@color/z3"
             android:id="@+id/createDateView"/>
     </LinearLayout>

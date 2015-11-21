@@ -149,11 +149,9 @@ public class VideoVeiwPagerAdapter extends PagerAdapter {
 
         @Override
         public int getSpanSize(int position) {
-            if(null == videoListAdapter) {
-                if(null != recyclerView) {
-                    if(recyclerView.getAdapter() instanceof VideoListAdapter) {
-                        videoListAdapter = (VideoListAdapter)recyclerView.getAdapter();
-                    }
+            if(null != recyclerView) {
+                if(recyclerView.getAdapter() instanceof VideoListAdapter) {
+                    videoListAdapter = (VideoListAdapter)recyclerView.getAdapter();
                 }
             }
 
