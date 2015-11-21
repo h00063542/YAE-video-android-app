@@ -10,4 +10,7 @@
 
 
     <item name="mall_index_catetory_id" type="id" />
+    <item name="lession_ranking_type" type="id" />
+    <item name="lession_vote_type" type="id" />
+
 </resources>
