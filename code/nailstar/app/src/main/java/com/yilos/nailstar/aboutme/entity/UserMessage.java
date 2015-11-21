@@ -162,7 +162,7 @@ public class UserMessage implements Serializable{
         return reply;
     }
 
-    public static class CommentEntity {
+    public static class CommentEntity implements Serializable{
         public CommentEntity(String atName, String content, long createDate, int isHomework) {
             this.atName = atName;
             this.content = content;
@@ -208,7 +208,7 @@ public class UserMessage implements Serializable{
         }
     }
 
-    public static class ReplyEntity {
+    public static class ReplyEntity implements Serializable{
         public ReplyEntity(String accountId, String accountName, String accountPhoto, String content, long createDate, String lastReplyTo, String replyTo) {
             this.accountId = accountId;
             this.accountName = accountName;

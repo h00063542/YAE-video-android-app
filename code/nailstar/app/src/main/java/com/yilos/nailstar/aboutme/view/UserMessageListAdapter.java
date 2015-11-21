@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.yilos.nailstar.R;
 import com.yilos.nailstar.aboutme.entity.UserMessage;
+import com.yilos.nailstar.util.Constants;
 import com.yilos.widget.circleimageview.CircleImageView;
 import com.yilos.widget.view.ImageCacheView;
 
@@ -130,8 +131,10 @@ public class UserMessageListAdapter extends RecyclerView.Adapter<UserMessageList
 
         if (hasBeenReply) {
             holder.hasBeenReply.setVisibility(View.VISIBLE);
+            holder.replyButton.setVisibility(View.GONE);
         } else {
             holder.replyButton.setVisibility(View.VISIBLE);
+            holder.hasBeenReply.setVisibility(View.GONE);
         }
 
         holder.accountPhoto.setImageSrc(accountPhoto);
@@ -147,9 +150,10 @@ public class UserMessageListAdapter extends RecyclerView.Adapter<UserMessageList
             public void onClick(View v) {
                 Intent intent = new Intent(context,UserMessageReplyActivity.class);
                 Bundle bundle =new Bundle();
-                bundle.putSerializable("userMessage",userMessage);
+                bundle.putSerializable(Constants.USERMESSAGE, userMessage);
                 intent.putExtras(bundle);
-                context.startActivity(intent);
+                ((MessageActivity) context).startActivityForResult(intent, 1);
+
             }
         });
     }
