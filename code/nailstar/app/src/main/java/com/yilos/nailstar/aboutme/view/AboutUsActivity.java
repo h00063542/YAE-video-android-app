@@ -1,6 +1,5 @@
 package com.yilos.nailstar.aboutme.view;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Bundle;
@@ -36,7 +35,7 @@ public class AboutUsActivity extends BaseActivity {
         userAgreement.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent userAgreementIntent = new Intent(AboutUsActivity.this,UserAgreementActivity.class);
+                Intent userAgreementIntent = new Intent(AboutUsActivity.this, LicenceActivity.class);
                 startActivity(userAgreementIntent);
             }
         });
