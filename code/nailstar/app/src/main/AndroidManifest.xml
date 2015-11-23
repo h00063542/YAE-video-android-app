@@ -44,6 +44,9 @@
             android:name=".topic.view.TopicVideoPlayerActivity"
             android:configChanges="orientation|screenSize|keyboardHidden" />
         <activity
+            android:name=".topic.view.TopicDetailActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden" />
+        <activity
             android:name=".topic.view.TopicCommentActivity"
             android:windowSoftInputMode="stateVisible" />
         <activity
