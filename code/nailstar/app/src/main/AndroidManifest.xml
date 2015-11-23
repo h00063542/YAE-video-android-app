@@ -60,7 +60,6 @@
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="sensorLandscape" >
         </activity>
-        <activity android:name=".aboutme.view.UserAgreementActivity" />
         <activity android:name=".aboutme.view.MessageActivity"/>
         <activity android:name=".aboutme.view.UserMessageReplyActivity"/>
         <activity

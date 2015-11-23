@@ -1,6 +1,7 @@
 package com.yilos.nailstar.util;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -58,4 +59,20 @@ public class StringUtil {
         }
         return result;
     }
+
+    public static String getTopicCommentDateStr(long time) {
+        Date date = new Date(time);
+        Date today = new Date();
+        long result = today.getTime() - time;
+        if (result / 1000 <= 60) {
+            return "刚刚";
+        } else if (result / 1000 > 60 && result / 1000 <= 3600) {
+            return (int) Math.floor((result / 1000) / 60) + "分钟前";
+        } else if (result / 1000 > 3600 && result / 1000 <= 86400) {
+            return date.getHours() + "点" + date.getMinutes() + "分";
+        } else {
+            return (date.getMonth() + 1) + "月" + date.getDate() + "日";
+        }
+    }
+
 }

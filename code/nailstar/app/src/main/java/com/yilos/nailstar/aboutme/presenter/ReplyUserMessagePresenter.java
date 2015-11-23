@@ -4,14 +4,11 @@ import com.yilos.nailstar.aboutme.entity.MessageComment;
 import com.yilos.nailstar.aboutme.entity.UserMessage;
 import com.yilos.nailstar.aboutme.model.UserMessageService;
 import com.yilos.nailstar.aboutme.model.UserMessageServiceImpl;
-import com.yilos.nailstar.aboutme.view.MessageActivity;
 import com.yilos.nailstar.aboutme.view.UserMessageReplyActivity;
 import com.yilos.nailstar.framework.exception.NetworkDisconnectException;
 import com.yilos.nailstar.util.TaskManager;
 
 import org.json.JSONException;
-
-import java.util.ArrayList;
 
 /**
  * Created by sisilai on 15/11/20.
