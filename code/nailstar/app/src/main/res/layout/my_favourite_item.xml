@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.yilos.widget.view.ImageCacheView
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:id="@+id/topicImage"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center_vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/common_10_dp"
+            android:textColor="@color/z1"
+            android:textSize="20sp"
+            android:gravity="center_vertical"
+            android:id="@+id/titleView"/>
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/common_10_dp"
+                android:textColor="@color/z2"
+                android:textSize="15sp"
+                android:id="@+id/teacherNameView"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/common_10_dp"
+                android:layout_gravity="right"
+                android:textColor="@color/z3"
+                android:id="@+id/updateDateView"/>
+        </FrameLayout>
+    </LinearLayout>
+</LinearLayout>
