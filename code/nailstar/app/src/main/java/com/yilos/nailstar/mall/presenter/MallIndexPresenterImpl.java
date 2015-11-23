@@ -74,6 +74,11 @@ public class MallIndexPresenterImpl implements MallIndexPresenter{
                     oneBannerView.getSettings().setSupportZoom(false);
                     oneBannerView.getSettings().setJavaScriptEnabled(true);
                     oneBannerView.getSettings().setDomStorageEnabled(true);
+                    oneBannerView.setWebViewClient(new WebViewClient() {
+                        public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
+                            handler.proceed();
+                        }
+                    });
                     commodityCateListView.addView(oneBanner);
 
                 }
