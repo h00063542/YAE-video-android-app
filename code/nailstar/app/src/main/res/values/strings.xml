@@ -49,6 +49,8 @@
     <string name="add_topic_collection">成功添加至 我的 -> 已收藏</string>
     <string name="submitted_comment_fail">提交评论失败，请稍后再试...</string>
     <string name="submitted_homework_fail">交作业失败，请稍后再试...</string>
+    <string name="topic_share_title">月薪10000+的美甲师都在看</string>
+    <string name="topic_share_content">美甲大咖App热播教学视频%1$s</string>
 
     <string name="topic_shopping_helper">购物帮助</string>
     <string name="order_finish_headertext">完成订单！</string>
