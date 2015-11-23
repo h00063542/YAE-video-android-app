@@ -84,12 +84,12 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class TopicVideoPlayerActivity extends BaseActivity implements
+public class TopicDetailActivity extends BaseActivity implements
         ITopicVideoPlayerView,
         VDVideoExtListeners.OnVDVideoPlaylistListener,
         PullToRefreshView.OnHeaderRefreshListener,
         PullToRefreshView.OnFooterRefreshListener {
-    private final Logger LOGGER = LoggerFactory.getLogger(TopicVideoPlayerActivity.class);
+    private final Logger LOGGER = LoggerFactory.getLogger(TopicDetailActivity.class);
 
     private final String TAG = "TopicDetailActivity";
 
@@ -347,7 +347,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
                 .callback(new TakeImageCallback() {
                     @Override
                     public void callback(Uri uri) {
-                        Intent intent = new Intent(TopicVideoPlayerActivity.this, TopicHomeworkActivity.class);
+                        Intent intent = new Intent(TopicDetailActivity.this, TopicHomeworkActivity.class);
                         intent.putExtra(Constants.TOPIC_ID, mTopicId);
                         intent.putExtra(Constants.CONTENT_PIC, uri.getPath());
                         startActivityForResult(intent, Constants.TOPIC_HOMEWORK_REQUEST_CODE);
@@ -365,9 +365,9 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         mIvVideoPlayerBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(TopicVideoPlayerActivity.this, MainActivity.class);
+                Intent intent = new Intent(TopicDetailActivity.this, MainActivity.class);
                 setResult(RESULT_OK, intent);
-                TopicVideoPlayerActivity.this.finish();
+                TopicDetailActivity.this.finish();
             }
         });
 
@@ -389,7 +389,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         mIvTopicShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SocialAPI.getInstance().share(TopicVideoPlayerActivity.this,
+                SocialAPI.getInstance().share(TopicDetailActivity.this,
                         getString(R.string.topic_share_title),
                         String.format(getString(R.string.topic_share_content), mTopicInfo.getTitle()),
                         String.format(Constants.TOPIC_SHARE_URL, mTopicId),
@@ -507,7 +507,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
                 if (!LoginAPI.getInstance().isLogin()) {
                     autoSetTopicStatus = true;
                     mCbTopicTabLike.setChecked(false);
-                    LoginAPI.getInstance().gotoLoginPage(TopicVideoPlayerActivity.this);
+                    LoginAPI.getInstance().gotoLoginPage(TopicDetailActivity.this);
                     return;
                 }
                 mTopicVideoPlayerPresenter.setTopicLikeStatus(mTopicId, isChecked);
@@ -521,7 +521,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
                 if (!LoginAPI.getInstance().isLogin()) {
                     autoSetTopicStatus = true;
                     mCbTopicTabCollection.setChecked(false);
-                    LoginAPI.getInstance().gotoLoginPage(TopicVideoPlayerActivity.this);
+                    LoginAPI.getInstance().gotoLoginPage(TopicDetailActivity.this);
                     return;
                 }
                 if (autoSetTopicStatus) {
@@ -537,7 +537,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
             @Override
             public void onClick(View v) {
                 if (!LoginAPI.getInstance().isLogin()) {
-                    LoginAPI.getInstance().gotoLoginPage(TopicVideoPlayerActivity.this);
+                    LoginAPI.getInstance().gotoLoginPage(TopicDetailActivity.this);
                     return;
                 }
                 if (autoSetTopicStatus) {
@@ -553,7 +553,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
             @Override
             public void onClick(View v) {
                 if (!LoginAPI.getInstance().isLogin()) {
-                    LoginAPI.getInstance().gotoLoginPage(TopicVideoPlayerActivity.this);
+                    LoginAPI.getInstance().gotoLoginPage(TopicDetailActivity.this);
                     return;
                 }
                 mTakeImage.initTakeImage();
@@ -756,7 +756,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
 
 
         for (int i = 0, size = pictures.size(); i < size; i++) {
-            ImageCacheView imageView = new ImageCacheView(TopicVideoPlayerActivity.this);
+            ImageCacheView imageView = new ImageCacheView(TopicDetailActivity.this);
             // 如果没有配图没有文字，并且不是第一张图片时，不需要设置Margin Top
 //            imageView.setLayoutParams(((null == articles.get(i) || articles.get(i).toString().length() == 0))
 //                    ? lpMarginTop : lpMarginTopBottom);
@@ -773,7 +773,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
             mLayoutTopicImageTextContent.addView(imageView);
 
             if (!StringUtil.isEmpty(articles.get(i))) {
-                TextView textView = new TextView(TopicVideoPlayerActivity.this);
+                TextView textView = new TextView(TopicDetailActivity.this);
                 textView.setLayoutParams(lpMarginTop);
                 textView.setText(articles.get(i).toString());
                 mLayoutTopicImageTextContent.addView(textView);
@@ -896,7 +896,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
             FrameLayout topicRelateLayout = new FrameLayout(this);
             topicRelateLayout.setLayoutParams(layoutLp);
 
-            ImageCacheView topicRelateIv = new ImageCacheView(TopicVideoPlayerActivity.this);
+            ImageCacheView topicRelateIv = new ImageCacheView(TopicDetailActivity.this);
             topicRelateIv.setLayoutParams(topicRelateIvLp);
             topicRelateIv.setAdjustViewBounds(true);
             if (topicRelatedList.size() > i && null != topicRelatedList.get(i)) {
@@ -950,7 +950,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
                 topicRelateLayout.setBackgroundResource(R.drawable.bottom_border);
             }
             topicRelateLayout.setGravity(Gravity.CENTER_VERTICAL);
-            TextView topicRelateUseProductv = new TextView(TopicVideoPlayerActivity.this);
+            TextView topicRelateUseProductv = new TextView(TopicDetailActivity.this);
             topicRelateUseProductv.setLayoutParams(topicRelateProduxtTextIvLp);
             topicRelateUseProductv.setText(topicRelatedProductList.get(i).getProductName());
             topicRelateUseProductv.setTextColor(getResources().getColor(R.color.z1));
@@ -963,7 +963,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
                 }
             });
             topicRelateLayout.addView(topicRelateUseProductv);
-            ImageView arrows = new ImageView(TopicVideoPlayerActivity.this);
+            ImageView arrows = new ImageView(TopicDetailActivity.this);
             arrows.setImageResource(R.mipmap.ic_right_button);
             arrows.setLayoutParams(arrowsLp);
             topicRelateLayout.addView(arrows);
@@ -1000,7 +1000,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
      * @param topicRelatedInfo
      */
     private void showTopicRelated(TopicRelatedInfo topicRelatedInfo) {
-        Intent intent = new Intent(this, TopicVideoPlayerActivity.class);
+        Intent intent = new Intent(this, TopicDetailActivity.class);
         intent.putExtra(Constants.TOPIC_ID, topicRelatedInfo.getTopicId());
         startActivity(intent);
         finish();
@@ -1024,7 +1024,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
             @Override
             public void onPaySuccess(TradeResult tradeResult) {
                 //弹出框，提示购买成功，去淘宝查看订单信息
-                final OrderFinishDialog successDialog = new OrderFinishDialog(TopicVideoPlayerActivity.this);
+                final OrderFinishDialog successDialog = new OrderFinishDialog(TopicDetailActivity.this);
                 successDialog.show();
                 final Timer timer = new Timer();
                 TimerTask task = new TimerTask() {
