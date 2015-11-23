@@ -14,8 +14,7 @@ import java.util.List;
  */
 public class FavouriteListAdapter extends RecyclerArrayAdapter<FavouriteTopic>{
     public FavouriteListAdapter(Context context, List<FavouriteTopic> favouriteTopicList) {
-        super(context);
-        addAll(favouriteTopicList);
+        super(context, favouriteTopicList);
     }
 
     @Override

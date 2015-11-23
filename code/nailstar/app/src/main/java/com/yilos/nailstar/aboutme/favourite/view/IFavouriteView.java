@@ -13,5 +13,5 @@ public interface IFavouriteView extends IView {
      * 初始化收藏列表
      * @param favouriteTopicList
      */
-    void initFavouriteList(List<FavouriteTopic> favouriteTopicList);
+    void setFavouriteList(List<FavouriteTopic> favouriteTopicList);
 }
