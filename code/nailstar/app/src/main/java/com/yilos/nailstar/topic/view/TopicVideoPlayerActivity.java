@@ -87,11 +87,10 @@ import java.util.TimerTask;
 public class TopicVideoPlayerActivity extends BaseActivity implements
         ITopicVideoPlayerView,
         VDVideoExtListeners.OnVDVideoPlaylistListener,
-        PullToRefreshView.OnHeaderRefreshListener,
         PullToRefreshView.OnFooterRefreshListener {
     private final Logger LOGGER = LoggerFactory.getLogger(TopicVideoPlayerActivity.class);
 
-    private final String TAG = "TopicDetailActivity";
+    private final String TAG = "TopicVideoPlayerActivity";
 
     private int widthPixels;
     private int heightPixels;
@@ -111,7 +110,6 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
     private ListView mLvTopicDetail;
     private TopicCommentAdapter mTopicCommentAdapter;
 
-    //    private ScrollView mSvVideoPlayer;
     // 视频播放控件
     private VDVideoView mVDVideoView;
     private LinearLayout mPlayIconParent;
@@ -263,7 +261,6 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
 
 
         // 视频播放控件
-//        mSvVideoPlayer = (ScrollView) topicDetailHeadLayout.findViewById(R.id.sv_video_player);
         mVDVideoView = (VDVideoView) topicDetailHeadLayout.findViewById(R.id.video_player);
         // 手动这是播放窗口父类，横屏的时候，会用这个做为容器使用，如果不设置，那么默认直接跳转到DecorView
         mVDVideoView.setVDVideoViewContainer((ViewGroup) mVDVideoView.getParent());
@@ -306,7 +303,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         mTvHideTopicImageTextContent = (TextView) topicDetailHeadLayout.findViewById(R.id.tv_hide_topic_image_text_content);
         mTvDownloadTopicImageTextContent = (TextView) topicDetailHeadLayout.findViewById(R.id.tv_download_topic_image_text_content);
         mDownloadTopicImageTextDialog = new Dialog(this);
-        mDownloadTopicImageTextDialog.requestWindowFeature(Window.FEATURE_NO_TITLE); //before
+        mDownloadTopicImageTextDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         LinearLayout downloadTopicImageTextLayout = (LinearLayout) getLayoutInflater().inflate(R.layout.download_topic_image_text_layout, null);
         mDownloadTopicImageTextDialog.setContentView(downloadTopicImageTextLayout);
         mDownloadTopicImageTextDialog.setCancelable(false);
@@ -678,9 +675,8 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         VDVideoInfo info = new VDVideoInfo();
         TopicVideoInfo topicVideoInfo = topicInfo.getVideos().get(0);
         mVideoRemoteUrl = mTopicVideoPlayerPresenter.buildVideoRemoteUrl(topicVideoInfo);
-//        mVideoLocalFilePath = mTopicVideoPlayerPresenter.buildVideoLocalFilePath(topicVideoInfo);
         info.mTitle = topicInfo.getTitle();
-        info.mPlayUrl = mVideoRemoteUrl;//!mTopicVideoPlayerPresenter.checkHasLocalVideo(mVideoLocalFilePath) ? mVideoRemoteUrl : mVideoLocalFilePath;
+        info.mPlayUrl = mVideoRemoteUrl;
         // 获取视频缩略图
         Bitmap bitmap = createVideoThumbnail(mVideoRemoteUrl, 700, (int) (700 / Constants.VIDEO_ASPECT_RATIO));
         mPlayIconParent.setBackgroundDrawable(new BitmapDrawable(bitmap));
@@ -746,10 +742,6 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         ArrayList<String> pictures = topicImageTextInfo.getPictures();
         ArrayList<String> articles = topicImageTextInfo.getArticles();
 
-//        LinearLayout.LayoutParams lpMarginTopBottom = new LinearLayout.LayoutParams
-//                (LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-//        lpMarginTopBottom.setMargins(0, dp_10, 0, dp_10);
-
         LinearLayout.LayoutParams lpMarginTop = new LinearLayout.LayoutParams
                 (LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         lpMarginTop.setMargins(0, mImageTextMargin, 0, 0);
@@ -757,9 +749,6 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
 
         for (int i = 0, size = pictures.size(); i < size; i++) {
             ImageCacheView imageView = new ImageCacheView(TopicVideoPlayerActivity.this);
-            // 如果没有配图没有文字，并且不是第一张图片时，不需要设置Margin Top
-//            imageView.setLayoutParams(((null == articles.get(i) || articles.get(i).toString().length() == 0))
-//                    ? lpMarginTop : lpMarginTopBottom);
             imageView.setLayoutParams(lpMarginTop);
             imageView.setImageSrc(pictures.get(i));
             imageView.setAdjustViewBounds(true);
@@ -896,7 +885,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
             FrameLayout topicRelateLayout = new FrameLayout(this);
             topicRelateLayout.setLayoutParams(layoutLp);
 
-            ImageCacheView topicRelateIv = new ImageCacheView(TopicVideoPlayerActivity.this);
+            ImageCacheView topicRelateIv = new ImageCacheView(this);
             topicRelateIv.setLayoutParams(topicRelateIvLp);
             topicRelateIv.setAdjustViewBounds(true);
             if (topicRelatedList.size() > i && null != topicRelatedList.get(i)) {
@@ -1092,23 +1081,6 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
                 } else {
                     mTopicVideoPlayerPresenter.initTopicComments(mTopicId, ++mPage);
                 }
-            }
-        }, 1000);
-    }
-
-
-    /**
-     * scrollView header刷新，不需要处理
-     *
-     * @param view
-     */
-    @Override
-    public void onHeaderRefresh(PullToRefreshView view) {
-        mTopicPullToRefreshView.postDelayed(new Runnable() {
-
-            @Override
-            public void run() {
-                mTopicPullToRefreshView.onHeaderRefreshComplete();
             }
         }, 1000);
     }

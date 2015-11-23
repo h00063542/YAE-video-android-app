@@ -295,16 +295,16 @@ public class TopicCommentAdapter extends BaseAdapter {
         TextView topicCommentReplyTv = (TextView) mInflater.inflate(R.layout.topic_comment_replay_item, null);
 
         StringBuilder replyText = new StringBuilder()
-                .append(buildTextFont(R.color.orange, topicCommentReplyInfo.getAuthor()));
+                .append(mBaseActivity.buildTextFont(R.color.orange, topicCommentReplyInfo.getAuthor()));
 
         if (!topicCommentInfo.getUserId().equals(topicCommentReplyInfo.getAt().getUserId())) {
-            replyText.append(buildTextFont(R.color.z3, mBaseActivity.getString(R.string.reply) + topicCommentReplyInfo.getAt().getNickName()));
+            replyText.append(mBaseActivity.buildTextFont(R.color.z3, mBaseActivity.getString(R.string.reply) + topicCommentReplyInfo.getAt().getNickName()));
         }
 
         replyText.append(": ");
 
         String content = StringUtil.buildTelNumberHtmlText(topicCommentReplyInfo.getContent());
-        replyText.append(buildTextFont(R.color.z2, content));
+        replyText.append(mBaseActivity.buildTextFont(R.color.z2, content));
 
         topicCommentReplyTv.setText(Html.fromHtml(replyText.toString()));
         topicCommentReplyTv.setMovementMethod(LinkMovementMethod.getInstance());
@@ -323,12 +323,6 @@ public class TopicCommentAdapter extends BaseAdapter {
             }
         });
         return topicCommentReplyTv;
-    }
-
-    private String buildTextFont(int resColorId, String text) {
-        int color = mBaseActivity.getResources().getColor(resColorId);
-        StringBuilder stringBuilder = new StringBuilder().append(String.format("<font color=\"#%s\">", String.format("%X", color).substring(2))).append(text).append("</font>");
-        return stringBuilder.toString();
     }
 
     private void addTopicCommentReply(TopicCommentInfo commentInfo, TopicCommentReplyInfo replyInfo, int type) {

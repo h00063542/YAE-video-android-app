@@ -109,7 +109,7 @@ public class TopicVideoPlayerPresenter {
 
     }
 
-    public void initTopicRelatedUsedProductList(final String topicId){
+    public void initTopicRelatedUsedProductList(final String topicId) {
         TaskManager.Task loadTopicRelatedInfo = new TaskManager.BackgroundTask() {
             @Override
             public Object doWork(Object data) {
@@ -198,13 +198,12 @@ public class TopicVideoPlayerPresenter {
         TaskManager.Task loadTopicComments = new TaskManager.BackgroundTask() {
             @Override
             public Object doWork(Object data) {
-//                try {
-                // TODO 防止向正式环境发送数据
-                //return topicsService.addVideoPlayCount(topicId);
-//                } catch (NetworkDisconnectException e) {
-//                    e.printStackTrace();
-//                    LOGGER.error(MessageFormat.format("视频播放次数+1失败，topicId:{0}", topicId), e);
-//                }
+                try {
+                    return topicsService.addVideoPlayCount(topicId);
+                } catch (NetworkDisconnectException e) {
+                    e.printStackTrace();
+                    LOGGER.error(MessageFormat.format("视频播放次数+1失败，topicId:{0}", topicId), e);
+                }
                 return null;
             }
         };
@@ -239,11 +238,6 @@ public class TopicVideoPlayerPresenter {
                 }
             }
         }.start();
-    }
-
-    public void shareTopic(String topicId) {
-
-
     }
 
     public void initUserTopicStatus(final String topicId) {
@@ -337,29 +331,11 @@ public class TopicVideoPlayerPresenter {
         return !StringUtil.isEmpty(topicVideoInfo.getOssUrl()) ? topicVideoInfo.getOssUrl() : topicVideoInfo.getCcUrl();
     }
 
-
-    public String buildVideoLocalFilePath(final TopicVideoInfo topicVideoInfo) {
-        if (null == topicVideoInfo) {
-            return Constants.EMPTY_STRING;
-        }
-        String videoRemoteUrl = buildVideoRemoteUrl(topicVideoInfo);
-        if (StringUtil.isEmpty(videoRemoteUrl)) {
-            return Constants.EMPTY_STRING;
-        }
-        String videoSuffix = videoRemoteUrl.substring(videoRemoteUrl.lastIndexOf(Constants.POINT), videoRemoteUrl.length());
-
-        return new StringBuffer().append(Constants.YILOS_NAILSTAR_VIDEOS_PATH).append(topicVideoInfo.getVideoId()).append(videoSuffix).toString();
-    }
-
     public String buildPictureLocalFileName(final String topicId, final String imageSrc) {
         if (StringUtil.isEmpty(topicId) || StringUtil.isEmpty(imageSrc)) {
             return Constants.EMPTY_STRING;
         }
         return new StringBuffer().append(imageSrc.substring(imageSrc.lastIndexOf("/"), imageSrc.length())).append(Constants.PNG_SUFFIX).toString();
-    }
-
-    public boolean checkHasLocalVideo(String filePath) {
-        return StringUtil.isEmpty(filePath) ? false : new File(filePath).exists();
     }
 
     private String saveBitmap2File(String topicId, String url) {

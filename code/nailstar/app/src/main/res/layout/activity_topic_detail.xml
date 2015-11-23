@@ -80,7 +80,8 @@
             android:background="@color/submitted_homework_background_color"
             android:gravity="center_horizontal|center_vertical"
             android:text="@string/submitted_homework"
-            android:textColor="@color/white" />
+            android:textColor="@color/white"
+            android:textSize="@dimen/middle_text_size" />
 
     </LinearLayout>
 </LinearLayout>

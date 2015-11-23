@@ -119,6 +119,7 @@
                 android:orientation="horizontal"
                 android:weightSum="1">
 
+                <!--tag1-->
                 <TextView
                     android:id="@+id/tv_topic_author_tag_1"
                     android:layout_width="wrap_content"
@@ -141,7 +142,7 @@
                     android:src="@drawable/graya"
                     android:visibility="gone" />
 
-
+                <!--tag2-->
                 <TextView
                     android:id="@+id/tv_topic_author_tag_2"
                     android:layout_width="wrap_content"
@@ -165,7 +166,7 @@
                     android:src="@drawable/graya"
                     android:visibility="gone" />
 
-
+                <!--tag3-->
                 <TextView
                     android:id="@+id/tv_topic_author_tag_3"
                     android:layout_width="wrap_content"
@@ -396,7 +397,7 @@
         android:textColor="@color/z3"
         android:textSize="@dimen/small_text_size" />
 
-    <!--视频评论-->
+    <!--视频评论空白区域-->
     <LinearLayout
         android:id="@+id/topic_empty_comment_layout"
         android:layout_width="match_parent"
@@ -409,17 +410,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="@dimen/topic_comment_margin_top"
             android:src="@mipmap/blank_comment" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="15dp"
-            android:layout_marginTop="15dp"
+            android:layout_marginBottom="@dimen/topic_comment_margin_bottom"
+            android:layout_marginTop="@dimen/topic_comment_margin_top"
             android:gravity="center_horizontal"
-            android:text="暂无评论，来抢沙发吧~" />
+            android:text="@string/topic_empty_comment_tips" />
 
     </LinearLayout>
 </RelativeLayout>
