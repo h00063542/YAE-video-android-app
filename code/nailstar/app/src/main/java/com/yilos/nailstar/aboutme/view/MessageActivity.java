@@ -82,7 +82,7 @@ public class MessageActivity extends BaseActivity implements IMessageView {
     public void getSystemMessageList(List<Object> objectList) {
         ArrayList<SystemMessage> systemMessageArrayList = (ArrayList<SystemMessage>)objectList.get(0);
         long lt = (long) objectList.get(1);
-        setLocalSystemMessage(systemMessageArrayList,Constants.APPEND);
+        setLocalSystemMessage(systemMessageArrayList);
         setLatestMessageTime(lt);
         initSystemMessageList(getLocalSystemMessage());
     }
@@ -139,7 +139,7 @@ public class MessageActivity extends BaseActivity implements IMessageView {
     }
 
     @Override
-    public void setLocalSystemMessage(ArrayList<SystemMessage> systemMessageArrayList,String model) {
+    public void setLocalSystemMessage(ArrayList<SystemMessage> systemMessageArrayList) {
         if (systemMessageArrayList.size() == 0) {
             return;
         }
@@ -334,7 +334,6 @@ public class MessageActivity extends BaseActivity implements IMessageView {
                     }
                 }
                 setLocalReplyMessage(userMessageArrayList);
-
                 initUserMessageList(userMessageArrayList);
                 break;
             default:
