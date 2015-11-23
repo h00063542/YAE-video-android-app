@@ -127,6 +127,7 @@ public class TopicHomeworkActivity extends BaseActivity implements ITopicHomewor
             return;
         }
         //设置返回数据
+        intent.putExtra(Constants.TOPIC_NEW_COMMENT_ID, newCommentId);
         intent.putExtra(Constants.CONTENT, mContent);
         intent.putExtra(Constants.CONTENT_PIC, mContentPic);
         setResult(RESULT_OK, intent);
