@@ -17,9 +17,10 @@ public interface IMessageView {
 
     void getSystemMessageList(List<Object> objectList);
 
-    void setLocalSystemMessage(ArrayList<SystemMessage> systemMessageArrayList);
+    void setLocalSystemMessage(ArrayList<SystemMessage> systemMessageArrayList,String model);
 
     void setLatestMessageTime(long latestMessageTime);
 
     long getLatestMessageTime();
+    ArrayList<SystemMessage> getLocalSystemMessage();
 }

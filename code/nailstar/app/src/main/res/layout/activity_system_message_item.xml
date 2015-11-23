@@ -2,7 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:id="@+id/system_message_item"
+    android:clickable="true">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -25,7 +27,6 @@
                     android:id="@+id/title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/z3"
                     android:textSize="@dimen/middle_text_size"
                     android:text="美甲大咖团队"/>
                 <TextView
@@ -43,7 +44,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="18px"
                 android:textSize="@dimen/small_text_size"
-                android:textColor="@color/z3"
                 android:lineSpacingExtra="9dp"
                 android:text="与胡波老师的彩绘获奖作品来个亲密接触吧与胡波老师的彩绘获奖作品来个亲密接触吧与胡波老师的彩绘获奖作品来个亲密接触吧与胡波老师的彩绘获奖作品来个亲密接触吧与胡波老师的彩绘获奖作品来个亲密接触吧"/>
         </LinearLayout>

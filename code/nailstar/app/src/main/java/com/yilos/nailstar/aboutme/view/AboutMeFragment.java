@@ -250,7 +250,6 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
                     loginAPI.gotoLoginPage(getActivity());
                 } else {
                     Intent intent = new Intent(getActivity(),MessageActivity.class);
-                    intent.putExtra("uid",personInfo.getUid());
                     startActivity(intent);
                 }
             default:
