@@ -60,7 +60,7 @@ public class SocialLoginAPI {
 
     public void qqLogin(final Activity activity, final SocialLoginResultListener<LoginData> loginListener) {
         //参数1为当前Activity， 参数2为开发者在QQ互联申请的APP ID，参数3为开发者在QQ互联申请的APP kEY.
-        UMQQSsoHandler qqSsoHandler = new UMQQSsoHandler(activity, "1104611687", "LGiugygtm1OcHQEh");
+        UMQQSsoHandler qqSsoHandler = new UMQQSsoHandler(activity, SocialAPI.QQ_APP_ID, SocialAPI.QQ_APP_KEY);
         qqSsoHandler.addToSocialSDK();
         login(activity, new QQResultParser(), loginListener);
     }
