@@ -178,4 +178,5 @@
 
 
     <string name="has_been_reply">已回复</string>
+    <string name="title_activity_my_favourite">收藏</string>
 </resources>
