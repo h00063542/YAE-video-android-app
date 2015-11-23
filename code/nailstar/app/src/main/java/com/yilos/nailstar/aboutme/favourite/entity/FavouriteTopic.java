@@ -18,7 +18,7 @@ public class FavouriteTopic {
 
     private Date createDate;
 
-    private String photoUrl;
+    private String authorPhotoUrl;
 
     public String getCollectionId() {
         return collectionId;
@@ -68,11 +68,11 @@ public class FavouriteTopic {
         this.createDate = createDate;
     }
 
-    public String getPhotoUrl() {
-        return photoUrl;
+    public String getAuthorPhotoUrl() {
+        return authorPhotoUrl;
     }
 
-    public void setPhotoUrl(String photoUrl) {
-        this.photoUrl = photoUrl;
+    public void setAuthorPhotoUrl(String photoUrl) {
+        this.authorPhotoUrl = photoUrl;
     }
 }

@@ -2,6 +2,9 @@
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:fitsSystemWindows="true"
+    android:clipToPadding="true"
+    android:background="@color/xk2"
     tools:context="com.yilos.nailstar.aboutme.favourite.view.MyFavouriteActivity">
 
     <com.yilos.widget.titlebar.TitleBar
@@ -13,6 +16,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/myFavouriteList"
+        android:background="@color/white"
+        android:paddingLeft="@dimen/common_10_dp"
         android:visibility="gone">
     </android.support.v7.widget.RecyclerView>
 
