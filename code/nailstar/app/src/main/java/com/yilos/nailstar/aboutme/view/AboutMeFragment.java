@@ -3,6 +3,7 @@ package com.yilos.nailstar.aboutme.view;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -19,10 +20,15 @@ import com.yilos.nailstar.aboutme.entity.PersonInfo;
 import com.yilos.nailstar.aboutme.model.LoginAPI;
 import com.yilos.nailstar.aboutme.presenter.AboutMePresenter;
 import com.yilos.nailstar.social.model.SocialAPI;
+import com.yilos.nailstar.util.Constants;
+import com.yilos.nailstar.util.DateUtil;
 import com.yilos.nailstar.util.IdentityUtil;
 import com.yilos.nailstar.util.LevelUtil;
 import com.yilos.widget.circleimageview.CircleImageView;
 import com.yilos.widget.titlebar.TitleBar;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -109,7 +115,12 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
         if (messageCount == null) {
             return;
         }
-        messageCountText.setText(String.valueOf(messageCount.getCount()));
+        int count = messageCount.getCount() + getLatestMessageCount();
+        messageCountText.setText(String.valueOf(count));
+        setLatestMessageCount(count);
+        if (!messageCountText.getText().toString().equals("0")) {
+            messageCountText.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -147,23 +158,60 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
     @Override
     public void judgeLogin() {
         if (loginAPI.isLogin()) {
-            personInfo.setUid(loginAPI.getLoginUserId());
+            String uid = loginAPI.getLoginUserId();
+            int type = loginAPI.getLoginUserType();
+            personInfo.setUid(uid);
             personInfo.setNickname(loginAPI.getLoginUserNickname());
-            personInfo.setType(loginAPI.getLoginUserType());
+            personInfo.setType(type);
             personInfo.setPhotoUrl(loginAPI.getLoginUserPhotourl());
             personInfo.setProfile(loginAPI.getLoginUserProfile());
             profileImage.setImageSrc(personInfo.getPhotoUrl());
             nameText.setText(personInfo.getNickname());
             identityText.setText(IdentityUtil.getIdentity(personInfo.getType()));
-            if (messageCountText.getText().toString().equals("0")) {
-                messageCountText.setVisibility(View.GONE);
-            }
+
+            aboutMePresenter.getMessageCount(getLatestMessageCountTime(), uid, type);
+            long lt = DateUtil.getTimestamp();
+            setLatestMessageCountTime(lt);
         } else {
             identityText.setText(R.string.about_me_identity);
             nameText.setText(R.string.about_me_name);
             profileImage.setImageResource(R.mipmap.ic_default_photo);
             messageCountText.setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    public int getLatestMessageCount() {
+        SharedPreferences mySharedPreferences= getActivity().getSharedPreferences(Constants.MESSAGES,
+                Activity.MODE_PRIVATE);
+        int count = mySharedPreferences.getInt(Constants.LATEST_MESSAGE_COUNT, 0);
+        return count;
+    }
+
+    @Override
+    public void setLatestMessageCount(int count) {
+        SharedPreferences mySharedPreferences= getActivity().getSharedPreferences(Constants.MESSAGES,
+                Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = mySharedPreferences.edit();
+        editor.putInt(Constants.LATEST_MESSAGE_COUNT, count);
+        editor.commit();
+    }
+
+    @Override
+    public long getLatestMessageCountTime() {
+        SharedPreferences mySharedPreferences= getActivity().getSharedPreferences(Constants.MESSAGES,
+                Activity.MODE_PRIVATE);
+        long time = mySharedPreferences.getLong(Constants.LATEST_MESSAGE_COUNT_TIME, 0);
+        return time;
+    }
+
+    @Override
+    public void setLatestMessageCountTime(long lt) {
+        SharedPreferences mySharedPreferences= getActivity().getSharedPreferences(Constants.MESSAGES,
+                Activity.MODE_PRIVATE);
+        SharedPreferences.Editor editor = mySharedPreferences.edit();
+        editor.putLong(Constants.LATEST_MESSAGE_COUNT_TIME, lt);
+        editor.commit();
     }
 
     private void initViews(View view){
@@ -249,6 +297,7 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
                 if (!loginAPI.isLogin()) {
                     loginAPI.gotoLoginPage(getActivity());
                 } else {
+                    setLatestMessageCount(Constants.ZERO);
                     Intent intent = new Intent(getActivity(),MessageActivity.class);
                     startActivity(intent);
                 }
