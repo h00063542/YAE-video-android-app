@@ -65,7 +65,7 @@ public class MessageActivity extends BaseActivity implements IMessageView {
         UserMessagePresenter userMessagePresenter = UserMessagePresenter.getInstance(this);
         userMessagePresenter.getUserMessageList(uid);
 
-        long lt = DateUtil.getTimestamp();
+        long lt = getLatestMessageTime();
         SystemMessagePresenter systemMessagePresenter = SystemMessagePresenter.getInstance(this);
         systemMessagePresenter.getSystemMessageList(lt);
 
