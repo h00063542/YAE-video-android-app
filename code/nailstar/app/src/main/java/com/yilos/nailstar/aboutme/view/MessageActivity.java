@@ -96,6 +96,48 @@ public class MessageActivity extends BaseActivity implements IMessageView {
         editor.commit();
     }
 
+    public void updateLocalSystemMessage(ArrayList<SystemMessage> systemMessageArrayList) {
+        if (systemMessageArrayList.size() == 0) {
+            return;
+        }
+        SharedPreferences mySharedPreferences= getSharedPreferences(Constants.MESSAGES,
+                Activity.MODE_PRIVATE);
+        String list = "{\"systemMessageList\":[]}";
+        JSONObject jsonObject = null;
+        JSONArray jsonArray = null;
+        try {
+            jsonObject = new JSONObject(list);
+            jsonArray = jsonObject.getJSONArray(Constants.SYSTEM_MESSAGE_LIST);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        for (SystemMessage systemMessage:systemMessageArrayList) {
+            JSONObject systemMessageJSONObject = new JSONObject();
+            try {
+                /**
+                 * id : d2f3cdc0-8f7f-11e5-ab99-1f385dee6318
+                 * title : 美甲大咖团队
+                 * content : 超级实用的纵向晕染技巧
+                 * publishDate : 1448021486748
+                 * topicId : 39f830b0-8f3a-11e5-ab99-1f385dee6318
+                 * hasBeenRead : true
+                 */
+                systemMessageJSONObject.put(Constants.ID,systemMessage.getId());
+                systemMessageJSONObject.put(Constants.TITLE,systemMessage.getTitle());
+                systemMessageJSONObject.put(Constants.CONTENT,systemMessage.getContent());
+                systemMessageJSONObject.put(Constants.PUBLISH_DATE,systemMessage.getPublishDate());
+                systemMessageJSONObject.put(Constants.TOPIC_ID,systemMessage.getTopicId());
+                systemMessageJSONObject.put(Constants.HAS_BEEN_READ,systemMessage.getHasBeenRead());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            jsonArray.put(systemMessageJSONObject);
+        }
+        SharedPreferences.Editor editor = mySharedPreferences.edit();
+        editor.putString(Constants.SYSTEM_MESSAGE_LIST, jsonObject.toString());
+        editor.commit();
+    }
+
     @Override
     public void setLocalSystemMessage(ArrayList<SystemMessage> systemMessageArrayList,String model) {
         if (systemMessageArrayList.size() == 0) {
@@ -109,11 +151,6 @@ public class MessageActivity extends BaseActivity implements IMessageView {
         try {
             jsonObject = new JSONObject(list);
             jsonArray = jsonObject.getJSONArray(Constants.SYSTEM_MESSAGE_LIST);
-
-            if (model.equals(Constants.COVER)) {//追加（append）模式和覆盖(cover)模式
-                jsonArray = null;
-            }
-
         } catch (JSONException e) {
             e.printStackTrace();
         }

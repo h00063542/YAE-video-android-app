@@ -81,7 +81,7 @@ public class SystemMessageListAdapter extends RecyclerView.Adapter<SystemMessage
                         break;
                     }
                 }
-                ((MessageActivity) context).setLocalSystemMessage(systemMessageList,Constants.COVER);
+                ((MessageActivity) context).updateLocalSystemMessage(systemMessageList);
                 ((MessageActivity) context).initSystemMessageList(systemMessageList);
                 Intent intent = new Intent(context, TopicVideoPlayerActivity.class);
                 intent.putExtra(Constants.TOPIC_ID, systemMessage.getTopicId());
