@@ -24,7 +24,6 @@ import com.yilos.nailstar.aboutme.model.LoginAPI;
 import com.yilos.nailstar.framework.view.BaseActivity;
 import com.yilos.nailstar.topic.entity.TopicCommentInfo;
 import com.yilos.nailstar.topic.entity.TopicCommentReplyInfo;
-import com.yilos.nailstar.topic.presenter.TopicVideoPlayerPresenter;
 import com.yilos.nailstar.util.CollectionUtil;
 import com.yilos.nailstar.util.Constants;
 import com.yilos.nailstar.util.StringUtil;
@@ -37,8 +36,6 @@ import java.util.ArrayList;
  * Created by yilos on 2015-11-21.
  */
 public class TopicCommentAdapter extends BaseAdapter {
-    private final int TOPIC_COMMENT_REQUEST_CODE = 3;
-    private final int TOPIC_HOMEWORK_REQUEST_CODE = 4;
     private final int HOMEWORK_IMAGE_ZOOM_ANIMATION_TIME = 200;
 
     private int widthPixels;
@@ -56,13 +53,13 @@ public class TopicCommentAdapter extends BaseAdapter {
 
 
     // topic评论
-    private LinearLayout mLayoutTopicBlankComment;
     private View mZoomInImageLayout;
     private ImageCacheView mIcvTopicCommentImage;
     private ScaleAnimation homeworkZoomInScaleAnimation;
     private ScaleAnimation homeworkZoomOutScaleAnimation;
 
     private String mTopicId;
+
     private ArrayList<TopicCommentInfo> topicCommentInfoList = new ArrayList<>();
 
 
@@ -71,10 +68,10 @@ public class TopicCommentAdapter extends BaseAdapter {
         mInflater = activity.getLayoutInflater();
         mTopicId = topicId;
         mDecorView = (ViewGroup) activity.getWindow().getDecorView().findViewById(android.R.id.content);
-        mLayoutTopicBlankComment = (LinearLayout) mInflater.inflate(R.layout.topic_blank_comment_layout, null);
         mZoomInImageLayout = mInflater.inflate(R.layout.zoomin_topic_comment_image_layout, null);
         mIcvTopicCommentImage = (ImageCacheView) mZoomInImageLayout.findViewById(R.id.icv_topic_comment_image);
         mZoomInImageLayout.setBackgroundColor(0x80000000);
+        mZoomInImageLayout.setTag(R.layout.zoomin_topic_comment_image_layout, true);
         DisplayMetrics displayMetrics = new DisplayMetrics();
         activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         widthPixels = displayMetrics.widthPixels;
@@ -98,6 +95,12 @@ public class TopicCommentAdapter extends BaseAdapter {
                 }, HOMEWORK_IMAGE_ZOOM_ANIMATION_TIME);
             }
         });
+        mZoomInImageLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 防止点到底层控件
+            }
+        });
     }
 
     @Override
@@ -107,15 +110,15 @@ public class TopicCommentAdapter extends BaseAdapter {
 
     @Override
     public Object getItem(int position) {
-        return null;
+        return topicCommentInfoList.get(position);
     }
 
     @Override
     public long getItemId(int position) {
-        return 0;
+        return position;
     }
 
-    static class ViewHolder {
+    class ViewHolder {
         public CircleImageView authorPhoto;
         public LinearLayout commentLayoutParent;
         public LinearLayout commentLayout;
@@ -128,9 +131,6 @@ public class TopicCommentAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        if (getCount() == 0) {
-            return mLayoutTopicBlankComment;
-        }
         final TopicCommentInfo topicCommentInfo = topicCommentInfoList.get(position);
         if (null == convertView) {
             convertView = mInflater.inflate(R.layout.topic_comment_item, null);
@@ -156,23 +156,26 @@ public class TopicCommentAdapter extends BaseAdapter {
         // -----------------评论人名称-----------------
         holder.authorName.setText(topicCommentInfo.getAuthor());
 
+        boolean isHomework = topicCommentInfo.getIsHomework() == Constants.IS_HOME_WORK_VALUE
+                && !StringUtil.isEmpty(topicCommentInfo.getContentPic());
+
         // -----------------评论人时间-----------------
         StringBuilder contentText = new StringBuilder();
-        if (topicCommentInfo.getIsHomework() == Constants.IS_HOME_WORK_VALUE) {
+        if (isHomework) {
             contentText.append("#")
                     .append(mBaseActivity.getString(R.string.submitted_homework))
                     .append("#    ");
         }
         contentText.append(StringUtil.getTopicCommentDateStr(topicCommentInfo.getCreateDate()));
         holder.commentTime.setText(contentText);
-        holder.commentContent.setText(Html.fromHtml(StringUtil.buildTelNumberHtmlText(topicCommentInfo.getContent())));
-        ((LinearLayout.LayoutParams) holder.commentContent.getLayoutParams()).setMargins(0, mCommentContentMarginTop, 0, CollectionUtil.isEmpty(topicCommentInfo.getReplies()) ? 0 : mCommentContentMarginBottom);
-
 
         // -----------------设置评论内容-----------------
-        if (topicCommentInfo.getIsHomework() == Constants.IS_HOME_WORK_VALUE
-                && !StringUtil.isEmpty(topicCommentInfo.getContentPic())) {
+        holder.commentContent.setText(Html.fromHtml(StringUtil.buildTelNumberHtmlText(topicCommentInfo.getContent())));
+        ((LinearLayout.LayoutParams) holder.commentContent.getLayoutParams()).setMargins(0, mCommentContentMarginTop, 0,
+                isHomework || !CollectionUtil.isEmpty(topicCommentInfo.getReplies()) ? mCommentContentMarginBottom : 0);
 
+        // -----------------设置评论图片-----------------
+        if (isHomework) {
             // 交作业时，显示的是本地图片
             if (!URLUtil.isNetworkUrl(topicCommentInfo.getContentPic())) {
                 holder.commentContentPic.setImageURI(Uri.parse(topicCommentInfo.getContentPic()));
@@ -206,7 +209,6 @@ public class TopicCommentAdapter extends BaseAdapter {
                     float pivotXValue = locationX / widthPixels;
                     float pivotYValue = locationY / heightPixels;
 
-
                     //渐变尺寸缩放
                     //放大动画
                     homeworkZoomInScaleAnimation = null;
@@ -226,6 +228,7 @@ public class TopicCommentAdapter extends BaseAdapter {
         }
 
         holder.commentReplayLayout.removeAllViews();
+
         // -----------------设置评论回复内容-----------------
         if (!CollectionUtil.isEmpty(topicCommentInfo.getReplies())) {
             int index = 0;
@@ -265,29 +268,43 @@ public class TopicCommentAdapter extends BaseAdapter {
         this.topicCommentInfoList.addAll(index, topicCommentInfoList);
     }
 
+    public void addTopicCommentReply(String topicCommentId, TopicCommentReplyInfo topicCommentReplyInfo) {
+        // 从评论中找到回复评论的位置
+        if (CollectionUtil.isEmpty(topicCommentInfoList)) {
+            return;
+        }
+        TopicCommentInfo topicCommentInfo = null;
+        for (TopicCommentInfo item : topicCommentInfoList) {
+            if (topicCommentId.equals(item.getId())) {
+                topicCommentInfo = item;
+                break;
+            }
+        }
+        if (null != topicCommentInfo) {
+            if (null == topicCommentInfo.getReplies()) {
+                topicCommentInfo.setReplies(new ArrayList<TopicCommentReplyInfo>());
+            }
+            topicCommentInfo.getReplies().add(topicCommentReplyInfo);
+            notifyDataSetChanged();
+        }
+    }
+
     @NonNull
     private TextView buildCommentReplyTextView(TopicCommentInfo topicCommentInfo
             , TopicCommentReplyInfo topicCommentReplyInfo) {
         TextView topicCommentReplyTv = (TextView) mInflater.inflate(R.layout.topic_comment_replay_item, null);
 
         StringBuilder replyText = new StringBuilder()
-                .append(buildStartFont(R.color.orange))
-                .append(topicCommentReplyInfo.getAuthor())
-                .append("</font>");
+                .append(buildTextFont(R.color.orange, topicCommentReplyInfo.getAuthor()));
 
         if (!topicCommentInfo.getUserId().equals(topicCommentReplyInfo.getAt().getUserId())) {
-            replyText.append(buildStartFont(R.color.z3))
-                    .append(mBaseActivity.getString(R.string.reply))
-                    .append(topicCommentReplyInfo.getAt().getNickName())
-                    .append("</font>");
+            replyText.append(buildTextFont(R.color.z3, mBaseActivity.getString(R.string.reply) + topicCommentReplyInfo.getAt().getNickName()));
         }
 
         replyText.append(": ");
 
         String content = StringUtil.buildTelNumberHtmlText(topicCommentReplyInfo.getContent());
-        replyText.append(buildStartFont(R.color.z2));
-        replyText.append(content);
-        replyText.append("</font>");
+        replyText.append(buildTextFont(R.color.z2, content));
 
         topicCommentReplyTv.setText(Html.fromHtml(replyText.toString()));
         topicCommentReplyTv.setMovementMethod(LinkMovementMethod.getInstance());
@@ -308,11 +325,11 @@ public class TopicCommentAdapter extends BaseAdapter {
         return topicCommentReplyTv;
     }
 
-    private String buildStartFont(int resColorId) {
+    private String buildTextFont(int resColorId, String text) {
         int color = mBaseActivity.getResources().getColor(resColorId);
-        return String.format("<font color=\"#%s\">", String.format("%X", color).substring(2));
+        StringBuilder stringBuilder = new StringBuilder().append(String.format("<font color=\"#%s\">", String.format("%X", color).substring(2))).append(text).append("</font>");
+        return stringBuilder.toString();
     }
-
 
     private void addTopicCommentReply(TopicCommentInfo commentInfo, TopicCommentReplyInfo replyInfo, int type) {
         if (!LoginAPI.getInstance().isLogin()) {
@@ -331,7 +348,7 @@ public class TopicCommentAdapter extends BaseAdapter {
             intent.putExtra(Constants.TOPIC_COMMENT_AUTHOR, commentInfo.getAuthor());
         }
         intent.putExtra(Constants.TYPE, type);
-        mBaseActivity.startActivityForResult(intent, TOPIC_COMMENT_REQUEST_CODE);
+        mBaseActivity.startActivityForResult(intent, Constants.TOPIC_COMMENT_REQUEST_CODE);
     }
 
     private void showTopicCommentReplayAgainDialog(final TopicCommentInfo commentInfo
@@ -356,7 +373,7 @@ public class TopicCommentAdapter extends BaseAdapter {
                         intent.putExtra(Constants.TOPIC_COMMENT_REPLY_AUTHOR, replyInfo.getAuthor());
                     }
                     intent.putExtra(Constants.TYPE, type);
-                    mBaseActivity.startActivityForResult(intent, TOPIC_COMMENT_REQUEST_CODE);
+                    mBaseActivity.startActivityForResult(intent, Constants.TOPIC_COMMENT_REQUEST_CODE);
                 } else if (1 == item) {
                     dialog.dismiss();
                 }

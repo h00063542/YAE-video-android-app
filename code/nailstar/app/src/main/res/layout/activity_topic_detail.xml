@@ -16,12 +16,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <!--<LinearLayout-->
-        <!--android:id="@+id/webView_layout"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="500dp"-->
-        <!--android:orientation="horizontal"></LinearLayout>-->
-
     <!--视频播放界面中间部分，视频播放框，图文分解，更多视频，评论-->
     <com.yilos.widget.pullrefresh.PullToRefreshView
         android:id="@+id/topic_pull_refresh_view"
@@ -34,9 +28,7 @@
             android:id="@+id/lv_topic_detail"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:divider="@null">
-
-        </ListView>
+            android:divider="@null"></ListView>
 
     </com.yilos.widget.pullrefresh.PullToRefreshView>
 
@@ -91,6 +83,4 @@
             android:textColor="@color/white" />
 
     </LinearLayout>
-
-
 </LinearLayout>

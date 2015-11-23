@@ -94,8 +94,6 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         PullToRefreshView.OnFooterRefreshListener {
     private final Logger LOGGER = LoggerFactory.getLogger(TopicVideoPlayerActivity.class);
 
-    private final int TOPIC_COMMENT_REQUEST_CODE = 3;
-    private final int TOPIC_HOMEWORK_REQUEST_CODE = 4;
     private final int HOMEWORK_IMAGE_ZOOM_ANIMATION_TIME = 200;
 
     private int widthPixels;
@@ -172,8 +170,6 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
     private ScaleAnimation homeworkZoomOutScaleAnimation;
 
 
-//    private FloatingActionButton mFabBackTop;
-
     // 底部下载、收藏、评论、交作业
     private CheckBox mCbTopicTabLike;
     private CheckBox mCbTopicTabCollection;
@@ -191,16 +187,8 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
 
     private TopicVideoPlayerPresenter mTopicVideoPlayerPresenter;
 
-    //    private float mCommentAuthorFontSize;
-//    private float mCommentIsHomeWorkFontSize;
-//    private float mCommentCreateDateFontSize;
-//    private float mCommentContentFontSize;
-//    private float mCommentReplyFontSize;
-//    private float mFontSizeLarge;
     private float mFontSizeMiddle;
     private float mFontSizeSmall;
-//    private float mFontSizeVerySmall;
-
 
     private int mImageTextMargin;
 
@@ -407,7 +395,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
                         Intent intent = new Intent(TopicVideoPlayerActivity.this, TopicHomeworkActivity.class);
                         intent.putExtra(Constants.TOPIC_ID, mTopicId);
                         intent.putExtra(Constants.CONTENT_PIC, uri.getPath());
-                        startActivityForResult(intent, TOPIC_HOMEWORK_REQUEST_CODE);
+                        startActivityForResult(intent, Constants.TOPIC_HOMEWORK_REQUEST_CODE);
                     }
                 }).build();
 
@@ -441,7 +429,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
                 mTopicVideoPlayerPresenter.downloadVideo(mTopicInfo);
             }
         });
-// 界面顶部分享按钮
+        // 界面顶部分享按钮
         mIvTopicShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -450,8 +438,6 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
                         String.format(getString(R.string.topic_share_content), mTopicInfo.getTitle()),
                         String.format(Constants.TOPIC_SHARE_URL, mTopicId),
                         mTopicInfo.getThumbUrl());
-//                mTopicVideoPlayerPresenter.shareTopic(mTopicId);
-//                showShortToast("分享成功");
             }
         });
 
@@ -470,35 +456,6 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
             }
         });
 
-
-//        // 添加滚动监听
-//        mSvVideoPlayer.setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event) {
-//                switch (event.getAction()) {
-//                    case MotionEvent.ACTION_MOVE://移动
-////                        Log.i(TAG, "ScrollView的滚动事件" + (event.getAction() == MotionEvent.ACTION_DOWN));
-//                        break;
-//                    case MotionEvent.ACTION_UP://向上
-//                        View childView = mSvVideoPlayer.getChildAt(0);
-//                        Log.i(TAG, "=======================================childView.getMeasuredHeight():" + childView.getMeasuredHeight());
-//                        Log.i(TAG, "=======================================mSvVideoPlayer.getScrollY():" + mSvVideoPlayer.getScrollY());
-//                        Log.i(TAG, "=======================================mSvVideoPlayer.getHeight():" + mSvVideoPlayer.getHeight());
-//                        Log.i(TAG, "=======================================minus:" + (childView.getMeasuredHeight() <= mSvVideoPlayer.getScrollY() + mSvVideoPlayer.getHeight()));
-//                        if (childView != null && childView.getMeasuredHeight() <= mSvVideoPlayer.getScrollY() + mSvVideoPlayer.getHeight()) {
-//                            mFabBackTop.setVisibility(View.VISIBLE);
-//                            Log.i(TAG, "=======================================底部1");
-//                        } else {
-//                            mFabBackTop.setVisibility(View.GONE);
-//                        }
-//                        break;
-//                    case MotionEvent.ACTION_DOWN://向下
-//                        mFabBackTop.setVisibility(View.GONE);
-//                        break;
-//                }
-//                return false;
-//            }
-//        });
         mPlayIconParent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -677,16 +634,8 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
     }
 
     private void initControlLayoutParams() {
-//        mCommentAuthorFontSize = getResources().getDimensionPixelSize(R.dimen.topic_comment_author_font_size);
-//        mCommentIsHomeWorkFontSize = getResources().getDimensionPixelSize(R.dimen.topic_comment_is_home_work_font_size);
-//        mCommentCreateDateFontSize = getResources().getDimensionPixelSize(R.dimen.topic_comment_create_date_font_size);
-//        mCommentContentFontSize = getResources().getDimensionPixelSize(R.dimen.topic_comment_content_font_size);
-//        mCommentReplyFontSize = getResources().getDimensionPixelSize(R.dimen.topic_comment_reply_font_size);
-
-//        mFontSizeLarge = getResources().getDimensionPixelSize(R.dimen.large_text_size);
         mFontSizeMiddle = getResources().getDimensionPixelSize(R.dimen.middle_text_size);
         mFontSizeSmall = getResources().getDimensionPixelSize(R.dimen.small_text_size);
-//        mFontSizeVerySmall = getResources().getDimensionPixelSize(R.dimen.very_small_text_size);
 
         mCommentAuthorPhotoSize = getResources().getDimensionPixelSize(R.dimen.topic_comment_author_photo_size);
         mCommentAuthorPhotoMargin = getResources().getDimensionPixelSize(R.dimen.topic_comment_author_photo_margin);
@@ -795,7 +744,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         Intent intent = new Intent(this, TopicCommentActivity.class);
         intent.putExtra(Constants.TOPIC_ID, mTopicId);
         intent.putExtra(Constants.TYPE, Constants.TOPIC_COMMENT_TYPE_COMMENT);
-        startActivityForResult(intent, TOPIC_COMMENT_REQUEST_CODE);
+        startActivityForResult(intent, Constants.TOPIC_COMMENT_REQUEST_CODE);
     }
 
     /**
@@ -821,7 +770,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
             intent.putExtra(Constants.TOPIC_COMMENT_AUTHOR, commentInfo.getAuthor());
         }
         intent.putExtra(Constants.TYPE, type);
-        startActivityForResult(intent, TOPIC_COMMENT_REQUEST_CODE);
+        startActivityForResult(intent, Constants.TOPIC_COMMENT_REQUEST_CODE);
     }
 
     private void showTopicCommentReplayAgainDialog(final TopicCommentInfo commentInfo
@@ -846,7 +795,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
                         intent.putExtra(Constants.TOPIC_COMMENT_REPLY_AUTHOR, replyInfo.getAuthor());
                     }
                     intent.putExtra(Constants.TYPE, type);
-                    startActivityForResult(intent, TOPIC_COMMENT_REQUEST_CODE);
+                    startActivityForResult(intent, Constants.TOPIC_COMMENT_REQUEST_CODE);
                 } else if (1 == item) {
                     dialog.dismiss();
                 }
@@ -1574,11 +1523,6 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         if (isCollection && isSuccess) {
             showShortToast(getString(R.string.add_topic_collection));
         }
-//        if (isSuccess) {
-//            Toast.makeText(this, isCollection ? "收藏成功" : "取消收藏成功", Toast.LENGTH_SHORT).show();
-//        } else {
-//            Toast.makeText(this, isCollection ? "收藏失败" : "取消收藏失败", Toast.LENGTH_SHORT).show();
-//        }
     }
 
     @Override
@@ -1644,9 +1588,9 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
 
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (resultCode != RESULT_OK) {
-            if (requestCode == TOPIC_COMMENT_REQUEST_CODE && resultCode == RESULT_FIRST_USER) {
+            if (requestCode == Constants.TOPIC_COMMENT_REQUEST_CODE && resultCode == RESULT_FIRST_USER) {
                 showShortToast(R.string.submitted_comment_fail);
-            } else if (requestCode == TOPIC_HOMEWORK_REQUEST_CODE && resultCode == RESULT_FIRST_USER) {
+            } else if (requestCode == Constants.TOPIC_HOMEWORK_REQUEST_CODE && resultCode == RESULT_FIRST_USER) {
                 showShortToast(R.string.submitted_homework_fail);
             }
             return;
@@ -1655,7 +1599,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         String userNickname = LoginAPI.getInstance().getLoginUserNickname();
         String userPhotoUrl = LoginAPI.getInstance().getLoginUserPhotourl();
         // 评论或回复
-        if (requestCode == TOPIC_COMMENT_REQUEST_CODE) {
+        if (requestCode == Constants.TOPIC_COMMENT_REQUEST_CODE) {
             Bundle data = intent.getExtras();
 //            String topicId = data.getString(Constants.TOPIC_ID, Constants.EMPTY_STRING);
             int commentType = data.getInt(Constants.TYPE, Constants.TOPIC_COMMENT_TYPE_COMMENT);
@@ -1721,7 +1665,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
             return;
         }
         // 交作业
-        if (requestCode == TOPIC_HOMEWORK_REQUEST_CODE) {
+        if (requestCode == Constants.TOPIC_HOMEWORK_REQUEST_CODE) {
             Bundle data = intent.getExtras();
             String content = data.getString(Constants.CONTENT, Constants.EMPTY_STRING);
             String contentPic = data.getString(Constants.CONTENT_PIC, Constants.EMPTY_STRING);
