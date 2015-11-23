@@ -7,7 +7,7 @@ import android.os.Environment;
  */
 public class Constants {
 
-    public static final String YILOS_API_SERVER= "http://192.168.1.113:5013";//"http://api3.naildaka.com";
+    public static final String YILOS_API_SERVER= "http://api3.naildaka.com";//"http://api3.naildaka.com";
     public static final String YILOS_STATIC_SERVER = "http://s.naildaka.com";
 
 
