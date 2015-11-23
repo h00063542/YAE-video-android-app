@@ -200,4 +200,6 @@ public class Constants {
     public static final String COVER = "cover";
     public static final String APPEND = "append";
     public static final int ZERO = 0;
+    public static final String CANDIDATES = "candidates";
+    public static final String NO = "no";
 }

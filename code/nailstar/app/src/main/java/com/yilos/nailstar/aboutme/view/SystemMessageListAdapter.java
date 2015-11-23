@@ -19,7 +19,6 @@ import com.yilos.nailstar.util.Constants;
 import com.yilos.nailstar.util.DateUtil;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by sisilai on 15/11/21.

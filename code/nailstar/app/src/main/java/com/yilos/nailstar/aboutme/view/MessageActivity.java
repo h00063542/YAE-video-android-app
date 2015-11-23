@@ -40,6 +40,7 @@ public class MessageActivity extends BaseActivity implements IMessageView {
     private TitleBar titleBar;
     private TextView titleText;
     private LoginAPI loginAPI= LoginAPI.getInstance();
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,7 +90,7 @@ public class MessageActivity extends BaseActivity implements IMessageView {
 
     @Override
     public void setLatestMessageTime(long latestMessageTime) {
-        SharedPreferences mySharedPreferences= getSharedPreferences(Constants.MESSAGES,
+        SharedPreferences mySharedPreferences= getSharedPreferences(Constants.MESSAGES + "_" + loginAPI.getLoginUserId(),
                 Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = mySharedPreferences.edit();
         editor.putLong(Constants.LATEST_MESSAGE_TIME, latestMessageTime);
@@ -100,7 +101,7 @@ public class MessageActivity extends BaseActivity implements IMessageView {
         if (systemMessageArrayList.size() == 0) {
             return;
         }
-        SharedPreferences mySharedPreferences= getSharedPreferences(Constants.MESSAGES,
+        SharedPreferences mySharedPreferences= getSharedPreferences(Constants.MESSAGES + "_" + loginAPI.getLoginUserId(),
                 Activity.MODE_PRIVATE);
         String list = "{\"systemMessageList\":[]}";
         JSONObject jsonObject = null;
@@ -143,7 +144,7 @@ public class MessageActivity extends BaseActivity implements IMessageView {
         if (systemMessageArrayList.size() == 0) {
             return;
         }
-        SharedPreferences mySharedPreferences= getSharedPreferences(Constants.MESSAGES,
+        SharedPreferences mySharedPreferences= getSharedPreferences(Constants.MESSAGES + "_" + loginAPI.getLoginUserId(),
                 Activity.MODE_PRIVATE);
         String list = mySharedPreferences.getString(Constants.SYSTEM_MESSAGE_LIST, "{\"systemMessageList\":[]}");
         JSONObject jsonObject = null;
@@ -183,7 +184,7 @@ public class MessageActivity extends BaseActivity implements IMessageView {
 
     @Override
     public long getLatestMessageTime() {
-        SharedPreferences mySharedPreferences= getSharedPreferences(Constants.MESSAGES,
+        SharedPreferences mySharedPreferences= getSharedPreferences(Constants.MESSAGES + "_" + loginAPI.getLoginUserId(),
                 Activity.MODE_PRIVATE);
         long time = mySharedPreferences.getLong(Constants.LATEST_MESSAGE_TIME, 0);
         return time;
@@ -201,7 +202,7 @@ public class MessageActivity extends BaseActivity implements IMessageView {
     @Override
     public ArrayList<UserMessage> getLocalReplyMessage() {
         ArrayList<UserMessage> userMessageArrayList = new ArrayList<>();
-        SharedPreferences mySharedPreferences= getSharedPreferences(Constants.MESSAGES,
+        SharedPreferences mySharedPreferences= getSharedPreferences(Constants.MESSAGES + "_" + loginAPI.getLoginUserId(),
                 Activity.MODE_PRIVATE);
         String list = mySharedPreferences.getString(Constants.USER_MESSAGE_ARRAY_LIST, "{\"userMessageArrayList\":[]}");
         JSONObject jsonObject = null;
@@ -236,7 +237,7 @@ public class MessageActivity extends BaseActivity implements IMessageView {
     @Override
     public ArrayList<SystemMessage> getLocalSystemMessage() {
         ArrayList<SystemMessage> systemMessageArrayList = new ArrayList<>();
-        SharedPreferences mySharedPreferences= getSharedPreferences(Constants.MESSAGES,
+        SharedPreferences mySharedPreferences= getSharedPreferences(Constants.MESSAGES + "_" + loginAPI.getLoginUserId(),
                 Activity.MODE_PRIVATE);
         String list = mySharedPreferences.getString(Constants.SYSTEM_MESSAGE_LIST, "{\"systemMessageArrayList\":[]}");
         JSONObject jsonObject = null;
@@ -268,7 +269,7 @@ public class MessageActivity extends BaseActivity implements IMessageView {
             return;
         }
 
-        SharedPreferences mySharedPreferences= getSharedPreferences(Constants.MESSAGES,
+        SharedPreferences mySharedPreferences= getSharedPreferences(Constants.MESSAGES + "_" + loginAPI.getLoginUserId(),
                 Activity.MODE_PRIVATE);
 
         String list = mySharedPreferences.getString(Constants.USER_MESSAGE_ARRAY_LIST, "{\"userMessageArrayList\":[]}");

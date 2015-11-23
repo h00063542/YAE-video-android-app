@@ -19,6 +19,7 @@ import com.yilos.nailstar.aboutme.entity.MessageCount;
 import com.yilos.nailstar.aboutme.entity.PersonInfo;
 import com.yilos.nailstar.aboutme.model.LoginAPI;
 import com.yilos.nailstar.aboutme.presenter.AboutMePresenter;
+import com.yilos.nailstar.aboutme.requirelesson.view.RequireLessonListActivity;
 import com.yilos.nailstar.social.model.SocialAPI;
 import com.yilos.nailstar.util.Constants;
 import com.yilos.nailstar.util.DateUtil;
@@ -59,6 +60,8 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
     private TextView titleText;//标题栏标题
 
     private RelativeLayout personInfoLayout;
+
+    private RelativeLayout aboutMeRequireLesson;
 
     private TextView levelText;//等级
     private TextView attentionText;//关注
@@ -215,22 +218,23 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
     }
 
     private void initViews(View view){
-        aboutMeSetting = (RelativeLayout)view.findViewById(R.id.about_me_setting_group);
-        aboutMeMyInfo = (LinearLayout)view.findViewById(R.id.about_me_my_info);
-        messageGroup = (RelativeLayout)view.findViewById(R.id.about_me_message_group);
-        messageCountText = (TextView)view.findViewById(R.id.about_me_message_count);
+        aboutMeRequireLesson = (RelativeLayout) view.findViewById(R.id.about_me_require_lesson);
+        aboutMeSetting = (RelativeLayout) view.findViewById(R.id.about_me_setting_group);
+        aboutMeMyInfo = (LinearLayout) view.findViewById(R.id.about_me_my_info);
+        messageGroup = (RelativeLayout) view.findViewById(R.id.about_me_message_group);
+        messageCountText = (TextView) view.findViewById(R.id.about_me_message_count);
 
-        nameText = (TextView)view.findViewById(R.id.about_me_name);
-        identityText = (TextView)view.findViewById(R.id.about_me_identity);
-        profileImage = (CircleImageView)view.findViewById(R.id.profile_image);
+        nameText = (TextView) view.findViewById(R.id.about_me_name);
+        identityText = (TextView) view.findViewById(R.id.about_me_identity);
+        profileImage = (CircleImageView) view.findViewById(R.id.profile_image);
 
 //        levelText = (TextView) view.findViewById(R.id.about_me_level);
 //        attentionText = (TextView) view.findViewById(R.id.about_me_attention_count);
 //        fansText = (TextView) view.findViewById(R.id.about_me_fans_count);
 //        kaBiText = (TextView) view.findViewById(R.id.about_me_ka_bi_count);
 
-        titleBar = (TitleBar)view.findViewById(R.id.about_me_header_nav);
-        personInfoLayout = (RelativeLayout)view.findViewById(R.id.about_me_person_info_layout);
+        titleBar = (TitleBar) view.findViewById(R.id.about_me_header_nav);
+        personInfoLayout = (RelativeLayout) view.findViewById(R.id.about_me_person_info_layout);
 
 //        myFollowList = (LinearLayout)view.findViewById(R.id.my_follow_list);
 //        myFansList = (LinearLayout)view.findViewById(R.id.my_fans_list);
@@ -301,6 +305,16 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
                     Intent intent = new Intent(getActivity(),MessageActivity.class);
                     startActivity(intent);
                 }
+                break;
+            case R.id.about_me_require_lesson:
+                if (!loginAPI.isLogin()) {
+                    Intent goToLoginIntent = new Intent(getActivity(),LoginActivity.class);
+                    startActivity(goToLoginIntent);
+                } else {
+                    Intent requireLessonIntent = new Intent(getActivity(),RequireLessonListActivity.class);
+                    startActivity(requireLessonIntent);
+                }
+                break;
             default:
                 break;
         }
@@ -320,6 +334,7 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
 
         downloadVideoBtn.setOnClickListener(this);
         messageGroup.setOnClickListener(this);
+        aboutMeRequireLesson.setOnClickListener(this);
     }
 
     // TODO: Rename method, update argument and hook method into UI event

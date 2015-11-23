@@ -361,13 +361,14 @@
 
                         <!-- 我的求教程 -->
                         <RelativeLayout
+                            android:id="@+id/about_me_require_lesson"
                             android:background="@drawable/selector"
                             android:clickable="true"
                             android:layout_width="fill_parent"
                             android:layout_height="@dimen/about_me_list_item_height"
                             android:orientation="horizontal">
                             <ImageView
-                                android:id="@+id/about_me_require_lesson"
+                                android:id="@+id/about_me_require_lesson_image"
                                 android:layout_centerVertical="true"
                                 android:layout_width="@dimen/about_me_list_item_left_img"
                                 android:layout_height="@dimen/about_me_list_item_left_img"
@@ -376,7 +377,7 @@
                             <TextView
                                 android:textColor="@color/z1"
                                 android:layout_centerVertical="true"
-                                android:layout_toRightOf="@id/about_me_require_lesson"
+                                android:layout_toRightOf="@id/about_me_require_lesson_image"
                                 android:layout_marginLeft="@dimen/about_me_border_padding"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"

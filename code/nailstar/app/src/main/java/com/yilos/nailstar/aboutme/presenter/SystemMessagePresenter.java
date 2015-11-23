@@ -1,17 +1,13 @@
 package com.yilos.nailstar.aboutme.presenter;
 
-import com.yilos.nailstar.aboutme.entity.UserMessage;
 import com.yilos.nailstar.aboutme.model.SystemMessageService;
 import com.yilos.nailstar.aboutme.model.SystemMessageServiceImpl;
-import com.yilos.nailstar.aboutme.model.UserMessageService;
-import com.yilos.nailstar.aboutme.model.UserMessageServiceImpl;
 import com.yilos.nailstar.aboutme.view.MessageActivity;
 import com.yilos.nailstar.framework.exception.NetworkDisconnectException;
 import com.yilos.nailstar.util.TaskManager;
 
 import org.json.JSONException;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
