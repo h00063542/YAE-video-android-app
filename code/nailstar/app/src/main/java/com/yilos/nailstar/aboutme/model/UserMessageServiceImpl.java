@@ -86,7 +86,7 @@ public class UserMessageServiceImpl implements UserMessageService {
                 "\"accountPhoto\":\"http://pic.yilos.com/ec9a2bbc1abb13166af6da31495bea0b\"," +
                 "\"content\":\"嗯嗯\",\"createDate\":1446718910072," +
                 "\"replyTo\":\"9f59f430-8390-11e5-a74c-839a83b22973\"," +
-                "\"lastReplyTo\":\"b1438670-8390-11e5-a74c-839a83b22973\"}}\n" +
+                "\"lastReplyTo\":\"b1438670-8390-11e5-a74c-839a83b22973\"}}" +
 
 
                 "]}}";

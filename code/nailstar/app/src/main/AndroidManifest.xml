@@ -55,6 +55,7 @@
         <activity android:name=".aboutme.view.PersonInfoActivity" />
         <activity android:name=".aboutme.view.AboutUsActivity" />
         <activity android:name=".aboutme.view.DownloadVideo" />
+        <activity android:name=".aboutme.requirelesson.view.RequireLessonListActivity"/>
         <activity
             android:name=".aboutme.view.DownloadVideoPlayer"
             android:configChanges="orientation|screenSize|keyboardHidden"

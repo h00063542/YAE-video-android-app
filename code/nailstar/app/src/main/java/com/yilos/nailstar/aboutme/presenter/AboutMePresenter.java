@@ -27,12 +27,12 @@ public class AboutMePresenter {
     }
 
     //获取消息数
-    public void getMessageCount(){
+    public void getMessageCount(final long lt, final String uid, final int type){
         TaskManager.Task loadMessageCount = new TaskManager.BackgroundTask() {
             @Override
             public Object doWork(Object data) {
                 try {
-                    return aboutMeService.getMessageCount();
+                    return aboutMeService.getMessageCount(lt,uid,type);
                 } catch (NetworkDisconnectException e) {
                     e.printStackTrace();
                 } catch (JSONException e) {

@@ -68,15 +68,11 @@ public class AboutMeServiceImpl implements AboutMeService {
     }
 
     @Override
-    public MessageCount getMessageCount() throws NetworkDisconnectException, JSONException {
+    public MessageCount getMessageCount(long lt, String uid, int type) throws NetworkDisconnectException, JSONException {
         MessageCount messageCount = new MessageCount();
         String jsonObject;
         JSONObject messageCountObject;
-        String lt = "1445669825802";
-        String uid = "a8affd60-efe6-11e4-a908-3132fc2abe39";
-        int type = 5;
         String url = "/vapi/nailstar/messages/count?lt="+ lt + "&uid=" + uid + "&type=" + type;
-        //String url = "/vapi2/nailstar/messages/count";
         try {
             jsonObject = HttpClient.getJson(url);
             //"{\"code\":0,\"result\":{\"count\":3}}";
@@ -85,12 +81,12 @@ public class AboutMeServiceImpl implements AboutMeService {
                 return null;
             }
             messageCount.setCount(messageCountObject.getJSONObject("result").getInt("count"));
-            return messageCount;
         } catch (IOException e) {
             throw new NetworkDisconnectException("网络获取消息数失败", e);
         }catch (JSONException e) {
             throw new JSONException("消息数解析失败");
         }
+        return messageCount;
     }
 
     @Override
