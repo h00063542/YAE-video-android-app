@@ -42,6 +42,7 @@ public class MallIndexCategoryActivity extends BaseActivity implements IMallInde
     private boolean mHasRequestedMore;
     private int page = 1;
     private int prePageNo = 10;
+    private String category_id;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,7 +61,10 @@ public class MallIndexCategoryActivity extends BaseActivity implements IMallInde
         categotyCommodityListView.setAdapter(adapter);
     }
     private void initData() {
-        mallCategoryPresenter.loadCategoryPageData(prePageNo, page);
+        Bundle data = getIntent().getExtras();
+        category_id = data.getString(Constants.MALL_COMMODITY_CATE_ID, Constants.EMPTY_STRING);
+
+        mallCategoryPresenter.loadCategoryPageData(category_id,prePageNo, page);
 
     }
     private void bindControl() {
@@ -126,7 +130,7 @@ public class MallIndexCategoryActivity extends BaseActivity implements IMallInde
     }
 
     private void onLoadMoreItems() {
-        mallCategoryPresenter.loadCategoryPageData(prePageNo, page++);
+        mallCategoryPresenter.loadCategoryPageData(category_id,prePageNo, page++);
         adapter.notifyDataSetChanged();
         mHasRequestedMore = false;
     }

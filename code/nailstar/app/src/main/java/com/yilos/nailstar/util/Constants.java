@@ -7,7 +7,7 @@ import android.os.Environment;
  */
 public class Constants {
 
-    public static final String YILOS_API_SERVER= "http://api3.naildaka.com";
+    public static final String YILOS_API_SERVER = "http://api3.naildaka.com";
     public static final String YILOS_STATIC_SERVER = "http://s.naildaka.com";
 
 
@@ -109,6 +109,9 @@ public class Constants {
      */
     public static final int TOPIC_COMMENT_TYPE_REPLY_AGAIN = 3;
 
+    public static final int TOPIC_COMMENT_REQUEST_CODE = 3;
+    public static final int TOPIC_HOMEWORK_REQUEST_CODE = 4;
+
     public static final String TOPIC_COMMENT_ID = "topicCommentId";
     public static final String TOPIC_NEW_COMMENT_ID = "topicNewCommentId";
     public static final String TOPIC_COMMENT_USER_ID = "topicCommentUserId";
@@ -153,7 +156,7 @@ public class Constants {
     public static final int HOMEWORK_PIC_PIXEL = 400;
 
 
-    public static final String TOPIC_PRODUCT_HELPER_URL = YILOS_STATIC_SERVER+"/shop/rule.html";
+    public static final String TOPIC_PRODUCT_HELPER_URL = YILOS_STATIC_SERVER + "/shop/rule.html";
 
     /**
      * 通用WebView展示参数
@@ -168,15 +171,15 @@ public class Constants {
     public static final String ISV_CODE = "nailstar_app_android";
 
 
-
     public static final String YILOS_PIC_URL = "http://pic.yilos.com/";
     public static final String DEFAULT_OSS_HOST_ID = "oss-cn-hangzhou.aliyuncs.com";
+    public static final String TOPIC_SHARE_URL = "http://s.naildaka.com/site/video_detail.html?topicId=%1$s&allowBack=1";
 
 
     public static final String TEACHER = "teacher";
     public static final String COMMENT = "comment";
     public static final String ATNAME = "atName";
-    public static final String REPLY  = "reply";
+    public static final String REPLY = "reply";
     public static final String ACCOUNTID = "accountId";
     public static final String ACCOUNTNAME = "accountName";
     public static final String ACCOUNTPHOTO = "accountPhoto";
@@ -192,6 +195,8 @@ public class Constants {
     public static final String USERMESSAGE = "userMessage";
     public static final String PUBLISH_DATE = "publishDate";
     public static final String LATEST_MESSAGE_TIME = "latestMessageTime";
+    public static final String LATEST_MESSAGE_COUNT_TIME = "latestMessageCountTime";
+    public static final String LATEST_MESSAGE_COUNT = "latestMessageCount";
     public static final String USER_MESSAGE_ARRAY_LIST = "userMessageArrayList";
     public static final String SYSTEM_MESSAGE_LIST = "systemMessageList";
     public static final String HAS_BEEN_READ = "hasBeenRead";
@@ -200,4 +205,9 @@ public class Constants {
     //商城相关常量
     public static final String MALL_COMMODITY_CATE_ID = "commodityCateId";
 
+    public static final String COVER = "cover";
+    public static final String APPEND = "append";
+    public static final int ZERO = 0;
+    public static final String CANDIDATES = "candidates";
+    public static final String NO = "no";
 }

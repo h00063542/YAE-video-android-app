@@ -55,7 +55,11 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
     }
 
     public void setPersonInfo(PersonInfo personInfo) {
-        showShortToast("个人资料更新成功");
+        if (personInfo == null) {
+            showShortToast(R.string.person_info_update_fail);
+            return;
+        }
+        showShortToast(R.string.person_info_update_succeed);
         loginAPI.saveLoginStatus(loginAPI.getLoginUserName(),personInfo);
         finish();
     }

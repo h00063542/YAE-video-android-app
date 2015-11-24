@@ -119,7 +119,8 @@
     <dimen name="about_me_level_padding">2dp</dimen>
     <dimen name="about_me_number_count_height">60dp</dimen>
     <dimen name="about_me_list_item_height">45dp</dimen>
-    <dimen name="about_me_list_item_img">20dp</dimen>
+    <dimen name="about_me_list_item_left_img">24dp</dimen>
+    <dimen name="about_me_list_item_img">15dp</dimen>
     <dimen name="about_me_text_gray_line">1dp</dimen>
     <dimen name="about_me_message_count_border_padding">40dp</dimen>
 

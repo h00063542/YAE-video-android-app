@@ -49,6 +49,9 @@
     <string name="add_topic_collection">成功添加至 我的 -> 已收藏</string>
     <string name="submitted_comment_fail">提交评论失败，请稍后再试...</string>
     <string name="submitted_homework_fail">交作业失败，请稍后再试...</string>
+    <string name="topic_share_title">月薪10000+的美甲师都在看</string>
+    <string name="topic_share_content">美甲大咖App热播教学视频%1$s</string>
+    <string name="topic_empty_comment_tips">暂无评论，来抢沙发吧~</string>
 
     <string name="topic_shopping_helper">购物帮助</string>
     <string name="order_finish_headertext">完成订单！</string>
@@ -89,8 +92,12 @@
     <string name="person_info_name">昵称</string>
     <string name="person_info_identity">身份</string>
     <string name="person_info_introduction">个人介绍</string>
+    <string name="person_info_update_fail">个人资料更新失败，请重试</string>
+    <string name="person_info_update_succeed">个人资料更新成功</string>
 
     <!-- 求教程-->
+    <string name="di">第</string>
+    <string name="qi">期</string>
     <string name="just_now">刚刚</string>
     <string name="minute">分钟</string>
     <string name="hour">小时</string>
@@ -109,6 +116,8 @@
     <string name="lession_collection_title">求教程合集</string>
     <string name="vote_success">投票成功</string>
     <string name="vote_failed">投票失败, 请稍后再试...</string>
+    <string name="lession_share_title">来美甲大咖App，订制你想要的教学视频</string>
+    <string name="lession_share_context">我正在美甲大咖求视频教程，快来给我投票吧！</string>
 
     <string name="from_camera">拍照</string>
     <string name="from_library">从手机相册中挑选</string>
@@ -178,4 +187,5 @@
 
 
     <string name="has_been_reply">已回复</string>
+    <string name="title_activity_my_favourite">收藏</string>
 </resources>

@@ -70,7 +70,7 @@ public class TopicCommentActivity extends BaseActivity implements ITopicCommentV
         // 初始化控件事件
         initControlEvent();
 
-        mTopicCommentPresenter = TopicCommentPresenter.getInstance(this);
+        mTopicCommentPresenter = new TopicCommentPresenter(this);
     }
 
     private void initControl() {

@@ -1,5 +1,6 @@
 package com.yilos.nailstar.mall.presenter;
 
+import android.app.Fragment;
 import android.content.Intent;
 import android.net.http.SslError;
 import android.view.Gravity;
@@ -111,7 +112,7 @@ public class MallIndexPresenterImpl implements MallIndexPresenter{
                         String cateforyId = (String)v.getTag(R.id.mall_index_commodity_cate_id);
                         Intent intent = new Intent(view.getRootView().getContext(), MallIndexCategoryActivity.class);
                         intent.putExtra(Constants.MALL_COMMODITY_CATE_ID, cateforyId);
-                        view.startActivityForResult(intent, TOPIC_HOMEWORK_REQUEST_CODE);
+                        ((Fragment)view).startActivity(intent);
                     }
                 };
 

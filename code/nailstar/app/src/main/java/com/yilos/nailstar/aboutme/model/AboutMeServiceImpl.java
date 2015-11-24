@@ -45,7 +45,7 @@ public class AboutMeServiceImpl implements AboutMeService {
     @Override
     public PersonInfo setPersonInfo(PersonInfo personInfo) throws NetworkDisconnectException, JSONException {
         String result;
-        JSONObject personInfoObject;
+        JSONObject personInfoObject = null;
         String url = "/vapi/nailstar/account/profile/" + personInfo.getUid();
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("nickname", personInfo.getNickname());
@@ -53,43 +53,42 @@ public class AboutMeServiceImpl implements AboutMeService {
         jsonObject.put("photoUrl", personInfo.getPhotoUrl());
         jsonObject.put("profile", personInfo.getProfile());
         try {
-            result = HttpClient.post(url,jsonObject.toString());
+            result = HttpClient.post(url, jsonObject.toString());
+            personInfoObject = new JSONObject(result);
+            if (personInfoObject.getInt("code") != 0) {
+                return null;
+            }
         } catch (IOException e) {
-            throw new NetworkDisconnectException("更新个人资料失败",e);
+            throw new NetworkDisconnectException("更新个人资料失败", e);
+        } catch (JSONException e) {
+            throw new JSONException("更新个人资料JSON解析失败");
+        } finally {
+            if (personInfoObject.getJSONObject("result").getString("messages").equals("ok")) {
+                return personInfo;
+            }
         }
-        personInfoObject = new JSONObject(result);
-        if (personInfoObject.getInt("code") != 0) {
-            return null;
-        }
-        if (personInfoObject.getJSONObject("result").getString("messages").equals("ok")) {
-            return personInfo;
-        }
-        return null;
+        return personInfo;
     }
 
     @Override
-    public MessageCount getMessageCount() throws NetworkDisconnectException, JSONException {
+    public MessageCount getMessageCount(long lt, String uid, int type) throws NetworkDisconnectException, JSONException {
         MessageCount messageCount = new MessageCount();
         String jsonObject;
         JSONObject messageCountObject;
-        String lt = "1445669825802";
-        String uid = "a8affd60-efe6-11e4-a908-3132fc2abe39";
-        int type = 5;
-        String url = "/vapi/nailstar/messages/count?lt="+ lt + "&uid=" + uid + "&type=" + type;
-        //String url = "/vapi2/nailstar/messages/count";
+        String url = "/vapi/nailstar/messages/count?lt=" + lt + "&uid=" + uid + "&type=" + type;
         try {
             jsonObject = HttpClient.getJson(url);
-            //"{\"code\":0,\"result\":{\"count\":3}}";
             messageCountObject = new JSONObject(jsonObject);
             if (messageCountObject.getInt("code") != 0) {
                 return null;
             }
             messageCount.setCount(messageCountObject.getJSONObject("result").getInt("count"));
-            return messageCount;
         } catch (IOException e) {
             throw new NetworkDisconnectException("网络获取消息数失败", e);
-        }catch (JSONException e) {
+        } catch (JSONException e) {
             throw new JSONException("消息数解析失败");
+        } finally {
+            return messageCount;
         }
     }
 
@@ -114,10 +113,10 @@ public class AboutMeServiceImpl implements AboutMeService {
             aboutMeNumber.setExp(aboutMeNumberResult.getInt("exp"));
             aboutMeNumber.setFansNumber(aboutMeNumberResult.getInt("fansNumber"));
             aboutMeNumber.setFocusNumber(aboutMeNumberResult.getInt("focusNumber"));
-            return aboutMeNumber;
         } catch (IOException e) {
             throw new NetworkDisconnectException("网络获取我的页面的经验、咖币、粉丝数和关注数信息失败", e);
         }
+        return aboutMeNumber;
     }
 
     @Override
@@ -142,9 +141,9 @@ public class AboutMeServiceImpl implements AboutMeService {
                 return followLists;
             }
             followListUsersArray = followListObject.getJSONObject("result").getJSONArray("users");
-            for (int index = 0;index < followListUsersArray.length(); index ++) {
+            for (int index = 0; index < followListUsersArray.length(); index++) {
                 photoUrl = JsonUtil.optString(followListUsersArray.optJSONObject(index), "photoUrl");
-                if(photoUrl != null) {
+                if (photoUrl != null) {
                     byte[] data;
                     try {
                         data = ImageUtil.getBytes(new URL(photoUrl).openStream());
@@ -156,10 +155,10 @@ public class AboutMeServiceImpl implements AboutMeService {
                 }
 
                 followLists.add(new FollowList(
-                        JsonUtil.optString(followListUsersArray.optJSONObject(index),"accountId"),
-                        JsonUtil.optString(followListUsersArray.optJSONObject(index),"nickname"),
+                        JsonUtil.optString(followListUsersArray.optJSONObject(index), "accountId"),
+                        JsonUtil.optString(followListUsersArray.optJSONObject(index), "nickname"),
                         photoUrl,
-                        JsonUtil.optString(followListUsersArray.optJSONObject(index),"profile"),
+                        JsonUtil.optString(followListUsersArray.optJSONObject(index), "profile"),
                         followListUsersArray.optJSONObject(index).getInt("type"),
                         imageBitmap
                 ));
@@ -194,9 +193,9 @@ public class AboutMeServiceImpl implements AboutMeService {
                 return fansLists;
             }
             fansListUsersArray = fansListObject.getJSONObject("result").getJSONArray("users");
-            for (int index = 0;index < fansListUsersArray.length(); index ++) {
+            for (int index = 0; index < fansListUsersArray.length(); index++) {
                 photoUrl = JsonUtil.optString(fansListUsersArray.optJSONObject(index), "photoUrl");
-                if(photoUrl != null) {
+                if (photoUrl != null) {
                     byte[] data;
                     try {
                         data = ImageUtil.getBytes(new URL(photoUrl).openStream());
@@ -208,10 +207,10 @@ public class AboutMeServiceImpl implements AboutMeService {
                 }
 
                 fansLists.add(new FansList(
-                        JsonUtil.optString(fansListUsersArray.optJSONObject(index),"accountId"),
-                        JsonUtil.optString(fansListUsersArray.optJSONObject(index),"nickname"),
+                        JsonUtil.optString(fansListUsersArray.optJSONObject(index), "accountId"),
+                        JsonUtil.optString(fansListUsersArray.optJSONObject(index), "nickname"),
                         photoUrl,
-                        JsonUtil.optString(fansListUsersArray.optJSONObject(index),"profile"),
+                        JsonUtil.optString(fansListUsersArray.optJSONObject(index), "profile"),
                         fansListUsersArray.optJSONObject(index).getInt("type"),
                         imageBitmap
                 ));

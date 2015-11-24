@@ -33,23 +33,19 @@ import java.util.Date;
  * Created by yilos on 2015-10-22.
  */
 public class TopicVideoPlayerPresenter {
-    private static final Logger LOGGER = LoggerFactory.getLogger(TopicVideoPlayerPresenter.class);
-
-    private static TopicVideoPlayerPresenter topicPresenter = new TopicVideoPlayerPresenter();
+    private final Logger LOGGER = LoggerFactory.getLogger(TopicVideoPlayerPresenter.class);
 
     private ITopicVideoPlayerView topicVideoPlayerView;
-    private ITopicService topicsService = new TopicServiceImpl();
-    private ImageLoader imageLoader = ImageLoader.getInstance();
+    private ITopicService topicsService;
+    private ImageLoader imageLoader;
 
 
-    private TopicVideoPlayerPresenter() {
-
+    public TopicVideoPlayerPresenter(ITopicVideoPlayerView topicVideoPlayerView) {
+        this.topicVideoPlayerView = topicVideoPlayerView;
+        this.topicsService = new TopicServiceImpl();
+        this.imageLoader = ImageLoader.getInstance();
     }
 
-    public static TopicVideoPlayerPresenter getInstance(ITopicVideoPlayerView videoPlayerView) {
-        topicPresenter.topicVideoPlayerView = videoPlayerView;
-        return topicPresenter;
-    }
 
     public void initTopicInfo(final String topicId) {
         TaskManager.Task loadTopicInfo = new TaskManager.BackgroundTask() {
@@ -109,7 +105,7 @@ public class TopicVideoPlayerPresenter {
 
     }
 
-    public void initTopicRelatedUsedProductList(final String topicId){
+    public void initTopicRelatedUsedProductList(final String topicId) {
         TaskManager.Task loadTopicRelatedInfo = new TaskManager.BackgroundTask() {
             @Override
             public Object doWork(Object data) {
@@ -198,13 +194,12 @@ public class TopicVideoPlayerPresenter {
         TaskManager.Task loadTopicComments = new TaskManager.BackgroundTask() {
             @Override
             public Object doWork(Object data) {
-//                try {
-                // TODO 防止向正式环境发送数据
-                //return topicsService.addVideoPlayCount(topicId);
-//                } catch (NetworkDisconnectException e) {
-//                    e.printStackTrace();
-//                    LOGGER.error(MessageFormat.format("视频播放次数+1失败，topicId:{0}", topicId), e);
-//                }
+                try {
+                    return topicsService.addVideoPlayCount(topicId);
+                } catch (NetworkDisconnectException e) {
+                    e.printStackTrace();
+                    LOGGER.error(MessageFormat.format("视频播放次数+1失败，topicId:{0}", topicId), e);
+                }
                 return null;
             }
         };
@@ -239,11 +234,6 @@ public class TopicVideoPlayerPresenter {
                 }
             }
         }.start();
-    }
-
-    public void shareTopic(String topicId) {
-
-
     }
 
     public void initUserTopicStatus(final String topicId) {
@@ -337,29 +327,11 @@ public class TopicVideoPlayerPresenter {
         return !StringUtil.isEmpty(topicVideoInfo.getOssUrl()) ? topicVideoInfo.getOssUrl() : topicVideoInfo.getCcUrl();
     }
 
-
-    public String buildVideoLocalFilePath(final TopicVideoInfo topicVideoInfo) {
-        if (null == topicVideoInfo) {
-            return Constants.EMPTY_STRING;
-        }
-        String videoRemoteUrl = buildVideoRemoteUrl(topicVideoInfo);
-        if (StringUtil.isEmpty(videoRemoteUrl)) {
-            return Constants.EMPTY_STRING;
-        }
-        String videoSuffix = videoRemoteUrl.substring(videoRemoteUrl.lastIndexOf(Constants.POINT), videoRemoteUrl.length());
-
-        return new StringBuffer().append(Constants.YILOS_NAILSTAR_VIDEOS_PATH).append(topicVideoInfo.getVideoId()).append(videoSuffix).toString();
-    }
-
     public String buildPictureLocalFileName(final String topicId, final String imageSrc) {
         if (StringUtil.isEmpty(topicId) || StringUtil.isEmpty(imageSrc)) {
             return Constants.EMPTY_STRING;
         }
         return new StringBuffer().append(imageSrc.substring(imageSrc.lastIndexOf("/"), imageSrc.length())).append(Constants.PNG_SUFFIX).toString();
-    }
-
-    public boolean checkHasLocalVideo(String filePath) {
-        return StringUtil.isEmpty(filePath) ? false : new File(filePath).exists();
     }
 
     private String saveBitmap2File(String topicId, String url) {
