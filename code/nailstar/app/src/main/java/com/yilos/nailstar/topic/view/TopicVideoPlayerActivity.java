@@ -1332,11 +1332,4 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
             hideLoading();
         }
     }
-
-    private String buildTextFont(int resColorId, String text) {
-        int color = getResources().getColor(resColorId);
-        StringBuilder stringBuilder = new StringBuilder().append(String.format("<font color=\"#%s\">", String.format("%X", color).substring(2))).append(text).append("</font>");
-        return stringBuilder.toString();
-    }
-
 }

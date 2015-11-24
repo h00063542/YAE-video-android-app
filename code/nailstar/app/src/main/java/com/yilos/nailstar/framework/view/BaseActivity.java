@@ -168,4 +168,11 @@ public class BaseActivity extends AppCompatActivity implements IView {
         }
         return bitmap;
     }
+
+    public String buildTextFont(int resColorId, String text) {
+        int color = getResources().getColor(resColorId);
+        StringBuilder stringBuilder = new StringBuilder().append(String.format("<font color=\"#%s\">", String.format("%X", color).substring(2))).append(text).append("</font>");
+        return stringBuilder.toString();
+    }
+
 }
