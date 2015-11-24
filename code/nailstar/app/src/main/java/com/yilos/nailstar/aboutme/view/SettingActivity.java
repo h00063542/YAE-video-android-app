@@ -155,8 +155,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                                         if (item == null) {
                                             return;
                                         }
-                                        Sdcard sdcard = new Sdcard();
-                                        sdcard = (Sdcard) item;
+                                        Sdcard sdcard  = (Sdcard) item;
                                         SettingUtil.setSdcardPathSharedPreferences(sdcard.getSdcardName(), sdcard.getSdcardPath());
                                         downloadSdcard.setText(SettingUtil.getSdcardName());
                                         dialog.dismiss();

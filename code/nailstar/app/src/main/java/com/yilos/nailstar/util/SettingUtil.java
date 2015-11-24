@@ -24,8 +24,8 @@ public class SettingUtil {
      *              false: 不允许非WiFi
      */
     public static void setAllowNoWifiSharedPreferences(boolean allow) {
-        SharedPreferences allowNoWifi= getSettingSharedPreferences();
-        SharedPreferences.Editor editor = allowNoWifi.edit();
+        SharedPreferences settingSharedPreferences= getSettingSharedPreferences();
+        SharedPreferences.Editor editor = settingSharedPreferences.edit();
         editor.putBoolean("allow", allow);
         editor.commit();
     }
@@ -34,15 +34,29 @@ public class SettingUtil {
      * @return allow
      */
     public static boolean getAllowNoWifi() {
-        return getSettingSharedPreferences().getBoolean("allow",true);
+        return getSettingSharedPreferences().getBoolean("allow", true);
+    }
+
+    public static void setFirstFlag(boolean isFirst) {
+        SharedPreferences settingSharedPreferences= getSettingSharedPreferences();
+        SharedPreferences.Editor editor = settingSharedPreferences.edit();
+        editor.putBoolean("isFirst", isFirst);
+        editor.commit();
+    }
+
+    /**
+     * @return allow
+     */
+    public static boolean getFirstFlag() {
+        return getSettingSharedPreferences().getBoolean("isFirst",true);
     }
 
     /**
      * @param sdcard_path
      */
     public static void setSdcardPathSharedPreferences(String sdcard_name,String sdcard_path) {
-        SharedPreferences sdcardPath = getSettingSharedPreferences();
-        SharedPreferences.Editor editor = sdcardPath.edit();
+        SharedPreferences settingSharedPreferences = getSettingSharedPreferences();
+        SharedPreferences.Editor editor = settingSharedPreferences.edit();
         editor.putString("sdcard_name", sdcard_name);
         editor.putString("sdcard_path", sdcard_path);
         editor.commit();
