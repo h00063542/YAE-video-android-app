@@ -61,7 +61,7 @@
             android:id="@+id/goVotingBtn"
             style="@style/CustomTabPageIndicator"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/index_tab_height"
             android:layout_weight="1"
             android:gravity="center"
             android:text="@string/vote" />
@@ -77,4 +77,18 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/line_color"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/pageCursor"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/orange"
+            android:orientation="horizontal"></LinearLayout>
+
+    </LinearLayout>
 </LinearLayout>

@@ -33,7 +33,9 @@ public class TopicHomeworkActivity extends BaseActivity implements ITopicHomewor
 
     private EditText mEtTopicHomeworkContent;
 
+    private AddCommentInfo info;
     private String mTopicId;
+    private String mCommentUserId;
     private String mContentPic;
     private String mContent;
 
@@ -54,13 +56,14 @@ public class TopicHomeworkActivity extends BaseActivity implements ITopicHomewor
     private void init() {
         Bundle data = getIntent().getExtras();
         mTopicId = data.getString(Constants.TOPIC_ID, Constants.EMPTY_STRING);
+        mCommentUserId = data.getString(Constants.TOPIC_COMMENT_USER_ID, Constants.EMPTY_STRING);
         mContentPic = data.getString(Constants.CONTENT_PIC, Constants.EMPTY_STRING);
         // 初始化控件
         initControl();
         // 初始化控件事件
         initControlEvent();
 
-        mTopicHomeworkPresenter = TopicHomeworkPresenter.getInstance(this);
+        mTopicHomeworkPresenter = new TopicHomeworkPresenter(this);
         mTopicHomeworkPresenter.initSubmittedHomeworkCount(mTopicId);
     }
 
@@ -103,7 +106,7 @@ public class TopicHomeworkActivity extends BaseActivity implements ITopicHomewor
             public void onClick(View v) {
                 mContent = mEtTopicHomeworkContent.getText().toString();
                 String userId = LoginAPI.getInstance().getLoginUserId();
-                AddCommentInfo info = new AddCommentInfo();
+                info = new AddCommentInfo();
                 info.setTopicId(mTopicId);
                 info.setUserId(userId);
                 info.setContent(mContent);
@@ -111,6 +114,7 @@ public class TopicHomeworkActivity extends BaseActivity implements ITopicHomewor
                 info.setReady(Constants.READY_HOMEWORK);
                 info.setPicLocalPath(mContentPic);
                 info.setPicName(UUIDUtil.getUUID());
+                info.setAtUserId(mCommentUserId);
                 mTopicHomeworkPresenter.submittedHomework(info);
             }
         });
@@ -126,6 +130,7 @@ public class TopicHomeworkActivity extends BaseActivity implements ITopicHomewor
             finish();
             return;
         }
+        mTopicHomeworkPresenter.uploadFileAndReady(info, newCommentId);
         //设置返回数据
         intent.putExtra(Constants.TOPIC_NEW_COMMENT_ID, newCommentId);
         intent.putExtra(Constants.CONTENT, mContent);

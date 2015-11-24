@@ -1,6 +1,5 @@
 package com.yilos.nailstar.aboutme.view;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;

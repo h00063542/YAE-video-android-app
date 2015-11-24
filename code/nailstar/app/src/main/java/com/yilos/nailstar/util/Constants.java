@@ -195,7 +195,14 @@ public class Constants {
     public static final String USERMESSAGE = "userMessage";
     public static final String PUBLISH_DATE = "publishDate";
     public static final String LATEST_MESSAGE_TIME = "latestMessageTime";
+    public static final String LATEST_MESSAGE_COUNT_TIME = "latestMessageCountTime";
+    public static final String LATEST_MESSAGE_COUNT = "latestMessageCount";
     public static final String USER_MESSAGE_ARRAY_LIST = "userMessageArrayList";
     public static final String SYSTEM_MESSAGE_LIST = "systemMessageList";
     public static final String HAS_BEEN_READ = "hasBeenRead";
+    public static final String COVER = "cover";
+    public static final String APPEND = "append";
+    public static final int ZERO = 0;
+    public static final String CANDIDATES = "candidates";
+    public static final String NO = "no";
 }

@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.yilos.nailstar.R;
 import com.yilos.nailstar.aboutme.entity.SystemMessage;
 import com.yilos.nailstar.aboutme.entity.UserMessage;
+import com.yilos.nailstar.aboutme.model.LoginAPI;
 import com.yilos.nailstar.aboutme.presenter.SystemMessagePresenter;
 import com.yilos.nailstar.aboutme.presenter.UserMessagePresenter;
 import com.yilos.nailstar.framework.view.BaseActivity;
@@ -36,17 +37,14 @@ public class MessageActivity extends BaseActivity implements IMessageView {
     // 消息列表适配器
     private MessageListAdapter messageListAdapter;
 
-    //用户uid
-    private String uid;
-
     private TitleBar titleBar;
     private TextView titleText;
-
+    private LoginAPI loginAPI= LoginAPI.getInstance();
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message);
-        uid = getIntent().getStringExtra("uid");
         titleBar = (TitleBar) findViewById(R.id.message_title_bar);
         titleText = titleBar.getTitleView();
         titleText.setText(R.string.about_me_message);
@@ -63,7 +61,7 @@ public class MessageActivity extends BaseActivity implements IMessageView {
         underlinePageIndicator.setViewPager(messageListPager);
 
         UserMessagePresenter userMessagePresenter = UserMessagePresenter.getInstance(this);
-        userMessagePresenter.getUserMessageList(uid);
+        userMessagePresenter.getUserMessageList(loginAPI.getLoginUserId());
 
         long lt = getLatestMessageTime();
         SystemMessagePresenter systemMessagePresenter = SystemMessagePresenter.getInstance(this);
@@ -83,19 +81,62 @@ public class MessageActivity extends BaseActivity implements IMessageView {
 
     @Override
     public void getSystemMessageList(List<Object> objectList) {
-        ArrayList<SystemMessage> systemMessageArrayList = (ArrayList<SystemMessage>)objectList.get(0);
-        long lt = (long) objectList.get(1);
-        setLocalSystemMessage(systemMessageArrayList);
-        setLatestMessageTime(lt);
-        initSystemMessageList(systemMessageArrayList);
+        if (objectList.size() == 0) {
+            initSystemMessageList(getLocalSystemMessage());
+        } else {
+            ArrayList<SystemMessage> systemMessageArrayList = (ArrayList<SystemMessage>)objectList.get(0);
+            long lt = (long) objectList.get(1);
+            setLocalSystemMessage(systemMessageArrayList);
+            setLatestMessageTime(lt);
+            initSystemMessageList(getLocalSystemMessage());
+        }
     }
 
     @Override
     public void setLatestMessageTime(long latestMessageTime) {
-        SharedPreferences mySharedPreferences= getSharedPreferences(Constants.MESSAGES,
+        SharedPreferences mySharedPreferences= getSharedPreferences(Constants.MESSAGES + "_" + loginAPI.getLoginUserId(),
                 Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = mySharedPreferences.edit();
-        editor.putString(Constants.LATEST_MESSAGE_TIME, String.valueOf(latestMessageTime));
+        editor.putLong(Constants.LATEST_MESSAGE_TIME, latestMessageTime);
+        editor.commit();
+    }
+
+    public void updateLocalSystemMessage(ArrayList<SystemMessage> systemMessageArrayList) {
+        SharedPreferences mySharedPreferences= getSharedPreferences(Constants.MESSAGES + "_" + loginAPI.getLoginUserId(),
+                Activity.MODE_PRIVATE);
+        String list = "{\"systemMessageList\":[]}";
+        JSONObject jsonObject = null;
+        JSONArray jsonArray = null;
+        try {
+            jsonObject = new JSONObject(list);
+            jsonArray = jsonObject.getJSONArray(Constants.SYSTEM_MESSAGE_LIST);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        for (SystemMessage systemMessage:systemMessageArrayList) {
+            JSONObject systemMessageJSONObject = new JSONObject();
+            try {
+                /**
+                 * id : d2f3cdc0-8f7f-11e5-ab99-1f385dee6318
+                 * title : 美甲大咖团队
+                 * content : 超级实用的纵向晕染技巧
+                 * publishDate : 1448021486748
+                 * topicId : 39f830b0-8f3a-11e5-ab99-1f385dee6318
+                 * hasBeenRead : true
+                 */
+                systemMessageJSONObject.put(Constants.ID,systemMessage.getId());
+                systemMessageJSONObject.put(Constants.TITLE,systemMessage.getTitle());
+                systemMessageJSONObject.put(Constants.CONTENT,systemMessage.getContent());
+                systemMessageJSONObject.put(Constants.PUBLISH_DATE,systemMessage.getPublishDate());
+                systemMessageJSONObject.put(Constants.TOPIC_ID,systemMessage.getTopicId());
+                systemMessageJSONObject.put(Constants.HAS_BEEN_READ,systemMessage.getHasBeenRead());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            jsonArray.put(systemMessageJSONObject);
+        }
+        SharedPreferences.Editor editor = mySharedPreferences.edit();
+        editor.putString(Constants.SYSTEM_MESSAGE_LIST, jsonObject.toString());
         editor.commit();
     }
 
@@ -104,7 +145,7 @@ public class MessageActivity extends BaseActivity implements IMessageView {
         if (systemMessageArrayList.size() == 0) {
             return;
         }
-        SharedPreferences mySharedPreferences= getSharedPreferences(Constants.MESSAGES,
+        SharedPreferences mySharedPreferences= getSharedPreferences(Constants.MESSAGES + "_" + loginAPI.getLoginUserId(),
                 Activity.MODE_PRIVATE);
         String list = mySharedPreferences.getString(Constants.SYSTEM_MESSAGE_LIST, "{\"systemMessageList\":[]}");
         JSONObject jsonObject = null;
@@ -144,24 +185,27 @@ public class MessageActivity extends BaseActivity implements IMessageView {
 
     @Override
     public long getLatestMessageTime() {
-        SharedPreferences mySharedPreferences= getSharedPreferences(Constants.MESSAGES,
+        SharedPreferences mySharedPreferences= getSharedPreferences(Constants.MESSAGES + "_" + loginAPI.getLoginUserId(),
                 Activity.MODE_PRIVATE);
-        return mySharedPreferences.getLong(Constants.LATEST_MESSAGE_TIME,0);
+        long time = mySharedPreferences.getLong(Constants.LATEST_MESSAGE_TIME, DateUtil.getTimestamp());
+        return time;
     }
 
     @Override
     public void getUserMessageList(ArrayList<UserMessage> userMessageArrayList) {
-        if (userMessageArrayList.size() != 0) {
+        if (userMessageArrayList.size() == 0) {
+            ArrayList<UserMessage> userMessageList = getLocalReplyMessage();
+            initUserMessageList(userMessageList);
+        } else {
             setLocalReplyMessage(userMessageArrayList);
+            initUserMessageList(userMessageArrayList);
         }
-        ArrayList<UserMessage> userMessageList = getLocalReplyMessage();
-        initUserMessageList(userMessageList);
     }
 
     @Override
     public ArrayList<UserMessage> getLocalReplyMessage() {
         ArrayList<UserMessage> userMessageArrayList = new ArrayList<>();
-        SharedPreferences mySharedPreferences= getSharedPreferences(Constants.MESSAGES,
+        SharedPreferences mySharedPreferences= getSharedPreferences(Constants.MESSAGES + "_" + loginAPI.getLoginUserId(),
                 Activity.MODE_PRIVATE);
         String list = mySharedPreferences.getString(Constants.USER_MESSAGE_ARRAY_LIST, "{\"userMessageArrayList\":[]}");
         JSONObject jsonObject = null;
@@ -194,12 +238,37 @@ public class MessageActivity extends BaseActivity implements IMessageView {
     }
 
     @Override
-    public void setLocalReplyMessage(ArrayList<UserMessage> userMessageArrayList) {
-        if (userMessageArrayList.size() == 0) {
-            return;
-        }
+    public ArrayList<SystemMessage> getLocalSystemMessage() {
+        ArrayList<SystemMessage> systemMessageArrayList = new ArrayList<>();
+        SharedPreferences mySharedPreferences= getSharedPreferences(Constants.MESSAGES + "_" + loginAPI.getLoginUserId(),
+                Activity.MODE_PRIVATE);
+        String list = mySharedPreferences.getString(Constants.SYSTEM_MESSAGE_LIST, "{\"systemMessageArrayList\":[]}");
+        JSONObject jsonObject = null;
+        JSONArray jsonArray = null;
+        try {
+            jsonObject = new JSONObject(list);
+            jsonArray = jsonObject.getJSONArray(Constants.SYSTEM_MESSAGE_LIST);
+            for (int i =0;i<jsonArray.length();i++) {
+                JSONObject systemMessageJSONObject = jsonArray.getJSONObject(i);
+                String id = systemMessageJSONObject.getString(Constants.ID);
+                String title = systemMessageJSONObject.getString(Constants.TITLE);
+                String content = systemMessageJSONObject.getString(Constants.CONTENT);
+                long publishDate = systemMessageJSONObject.getLong(Constants.PUBLISH_DATE);
+                String topicId = systemMessageJSONObject.getString(Constants.TOPIC_ID);
+                boolean hasBeenRead = systemMessageJSONObject.getBoolean(Constants.HAS_BEEN_READ);
 
-        SharedPreferences mySharedPreferences= getSharedPreferences(Constants.MESSAGES,
+                SystemMessage systemMessage = new SystemMessage(content,hasBeenRead, id, publishDate, title, topicId);
+                systemMessageArrayList.add(systemMessage);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return systemMessageArrayList;
+    }
+
+    @Override
+    public void setLocalReplyMessage(ArrayList<UserMessage> userMessageArrayList) {
+        SharedPreferences mySharedPreferences= getSharedPreferences(Constants.MESSAGES + "_" + loginAPI.getLoginUserId(),
                 Activity.MODE_PRIVATE);
 
         String list = mySharedPreferences.getString(Constants.USER_MESSAGE_ARRAY_LIST, "{\"userMessageArrayList\":[]}");
@@ -265,7 +334,6 @@ public class MessageActivity extends BaseActivity implements IMessageView {
                     }
                 }
                 setLocalReplyMessage(userMessageArrayList);
-
                 initUserMessageList(userMessageArrayList);
                 break;
             default:

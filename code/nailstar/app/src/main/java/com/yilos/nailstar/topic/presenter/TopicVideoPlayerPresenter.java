@@ -33,23 +33,19 @@ import java.util.Date;
  * Created by yilos on 2015-10-22.
  */
 public class TopicVideoPlayerPresenter {
-    private static final Logger LOGGER = LoggerFactory.getLogger(TopicVideoPlayerPresenter.class);
-
-    private static TopicVideoPlayerPresenter topicPresenter = new TopicVideoPlayerPresenter();
+    private final Logger LOGGER = LoggerFactory.getLogger(TopicVideoPlayerPresenter.class);
 
     private ITopicVideoPlayerView topicVideoPlayerView;
-    private ITopicService topicsService = new TopicServiceImpl();
-    private ImageLoader imageLoader = ImageLoader.getInstance();
+    private ITopicService topicsService;
+    private ImageLoader imageLoader;
 
 
-    private TopicVideoPlayerPresenter() {
-
+    public TopicVideoPlayerPresenter(ITopicVideoPlayerView topicVideoPlayerView) {
+        this.topicVideoPlayerView = topicVideoPlayerView;
+        this.topicsService = new TopicServiceImpl();
+        this.imageLoader = ImageLoader.getInstance();
     }
 
-    public static TopicVideoPlayerPresenter getInstance(ITopicVideoPlayerView videoPlayerView) {
-        topicPresenter.topicVideoPlayerView = videoPlayerView;
-        return topicPresenter;
-    }
 
     public void initTopicInfo(final String topicId) {
         TaskManager.Task loadTopicInfo = new TaskManager.BackgroundTask() {

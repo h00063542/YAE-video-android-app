@@ -22,20 +22,14 @@ import java.util.ArrayList;
  * Created by yilos on 2015-10-22.
  */
 public class TopicHomeworkPresenter {
-    private static final Logger LOGGER = LoggerFactory.getLogger(TopicHomeworkPresenter.class);
-
-    private static TopicHomeworkPresenter topicHomeworkPresenter = new TopicHomeworkPresenter();
+    private final Logger LOGGER = LoggerFactory.getLogger(TopicHomeworkPresenter.class);
 
     private ITopicHomeworkView topicHomeworkView;
-    private ITopicService topicsService = new TopicServiceImpl();
+    private ITopicService topicsService;
 
-    private TopicHomeworkPresenter() {
-
-    }
-
-    public static TopicHomeworkPresenter getInstance(ITopicHomeworkView topicHomeworkView) {
-        topicHomeworkPresenter.topicHomeworkView = topicHomeworkView;
-        return topicHomeworkPresenter;
+    public TopicHomeworkPresenter(ITopicHomeworkView topicHomeworkView) {
+        this.topicHomeworkView = topicHomeworkView;
+        this.topicsService = new TopicServiceImpl();
     }
 
     public void initSubmittedHomeworkCount(final String topicId) {
@@ -71,15 +65,14 @@ public class TopicHomeworkPresenter {
         TaskManager.Task submittedHomeworkTask = new TaskManager.BackgroundTask() {
             @Override
             public Object doWork(Object data) {
-//                try {
-                // TODO 测试阶段，先不要调用服务端接口
-                return "003";
-//                    return topicsService.addComment(info);
-//                } catch (NetworkDisconnectException e) {
-//                    e.printStackTrace();
-//                    LOGGER.error("添加评论信息失败，topicId：" + info.getTopicId(), e);
-//                }
-//                return null;
+                try {
+//                return "003";
+                    return topicsService.addComment(info);
+                } catch (NetworkDisconnectException e) {
+                    e.printStackTrace();
+                    LOGGER.error("添加评论信息失败，topicId：" + info.getTopicId(), e);
+                }
+                return null;
             }
         };
 
@@ -91,6 +84,14 @@ public class TopicHomeworkPresenter {
             }
         };
 
+
+        new TaskManager()
+                .next(submittedHomeworkTask)
+                .next(updateUi)
+                .start();
+    }
+
+    public void uploadFileAndReady(final AddCommentInfo info, final String commentId) {
         TaskManager.Task uploadHomeworkPicTask = new TaskManager.BackgroundTask() {
             @Override
             public Object doWork(Object data) {
@@ -101,26 +102,25 @@ public class TopicHomeworkPresenter {
                             LOGGER.debug(MessageFormat.format("正在上传交作业图片到Oss成功，topicId:{0}，localPath:{1}，picName:{2}，objectKey:{3}"
                                     , info.getTopicId(), info.getPicLocalPath(), info.getPicName(), objectKey));
                             UpdateReadyInfo updateReadyInfo = new UpdateReadyInfo();
-                            updateReadyInfo.setId(info.getTopicId());
+                            updateReadyInfo.setId(commentId);
                             ArrayList<String> picUrls = new ArrayList<String>();
                             picUrls.add(Constants.YILOS_PIC_URL + objectKey);
                             updateReadyInfo.setPicUrls(picUrls);
                             updateReadyInfo.setTable(Constants.HOMEWORK);
-//                            try {
-                            // 1、更新homework状态
-                            // TODO 测试阶段，先不要调用服务端接口
-//                                topicsService.updateReady(updateReadyInfo);
-                            //2、删除本地文件
+                            try {
+//                             1、更新homework状态
+                                topicsService.updateReady(updateReadyInfo);
+                                //2、删除本地文件
 //                            if (!StringUtil.isEmpty(info.getPicLocalPath())) {
 //                                File file = new File(info.getPicLocalPath());
 //                                if (file.exists()) {
 //                                    file.delete();
 //                                }
 //                            }
-//                            } catch (NetworkDisconnectException e) {
-//                                LOGGER.error(MessageFormat.format("修改ready状态失败，id:{0}", info.getTopicId()), e);
-//                                e.printStackTrace();
-//                            }
+                            } catch (NetworkDisconnectException e) {
+                                LOGGER.error(MessageFormat.format("修改ready状态失败，id:{0}", info.getTopicId()), e);
+                                e.printStackTrace();
+                            }
                         }
 
                         @Override
@@ -147,15 +147,9 @@ public class TopicHomeworkPresenter {
             }
         };
 
-
-        new TaskManager()
-                .next(submittedHomeworkTask)
-                .next(updateUi)
-                .start();
-
-        // TODO 测试阶段，先不要调用服务端接口
         new TaskManager()
                 .next(uploadHomeworkPicTask)
                 .start();
+
     }
 }

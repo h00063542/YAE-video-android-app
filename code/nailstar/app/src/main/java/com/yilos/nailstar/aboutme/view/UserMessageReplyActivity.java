@@ -1,9 +1,7 @@
 package com.yilos.nailstar.aboutme.view;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -13,7 +11,6 @@ import com.yilos.nailstar.aboutme.entity.MessageComment;
 import com.yilos.nailstar.aboutme.entity.UserMessage;
 import com.yilos.nailstar.aboutme.model.LoginAPI;
 import com.yilos.nailstar.aboutme.presenter.ReplyUserMessagePresenter;
-import com.yilos.nailstar.aboutme.presenter.UserMessagePresenter;
 import com.yilos.nailstar.framework.view.BaseActivity;
 import com.yilos.nailstar.util.Constants;
 import com.yilos.widget.titlebar.TitleBar;

@@ -5,6 +5,7 @@ package com.yilos.nailstar.topic.view;
  */
 
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
@@ -346,6 +347,8 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
                     public void callback(Uri uri) {
                         Intent intent = new Intent(TopicVideoPlayerActivity.this, TopicHomeworkActivity.class);
                         intent.putExtra(Constants.TOPIC_ID, mTopicId);
+                        // 交作业是atuserId为视频作者
+                        intent.putExtra(Constants.TOPIC_COMMENT_USER_ID, mTopicInfo.getAuthorId());
                         intent.putExtra(Constants.CONTENT_PIC, uri.getPath());
                         startActivityForResult(intent, Constants.TOPIC_HOMEWORK_REQUEST_CODE);
                     }
@@ -376,9 +379,26 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
                     showShortToast(String.format(getString(R.string.video_has_been_cached), mTopicInfo.getTitle()));
                     return;
                 }
-                //下载视频
-                showShortToast(getString(R.string.add_video_download));
-                mTopicVideoPlayerPresenter.downloadVideo(mTopicInfo);
+
+                // 非wifi网络提示是否继续下载
+                if (!NailStarApplicationContext.getInstance().isWifi()) {
+                    showMessageDialogWithEvent(null,
+                            getString(R.string.video_play_not_wifi_tips1) + ", " + getString(R.string.continue_to_download),
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //下载视频
+                                    showShortToast(getString(R.string.add_video_download));
+                                    mTopicVideoPlayerPresenter.downloadVideo(mTopicInfo);
+                                }
+                            },
+                            null);
+                } else {
+                    //下载视频
+                    showShortToast(getString(R.string.add_video_download));
+                    mTopicVideoPlayerPresenter.downloadVideo(mTopicInfo);
+                }
+
             }
         });
 
@@ -571,7 +591,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
     }
 
     private void initData() {
-        mTopicVideoPlayerPresenter = TopicVideoPlayerPresenter.getInstance(this);
+        mTopicVideoPlayerPresenter = new TopicVideoPlayerPresenter(this);
         // 调用后台接口初始化界面数据
         mTopicVideoPlayerPresenter.initTopicInfo(mTopicId);
         mTopicVideoPlayerPresenter.initTopicRelatedInfo(mTopicId);
@@ -656,6 +676,8 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         }
         Intent intent = new Intent(this, TopicCommentActivity.class);
         intent.putExtra(Constants.TOPIC_ID, mTopicId);
+        // 评论的atuserid为视频作者
+        intent.putExtra(Constants.TOPIC_COMMENT_USER_ID, mTopicInfo.getAuthorId());
         intent.putExtra(Constants.TYPE, Constants.TOPIC_COMMENT_TYPE_COMMENT);
         startActivityForResult(intent, Constants.TOPIC_COMMENT_REQUEST_CODE);
     }
@@ -673,13 +695,15 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         showTopicInfo2Page(topicInfo);
         VDVideoListInfo mVDVideoListInfo = new VDVideoListInfo();
         VDVideoInfo info = new VDVideoInfo();
-        TopicVideoInfo topicVideoInfo = topicInfo.getVideos().get(0);
-        mVideoRemoteUrl = mTopicVideoPlayerPresenter.buildVideoRemoteUrl(topicVideoInfo);
-        info.mTitle = topicInfo.getTitle();
-        info.mPlayUrl = mVideoRemoteUrl;
-        // 获取视频缩略图
-        Bitmap bitmap = createVideoThumbnail(mVideoRemoteUrl, 700, (int) (700 / Constants.VIDEO_ASPECT_RATIO));
-        mPlayIconParent.setBackgroundDrawable(new BitmapDrawable(bitmap));
+        if (!CollectionUtil.isEmpty(topicInfo.getVideos())) {
+            TopicVideoInfo topicVideoInfo = topicInfo.getVideos().get(0);
+            mVideoRemoteUrl = mTopicVideoPlayerPresenter.buildVideoRemoteUrl(topicVideoInfo);
+            info.mTitle = topicInfo.getTitle();
+            info.mPlayUrl = mVideoRemoteUrl;
+            // 获取视频缩略图
+            Bitmap bitmap = createVideoThumbnail(mVideoRemoteUrl, 700, (int) (700 / Constants.VIDEO_ASPECT_RATIO));
+            mPlayIconParent.setBackgroundDrawable(new BitmapDrawable(bitmap));
+        }
         mVDVideoListInfo.addVideoInfo(info);
         mVDVideoView.open(this, mVDVideoListInfo);
     }
@@ -696,9 +720,11 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         mIvVideoAuthorPhoto.setImageSrc(topicInfo.getAuthorPhoto());
         // 作者和播放次数名称
         StringBuilder stringBuilder = new StringBuilder()
-                .append(buildTextFont(R.color.z2, topicInfo.getAuthor()))
-                .append("  ")
-                .append(buildTextFont(R.color.z3, String.format(getString(R.string.video_play_times), topicInfo.getVideos().get(0).getPlayTimes())));
+                .append(buildTextFont(R.color.z2, topicInfo.getAuthor()));
+        if (!CollectionUtil.isEmpty(topicInfo.getVideos())) {
+            stringBuilder.append("  ")
+                    .append(buildTextFont(R.color.z3, String.format(getString(R.string.video_play_times), topicInfo.getVideos().get(0).getPlayTimes())));
+        }
         mTvVideoAuthorPlayTimes.setText(Html.fromHtml(stringBuilder.toString()));
 
         // 设置作者的tags
@@ -1120,7 +1146,6 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
                 if (mRpbDownloadTopicImageText.getMax() == mRpbDownloadTopicImageText.getProgress()) {
                     // 显示下载完成
                     mTvDownloadTopicImageText.setText(R.string.save_topic_image_text_success);
-//                    mRpbDownloadTopicImageText.setVisibility(View.GONE);
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -1332,11 +1357,4 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
             hideLoading();
         }
     }
-
-    private String buildTextFont(int resColorId, String text) {
-        int color = getResources().getColor(resColorId);
-        StringBuilder stringBuilder = new StringBuilder().append(String.format("<font color=\"#%s\">", String.format("%X", color).substring(2))).append(text).append("</font>");
-        return stringBuilder.toString();
-    }
-
 }

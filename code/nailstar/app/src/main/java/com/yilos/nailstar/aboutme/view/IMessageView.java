@@ -13,6 +13,7 @@ public interface IMessageView {
     void getUserMessageList(ArrayList<UserMessage> userMessageArrayList);
 
     void setLocalReplyMessage(ArrayList<UserMessage> userMessageArrayList);
+
     ArrayList<UserMessage> getLocalReplyMessage();
 
     void getSystemMessageList(List<Object> objectList);
@@ -22,4 +23,8 @@ public interface IMessageView {
     void setLatestMessageTime(long latestMessageTime);
 
     long getLatestMessageTime();
+
+    ArrayList<SystemMessage> getLocalSystemMessage();
+
+    void updateLocalSystemMessage(ArrayList<SystemMessage> systemMessageArrayList);
 }

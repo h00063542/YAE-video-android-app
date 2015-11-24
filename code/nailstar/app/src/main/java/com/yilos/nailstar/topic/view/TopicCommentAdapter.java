@@ -31,6 +31,7 @@ import com.yilos.widget.circleimageview.CircleImageView;
 import com.yilos.widget.view.ImageCacheView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by yilos on 2015-11-21.
@@ -42,6 +43,7 @@ public class TopicCommentAdapter extends BaseAdapter {
     private int heightPixels;
     private int mCommentContentMarginTop;
     private int mCommentContentMarginBottom;
+    private int mCommentContentPicMarginBottom;
     private int mCommentReplyPaddingLeft;
     private int mCommentReplyPaddingTop;
     private int mCommentReplyPaddingRight;
@@ -82,6 +84,7 @@ public class TopicCommentAdapter extends BaseAdapter {
         mCommentReplyPaddingBottom = mBaseActivity.getResources().getDimensionPixelSize(R.dimen.topic_comment_reply_padding_bottom);
         mCommentContentMarginTop = mBaseActivity.getResources().getDimensionPixelSize(R.dimen.topic_comment_content_margin_top);
         mCommentContentMarginBottom = mBaseActivity.getResources().getDimensionPixelSize(R.dimen.topic_comment_content_margin_bottom);
+        mCommentContentPicMarginBottom = mBaseActivity.getResources().getDimensionPixelSize(R.dimen.topic_comment_content_pic_margin_bottom);
         // 取消评论区域图片放大查看
         mIcvTopicCommentImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -120,7 +123,6 @@ public class TopicCommentAdapter extends BaseAdapter {
 
     class ViewHolder {
         public CircleImageView authorPhoto;
-        public LinearLayout commentLayoutParent;
         public LinearLayout commentLayout;
         public LinearLayout commentReplayLayout;
         public TextView authorName;
@@ -136,7 +138,6 @@ public class TopicCommentAdapter extends BaseAdapter {
             convertView = mInflater.inflate(R.layout.topic_comment_item, null);
             ViewHolder holder = new ViewHolder();
             holder.authorPhoto = (CircleImageView) convertView.findViewById(R.id.topic_comment_author_photo);
-            holder.commentLayoutParent = (LinearLayout) convertView.findViewById(R.id.topic_comment_content_layout_parent);
             holder.commentLayout = (LinearLayout) convertView.findViewById(R.id.topic_comment_content_layout);
             holder.authorName = (TextView) convertView.findViewById(R.id.topic_comment_author_name);
             holder.commentTime = (TextView) convertView.findViewById(R.id.topic_comment_time);
@@ -175,6 +176,7 @@ public class TopicCommentAdapter extends BaseAdapter {
                 isHomework || !CollectionUtil.isEmpty(topicCommentInfo.getReplies()) ? mCommentContentMarginBottom : 0);
 
         // -----------------设置评论图片-----------------
+        LinearLayout.LayoutParams commentContentPicLp = ((LinearLayout.LayoutParams) holder.commentContentPic.getLayoutParams());
         if (isHomework) {
             // 交作业时，显示的是本地图片
             if (!URLUtil.isNetworkUrl(topicCommentInfo.getContentPic())) {
@@ -182,6 +184,8 @@ public class TopicCommentAdapter extends BaseAdapter {
             } else {
                 holder.commentContentPic.setImageSrc(topicCommentInfo.getContentPic());
             }
+            commentContentPicLp.setMargins(0, 0, 0, !CollectionUtil.isEmpty(topicCommentInfo.getReplies()) ? mCommentContentPicMarginBottom : 0);
+//            holder.commentContentPic.setVisibility(View.VISIBLE);
             holder.commentContentPic.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -224,6 +228,7 @@ public class TopicCommentAdapter extends BaseAdapter {
                 }
             });
         } else {
+            commentContentPicLp.setMargins(0, 0, 0, 0);
             holder.commentContentPic.setImageSrc(Constants.EMPTY_STRING);
         }
 
@@ -295,16 +300,16 @@ public class TopicCommentAdapter extends BaseAdapter {
         TextView topicCommentReplyTv = (TextView) mInflater.inflate(R.layout.topic_comment_replay_item, null);
 
         StringBuilder replyText = new StringBuilder()
-                .append(buildTextFont(R.color.orange, topicCommentReplyInfo.getAuthor()));
+                .append(mBaseActivity.buildTextFont(R.color.orange, topicCommentReplyInfo.getAuthor()));
 
         if (!topicCommentInfo.getUserId().equals(topicCommentReplyInfo.getAt().getUserId())) {
-            replyText.append(buildTextFont(R.color.z3, mBaseActivity.getString(R.string.reply) + topicCommentReplyInfo.getAt().getNickName()));
+            replyText.append(mBaseActivity.buildTextFont(R.color.z3, mBaseActivity.getString(R.string.reply) + topicCommentReplyInfo.getAt().getNickName()));
         }
 
         replyText.append(": ");
 
         String content = StringUtil.buildTelNumberHtmlText(topicCommentReplyInfo.getContent());
-        replyText.append(buildTextFont(R.color.z2, content));
+        replyText.append(mBaseActivity.buildTextFont(R.color.z2, content));
 
         topicCommentReplyTv.setText(Html.fromHtml(replyText.toString()));
         topicCommentReplyTv.setMovementMethod(LinkMovementMethod.getInstance());
@@ -325,12 +330,6 @@ public class TopicCommentAdapter extends BaseAdapter {
         return topicCommentReplyTv;
     }
 
-    private String buildTextFont(int resColorId, String text) {
-        int color = mBaseActivity.getResources().getColor(resColorId);
-        StringBuilder stringBuilder = new StringBuilder().append(String.format("<font color=\"#%s\">", String.format("%X", color).substring(2))).append(text).append("</font>");
-        return stringBuilder.toString();
-    }
-
     private void addTopicCommentReply(TopicCommentInfo commentInfo, TopicCommentReplyInfo replyInfo, int type) {
         if (!LoginAPI.getInstance().isLogin()) {
             LoginAPI.getInstance().gotoLoginPage(mBaseActivity);
@@ -340,15 +339,38 @@ public class TopicCommentAdapter extends BaseAdapter {
             showTopicCommentReplayAgainDialog(commentInfo, replyInfo, type);
             return;
         }
+
         Intent intent = new Intent(mBaseActivity, TopicCommentActivity.class);
         intent.putExtra(Constants.TOPIC_ID, mTopicId);
         if (null != commentInfo) {
             intent.putExtra(Constants.TOPIC_COMMENT_ID, commentInfo.getId());
             intent.putExtra(Constants.TOPIC_COMMENT_USER_ID, commentInfo.getUserId());
             intent.putExtra(Constants.TOPIC_COMMENT_AUTHOR, commentInfo.getAuthor());
+            intent.putExtra(Constants.LAST_REPLY_TO, getLastTopicCommentReplayId(commentInfo.getId()));
         }
         intent.putExtra(Constants.TYPE, type);
         mBaseActivity.startActivityForResult(intent, Constants.TOPIC_COMMENT_REQUEST_CODE);
+    }
+
+    public String getLastTopicCommentReplayId(String topicId) {
+        if (StringUtil.isEmpty(topicId)) {
+            return Constants.EMPTY_STRING;
+        }
+        TopicCommentInfo topicCommentInfo = null;
+        for (TopicCommentInfo item : topicCommentInfoList) {
+            if (topicId.equals(item.getId())) {
+                topicCommentInfo = item;
+                break;
+            }
+        }
+        if (null == topicCommentInfo) {
+            return Constants.EMPTY_STRING;
+        }
+        List<TopicCommentReplyInfo> replies = topicCommentInfo.getReplies();
+        if (CollectionUtil.isEmpty(replies)) {
+            return topicId;
+        }
+        return replies.get(replies.size() - 1).getId();
     }
 
     private void showTopicCommentReplayAgainDialog(final TopicCommentInfo commentInfo
@@ -366,6 +388,7 @@ public class TopicCommentAdapter extends BaseAdapter {
                         intent.putExtra(Constants.TOPIC_COMMENT_ID, commentInfo.getId());
                         intent.putExtra(Constants.TOPIC_COMMENT_USER_ID, commentInfo.getUserId());
                         intent.putExtra(Constants.TOPIC_COMMENT_AUTHOR, commentInfo.getAuthor());
+                        intent.putExtra(Constants.LAST_REPLY_TO, getLastTopicCommentReplayId(commentInfo.getId()));
                     }
                     if (null != replyInfo && type == Constants.TOPIC_COMMENT_TYPE_REPLY_AGAIN) {
                         intent.putExtra(Constants.TOPIC_COMMENT_REPLY_ID, replyInfo.getId());

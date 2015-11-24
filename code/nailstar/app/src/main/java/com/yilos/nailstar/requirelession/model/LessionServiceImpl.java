@@ -172,6 +172,10 @@ public class LessionServiceImpl implements LessionService {
     @Override
     public void postCandidate(String imageUrl) throws IOException, JSONException, NotLoginException {
 
+        if (imageUrl == null || "".equals(imageUrl)) {
+            return;
+        }
+
         String url = "/vapi/nailstar/qjc/candidate";
 
         String uid = LoginAPI.getInstance().getLoginUserId();

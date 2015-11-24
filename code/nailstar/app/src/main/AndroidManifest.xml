@@ -37,6 +37,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".splash.view.GuideActivity"/>
         <activity
             android:name=".main.MainActivity"
             android:label="@string/title_activity_main" />
@@ -55,6 +56,7 @@
         <activity android:name=".aboutme.view.PersonInfoActivity" />
         <activity android:name=".aboutme.view.AboutUsActivity" />
         <activity android:name=".aboutme.view.DownloadVideo" />
+        <activity android:name=".aboutme.requirelesson.view.RequireLessonListActivity"/>
         <activity
             android:name=".aboutme.view.DownloadVideoPlayer"
             android:configChanges="orientation|screenSize|keyboardHidden"
