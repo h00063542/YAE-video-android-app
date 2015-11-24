@@ -182,6 +182,9 @@ public class TopicCommentAdapter extends BaseAdapter {
             } else {
                 holder.commentContentPic.setImageSrc(topicCommentInfo.getContentPic());
             }
+            ((LinearLayout.LayoutParams) holder.commentContentPic.getLayoutParams()).setMargins(0, 0, 0,
+                    !CollectionUtil.isEmpty(topicCommentInfo.getReplies()) ? mCommentContentMarginBottom : 0);
+            holder.commentContentPic.setVisibility(View.VISIBLE);
             holder.commentContentPic.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
