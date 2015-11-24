@@ -3,6 +3,7 @@ package com.yilos.nailstar.main;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
@@ -23,6 +24,8 @@ public class MainActivity extends BaseActivity {
     private RequireLessionFragment requireLessionFragment;
     private AboutMeFragment aboutMeFragment;
 
+    private RadioGroup radioGroup;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +35,7 @@ public class MainActivity extends BaseActivity {
         initViews();
         setTabSelection(0);
 
-        RadioGroup radioGroup = (RadioGroup) findViewById(R.id.main_tab_group);
+        radioGroup = (RadioGroup) findViewById(R.id.main_tab_group);
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -138,5 +141,29 @@ public class MainActivity extends BaseActivity {
         if (aboutMeFragment != null) {
             transaction.hide(aboutMeFragment);
         }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+
+        boolean handled = false;
+
+        if (radioGroup.getCheckedRadioButtonId() == R.id.main_tab_requirelession) {
+            handled = requireLessionFragment.onKeyDown(keyCode, event);
+        }
+
+        if (handled) {
+            // 如果Fragment已经处理按钮事件，则不需要继续处理
+            return false;
+        } else {
+            // 如果在其他Fragment页面点击返回按钮，则先返回首页
+            if (keyCode == KeyEvent.KEYCODE_BACK && radioGroup.getCheckedRadioButtonId() != R.id.main_tab_index) {
+                radioGroup.check(R.id.main_tab_index);
+                return false;
+            }
+            // 没有处理的按钮事件，交给系统处理
+            return super.onKeyDown(keyCode, event);
+        }
+
     }
 }

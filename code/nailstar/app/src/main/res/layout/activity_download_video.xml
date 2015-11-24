@@ -19,6 +19,7 @@
             android:layout_height="wrap_content" />
 
         <LinearLayout
+            android:visibility="gone"
             android:layout_margin="20dp"
             android:id="@+id/noDownloadVideo"
             android:layout_width="match_parent"

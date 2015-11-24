@@ -601,7 +601,7 @@ public class VoteListViewAdapter extends BaseAdapter {
 
     private void showImageActionDialog(int position) {
 
-        if (isShowing(R.id.lessionImageContainer)) {
+        if (isShowingImageActionDialog()) {
             return;
         }
 
@@ -613,7 +613,7 @@ public class VoteListViewAdapter extends BaseAdapter {
 
     }
 
-    private void dismissImageActionDialog() {
+    public void dismissImageActionDialog() {
 
         if (isDismissing) {
             return;
@@ -648,7 +648,11 @@ public class VoteListViewAdapter extends BaseAdapter {
 
     }
 
-    public boolean isShowing(@IdRes int id) {
+    public boolean isShowingImageActionDialog() {
+        return isShowing(R.id.lessionImageContainer);
+    }
+
+    private boolean isShowing(@IdRes int id) {
         View view = decorView.findViewById(id);
         return view != null;
     }
