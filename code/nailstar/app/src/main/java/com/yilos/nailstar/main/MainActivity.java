@@ -7,9 +7,9 @@ import android.view.KeyEvent;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.umeng.update.UmengUpdateAgent;
 import com.yilos.nailstar.R;
 import com.yilos.nailstar.aboutme.view.AboutMeFragment;
-import com.yilos.nailstar.circle.CircleFragment;
 import com.yilos.nailstar.framework.view.BaseActivity;
 import com.yilos.nailstar.index.view.IndexFragment;
 import com.yilos.nailstar.mall.view.MallIndexFragment;
@@ -31,6 +31,8 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        UmengUpdateAgent.update(this);
 
         initViews();
         setTabSelection(0);
