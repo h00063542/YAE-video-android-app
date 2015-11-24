@@ -92,6 +92,8 @@
     <string name="person_info_name">昵称</string>
     <string name="person_info_identity">身份</string>
     <string name="person_info_introduction">个人介绍</string>
+    <string name="person_info_update_fail">个人资料更新失败，请重试</string>
+    <string name="person_info_update_succeed">个人资料更新成功</string>
 
     <!-- 求教程-->
     <string name="di">第</string>

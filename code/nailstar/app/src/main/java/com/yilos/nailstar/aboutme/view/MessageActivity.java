@@ -81,11 +81,15 @@ public class MessageActivity extends BaseActivity implements IMessageView {
 
     @Override
     public void getSystemMessageList(List<Object> objectList) {
-        ArrayList<SystemMessage> systemMessageArrayList = (ArrayList<SystemMessage>)objectList.get(0);
-        long lt = (long) objectList.get(1);
-        setLocalSystemMessage(systemMessageArrayList);
-        setLatestMessageTime(lt);
-        initSystemMessageList(getLocalSystemMessage());
+        if (objectList.size() == 0) {
+            initSystemMessageList(getLocalSystemMessage());
+        } else {
+            ArrayList<SystemMessage> systemMessageArrayList = (ArrayList<SystemMessage>)objectList.get(0);
+            long lt = (long) objectList.get(1);
+            setLocalSystemMessage(systemMessageArrayList);
+            setLatestMessageTime(lt);
+            initSystemMessageList(getLocalSystemMessage());
+        }
     }
 
     @Override
@@ -98,9 +102,6 @@ public class MessageActivity extends BaseActivity implements IMessageView {
     }
 
     public void updateLocalSystemMessage(ArrayList<SystemMessage> systemMessageArrayList) {
-        if (systemMessageArrayList.size() == 0) {
-            return;
-        }
         SharedPreferences mySharedPreferences= getSharedPreferences(Constants.MESSAGES + "_" + loginAPI.getLoginUserId(),
                 Activity.MODE_PRIVATE);
         String list = "{\"systemMessageList\":[]}";
@@ -192,11 +193,13 @@ public class MessageActivity extends BaseActivity implements IMessageView {
 
     @Override
     public void getUserMessageList(ArrayList<UserMessage> userMessageArrayList) {
-        if (userMessageArrayList.size() != 0) {
+        if (userMessageArrayList.size() == 0) {
+            ArrayList<UserMessage> userMessageList = getLocalReplyMessage();
+            initUserMessageList(userMessageList);
+        } else {
             setLocalReplyMessage(userMessageArrayList);
+            initUserMessageList(userMessageArrayList);
         }
-        ArrayList<UserMessage> userMessageList = getLocalReplyMessage();
-        initUserMessageList(userMessageList);
     }
 
     @Override
@@ -265,10 +268,6 @@ public class MessageActivity extends BaseActivity implements IMessageView {
 
     @Override
     public void setLocalReplyMessage(ArrayList<UserMessage> userMessageArrayList) {
-        if (userMessageArrayList.size() == 0) {
-            return;
-        }
-
         SharedPreferences mySharedPreferences= getSharedPreferences(Constants.MESSAGES + "_" + loginAPI.getLoginUserId(),
                 Activity.MODE_PRIVATE);
 

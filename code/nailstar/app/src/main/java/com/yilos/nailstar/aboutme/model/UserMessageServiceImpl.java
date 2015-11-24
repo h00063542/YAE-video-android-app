@@ -26,115 +26,56 @@ public class UserMessageServiceImpl implements UserMessageService {
     }
 
     @Override
-    public List<UserMessage> getUserMessageList(String uid) throws NetworkDisconnectException, JSONException{
+    public ArrayList<UserMessage> getUserMessageList(String uid) throws NetworkDisconnectException, JSONException {
 
-        List<UserMessage> userMessageList = new ArrayList<>();
-        String jsonObject;
+        ArrayList<UserMessage> userMessageList = new ArrayList<>();
+        String jsonObject = null;
         JSONObject userMessageJSONObject;
         JSONArray userMessageArray;
-        String url = "/vapi2/nailstar/replyMessages?uid=" + uid;
-        jsonObject = //HttpClient.getJson(url);
-        "{\"code\":0,\"result\":{\"messages\":[" +
+        String url = "/vapi/nailstar/replyMessages?uid=" + uid;
+        try {
+            jsonObject = HttpClient.getJson(url);
+            userMessageJSONObject = new JSONObject(jsonObject);
+            if (userMessageJSONObject.getInt(Constants.CODE) != 0) {
+                return userMessageList;
+            }
+            userMessageArray = userMessageJSONObject.getJSONObject(Constants.RESULT).getJSONArray("messages");
+            for (int i = 0; i < userMessageArray.length(); i++) {
+                JSONObject userMessageObject = userMessageArray.getJSONObject(i);
+                JSONObject userMessageCommentObject = userMessageObject.getJSONObject("comment");
+                JSONObject userMessageReplyObject = userMessageObject.getJSONObject("reply");
 
-//                "{\"id\":\"06a79050-83a7-11e5-8027-61091fab3b57\"," +
-//                "\"topicId\":\"c8a5cfa0-312c-11e5-b553-d7e515311f8d\"," +
-//                "\"title\":\"第222期：牛仔贴纸\",\"teacher\":\"董亚坡老师\"," +
-//                "\"thumbUrl\":\"http://pic.yilos.com/283be79417e0a310eb9ed95a13a71d43\"," +
-//                "\"comment\":{\"content\":\"这尽职尽责尽职尽责\",\"atName\":\"在\"," +
-//                "\"createDate\":1446709317872,\"isHomework\":1}," +
-//                "\"reply\":{\"accountId\":\"d77348c0-60d7-11e5-ade9-e3d220e2c964\"," +
-//                "\"accountName\":\"勿忘我\"," +
-//                "\"accountPhoto\":\"http://pic.yilos.com/ec9a2bbc1abb13166af6da31495bea0b\"," +
-//                "\"content\":\"嗯嗯\",\"createDate\":1446718910072," +
-//                "\"replyTo\":\"9f59f430-8390-11e5-a74c-839a83b22973\"," +
-//                "\"lastReplyTo\":\"b1438670-8390-11e5-a74c-839a83b22973\"}},\n" +
-//
-//                "{\"id\":\"06a79050-83a7-11e5-8027-61091fab3b57\"," +
-//                "\"topicId\":\"c8a5cfa0-312c-11e5-b553-d7e515311f8d\"," +
-//                "\"title\":\"第222期：牛仔贴纸\",\"teacher\":\"董亚坡老师\"," +
-//                "\"thumbUrl\":\"http://pic.yilos.com/283be79417e0a310eb9ed95a13a71d43\"," +
-//                "\"comment\":{\"content\":\"这尽职尽责尽职尽责这尽职尽责尽职尽责这尽职尽责尽职尽责这尽职尽责尽职尽责\",\"atName\":\"在\"," +
-//                "\"createDate\":1446709317872,\"isHomework\":1}," +
-//                "\"reply\":{\"accountId\":\"d77348c0-60d7-11e5-ade9-e3d220e2c964\"," +
-//                "\"accountName\":\"勿忘我\"," +
-//                "\"accountPhoto\":\"http://pic.yilos.com/ec9a2bbc1abb13166af6da31495bea0b\"," +
-//                "\"content\":\"嗯嗯\",\"createDate\":1446718910072," +
-//                "\"replyTo\":\"9f59f430-8390-11e5-a74c-839a83b22973\"," +
-//                "\"lastReplyTo\":\"b1438670-8390-11e5-a74c-839a83b22973\"}},\n" +
-//
-//                "{\"id\":\"06a79050-83a7-11e5-8027-61091fab3b57\"," +
-//                "\"topicId\":\"c8a5cfa0-312c-11e5-b553-d7e515311f8d\"," +
-//                "\"title\":\"第222期：牛仔贴纸\",\"teacher\":\"董亚坡老师\"," +
-//                "\"thumbUrl\":\"http://pic.yilos.com/283be79417e0a310eb9ed95a13a71d43\"," +
-//                "\"comment\":{\"content\":\"这尽职尽责尽职尽责这尽职尽责尽职尽责这尽职尽责尽职尽责这尽职尽责尽职尽责\",\"atName\":\"在\"," +
-//                "\"createDate\":1446709317872,\"isHomework\":1}," +
-//                "\"reply\":{\"accountId\":\"d77348c0-60d7-11e5-ade9-e3d220e2c964\"," +
-//                "\"accountName\":\"勿忘我\"," +
-//                "\"accountPhoto\":\"http://pic.yilos.com/ec9a2bbc1abb13166af6da31495bea0b\"," +
-//                "\"content\":\"嗯嗯\",\"createDate\":1446718910072," +
-//                "\"replyTo\":\"9f59f430-8390-11e5-a74c-839a83b22973\"," +
-//                "\"lastReplyTo\":\"b1438670-8390-11e5-a74c-839a83b22973\"}},\n" +
+                String id = JsonUtil.optString(userMessageObject, "id");
+                String topicId = JsonUtil.optString(userMessageObject, "topicId");
+                String title = JsonUtil.optString(userMessageObject, "title");
+                String teacher = JsonUtil.optString(userMessageObject, "teacher");
+                String thumbUrl = JsonUtil.optString(userMessageObject, "thumbUrl");
 
-                "{\"id\":\"06a79050-83a7-11e5-8027-61091fab3b57\"," +
-                "\"topicId\":\"c8a5cfa0-312c-11e5-b553-d7e515311f8d\"," +
-                "\"title\":\"第222期：牛仔贴纸\",\"teacher\":\"董亚坡老师\"," +
-                "\"thumbUrl\":\"http://pic.yilos.com/283be79417e0a310eb9ed95a13a71d43\"," +
-                "\"comment\":{\"content\":\"这尽职尽责尽职尽责这尽职尽责尽职尽责这尽职尽责尽职尽责这尽职尽责尽职尽责\",\"atName\":\"在\"," +
-                "\"createDate\":1446709317872,\"isHomework\":1}," +
-                "\"reply\":{\"accountId\":\"d77348c0-60d7-11e5-ade9-e3d220e2c964\"," +
-                "\"accountName\":\"勿忘我\"," +
-                "\"accountPhoto\":\"http://pic.yilos.com/ec9a2bbc1abb13166af6da31495bea0b\"," +
-                "\"content\":\"嗯嗯\",\"createDate\":1446718910072," +
-                "\"replyTo\":\"9f59f430-8390-11e5-a74c-839a83b22973\"," +
-                "\"lastReplyTo\":\"b1438670-8390-11e5-a74c-839a83b22973\"}}" +
+                String commentContent = JsonUtil.optString(userMessageCommentObject, "content");
+                String atName = JsonUtil.optString(userMessageCommentObject, "atName");
+                long commentCreateDate = userMessageCommentObject.getLong("createDate");
+                int isHomework = userMessageCommentObject.getInt("isHomework");
+                UserMessage.CommentEntity comment = new UserMessage.CommentEntity(atName, commentContent, commentCreateDate, isHomework);
 
+                String accountId = JsonUtil.optString(userMessageReplyObject, "accountId");
+                String accountName = JsonUtil.optString(userMessageReplyObject, "accountName");
+                String accountPhoto = JsonUtil.optString(userMessageReplyObject, "accountPhoto");
+                String replyContent = JsonUtil.optString(userMessageReplyObject, "content");
+                long replyCreateDate = userMessageReplyObject.getLong("createDate");
+                String replyTo = JsonUtil.optString(userMessageReplyObject, "replyTo");
+                String lastReplyTo = JsonUtil.optString(userMessageReplyObject, "lastReplyTo");
+                UserMessage.ReplyEntity reply = new UserMessage.ReplyEntity(accountId, accountName, accountPhoto, replyContent, replyCreateDate, replyTo, lastReplyTo);
 
-                "]}}";
-        userMessageJSONObject = new JSONObject(jsonObject);
-        if (userMessageJSONObject.getInt(Constants.CODE) != 0) {
+                UserMessage userMessage = new UserMessage(comment, id, reply, teacher, thumbUrl, title, topicId, false);
+                userMessageList.add(userMessage);
+            }
+        } catch (IOException e) {
+            throw new NetworkDisconnectException("网络获取我的消息失败", e);
+        } catch (JSONException e) {
+            throw new JSONException("我的消息解析失败");
+        } finally {
             return userMessageList;
         }
-        userMessageArray = userMessageJSONObject.getJSONObject(Constants.RESULT).getJSONArray("messages");
-        for(int i=0;i<userMessageArray.length();i++){
-            JSONObject userMessageObject = userMessageArray.getJSONObject(i);
-            JSONObject userMessageCommentObject = userMessageObject.getJSONObject("comment");
-            JSONObject userMessageReplyObject = userMessageObject.getJSONObject("reply");
-
-            String id = JsonUtil.optString(userMessageObject, "id");
-            String topicId = JsonUtil.optString(userMessageObject, "topicId");
-            String title = JsonUtil.optString(userMessageObject, "title");
-            String teacher = JsonUtil.optString(userMessageObject, "teacher");
-            String thumbUrl = JsonUtil.optString(userMessageObject, "thumbUrl");
-
-            String commentContent = JsonUtil.optString(userMessageCommentObject, "content");
-            String atName = JsonUtil.optString(userMessageCommentObject, "atName");
-            long commentCreateDate = userMessageCommentObject.getLong("createDate");
-            int isHomework = userMessageCommentObject.getInt("isHomework");
-            UserMessage.CommentEntity comment = new UserMessage.CommentEntity(atName,commentContent,commentCreateDate,isHomework);
-
-            String accountId = JsonUtil.optString(userMessageReplyObject, "accountId");
-            String accountName = JsonUtil.optString(userMessageReplyObject, "accountName");
-            String accountPhoto = JsonUtil.optString(userMessageReplyObject,"accountPhoto");
-            String replyContent = JsonUtil.optString(userMessageReplyObject, "content");
-            long replyCreateDate = userMessageReplyObject.getLong("createDate");
-            String replyTo = JsonUtil.optString(userMessageReplyObject, "replyTo");
-            String lastReplyTo = JsonUtil.optString(userMessageReplyObject, "lastReplyTo");
-            UserMessage.ReplyEntity reply = new UserMessage.ReplyEntity(accountId,accountName,accountPhoto,replyContent,replyCreateDate,replyTo,lastReplyTo);
-
-            UserMessage userMessage = new UserMessage(comment,id,reply,teacher,thumbUrl,title,topicId,false);
-            /**
-             * id : 06a79050-83a7-11e5-8027-61091fab3b57
-             * topicId : c8a5cfa0-312c-11e5-b553-d7e515311f8d
-             * title : 第222期：牛仔贴纸
-             * teacher : 董亚坡老师
-             * thumbUrl : http://pic.yilos.com/283be79417e0a310eb9ed95a13a71d43
-             * comment : {"content":"这尽职尽责尽职尽责","atName":"在","createDate":1446709317872,"isHomework":1}
-             * reply : {"accountId":"d77348c0-60d7-11e5-ade9-e3d220e2c964","accountName":"勿忘我","accountPhoto":"http://pic.yilos.com/ec9a2bbc1abb13166af6da31495bea0b",
-             * "content":"嗯嗯","createDate":1446718910072,"replyTo":"9f59f430-8390-11e5-a74c-839a83b22973","lastReplyTo":"b1438670-8390-11e5-a74c-839a83b22973"}
-             */
-            userMessageList.add(userMessage);
-        }
-        return userMessageList;
     }
 
     @Override
@@ -153,12 +94,14 @@ public class UserMessageServiceImpl implements UserMessageService {
         jsonObject.put(Constants.READY, messageComment.getReady());
         try {
             result = HttpClient.post(url, jsonObject.toString());
+            messageCommentObject = new JSONObject(result);
+            if (messageCommentObject.getInt(Constants.CODE) == 0) {
+                return messageComment;
+            }
         } catch (IOException e) {
-            throw new NetworkDisconnectException("回复失败",e);
-        }
-        messageCommentObject = new JSONObject(result);
-        if (messageCommentObject.getInt(Constants.CODE) == 0) {
-            return messageComment;
+            throw new NetworkDisconnectException("回复失败", e);
+        } catch (JSONException e) {
+            throw new JSONException("消息装箱失败");
         }
         return messageComment;
     }
