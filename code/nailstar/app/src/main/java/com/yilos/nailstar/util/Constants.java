@@ -195,4 +195,9 @@ public class Constants {
     public static final String USER_MESSAGE_ARRAY_LIST = "userMessageArrayList";
     public static final String SYSTEM_MESSAGE_LIST = "systemMessageList";
     public static final String HAS_BEEN_READ = "hasBeenRead";
+
+
+    //商城相关常量
+    public static final String MALL_COMMODITY_CATE_ID = "commodityCateId";
+
 }

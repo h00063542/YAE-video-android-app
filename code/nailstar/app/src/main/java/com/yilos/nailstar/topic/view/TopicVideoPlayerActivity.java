@@ -1210,7 +1210,6 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         Map<String, String> exParams = new HashMap<String, String>();
         exParams.put(TradeConstants.ITEM_DETAIL_VIEW_TYPE, TradeConstants.BAICHUAN_H5_VIEW);
         exParams.put(TradeConstants.ISV_CODE, Constants.ISV_CODE);
-
         ItemService itemService = AlibabaSDK.getService(ItemService.class);
         UiSettings uiSetting = new UiSettings();
         itemService.showItemDetailByItemId(this, new TradeProcessCallback() {

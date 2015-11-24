@@ -12,14 +12,10 @@ import com.yilos.nailstar.R;
 import com.yilos.nailstar.mall.entity.Commodity;
 import com.yilos.widget.view.ImageCacheView;
 
-import java.util.ArrayList;
-import java.util.Random;
-
 /**
- * Created by ganyue on 15/11/20.
+ * Created by ganyue on 15/11/23.
  */
-public class MallIndexCommodityListAdapter extends ArrayAdapter<Commodity> {
-
+public class MallIndexCategoryListAdapter extends ArrayAdapter<Commodity> {
     static class ViewHolder {
         TextView titleView;
         TextView priceView;
@@ -27,7 +23,8 @@ public class MallIndexCommodityListAdapter extends ArrayAdapter<Commodity> {
     }
 
     private final LayoutInflater mLayoutInflater;
-    public MallIndexCommodityListAdapter(Context context) {
+
+    public MallIndexCategoryListAdapter(Context context) {
         super(context, 0);
         mLayoutInflater = LayoutInflater.from(context);
     }
@@ -56,7 +53,5 @@ public class MallIndexCommodityListAdapter extends ArrayAdapter<Commodity> {
         convertView.setTag(R.id.mall_index_product_real_id,item.getGoodsRealId());
         return convertView;
     }
-
-
 
 }
