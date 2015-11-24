@@ -10,6 +10,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.TranslateAnimation;
 import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -101,6 +102,10 @@ public class RequireLessionFragment extends Fragment implements LessionView {
     // 在悬浮头中的排行榜按钮
     private TextView goRankingBtnFloat;
 
+    // 页签指示
+    private View pageCursor;
+    private View pageCursorFloat;
+
     private LessionPresenter lessionPresenter = new LessionPresenter(this);
 
     private TakeImage takeImage;
@@ -153,10 +158,15 @@ public class RequireLessionFragment extends Fragment implements LessionView {
         // 页头的按钮
         goVotingBtn = (TextView) lessionViewHead1.findViewById(R.id.goVotingBtn);
         goRankingBtn = (TextView) lessionViewHead1.findViewById(R.id.goRankingBtn);
+        pageCursor = lessionViewHead1.findViewById(R.id.pageCursor);
+        pageCursor.getLayoutParams().width = screenWidth / 2;
+
 
         // 悬浮页头的按钮
         goVotingBtnFloat = (TextView) lessionViewHeadFloat.findViewById(R.id.goVotingBtn);
         goRankingBtnFloat = (TextView) lessionViewHeadFloat.findViewById(R.id.goRankingBtn);
+        pageCursorFloat = lessionViewHeadFloat.findViewById(R.id.pageCursor);
+        pageCursorFloat.getLayoutParams().width = screenWidth / 2;
 
         // 倒计时
         lessionCountDownText = (TextView) view.findViewById(R.id.lessionCountDownText);
@@ -333,6 +343,12 @@ public class RequireLessionFragment extends Fragment implements LessionView {
         goRankingBtn.setSelected(false);
         goRankingBtnFloat.setSelected(false);
 
+        TranslateAnimation animation = new TranslateAnimation(screenWidth / 2, 0 , 0, 0);
+        animation.setFillAfter(true);
+        animation.setDuration(300);
+        pageCursor.startAnimation(animation);
+        pageCursorFloat.startAnimation(animation);
+
         // 切换的时候先用notifyDataSetInvalidated通知Adapter数据暂时不可用，数据准备好之后再调用notifyDataSetChanged通知数据可用
         voteListViewAdapter.notifyDataSetInvalidated();
         voteListViewAdapter.setViewType(VoteListViewAdapter.ViewType.VOTE_LIST);
@@ -354,6 +370,12 @@ public class RequireLessionFragment extends Fragment implements LessionView {
         goVotingBtnFloat.setSelected(false);
         goRankingBtn.setSelected(true);
         goRankingBtnFloat.setSelected(true);
+
+        TranslateAnimation animation = new TranslateAnimation(0, screenWidth / 2, 0, 0);
+        animation.setFillAfter(true);
+        animation.setDuration(300);
+        pageCursor.startAnimation(animation);
+        pageCursorFloat.startAnimation(animation);
 
         // 切换的时候先用notifyDataSetInvalidated通知Adapter数据暂时不可用，数据准备好之后再调用notifyDataSetChanged通知数据可用
         voteListViewAdapter.notifyDataSetInvalidated();
