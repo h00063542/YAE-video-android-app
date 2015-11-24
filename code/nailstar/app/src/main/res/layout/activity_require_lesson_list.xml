@@ -10,10 +10,6 @@
         android:id="@+id/require_lesson_list_title_bar"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"/>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/common_1_dp"
-        android:background="@color/xk1"/>
     <android.support.v7.widget.RecyclerView
         android:paddingLeft="@dimen/common_10_dp"
         android:paddingTop="@dimen/common_10_dp"
