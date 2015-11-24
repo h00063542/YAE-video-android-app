@@ -71,6 +71,10 @@ public class DownLoadTaskManager {
      */
     public boolean isDownLoad(TopicInfo topicInfo) {
 
+        if (topicInfo == null) {
+            return false;
+        }
+
         // 判断文件是否存在
         boolean isFileExist = false;
         File file = new File(path, topicInfo.getTitle() + ".mp4");
@@ -98,6 +102,10 @@ public class DownLoadTaskManager {
      * @param topicInfo
      */
     public void addDownLoadTask(final TopicInfo topicInfo) {
+
+        if (topicInfo == null) {
+            return;
+        }
 
         final DownLoadInfo downLoadInfo = new DownLoadInfo(topicInfo);
         downLoadInfo.setStatus(DownloadConstants.DOWNLOADING);
@@ -294,6 +302,7 @@ public class DownLoadTaskManager {
             @Override
             public void update(long bytesRead, long contentLength, boolean done) {
                 downLoadInfo.setBytesRead(bytesRead);
+                downLoadInfo.setFileSize(contentLength);
                 downLoadInfo.setStatus(DownloadConstants.DOWNLOADING);
                 if (done) {
                     // 已完成

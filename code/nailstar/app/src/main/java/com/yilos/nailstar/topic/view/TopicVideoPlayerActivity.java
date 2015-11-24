@@ -5,6 +5,7 @@ package com.yilos.nailstar.topic.view;
  */
 
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
@@ -376,9 +377,26 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
                     showShortToast(String.format(getString(R.string.video_has_been_cached), mTopicInfo.getTitle()));
                     return;
                 }
-                //下载视频
-                showShortToast(getString(R.string.add_video_download));
-                mTopicVideoPlayerPresenter.downloadVideo(mTopicInfo);
+
+                // 非wifi网络提示是否继续下载
+                if (!NailStarApplicationContext.getInstance().isWifi()) {
+                    showMessageDialogWithEvent(null,
+                            getString(R.string.video_play_not_wifi_tips1) + ", " + getString(R.string.continue_to_download),
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    //下载视频
+                                    showShortToast(getString(R.string.add_video_download));
+                                    mTopicVideoPlayerPresenter.downloadVideo(mTopicInfo);
+                                }
+                            },
+                            null);
+                } else {
+                    //下载视频
+                    showShortToast(getString(R.string.add_video_download));
+                    mTopicVideoPlayerPresenter.downloadVideo(mTopicInfo);
+                }
+
             }
         });
 
