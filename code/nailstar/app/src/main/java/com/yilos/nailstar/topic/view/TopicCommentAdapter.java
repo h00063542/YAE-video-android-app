@@ -31,6 +31,7 @@ import com.yilos.widget.circleimageview.CircleImageView;
 import com.yilos.widget.view.ImageCacheView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by yilos on 2015-11-21.
@@ -338,15 +339,38 @@ public class TopicCommentAdapter extends BaseAdapter {
             showTopicCommentReplayAgainDialog(commentInfo, replyInfo, type);
             return;
         }
+
         Intent intent = new Intent(mBaseActivity, TopicCommentActivity.class);
         intent.putExtra(Constants.TOPIC_ID, mTopicId);
         if (null != commentInfo) {
             intent.putExtra(Constants.TOPIC_COMMENT_ID, commentInfo.getId());
             intent.putExtra(Constants.TOPIC_COMMENT_USER_ID, commentInfo.getUserId());
             intent.putExtra(Constants.TOPIC_COMMENT_AUTHOR, commentInfo.getAuthor());
+            intent.putExtra(Constants.LAST_REPLY_TO, getLastTopicCommentReplayId(commentInfo.getId()));
         }
         intent.putExtra(Constants.TYPE, type);
         mBaseActivity.startActivityForResult(intent, Constants.TOPIC_COMMENT_REQUEST_CODE);
+    }
+
+    public String getLastTopicCommentReplayId(String topicId) {
+        if (StringUtil.isEmpty(topicId)) {
+            return Constants.EMPTY_STRING;
+        }
+        TopicCommentInfo topicCommentInfo = null;
+        for (TopicCommentInfo item : topicCommentInfoList) {
+            if (topicId.equals(item.getId())) {
+                topicCommentInfo = item;
+                break;
+            }
+        }
+        if (null == topicCommentInfo) {
+            return Constants.EMPTY_STRING;
+        }
+        List<TopicCommentReplyInfo> replies = topicCommentInfo.getReplies();
+        if (CollectionUtil.isEmpty(replies)) {
+            return topicId;
+        }
+        return replies.get(replies.size() - 1).getId();
     }
 
     private void showTopicCommentReplayAgainDialog(final TopicCommentInfo commentInfo
@@ -364,6 +388,7 @@ public class TopicCommentAdapter extends BaseAdapter {
                         intent.putExtra(Constants.TOPIC_COMMENT_ID, commentInfo.getId());
                         intent.putExtra(Constants.TOPIC_COMMENT_USER_ID, commentInfo.getUserId());
                         intent.putExtra(Constants.TOPIC_COMMENT_AUTHOR, commentInfo.getAuthor());
+                        intent.putExtra(Constants.LAST_REPLY_TO, getLastTopicCommentReplayId(commentInfo.getId()));
                     }
                     if (null != replyInfo && type == Constants.TOPIC_COMMENT_TYPE_REPLY_AGAIN) {
                         intent.putExtra(Constants.TOPIC_COMMENT_REPLY_ID, replyInfo.getId());

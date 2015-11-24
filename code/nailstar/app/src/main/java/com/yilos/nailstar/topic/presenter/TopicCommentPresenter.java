@@ -1,5 +1,6 @@
 package com.yilos.nailstar.topic.presenter;
 
+import com.yilos.nailstar.framework.exception.NetworkDisconnectException;
 import com.yilos.nailstar.topic.entity.AddCommentInfo;
 import com.yilos.nailstar.topic.model.ITopicService;
 import com.yilos.nailstar.topic.model.TopicServiceImpl;
@@ -31,15 +32,14 @@ public class TopicCommentPresenter {
         TaskManager.Task addTopicCommentTask = new TaskManager.BackgroundTask() {
             @Override
             public Object doWork(Object data) {
-//                try {
-                // TODO 测试阶段，先不要调用服务端接口
-                //return topicsService.addComment(info);
-                return "001";
-//                } catch (NetworkDisconnectException e) {
-//                    e.printStackTrace();
-//                    LOGGER.error("添加评论信息失败，topicId：" + info.getTopicId(), e);
-//                }
-//                return null;
+                try {
+                    return topicsService.addComment(info);
+//                return "001";
+                } catch (NetworkDisconnectException e) {
+                    e.printStackTrace();
+                    LOGGER.error("添加评论信息失败，topicId：" + info.getTopicId(), e);
+                }
+                return null;
             }
         };
 
@@ -63,15 +63,14 @@ public class TopicCommentPresenter {
         TaskManager.Task addTopicCommentReplyTask = new TaskManager.BackgroundTask() {
             @Override
             public Object doWork(Object data) {
-//                try {
-                // TODO 测试阶段，先不要调用服务端接口
-                //return topicsService.addComment(info);
-                return "002";
-//                } catch (NetworkDisconnectException e) {
-//                    e.printStackTrace();
-//                    LOGGER.error("添加评论信息失败，topicId：" + info.getTopicId(), e);
-//                }
-//                return null;
+                try {
+                    return topicsService.addComment(info);
+//                return "002";
+                } catch (NetworkDisconnectException e) {
+                    e.printStackTrace();
+                    LOGGER.error("添加评论信息失败，topicId：" + info.getTopicId(), e);
+                }
+                return null;
             }
         };
 
