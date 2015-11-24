@@ -65,7 +65,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/topic_comment_content_pic_margin_bottom"
-                android:adjustViewBounds="true" />
+                android:adjustViewBounds="true"
+                android:visibility="gone" />
 
             <LinearLayout
                 android:id="@+id/topic_comment_replay_layout"
