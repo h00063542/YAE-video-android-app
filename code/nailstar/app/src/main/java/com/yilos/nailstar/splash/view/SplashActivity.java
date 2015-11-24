@@ -11,6 +11,7 @@ import android.view.WindowManager;
 import com.yilos.nailstar.R;
 import com.yilos.nailstar.main.MainActivity;
 import com.yilos.nailstar.splash.presenter.SplashPresenter;
+import com.yilos.nailstar.util.SettingUtil;
 import com.yilos.nailstar.util.TaskManager;
 
 public class SplashActivity extends AppCompatActivity {
@@ -54,7 +55,13 @@ public class SplashActivity extends AppCompatActivity {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        Intent intent = new Intent(SplashActivity.this, GuideActivity.class);
+                        Intent intent;
+                        if (SettingUtil.getFirstFlag()) {
+                            intent = new Intent(SplashActivity.this, GuideActivity.class);
+                            SettingUtil.setFirstFlag(false);
+                        } else {
+                            intent = new Intent(SplashActivity.this, MainActivity.class);
+                        }
                         startActivity(intent);
                         SplashActivity.this.finish();
                         SplashActivity.this.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);

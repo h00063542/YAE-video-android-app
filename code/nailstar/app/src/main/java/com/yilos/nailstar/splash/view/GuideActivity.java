@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.shizhefei.view.indicator.FixedIndicatorView;
 import com.shizhefei.view.indicator.Indicator;
 import com.shizhefei.view.indicator.IndicatorViewPager;
 import com.yilos.nailstar.R;
@@ -22,27 +23,16 @@ public class GuideActivity extends FragmentActivity {
     private IndicatorViewPager indicatorViewPager;
     private LayoutInflater inflate;
     private int[] images = { R.mipmap.guide_p1,R.mipmap.guide_p2,R.mipmap.guide_p3};
+    private FixedIndicatorView indicator;
     @Override
     protected void onCreate(Bundle arg0) {
         super.onCreate(arg0);
         setContentView(R.layout.activity_guide);
         ViewPager viewPager = (ViewPager) findViewById(R.id.guide_viewPager);
-        Indicator indicator = (Indicator) findViewById(R.id.guide_indicator);
+        indicator = (FixedIndicatorView) findViewById(R.id.guide_indicator);
         indicatorViewPager = new IndicatorViewPager(indicator, viewPager);
         inflate = LayoutInflater.from(getApplicationContext());
         indicatorViewPager.setAdapter(adapter);
-
-        // 设置页面切换监听
-        indicatorViewPager.setOnIndicatorPageChangeListener(new IndicatorViewPager.OnIndicatorPageChangeListener() {
-            @Override
-            public void onIndicatorPageChange(int i, int i1) {
-                Log.d("i", String.valueOf(i));
-                Log.d("i1",String.valueOf(i1));
-                if (i == images.length - 1) {
-                    setStartActivity();
-                }
-            }
-        });
     }
 
     public void setStartActivity() {
@@ -66,7 +56,6 @@ public class GuideActivity extends FragmentActivity {
                 convertView = new View(getApplicationContext());
                 convertView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
             }
-            convertView.setBackgroundResource(images[position]);
             if (position == images.length - 1) {
                 convertView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -74,6 +63,10 @@ public class GuideActivity extends FragmentActivity {
                         setStartActivity();
                     }
                 });
+                indicator.setVisibility(View.GONE);
+                convertView.setBackgroundResource(images[position]);
+            } else {
+                convertView.setBackgroundResource(images[position]);
             }
             return convertView;
         }
