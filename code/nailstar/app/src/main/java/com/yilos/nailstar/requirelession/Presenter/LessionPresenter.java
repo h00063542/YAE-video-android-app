@@ -481,9 +481,21 @@ public class LessionPresenter {
             public void onSuccess(String s) {
                 try {
                     service.postCandidate(Constants.YILOS_PIC_URL + s);
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            view.showMessage(R.string.upload_image_success);
+                        }
+                    });
                 } catch (NotLoginException notLoginException) {
                     view.gotoLoginPage();
                 } catch (Exception e) {
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            view.showMessage(R.string.upload_image_failed);
+                        }
+                    });
                     logger.error("postCandidate failed", e);
                 }
             }
