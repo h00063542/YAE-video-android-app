@@ -7,6 +7,7 @@ import android.app.Fragment;
 import android.support.annotation.StringRes;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -555,5 +556,15 @@ public class RequireLessionFragment extends Fragment implements LessionView {
     @Override
     public void gotoLoginPage() {
         LoginAPI.getInstance().gotoLoginPage(RequireLessionFragment.this.getActivity());
+    }
+
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if (voteListViewAdapter.isShowingImageActionDialog()) {
+                voteListViewAdapter.dismissImageActionDialog();
+                return true;
+            }
+        }
+        return false;
     }
 }
