@@ -154,12 +154,12 @@ public class MainActivity extends BaseActivity {
 
         if (handled) {
             // 如果Fragment已经处理按钮事件，则不需要继续处理
-            return false;
+            return true;
         } else {
             // 如果在其他Fragment页面点击返回按钮，则先返回首页
             if (keyCode == KeyEvent.KEYCODE_BACK && radioGroup.getCheckedRadioButtonId() != R.id.main_tab_index) {
                 radioGroup.check(R.id.main_tab_index);
-                return false;
+                return true;
             }
             // 没有处理的按钮事件，交给系统处理
             return super.onKeyDown(keyCode, event);
