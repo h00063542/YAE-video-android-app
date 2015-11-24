@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.yilos.nailstar.R;
 import com.yilos.nailstar.requirelession.Presenter.LessionPresenter;
 import com.yilos.nailstar.requirelession.entity.CandidateLession;
+import com.yilos.nailstar.social.model.SocialAPI;
 import com.yilos.nailstar.util.Constants;
 import com.yilos.widget.circleimageview.CircleImageView;
 import com.yilos.widget.view.ImageCacheView;
@@ -31,6 +32,8 @@ import java.util.List;
  * 求教程投票与排行榜ListView的Adapter
  */
 public class VoteListViewAdapter extends BaseAdapter {
+
+    private static final String shareUrl = "http://s.naildaka.com/site/share_candidate.html?candidateId=";
 
     private Activity context;
     private LayoutInflater layoutInflater;
@@ -253,6 +256,17 @@ public class VoteListViewAdapter extends BaseAdapter {
                 lessionPresenter.vote(currentImage);
             }
         });
+
+        lessionCanvassBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SocialAPI.getInstance().share(context,
+                        context.getResources().getString(R.string.lession_share_title),
+                        context.getResources().getString(R.string.lession_share_context),
+                        shareUrl + currentImage.getCandidateId(),
+                        currentImage.getPicUrl());
+            }
+        });
     }
 
     public void setViewType(ViewType viewType) {
@@ -366,6 +380,9 @@ public class VoteListViewAdapter extends BaseAdapter {
             holder.lessionVote = (TextView) convertView.findViewById(R.id.lessionVote);
             holder.lessionCanvass = (Button) convertView.findViewById(R.id.lessionCanvass);
 
+            // 图片高度为宽度的4/5，宽度在xml中设置为屏幕宽度的3/10。
+            holder.lessionRankingImg.getLayoutParams().height = screenWidth * 3 / 10 * 4 / 5;
+
             // 设置头像大小
             holder.lessionAuthorPhoto.getLayoutParams().width = screenWidth / 18;
             holder.lessionAuthorPhoto.getLayoutParams().height = screenWidth / 18;
@@ -404,6 +421,18 @@ public class VoteListViewAdapter extends BaseAdapter {
                 currentImage = candidateLession;
                 // 显示大图
                 showImageActionDialog(position);
+            }
+        });
+
+        // 拉票按钮
+        holder.lessionCanvass.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SocialAPI.getInstance().share(context,
+                        context.getResources().getString(R.string.lession_share_title),
+                        context.getResources().getString(R.string.lession_share_context),
+                        shareUrl + candidateLession.getCandidateId(),
+                        candidateLession.getPicUrl());
             }
         });
 
