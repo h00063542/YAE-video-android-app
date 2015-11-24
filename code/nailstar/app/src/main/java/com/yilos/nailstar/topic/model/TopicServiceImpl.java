@@ -46,8 +46,8 @@ import java.util.ArrayList;
  * Created by yilos on 2015-10-24.
  */
 public class TopicServiceImpl implements ITopicService {
-    private static final Logger LOGGER = LoggerFactory.getLogger(TopicServiceImpl.class);
-    private static final String URL_PREFIX = "/vapi/nailstar/";
+    private final Logger LOGGER = LoggerFactory.getLogger(TopicServiceImpl.class);
+    private final String URL_PREFIX = "/vapi/nailstar/";
 
 
     /**

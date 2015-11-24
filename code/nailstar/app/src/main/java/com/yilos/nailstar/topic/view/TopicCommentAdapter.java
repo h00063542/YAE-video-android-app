@@ -42,6 +42,7 @@ public class TopicCommentAdapter extends BaseAdapter {
     private int heightPixels;
     private int mCommentContentMarginTop;
     private int mCommentContentMarginBottom;
+    private int mCommentContentPicMarginBottom;
     private int mCommentReplyPaddingLeft;
     private int mCommentReplyPaddingTop;
     private int mCommentReplyPaddingRight;
@@ -82,6 +83,7 @@ public class TopicCommentAdapter extends BaseAdapter {
         mCommentReplyPaddingBottom = mBaseActivity.getResources().getDimensionPixelSize(R.dimen.topic_comment_reply_padding_bottom);
         mCommentContentMarginTop = mBaseActivity.getResources().getDimensionPixelSize(R.dimen.topic_comment_content_margin_top);
         mCommentContentMarginBottom = mBaseActivity.getResources().getDimensionPixelSize(R.dimen.topic_comment_content_margin_bottom);
+        mCommentContentPicMarginBottom = mBaseActivity.getResources().getDimensionPixelSize(R.dimen.topic_comment_content_pic_margin_bottom);
         // 取消评论区域图片放大查看
         mIcvTopicCommentImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -120,7 +122,6 @@ public class TopicCommentAdapter extends BaseAdapter {
 
     class ViewHolder {
         public CircleImageView authorPhoto;
-        public LinearLayout commentLayoutParent;
         public LinearLayout commentLayout;
         public LinearLayout commentReplayLayout;
         public TextView authorName;
@@ -136,7 +137,6 @@ public class TopicCommentAdapter extends BaseAdapter {
             convertView = mInflater.inflate(R.layout.topic_comment_item, null);
             ViewHolder holder = new ViewHolder();
             holder.authorPhoto = (CircleImageView) convertView.findViewById(R.id.topic_comment_author_photo);
-            holder.commentLayoutParent = (LinearLayout) convertView.findViewById(R.id.topic_comment_content_layout_parent);
             holder.commentLayout = (LinearLayout) convertView.findViewById(R.id.topic_comment_content_layout);
             holder.authorName = (TextView) convertView.findViewById(R.id.topic_comment_author_name);
             holder.commentTime = (TextView) convertView.findViewById(R.id.topic_comment_time);
@@ -175,6 +175,7 @@ public class TopicCommentAdapter extends BaseAdapter {
                 isHomework || !CollectionUtil.isEmpty(topicCommentInfo.getReplies()) ? mCommentContentMarginBottom : 0);
 
         // -----------------设置评论图片-----------------
+        LinearLayout.LayoutParams commentContentPicLp = ((LinearLayout.LayoutParams) holder.commentContentPic.getLayoutParams());
         if (isHomework) {
             // 交作业时，显示的是本地图片
             if (!URLUtil.isNetworkUrl(topicCommentInfo.getContentPic())) {
@@ -182,9 +183,8 @@ public class TopicCommentAdapter extends BaseAdapter {
             } else {
                 holder.commentContentPic.setImageSrc(topicCommentInfo.getContentPic());
             }
-            ((LinearLayout.LayoutParams) holder.commentContentPic.getLayoutParams()).setMargins(0, 0, 0,
-                    !CollectionUtil.isEmpty(topicCommentInfo.getReplies()) ? mCommentContentMarginBottom : 0);
-            holder.commentContentPic.setVisibility(View.VISIBLE);
+            commentContentPicLp.setMargins(0, 0, 0, !CollectionUtil.isEmpty(topicCommentInfo.getReplies()) ? mCommentContentPicMarginBottom : 0);
+//            holder.commentContentPic.setVisibility(View.VISIBLE);
             holder.commentContentPic.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -227,6 +227,7 @@ public class TopicCommentAdapter extends BaseAdapter {
                 }
             });
         } else {
+            commentContentPicLp.setMargins(0, 0, 0, 0);
             holder.commentContentPic.setImageSrc(Constants.EMPTY_STRING);
         }
 
