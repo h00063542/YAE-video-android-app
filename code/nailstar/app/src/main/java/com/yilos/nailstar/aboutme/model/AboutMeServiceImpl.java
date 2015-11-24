@@ -87,8 +87,9 @@ public class AboutMeServiceImpl implements AboutMeService {
             throw new NetworkDisconnectException("网络获取消息数失败", e);
         } catch (JSONException e) {
             throw new JSONException("消息数解析失败");
+        } finally {
+            return messageCount;
         }
-        return messageCount;
     }
 
     @Override

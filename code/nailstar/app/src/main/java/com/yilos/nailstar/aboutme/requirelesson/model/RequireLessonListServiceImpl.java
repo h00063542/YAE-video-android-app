@@ -50,8 +50,11 @@ public class RequireLessonListServiceImpl implements RequireLessonListService {
                 requireLessonArrayList.add(requireLesson);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new NetworkDisconnectException("网络获取我的求教程列表失败", e);
+        } catch (JSONException e) {
+            throw new JSONException("求教程列表解析失败");
+        } finally {
+            return requireLessonArrayList;
         }
-        return requireLessonArrayList;
     }
 }

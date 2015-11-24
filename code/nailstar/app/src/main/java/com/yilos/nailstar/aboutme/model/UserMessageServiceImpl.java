@@ -27,7 +27,6 @@ public class UserMessageServiceImpl implements UserMessageService {
 
     @Override
     public ArrayList<UserMessage> getUserMessageList(String uid) throws NetworkDisconnectException, JSONException {
-
         ArrayList<UserMessage> userMessageList = new ArrayList<>();
         String jsonObject = null;
         JSONObject userMessageJSONObject;
