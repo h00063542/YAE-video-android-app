@@ -1,6 +1,8 @@
 package com.yilos.nailstar.aboutme.requirelesson.view;
 
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +11,8 @@ import android.widget.TextView;
 
 import com.yilos.nailstar.R;
 import com.yilos.nailstar.aboutme.requirelesson.entity.RequireLesson;
+import com.yilos.nailstar.framework.application.NailStarApplication;
+import com.yilos.nailstar.util.Constants;
 import com.yilos.widget.view.ImageCacheView;
 
 import java.util.ArrayList;
@@ -19,10 +23,12 @@ import java.util.ArrayList;
 public class RequireLessonListAdapter extends RecyclerView.Adapter<RequireLessonListAdapter.ViewHolder> {
     private ArrayList<RequireLesson> requireLessonArrayList;
     private Context context;
+    private int imageWidth;
 
     public RequireLessonListAdapter(Context context, ArrayList<RequireLesson> requireLessonArrayList) {
         this.context = context;
         this.requireLessonArrayList = requireLessonArrayList;
+        imageWidth = (NailStarApplication.getApplication().getScreenWidth((RequireLessonListActivity) context) - 3 * context.getResources().getDimensionPixelSize(R.dimen.common_10_dp)) / 2;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -45,11 +51,17 @@ public class RequireLessonListAdapter extends RecyclerView.Adapter<RequireLesson
         return vh;
     }
 
+    @TargetApi(Build.VERSION_CODES.M)
     @Override
     public void onBindViewHolder(final RequireLessonListAdapter.ViewHolder holder, int position) {
         final RequireLesson requireLesson = requireLessonArrayList.get(position);
         holder.imageCacheView.setImageSrc(requireLesson.getThumbUrl());
-        String showNo = "第" + requireLesson.getNo() + "期";
+        int backColor = context.getResources().getColor(R.color.white,null);
+        holder.imageCacheView.setBackgroundColor(backColor);
+        holder.imageCacheView.getLayoutParams().height = (int) (imageWidth * 0.75);
+        String di = context.getResources().getString(R.string.di);
+        String qi = context.getResources().getString(R.string.qi);
+        String showNo = di + requireLesson.getNo() + qi;
         holder.textView.setText(showNo);
     }
 

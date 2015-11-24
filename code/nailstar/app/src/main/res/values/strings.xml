@@ -94,6 +94,8 @@
     <string name="person_info_introduction">个人介绍</string>
 
     <!-- 求教程-->
+    <string name="di">第</string>
+    <string name="qi">期</string>
     <string name="just_now">刚刚</string>
     <string name="minute">分钟</string>
     <string name="hour">小时</string>
