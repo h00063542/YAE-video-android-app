@@ -35,8 +35,7 @@ public class SettingFolderAdapter extends BaseAdapter {
 
     @Override
     public Sdcard getItem(int position) {
-        Sdcard sdcard = new Sdcard();
-        sdcard = sdcardArrayList.get(position);
+        Sdcard sdcard = sdcardArrayList.get(position);
         return sdcard;
     }
 
@@ -49,8 +48,7 @@ public class SettingFolderAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder;
         View view = convertView;
-        Sdcard sdcard = new Sdcard();
-        sdcard = getItem(position);
+        Sdcard sdcard = getItem(position);
         if (view == null) {
             view = layoutInflater.inflate(R.layout.setting_folder_dialog_item, parent, false);
             viewHolder = new ViewHolder();
@@ -62,9 +60,8 @@ public class SettingFolderAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) view.getTag();
         }
 
-        Context context = parent.getContext();
         viewHolder.sdcardText.setText(sdcard.getSdcardName() + "(" + sdcard.getSdcardPath() + ")");
-        viewHolder.sdcardUsed.setText(sdcard.getAvailCountFormat() + "可用，" + sdcard.getBlockCountFormat());
+        viewHolder.sdcardUsed.setText(sdcard.getAvailCountFormat() + "可用，" + "共" + sdcard.getBlockCountFormat());
 
         if (sdcard.getSdcardName().equals(sdcardName)) {
             viewHolder.sdcardChoose.setVisibility(View.VISIBLE);
