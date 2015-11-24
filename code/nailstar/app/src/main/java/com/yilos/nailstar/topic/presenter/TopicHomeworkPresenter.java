@@ -22,20 +22,14 @@ import java.util.ArrayList;
  * Created by yilos on 2015-10-22.
  */
 public class TopicHomeworkPresenter {
-    private static final Logger LOGGER = LoggerFactory.getLogger(TopicHomeworkPresenter.class);
-
-    private static TopicHomeworkPresenter topicHomeworkPresenter = new TopicHomeworkPresenter();
+    private final Logger LOGGER = LoggerFactory.getLogger(TopicHomeworkPresenter.class);
 
     private ITopicHomeworkView topicHomeworkView;
-    private ITopicService topicsService = new TopicServiceImpl();
+    private ITopicService topicsService;
 
-    private TopicHomeworkPresenter() {
-
-    }
-
-    public static TopicHomeworkPresenter getInstance(ITopicHomeworkView topicHomeworkView) {
-        topicHomeworkPresenter.topicHomeworkView = topicHomeworkView;
-        return topicHomeworkPresenter;
+    public TopicHomeworkPresenter(ITopicHomeworkView topicHomeworkView) {
+        this.topicHomeworkView = topicHomeworkView;
+        this.topicsService = new TopicServiceImpl();
     }
 
     public void initSubmittedHomeworkCount(final String topicId) {

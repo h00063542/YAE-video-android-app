@@ -571,7 +571,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
     }
 
     private void initData() {
-        mTopicVideoPlayerPresenter = TopicVideoPlayerPresenter.getInstance(this);
+        mTopicVideoPlayerPresenter = new TopicVideoPlayerPresenter(this);
         // 调用后台接口初始化界面数据
         mTopicVideoPlayerPresenter.initTopicInfo(mTopicId);
         mTopicVideoPlayerPresenter.initTopicRelatedInfo(mTopicId);
@@ -1120,7 +1120,6 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
                 if (mRpbDownloadTopicImageText.getMax() == mRpbDownloadTopicImageText.getProgress()) {
                     // 显示下载完成
                     mTvDownloadTopicImageText.setText(R.string.save_topic_image_text_success);
-//                    mRpbDownloadTopicImageText.setVisibility(View.GONE);
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {

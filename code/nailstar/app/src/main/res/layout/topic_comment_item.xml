@@ -5,6 +5,7 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal">
 
+    <!--评论人头像-->
     <com.yilos.widget.circleimageview.CircleImageView
         android:id="@+id/topic_comment_author_photo"
         android:layout_width="@dimen/topic_comment_author_photo_size"
@@ -15,7 +16,7 @@
         android:src="@drawable/man" />
 
     <LinearLayout
-        android:id="@+id/topic_comment_content_layout_parent"
+        android:id="@+id/topic_comment_content_bottom_line"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/bottom_border"
@@ -34,40 +35,39 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
-
+                <!--评论人名称-->
                 <TextView
                     android:id="@+id/topic_comment_author_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="评论人" />
+                    android:layout_weight="1" />
 
+                <!--评论时间-->
                 <TextView
                     android:id="@+id/topic_comment_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="right"
-                    android:text="评论时间" />
+                    android:gravity="right" />
             </LinearLayout>
 
+            <!--评论内容-->
             <TextView
                 android:id="@+id/topic_comment_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/topic_comment_content_margin_bottom"
                 android:layout_marginTop="@dimen/topic_comment_content_margin_top"
-                android:text="评论内容"
                 android:textColor="@color/z1"
                 android:textSize="@dimen/middle_text_size" />
 
+            <!--评论图片-->
             <com.yilos.widget.view.ImageCacheView
                 android:id="@+id/topic_comment_content_pic"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/topic_comment_content_pic_margin_bottom"
-                android:adjustViewBounds="true"
-                android:visibility="gone" />
+                android:adjustViewBounds="true" />
 
+            <!--评论回复-->
             <LinearLayout
                 android:id="@+id/topic_comment_replay_layout"
                 android:layout_width="match_parent"

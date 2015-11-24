@@ -14,20 +14,15 @@ import org.apache.log4j.Logger;
  * Created by yilos on 2015-10-22.
  */
 public class TopicCommentPresenter {
-    private static final Logger LOGGER = LoggerFactory.getLogger(TopicCommentPresenter.class);
+    private final Logger LOGGER = LoggerFactory.getLogger(TopicCommentPresenter.class);
 
-    private static TopicCommentPresenter topicCommentPresenter = new TopicCommentPresenter();
 
     private ITopicCommentView topicCommentView;
-    private ITopicService topicsService = new TopicServiceImpl();
+    private ITopicService topicsService;
 
-    private TopicCommentPresenter() {
-
-    }
-
-    public static TopicCommentPresenter getInstance(ITopicCommentView topicCommentView) {
-        topicCommentPresenter.topicCommentView = topicCommentView;
-        return topicCommentPresenter;
+    public TopicCommentPresenter(ITopicCommentView topicCommentView) {
+        this.topicCommentView = topicCommentView;
+        this.topicsService = new TopicServiceImpl();
     }
 
 
