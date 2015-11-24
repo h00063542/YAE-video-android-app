@@ -112,6 +112,8 @@
     <string name="lession_collection_title">求教程合集</string>
     <string name="vote_success">投票成功</string>
     <string name="vote_failed">投票失败, 请稍后再试...</string>
+    <string name="lession_share_title">来美甲大咖App，订制你想要的教学视频</string>
+    <string name="lession_share_context">我正在美甲大咖求视频教程，快来给我投票吧！</string>
 
     <string name="from_camera">拍照</string>
     <string name="from_library">从手机相册中挑选</string>
