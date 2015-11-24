@@ -17,6 +17,7 @@ import com.yilos.nailstar.R;
 import com.yilos.nailstar.aboutme.entity.AboutMeNumber;
 import com.yilos.nailstar.aboutme.entity.MessageCount;
 import com.yilos.nailstar.aboutme.entity.PersonInfo;
+import com.yilos.nailstar.aboutme.favourite.view.MyFavouriteActivity;
 import com.yilos.nailstar.aboutme.model.LoginAPI;
 import com.yilos.nailstar.aboutme.presenter.AboutMePresenter;
 import com.yilos.nailstar.aboutme.requirelesson.view.RequireLessonListActivity;
@@ -170,7 +171,11 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
             personInfo.setType(type);
             personInfo.setPhotoUrl(loginAPI.getLoginUserPhotourl());
             personInfo.setProfile(loginAPI.getLoginUserProfile());
-            profileImage.setImageSrc(personInfo.getPhotoUrl());
+            if(personInfo.getPhotoUrl() == null || personInfo.getPhotoUrl().trim().equals("")) {
+                profileImage.setImageResource(R.mipmap.ic_default_photo);
+            } else {
+                profileImage.setImageSrc(personInfo.getPhotoUrl());
+            }
             nameText.setText(personInfo.getNickname());
             identityText.setText(IdentityUtil.getIdentity(personInfo.getType()));
 
@@ -252,6 +257,9 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
                 SocialAPI.getInstance().share(activity, "美甲大咖，行业最专业的视频教学App", "我试过很多美甲App，最后还是选择了美甲大咖。真爱，经得起等待！", "http://s.naildaka.com/site/share_app.html", R.mipmap.ic_daka_share_image);
             }
         });
+
+        // 注册收藏按钮点击事件
+        view.findViewById(R.id.myFavouritePanel).setOnClickListener(this);
     }
 
     @Override
@@ -282,6 +290,14 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
                     startActivity(goToLoginIntent);
                 } else {
 
+                }
+                break;
+            case R.id.myFavouritePanel:
+                if (!loginAPI.isLogin()) {
+                    loginAPI.gotoLoginPage(getActivity());
+                } else {
+                    Intent intent = new Intent(getActivity(), MyFavouriteActivity.class);
+                    startActivity(intent);
                 }
                 break;
             case R.id.downloadVideoBtn:

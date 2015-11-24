@@ -129,6 +129,7 @@
         <meta-data
             android:name="UMENG_CHANNEL"
             android:value="dev" />
+        <!-- 友盟相关设置结束 -->
 
         <activity
             android:name=".aboutme.favourite.view.MyFavouriteActivity"

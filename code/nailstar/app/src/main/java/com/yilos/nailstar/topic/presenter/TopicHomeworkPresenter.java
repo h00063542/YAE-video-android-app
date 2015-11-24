@@ -4,18 +4,16 @@ import com.alibaba.sdk.android.oss.callback.SaveCallback;
 import com.alibaba.sdk.android.oss.model.OSSException;
 import com.yilos.nailstar.framework.exception.NetworkDisconnectException;
 import com.yilos.nailstar.topic.entity.AddCommentInfo;
+import com.yilos.nailstar.topic.entity.UpdateReadyInfo;
 import com.yilos.nailstar.topic.model.ITopicService;
 import com.yilos.nailstar.topic.model.TopicServiceImpl;
-import com.yilos.nailstar.topic.entity.UpdateReadyInfo;
 import com.yilos.nailstar.topic.view.ITopicHomeworkView;
 import com.yilos.nailstar.util.Constants;
 import com.yilos.nailstar.util.LoggerFactory;
-import com.yilos.nailstar.util.StringUtil;
 import com.yilos.nailstar.util.TaskManager;
 
 import org.apache.log4j.Logger;
 
-import java.io.File;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 
@@ -113,12 +111,12 @@ public class TopicHomeworkPresenter {
                             // TODO 测试阶段，先不要调用服务端接口
 //                                topicsService.updateReady(updateReadyInfo);
                             //2、删除本地文件
-                            if (!StringUtil.isEmpty(info.getPicLocalPath())) {
-                                File file = new File(info.getPicLocalPath());
-                                if (file.exists()) {
-                                    file.delete();
-                                }
-                            }
+//                            if (!StringUtil.isEmpty(info.getPicLocalPath())) {
+//                                File file = new File(info.getPicLocalPath());
+//                                if (file.exists()) {
+//                                    file.delete();
+//                                }
+//                            }
 //                            } catch (NetworkDisconnectException e) {
 //                                LOGGER.error(MessageFormat.format("修改ready状态失败，id:{0}", info.getTopicId()), e);
 //                                e.printStackTrace();

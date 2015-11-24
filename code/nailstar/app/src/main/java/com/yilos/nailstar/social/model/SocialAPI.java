@@ -5,7 +5,12 @@ import android.app.Activity;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.controller.UMServiceFactory;
 import com.umeng.socialize.controller.UMSocialService;
+import com.umeng.socialize.media.QQShareContent;
+import com.umeng.socialize.media.QZoneShareContent;
 import com.umeng.socialize.media.UMImage;
+import com.umeng.socialize.sso.QZoneSsoHandler;
+import com.umeng.socialize.sso.SinaSsoHandler;
+import com.umeng.socialize.sso.UMQQSsoHandler;
 import com.umeng.socialize.weixin.controller.UMWXHandler;
 import com.umeng.socialize.weixin.media.CircleShareContent;
 import com.umeng.socialize.weixin.media.WeiXinShareContent;
@@ -15,8 +20,10 @@ import com.yilos.nailstar.framework.application.NailStarApplication;
  * Created by yangdan on 15/11/20.
  */
 public class SocialAPI {
-    private static final String WEIXIN_APP_ID = "wxeedd9356af3a78b3";
-    private static final String WEIXIN_APP_SECRET = "0f3bb78c72569ad1ab64a83e24c69c46";
+    static final String WEIXIN_APP_ID = "wxeedd9356af3a78b3";
+    static final String WEIXIN_APP_SECRET = "0f3bb78c72569ad1ab64a83e24c69c46";
+    static final String QQ_APP_ID = "1104611687";
+    static final String QQ_APP_KEY = "LGiugygtm1OcHQEh";
 
     private static SocialAPI instance = new SocialAPI();
 
@@ -27,9 +34,8 @@ public class SocialAPI {
     }
 
     private SocialAPI(){
-        mController.getConfig().removePlatform(SHARE_MEDIA.QQ);
-        mController.getConfig().removePlatform(SHARE_MEDIA.QZONE);
-        mController.getConfig().removePlatform(SHARE_MEDIA.TENCENT);
+        //设置新浪SSO handler
+        mController.getConfig().setSsoHandler(new SinaSsoHandler());
 
         // 添加微信平台
         UMWXHandler wxHandler = new UMWXHandler(NailStarApplication.getApplication(), WEIXIN_APP_ID, WEIXIN_APP_SECRET);
@@ -38,6 +44,14 @@ public class SocialAPI {
         UMWXHandler wxCircleHandler = new UMWXHandler(NailStarApplication.getApplication(), WEIXIN_APP_ID, WEIXIN_APP_SECRET);
         wxCircleHandler.setToCircle(true);
         wxCircleHandler.addToSocialSDK();
+
+        mController.getConfig().setPlatformOrder(
+                SHARE_MEDIA.WEIXIN,
+                SHARE_MEDIA.WEIXIN_CIRCLE,
+                SHARE_MEDIA.QQ,
+                SHARE_MEDIA.QZONE,
+                SHARE_MEDIA.SINA,
+                SHARE_MEDIA.TENCENT);
     }
 
     public void share(Activity activity, String title, String content, String url, int photoResId) {
@@ -49,9 +63,18 @@ public class SocialAPI {
     }
 
     private void share(Activity activity, String title, String content, String url, UMImage photo) {
+        // QQ分享
+        UMQQSsoHandler qqSsoHandler = new UMQQSsoHandler(activity, QQ_APP_ID, QQ_APP_KEY);
+        qqSsoHandler.addToSocialSDK();
+        // QQ空间分享
+        QZoneSsoHandler qZoneSsoHandler = new QZoneSsoHandler(activity, QQ_APP_ID, QQ_APP_KEY);
+        qZoneSsoHandler.addToSocialSDK();
+
         setShareContent(content, url, photo);
         setWeixinContent(title, content, url, photo);
         setCircleShareContent(title, content, url, photo);
+        setQQShareContent(title, content, url, photo);
+        setQQZoneShareContent(title, content, url, photo);
 
         mController.openShare(activity, false);
     }
@@ -78,5 +101,23 @@ public class SocialAPI {
         circleMedia.setShareImage(photo);
         circleMedia.setTargetUrl(url);
         mController.setShareMedia(circleMedia);
+    }
+    // 设置QQ分享内容
+    private void setQQShareContent(String title, String content, String url, UMImage photo) {
+        QQShareContent qqShareContent = new QQShareContent();
+        qqShareContent.setShareContent(content);
+        qqShareContent.setTitle(title);
+        qqShareContent.setShareImage(photo);
+        qqShareContent.setTargetUrl(url);
+        mController.setShareMedia(qqShareContent);
+    }
+    // 设置QQ空间分享内容
+    private void setQQZoneShareContent(String title, String content, String url, UMImage photo) {
+        QZoneShareContent qzone = new QZoneShareContent();
+        qzone.setShareContent(content);
+        qzone.setTargetUrl(url);
+        qzone.setTitle(title);
+        qzone.setShareImage(photo);
+        mController.setShareMedia(qzone);
     }
 }

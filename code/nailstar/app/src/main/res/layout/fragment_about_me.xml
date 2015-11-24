@@ -283,7 +283,7 @@
                         <RelativeLayout
                             android:background="@drawable/selector"
                             android:clickable="true"
-                            android:id="@+id/list_item_group"
+                            android:id="@+id/myFavouritePanel"
                             android:layout_width="fill_parent"
                             android:layout_height="@dimen/about_me_list_item_height"
                             android:orientation="horizontal">
