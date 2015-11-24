@@ -123,6 +123,8 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
         setLatestMessageCount(count);
         if (!messageCountText.getText().toString().equals("0")) {
             messageCountText.setVisibility(View.VISIBLE);
+        } else {
+            messageCountText.setVisibility(View.GONE);
         }
     }
 
@@ -172,8 +174,8 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
             nameText.setText(personInfo.getNickname());
             identityText.setText(IdentityUtil.getIdentity(personInfo.getType()));
 
-            aboutMePresenter.getMessageCount(getLatestMessageCountTime(), uid, type);
             long lt = DateUtil.getTimestamp();
+            aboutMePresenter.getMessageCount(getLatestMessageCountTime(), uid, type);
             setLatestMessageCountTime(lt);
         } else {
             identityText.setText(R.string.about_me_identity);

@@ -37,7 +37,7 @@ public class RequireLessonListActivity extends BaseActivity implements IRequireL
         titleBar.getTitleView(R.string.about_me_my_require_lesson);
         titleBar.getBackButton(this);
         recyclerView = (RecyclerView) findViewById(R.id.require_lesson_list);
-        MaxHeightGridLayoutManager maxHeightGridLayoutManager = new MaxHeightGridLayoutManager(this, 2, 1500);
+        MaxHeightGridLayoutManager maxHeightGridLayoutManager = new MaxHeightGridLayoutManager(this, 2, 500);
         maxHeightGridLayoutManager.setOrientation(MaxHeightGridLayoutManager.VERTICAL);
         maxHeightGridLayoutManager.setSmoothScrollbarEnabled(true);
         recyclerView.setLayoutManager(maxHeightGridLayoutManager);
