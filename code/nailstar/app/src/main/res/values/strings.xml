@@ -44,6 +44,7 @@
     <string name="video_play_not_wifi_tips2">继续播放可能产生流量费用</string>
     <string name="video_play_not_wifi_tips1">您正在使用非Wi-Fi网络</string>
     <string name="continue_to_play">继续播放</string>
+    <string name="continue_to_download">是否继续下载</string>
     <string name="video_has_been_cached">%1$s视频已缓存</string>
     <string name="add_video_download">成功添加至 我的 -> 已下载</string>
     <string name="add_topic_collection">成功添加至 我的 -> 已收藏</string>
