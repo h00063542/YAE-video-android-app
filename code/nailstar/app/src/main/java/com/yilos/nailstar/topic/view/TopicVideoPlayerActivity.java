@@ -346,6 +346,8 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
                     public void callback(Uri uri) {
                         Intent intent = new Intent(TopicVideoPlayerActivity.this, TopicHomeworkActivity.class);
                         intent.putExtra(Constants.TOPIC_ID, mTopicId);
+                        // 交作业是atuserId为视频作者
+                        intent.putExtra(Constants.TOPIC_COMMENT_USER_ID, mTopicInfo.getAuthorId());
                         intent.putExtra(Constants.CONTENT_PIC, uri.getPath());
                         startActivityForResult(intent, Constants.TOPIC_HOMEWORK_REQUEST_CODE);
                     }
@@ -656,6 +658,8 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         }
         Intent intent = new Intent(this, TopicCommentActivity.class);
         intent.putExtra(Constants.TOPIC_ID, mTopicId);
+        // 评论的atuserid为视频作者
+        intent.putExtra(Constants.TOPIC_COMMENT_USER_ID, mTopicInfo.getAuthorId());
         intent.putExtra(Constants.TYPE, Constants.TOPIC_COMMENT_TYPE_COMMENT);
         startActivityForResult(intent, Constants.TOPIC_COMMENT_REQUEST_CODE);
     }
@@ -673,13 +677,15 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         showTopicInfo2Page(topicInfo);
         VDVideoListInfo mVDVideoListInfo = new VDVideoListInfo();
         VDVideoInfo info = new VDVideoInfo();
-        TopicVideoInfo topicVideoInfo = topicInfo.getVideos().get(0);
-        mVideoRemoteUrl = mTopicVideoPlayerPresenter.buildVideoRemoteUrl(topicVideoInfo);
-        info.mTitle = topicInfo.getTitle();
-        info.mPlayUrl = mVideoRemoteUrl;
-        // 获取视频缩略图
-        Bitmap bitmap = createVideoThumbnail(mVideoRemoteUrl, 700, (int) (700 / Constants.VIDEO_ASPECT_RATIO));
-        mPlayIconParent.setBackgroundDrawable(new BitmapDrawable(bitmap));
+        if (!CollectionUtil.isEmpty(topicInfo.getVideos())) {
+            TopicVideoInfo topicVideoInfo = topicInfo.getVideos().get(0);
+            mVideoRemoteUrl = mTopicVideoPlayerPresenter.buildVideoRemoteUrl(topicVideoInfo);
+            info.mTitle = topicInfo.getTitle();
+            info.mPlayUrl = mVideoRemoteUrl;
+            // 获取视频缩略图
+            Bitmap bitmap = createVideoThumbnail(mVideoRemoteUrl, 700, (int) (700 / Constants.VIDEO_ASPECT_RATIO));
+            mPlayIconParent.setBackgroundDrawable(new BitmapDrawable(bitmap));
+        }
         mVDVideoListInfo.addVideoInfo(info);
         mVDVideoView.open(this, mVDVideoListInfo);
     }
@@ -696,9 +702,11 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         mIvVideoAuthorPhoto.setImageSrc(topicInfo.getAuthorPhoto());
         // 作者和播放次数名称
         StringBuilder stringBuilder = new StringBuilder()
-                .append(buildTextFont(R.color.z2, topicInfo.getAuthor()))
-                .append("  ")
-                .append(buildTextFont(R.color.z3, String.format(getString(R.string.video_play_times), topicInfo.getVideos().get(0).getPlayTimes())));
+                .append(buildTextFont(R.color.z2, topicInfo.getAuthor()));
+        if (!CollectionUtil.isEmpty(topicInfo.getVideos())) {
+            stringBuilder.append("  ")
+                    .append(buildTextFont(R.color.z3, String.format(getString(R.string.video_play_times), topicInfo.getVideos().get(0).getPlayTimes())));
+        }
         mTvVideoAuthorPlayTimes.setText(Html.fromHtml(stringBuilder.toString()));
 
         // 设置作者的tags

@@ -89,18 +89,22 @@ public class TopicServiceImpl implements ITopicService {
 
             ArrayList tags = new ArrayList();
             JSONArray jsonTags = jsonResult.optJSONArray(Constants.TAGS);
-            for (int i = 0; i < jsonTags.length(); i++) {
-                tags.add(JsonUtil.optString(jsonTags, i));
+            if (null != jsonTags) {
+                for (int i = 0; i < jsonTags.length(); i++) {
+                    tags.add(JsonUtil.optString(jsonTags, i));
+                }
             }
 
             ArrayList videos = new ArrayList();
             JSONArray jsonVideos = jsonResult.optJSONArray(Constants.VIDEOS);
-            for (int i = 0; i < jsonVideos.length(); i++) {
-                JSONObject jsonVideoObj = jsonVideos.optJSONObject(i);
-                videos.add(new TopicVideoInfo(JsonUtil.optString(jsonVideoObj, Constants.VIDEO_ID)
-                        , jsonVideoObj.optInt(Constants.PLAY_TIMES, 0)
-                        , JsonUtil.optString(jsonVideoObj, Constants.CC_URL)
-                        , JsonUtil.optString(jsonVideoObj, Constants.OSS_URL)));
+            if (null != jsonVideos) {
+                for (int i = 0; i < jsonVideos.length(); i++) {
+                    JSONObject jsonVideoObj = jsonVideos.optJSONObject(i);
+                    videos.add(new TopicVideoInfo(JsonUtil.optString(jsonVideoObj, Constants.VIDEO_ID)
+                            , jsonVideoObj.optInt(Constants.PLAY_TIMES, 0)
+                            , JsonUtil.optString(jsonVideoObj, Constants.CC_URL)
+                            , JsonUtil.optString(jsonVideoObj, Constants.OSS_URL)));
+                }
             }
 
             topicInfo.setId(JsonUtil.optString(jsonResult, Constants.ID));
@@ -159,14 +163,18 @@ public class TopicServiceImpl implements ITopicService {
 
             ArrayList<String> pictures = new ArrayList<String>();
             JSONArray jsonPictures = jsonResult.optJSONArray(Constants.PICTURES);
-            for (int i = 0; i < jsonPictures.length(); i++) {
-                pictures.add(JsonUtil.optString(jsonPictures, i));
+            if (null != jsonPictures) {
+                for (int i = 0; i < jsonPictures.length(); i++) {
+                    pictures.add(JsonUtil.optString(jsonPictures, i));
+                }
             }
 
             ArrayList<String> articles = new ArrayList<String>();
             JSONArray jsonArticles = jsonResult.optJSONArray(Constants.ARTICLES);
-            for (int i = 0; i < jsonArticles.length(); i++) {
-                articles.add(JsonUtil.optString(jsonArticles, i));
+            if (null != jsonArticles) {
+                for (int i = 0; i < jsonArticles.length(); i++) {
+                    articles.add(JsonUtil.optString(jsonArticles, i));
+                }
             }
 
             topicImageTextInfo.setId(JsonUtil.optString(jsonResult, Constants.ID));
@@ -627,8 +635,14 @@ public class TopicServiceImpl implements ITopicService {
             JSONObject jsonObject = new JSONObject();
             // 当前登录用户Id
             jsonObject.put(Constants.ID, info.getId());
-            jsonObject.put(Constants.PIC_URL, info.getPicUrls());
-            jsonObject.put(Constants.TABLE, Constants.HOMEWORK);
+            JSONArray picUrls = new JSONArray();
+            if (!CollectionUtil.isEmpty(info.getPicUrls())) {
+                for (String picUrl : info.getPicUrls()) {
+                    picUrls.put(picUrl);
+                }
+            }
+            jsonObject.put(Constants.PIC_URL, picUrls);
+            jsonObject.put(Constants.TABLE, info.getTable());
             String strResult = HttpClient.post(url, jsonObject.toString());
             return null != buildJSONObject(strResult);
         } catch (JSONException e) {
