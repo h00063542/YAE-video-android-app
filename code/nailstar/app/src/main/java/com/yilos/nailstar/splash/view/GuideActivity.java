@@ -4,16 +4,18 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.shizhefei.view.indicator.FixedIndicatorView;
-import com.shizhefei.view.indicator.Indicator;
 import com.shizhefei.view.indicator.IndicatorViewPager;
 import com.yilos.nailstar.R;
+import com.yilos.nailstar.aboutme.entity.Sdcard;
 import com.yilos.nailstar.main.MainActivity;
+import com.yilos.nailstar.util.SettingUtil;
+
+import java.util.ArrayList;
 
 /**
  * Created by sisilai on 15/11/24.
@@ -33,6 +35,15 @@ public class GuideActivity extends FragmentActivity {
         indicatorViewPager = new IndicatorViewPager(indicator, viewPager);
         inflate = LayoutInflater.from(getApplicationContext());
         indicatorViewPager.setAdapter(adapter);
+        initApplicationSetting();
+    }
+    
+    private void initApplicationSetting() {
+        SettingUtil.setFirstFlag(false);
+        SettingUtil.setAllowNoWifi(true);
+        ArrayList<Sdcard> sdcardArrayList = SettingUtil.getSdcardList();
+        Sdcard sdcard = sdcardArrayList.get(sdcardArrayList.size() - 1);
+        SettingUtil.setSdcard(sdcard.getSdcardName(),sdcard.getSdcardPath());
     }
 
     public void setStartActivity() {

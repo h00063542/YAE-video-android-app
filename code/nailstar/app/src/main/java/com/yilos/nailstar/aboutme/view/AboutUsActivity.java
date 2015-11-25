@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.yilos.nailstar.R;
 import com.yilos.nailstar.framework.view.BaseActivity;
+import com.yilos.nailstar.util.Constants;
 import com.yilos.widget.titlebar.TitleBar;
 
 /**
@@ -27,7 +28,7 @@ public class AboutUsActivity extends BaseActivity {
         titleView.setText(R.string.app_name);
         titleBar.getBackButton(AboutUsActivity.this);
         Intent intent = getIntent();
-        String versionName = intent.getStringExtra("versionName");
+        String versionName = intent.getStringExtra(Constants.VERSION_NAME);
         versionNameText = (TextView) findViewById(R.id.version_name);
         versionNameText.setText( "Version " + versionName );
         userAgreement = (TextView) findViewById(R.id.user_agreement);

@@ -70,7 +70,7 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
         setContentView(R.layout.activity_person_info);
         initViews();
         Bundle bundle = this.getIntent().getExtras();
-        personInfo = (PersonInfo)bundle.getSerializable("personInfo");
+        personInfo = (PersonInfo)bundle.getSerializable(Constants.PERSON_INFO);
         setLoopView();
         initEvents();
     }
