@@ -7,11 +7,13 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.squareup.okhttp.OkHttpClient;
+import com.yilos.nailstar.framework.entity.NailStarApplicationContext;
 import com.yilos.nailstar.topic.entity.TopicInfo;
 import com.yilos.nailstar.util.Constants;
 import com.yilos.nailstar.util.FileUtils;
 import com.yilos.nailstar.util.HttpClient;
 import com.yilos.nailstar.util.LoggerFactory;
+import com.yilos.nailstar.util.SettingUtil;
 
 import org.apache.log4j.Logger;
 
@@ -27,11 +29,13 @@ import java.util.List;
  */
 public class DownLoadTaskManager {
 
-    private static Logger logger = LoggerFactory.getLogger(DownLoadTaskManager.class);
+    private static final String DEFAULT_PATH = Constants.YILOS_NAILSTAR_VIDEOS_PATH;
+
+    private static final String videoPath = "/yilos/nailstar/videos";
 
     private static final String DOWNLOAD_INFO_FILE = "download_info";
 
-    private String path = Constants.YILOS_NAILSTAR_VIDEOS_PATH;
+    private static Logger logger = LoggerFactory.getLogger(DownLoadTaskManager.class);
 
     private ObjectMapper objectMapper = new ObjectMapper();
 
@@ -75,6 +79,8 @@ public class DownLoadTaskManager {
             return false;
         }
 
+        String path = getDownloadPath();
+
         // 判断文件是否存在
         boolean isFileExist = false;
         File file = new File(path, topicInfo.getTitle() + ".mp4");
@@ -109,6 +115,9 @@ public class DownLoadTaskManager {
 
         final DownLoadInfo downLoadInfo = new DownLoadInfo(topicInfo);
         downLoadInfo.setStatus(DownloadConstants.DOWNLOADING);
+        String path = getDownloadPath();
+        // 保存存储路径
+        downLoadInfo.setPath(new File(path, downLoadInfo.getTitle() + ".mp4").getPath());
 
         // 如果之前保留了下载信息，则删除
         for (Iterator<DownLoadInfo> iterator = downLoadInfoList.iterator(); iterator.hasNext(); ) {
@@ -168,7 +177,7 @@ public class DownLoadTaskManager {
         }
 
         try {
-            FileUtils.writeToFile(new File(path, DOWNLOAD_INFO_FILE), objectMapper.writeValueAsString(downLoadInfoList));
+            FileUtils.writeToFile(new File(getDownloadInfoPath(), DOWNLOAD_INFO_FILE), objectMapper.writeValueAsString(downLoadInfoList));
         } catch (JsonProcessingException e) {
             logger.error("deleteDownLoadVideo writeToFile failed", e);
         }
@@ -177,7 +186,7 @@ public class DownLoadTaskManager {
         pauseDownLoadTask(downLoadInfo);
 
         // 如果视频文件已经存在，则删除视频文件
-        File file = new File(path, downLoadInfo.getTitle() + ".mp4");
+        File file = new File(downLoadInfo.getPath());
         if (file.exists()) {
             file.delete();
         }
@@ -220,7 +229,7 @@ public class DownLoadTaskManager {
             @Override
             public void run() {
 
-                File downloadInfoFile = new File(path, DOWNLOAD_INFO_FILE);
+                File downloadInfoFile = new File(getDownloadInfoPath(), DOWNLOAD_INFO_FILE);
 
                 if (!downloadInfoFile.exists()) {
                     return;
@@ -253,9 +262,7 @@ public class DownLoadTaskManager {
             @Override
             public void run() {
 
-                // 保存存储路径
-                downLoadInfo.setPath(new File(path, downLoadInfo.getTitle() + ".mp4").getPath());
-
+                String path = new File(downLoadInfo.getPath()).getParent();
                 // 保存视频图片，讲师图片
                 Bitmap image = imageLoader.loadImageSync(topicInfo.getThumbUrl());
                 File imageFile = new File(path, downLoadInfo.getTitle() + ".jpg");
@@ -286,7 +293,7 @@ public class DownLoadTaskManager {
 
                 // 下载信息保存
                 try {
-                    FileUtils.writeToFile(new File(path, DOWNLOAD_INFO_FILE), objectMapper.writeValueAsString(downLoadInfoList));
+                    FileUtils.writeToFile(new File(getDownloadInfoPath(), DOWNLOAD_INFO_FILE), objectMapper.writeValueAsString(downLoadInfoList));
                 } catch (JsonProcessingException e) {
                     logger.error("saveDownloadInfo writeToFile failed", e);
                 }
@@ -297,6 +304,7 @@ public class DownLoadTaskManager {
 
     private void startDownloadTask(final DownLoadInfo downLoadInfo) {
 
+        String path = new File(downLoadInfo.getPath()).getParent();
         final DownLoadTask downLoadTask = new DownLoadTask(client, downLoadInfo.getUrl(), path, downLoadInfo.getTitle() + ".mp4");
         downLoadTask.setProgressListener(new ProgressListener() {
             @Override
@@ -322,7 +330,7 @@ public class DownLoadTaskManager {
                     }
 
                     try {
-                        FileUtils.writeToFile(new File(path, DOWNLOAD_INFO_FILE), objectMapper.writeValueAsString(downLoadInfoList));
+                        FileUtils.writeToFile(new File(getDownloadInfoPath(), DOWNLOAD_INFO_FILE), objectMapper.writeValueAsString(downLoadInfoList));
                     } catch (JsonProcessingException e) {
                         logger.error("startDownloadTask writeToFile failed", e);
                     }
@@ -345,4 +353,19 @@ public class DownLoadTaskManager {
         }).start();
     }
 
+    private String getDownloadPath() {
+        String path = DEFAULT_PATH;
+        if (SettingUtil.getSdcardPath() != null && !"".equals(SettingUtil.getSdcardPath())) {
+            path = SettingUtil.getSdcardPath() + videoPath;
+        }
+        return path;
+    }
+
+    private String getDownloadInfoPath() {
+        String path = DEFAULT_PATH;
+        if (NailStarApplicationContext.getInstance().getFileDir().getPath() != null && !"".equals(NailStarApplicationContext.getInstance().getFileDir().getPath())) {
+            path = NailStarApplicationContext.getInstance().getFileDir().getPath();
+        }
+        return path;
+    }
 }

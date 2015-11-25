@@ -58,7 +58,6 @@ public class SplashActivity extends AppCompatActivity {
                         Intent intent;
                         if (SettingUtil.getFirstFlag()) {
                             intent = new Intent(SplashActivity.this, GuideActivity.class);
-                            SettingUtil.setFirstFlag(false);
                         } else {
                             intent = new Intent(SplashActivity.this, MainActivity.class);
                         }
