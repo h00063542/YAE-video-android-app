@@ -46,8 +46,6 @@ public class ImageCacheView extends ImageView implements ImageLoadingListener, I
     public ImageCacheView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
 
-        setBackgroundColor(ContextCompat.getColor(getContext(), R.color.xk3));
-
         super.setOnClickListener(this);
     }
 

@@ -35,14 +35,11 @@ import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
-import android.view.View;
 
-import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
-import com.nostra13.universalimageloader.core.listener.ImageLoadingProgressListener;
 import com.yilos.widget.R;
 import com.yilos.widget.view.ImageCacheView;
 
-public class CircleImageView extends ImageCacheView implements ImageLoadingListener, ImageLoadingProgressListener, View.OnClickListener {
+public class CircleImageView extends ImageCacheView {
 
     private static final ScaleType SCALE_TYPE = ScaleType.CENTER_CROP;
 
@@ -88,14 +85,10 @@ public class CircleImageView extends ImageCacheView implements ImageLoadingListe
 
     public CircleImageView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
-
-        setOnClickListener(this);
     }
 
     public CircleImageView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-
-        setOnClickListener(this);
 
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.CircleImageView, defStyle, 0);
 
@@ -105,7 +98,6 @@ public class CircleImageView extends ImageCacheView implements ImageLoadingListe
         mFillColor = a.getColor(R.styleable.CircleImageView_civ_fill_color, DEFAULT_FILL_COLOR);
 
         a.recycle();
-
         init();
     }
 
