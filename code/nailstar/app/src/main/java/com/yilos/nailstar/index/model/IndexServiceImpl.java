@@ -82,7 +82,10 @@ public class IndexServiceImpl implements IndexService{
                 poster.setActivityUrl(posterObj.getString("activityUrl"));
                 poster.setTopicId(posterObj.getString("topicId"));
                 poster.setType(posterObj.getString("type"));
-                result.add(poster);
+
+                if(poster.getType() == "video") {
+                    result.add(poster);
+                }
             }
 
             return result;
