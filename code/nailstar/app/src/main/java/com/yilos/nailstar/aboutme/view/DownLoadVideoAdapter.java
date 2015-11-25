@@ -110,7 +110,7 @@ public class DownLoadVideoAdapter extends BaseAdapter {
 
         if (downLoadInfo.getStatus() == DownloadConstants.DOWNLOADING) {
             holder.downloadOperation.setImageResource(R.mipmap.suspend_video);
-            holder.downloadOperation.setOnClickListener(new View.OnClickListener() {
+            holder.downloadImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     downloadPresenter.pauseDownLoadTask(downLoadInfo);
@@ -118,7 +118,7 @@ public class DownLoadVideoAdapter extends BaseAdapter {
             });
         } else if (downLoadInfo.getStatus() == DownloadConstants.DOWNLOAD_FINISH) {
             holder.downloadOperation.setImageResource(R.mipmap.play_video);
-            holder.downloadOperation.setOnClickListener(new View.OnClickListener() {
+            holder.downloadImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent downloadVideoPlayer = new Intent(context, DownloadVideoPlayer.class);
@@ -129,7 +129,7 @@ public class DownLoadVideoAdapter extends BaseAdapter {
             });
         } else if (downLoadInfo.getStatus() == DownloadConstants.DOWNLOAD_STOP) {
             holder.downloadOperation.setImageResource(R.mipmap.icon_download_white);
-            holder.downloadOperation.setOnClickListener(new View.OnClickListener() {
+            holder.downloadImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     downloadPresenter.resumeDownLoadTask(downLoadInfo);

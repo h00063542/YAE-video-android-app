@@ -139,13 +139,13 @@ public class LessionPresenter {
                     leftTime.append("0");
                 }
                 leftTime.append(hours);
-                leftTime.append(":");
+                leftTime.append(" : ");
 
                 if (minutes < 10) {
                     leftTime.append("0");
                 }
                 leftTime.append(minutes);
-                leftTime.append(":");
+                leftTime.append(" : ");
 
                 if (seconds < 10) {
                     leftTime.append("0");
