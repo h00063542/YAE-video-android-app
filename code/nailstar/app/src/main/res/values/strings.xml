@@ -186,7 +186,14 @@
     <string name="index_commodity_recommend_header_text">商品推荐</string>
     <string name="index_commodity_hot_1_price_unit">¥</string>
 
-
     <string name="has_been_reply">已回复</string>
     <string name="title_activity_my_favourite">收藏</string>
+
+    <!-- 内容为空时候显示的提示语句 -->
+    <string name="require_lesson_empty">你还没有求过教程</string>
+    <string name="require_lesson_empty_tips">不用再苦苦想制作方法啦~"</string>
+    <string name="message_empty">暂时没有消息</string>
+
+    <string name="reply_me">回复我的</string>
+    <string name="system_message">系统消息</string>
 </resources>
