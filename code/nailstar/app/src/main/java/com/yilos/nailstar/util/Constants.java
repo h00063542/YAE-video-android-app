@@ -212,4 +212,6 @@ public class Constants {
     public static final String SDCARD_PATH = "sdcard_path";
     public static final String VERSION_NAME = "version_name";
     public static final String PERSON_INFO = "personInfo";
+
+    public static final int PERSON_INFO_NAME_MAX_LENGTH = 8;
 }

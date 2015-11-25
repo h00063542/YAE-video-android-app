@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -60,7 +61,7 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
             return;
         }
         showShortToast(R.string.person_info_update_succeed);
-        loginAPI.saveLoginStatus(loginAPI.getLoginUserName(),personInfo);
+        loginAPI.saveLoginStatus(loginAPI.getLoginUserName(), personInfo);
         finish();
     }
 
@@ -102,7 +103,9 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
         identityText.setText(IdentityUtil.getIdentity(personInfo.getType()));
         nickNameText.setText(personInfo.getNickname());
         profileText.setText(personInfo.getProfile());
-        circleImageView.setImageSrc(personInfo.getPhotoUrl());
+        if (personInfo.getPhotoUrl() != "" || !personInfo.getPhotoUrl().isEmpty()) {
+            circleImageView.setImageSrc(personInfo.getPhotoUrl());
+        }
         showError();
         final PersonInfoPresenter personInfoPresenter = PersonInfoPresenter.getInstance(this);
         titleBar.getBackButton(PersonInfoActivity.this);
@@ -120,9 +123,13 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
         });
 
         nickNameText.addTextChangedListener(new TextWatcher() {
+            private CharSequence temp;
+            private int selectionStart ;
+            private int selectionEnd ;
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                 showError();
+                temp  = s;
             }
 
             @Override
@@ -133,6 +140,15 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
             @Override
             public void afterTextChanged(Editable s) {
                 showError();
+                selectionStart = nickNameText.getSelectionStart();
+                selectionEnd = nickNameText.getSelectionEnd();
+                if (temp.length() > Constants.PERSON_INFO_NAME_MAX_LENGTH) {
+                    showShortToast(R.string.person_info_name_tips);
+                    s.delete(selectionStart-1, selectionEnd);
+                    int tempSelection = selectionStart;
+                    nickNameText.setText(s);
+                    nickNameText.setSelection(tempSelection);
+                }
             }
         });
         circleImageView.setOnClickListener(this);
@@ -155,8 +171,8 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
 
         LoopView loopView = new LoopView(this);
         ArrayList<String> list = new ArrayList();
-        for (int i = 1; i < 7; i++) {
-            list.add(IdentityUtil.getIdentity(i));
+        for (int i = 0; i < 6; i++) {
+            list.add(IdentityUtil.getIdentity(i + 1));
         }
 
         //设置是否循环播放
@@ -172,7 +188,7 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
         //设置原始数据
         loopView.setArrayList(list);
         //设置初始位置
-        loopView.setPosition(2);
+        loopView.setPosition(personInfo.getType() - 1);
         //设置字体大小
         loopView.setTextSize(17);
 
