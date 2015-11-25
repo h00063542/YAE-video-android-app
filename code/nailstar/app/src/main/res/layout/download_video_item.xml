@@ -101,5 +101,14 @@
 
     </LinearLayout>
 
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:text="@string/delete"
+        android:background="@drawable/gray_button"
+        android:textColor="@color/white"
+        android:layout_gravity="center_vertical"
+        android:id="@+id/deleteVideo" />
 
 </LinearLayout>

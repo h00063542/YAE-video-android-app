@@ -1,12 +1,14 @@
 package com.yilos.nailstar.aboutme.view;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -83,6 +85,7 @@ public class DownLoadVideoAdapter extends BaseAdapter {
             holder.downloadProgressBar = (ProgressBar) convertView.findViewById(R.id.downloadProgressBar);
             holder.downloadMessage = convertView.findViewById(R.id.downloadMessage);
             holder.downloadBytes = (TextView) convertView.findViewById(R.id.downloadBytes);
+            holder.deleteVideo = (Button) convertView.findViewById(R.id.deleteVideo);
 
             holder.downloadImage.getLayoutParams().width = screenWidth * 25 / 100;
             holder.downloadImage.getLayoutParams().height = screenWidth * 25 / 100;
@@ -141,6 +144,13 @@ public class DownLoadVideoAdapter extends BaseAdapter {
 
         holder.downloadTopic.setText(downLoadInfo.getTitle());
 
+        holder.deleteVideo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                downloadPresenter.deleteVideoConfirm(downLoadInfo);
+            }
+        });
+
         handleDownloadProcess(downLoadInfo, holder);
 
         return convertView;
@@ -173,5 +183,6 @@ public class DownLoadVideoAdapter extends BaseAdapter {
         public ProgressBar downloadProgressBar;
         public View downloadMessage;
         public TextView downloadBytes;
+        public Button deleteVideo;
     }
 }
