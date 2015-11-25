@@ -7,6 +7,7 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.shizhefei.view.indicator.FixedIndicatorView;
 import com.shizhefei.view.indicator.IndicatorViewPager;
@@ -22,10 +23,12 @@ import java.util.ArrayList;
  */
 
 public class GuideActivity extends FragmentActivity {
+    private LinearLayout guideItemLayout;
     private IndicatorViewPager indicatorViewPager;
     private LayoutInflater inflate;
-    private int[] images = { R.mipmap.guide_p1,R.mipmap.guide_p2,R.mipmap.guide_p3};
+    private int[] images = {R.mipmap.guide_p1, R.mipmap.guide_p2, R.mipmap.guide_p3};
     private FixedIndicatorView indicator;
+
     @Override
     protected void onCreate(Bundle arg0) {
         super.onCreate(arg0);
@@ -37,13 +40,13 @@ public class GuideActivity extends FragmentActivity {
         indicatorViewPager.setAdapter(adapter);
         initApplicationSetting();
     }
-    
+
     private void initApplicationSetting() {
         SettingUtil.setFirstFlag(false);
         SettingUtil.setAllowNoWifi(true);
         ArrayList<Sdcard> sdcardArrayList = SettingUtil.getSdcardList();
         Sdcard sdcard = sdcardArrayList.get(sdcardArrayList.size() - 1);
-        SettingUtil.setSdcard(sdcard.getSdcardName(),sdcard.getSdcardPath());
+        SettingUtil.setSdcard(sdcard.getSdcardName(), sdcard.getSdcardPath());
     }
 
     public void setStartActivity() {
@@ -64,20 +67,37 @@ public class GuideActivity extends FragmentActivity {
         @Override
         public View getViewForPage(int position, View convertView, ViewGroup container) {
             if (convertView == null) {
-                convertView = new View(getApplicationContext());
-                convertView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-            }
-            if (position == images.length - 1) {
-                convertView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        setStartActivity();
-                    }
-                });
-                indicator.setVisibility(View.GONE);
-                convertView.setBackgroundResource(images[position]);
-            } else {
-                convertView.setBackgroundResource(images[position]);
+                convertView = inflate.inflate(R.layout.activity_guide_item, container, false);
+                guideItemLayout = (LinearLayout) convertView.findViewById(R.id.guide_item);
+                int color;
+                switch (position) {
+                    case 0:
+                        color = getApplicationContext().getResources().getColor(R.color.guide_yellow);
+                        guideItemLayout.setBackgroundColor(color);
+                        break;
+                    case 1:
+                        color = getApplicationContext().getResources().getColor(R.color.guide_pink);
+                        guideItemLayout.setBackgroundColor(color);
+                        break;
+                    case 2:
+                        color = getApplicationContext().getResources().getColor(R.color.guide_blue);
+                        guideItemLayout.setBackgroundColor(color);
+                        break;
+                    default:
+                        break;
+                }
+                if (position == images.length - 1) {
+                    convertView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            setStartActivity();
+                        }
+                    });
+                    indicator.setVisibility(View.GONE);
+                    convertView.setBackgroundResource(images[position]);
+                } else {
+                    convertView.setBackgroundResource(images[position]);
+                }
             }
             return convertView;
         }
