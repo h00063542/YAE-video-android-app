@@ -155,7 +155,7 @@ public class ImageCacheView extends ImageView implements ImageLoadingListener, I
             paint.setColor(Color.BLACK);
             int fontSize = getResources().getDimensionPixelSize(R.dimen.middle_text_size);
             paint.setTextSize(fontSize);
-            canvas.drawText("点击重试加载", (canvas.getWidth() - 6 * fontSize) / 2, (canvas.getHeight() - fontSize) / 2 - bitmap.getHeight(), paint);
+            canvas.drawText("点击重试加载", (canvas.getWidth() - 6 * fontSize) / 2, (canvas.getHeight() - fontSize) / 2 + bitmap.getHeight(), paint);
         }
     }
 
