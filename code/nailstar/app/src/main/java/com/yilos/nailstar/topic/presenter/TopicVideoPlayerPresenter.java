@@ -218,18 +218,19 @@ public class TopicVideoPlayerPresenter {
     }
 
 
-    public void downLoadTopicImage(final String topicId, final String url) {
-        String filePath = saveBitmap2File(topicId, url);
+    public void downLoadTopicImage(final String topicId, final String topicName, int index, final String url) {
+        String filePath = saveBitmap2File(topicId, topicName, index, url);
         topicVideoPlayerView.setDownloadTopicImageStatus(!StringUtil.isEmpty(filePath), filePath);
     }
 
-    public void downloadTopicImageText(final String topicId, final ArrayList<String> urls) {
+    public void downloadTopicImageText(final String topicId, final String topicName, final ArrayList<String> urls) {
         new Thread() {
             @Override
             public void run() {
                 super.run();
+                int index = 1;
                 for (final String url : urls) {
-                    String filePath = saveBitmap2File(topicId, url);
+                    String filePath = saveBitmap2File(topicId, topicName, index++, url);
                     topicVideoPlayerView.setDownloadTopicImageTextStatus(!StringUtil.isEmpty(filePath), filePath);
                 }
             }
@@ -327,15 +328,8 @@ public class TopicVideoPlayerPresenter {
         return !StringUtil.isEmpty(topicVideoInfo.getOssUrl()) ? topicVideoInfo.getOssUrl() : topicVideoInfo.getCcUrl();
     }
 
-    public String buildPictureLocalFileName(final String topicId, final String imageSrc) {
-        if (StringUtil.isEmpty(topicId) || StringUtil.isEmpty(imageSrc)) {
-            return Constants.EMPTY_STRING;
-        }
-        return new StringBuffer().append(imageSrc.substring(imageSrc.lastIndexOf("/"), imageSrc.length())).append(Constants.PNG_SUFFIX).toString();
-    }
-
-    private String saveBitmap2File(String topicId, String url) {
+    private String saveBitmap2File(String topicId, final String topicName, int index, String url) {
         Bitmap bitmap = imageLoader.loadImageSync(url);
-        return FileUtils.saveBitMap(bitmap, Constants.YILOS_NAILSTAR_PICTURE_PATH, buildPictureLocalFileName(topicId, url));
+        return FileUtils.saveBitMap(bitmap, Constants.YILOS_NAILSTAR_PICTURE_PATH, new StringBuffer().append(topicName).append(Constants.UNDERLINE).append(index).append(Constants.PNG_SUFFIX).toString());
     }
 }
