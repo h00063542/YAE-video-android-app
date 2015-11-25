@@ -48,9 +48,9 @@ public class MainActivity extends BaseActivity {
                     case R.id.main_tab_requirelession:
                         setTabSelection(1);
                         break;
-                    case R.id.main_tab_mall:
-                        setTabSelection(2);
-                        break;
+//                    case R.id.main_tab_mall:
+//                        setTabSelection(2);
+//                        break;
                     case R.id.main_tab_aboutme:
                         setTabSelection(3);
                         break;
