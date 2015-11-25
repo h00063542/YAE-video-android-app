@@ -21,7 +21,6 @@ import java.util.ArrayList;
 public class RequireLessonPresenter {
 
     private RequireLessonListService requireLessonListService = RequireLessonListServiceImpl.getInstance();
-    //new RequireLessonListServiceImpl();
     private static RequireLessonPresenter requireLessonPresenter = new RequireLessonPresenter();
     private RequireLessonListActivity requireLessonListActivity;
 
@@ -32,6 +31,7 @@ public class RequireLessonPresenter {
 
     //获取求教程列表
     public void getRequireLessonList(final String uid) {
+        requireLessonListActivity.showLoading(null);
         TaskManager.Task loadRequireLessonList = new TaskManager.BackgroundTask() {
             @Override
             public Object doWork(Object data) {
@@ -50,6 +50,7 @@ public class RequireLessonPresenter {
             @Override
             public ArrayList<RequireLesson> doWork(ArrayList<RequireLesson> data) {
                 requireLessonListActivity.getRequireLessonList(data);
+                requireLessonListActivity.hideLoading();
                 return null;
             }
         };

@@ -99,6 +99,7 @@
     <string name="person_info_update_fail">个人资料更新失败，请重试</string>
     <string name="person_info_update_succeed">个人资料更新成功</string>
     <string name="person_info_name_tips">昵称不能超过八个字哦~</string>
+    <string name="setting_person_info_show_tips">正在重置个人资料...</string>
 
     <!-- 求教程-->
     <string name="di">第</string>
@@ -201,5 +202,6 @@
     <string name="favourite_empty_tips">把自己想学的教程放进来吧</string>
     <string name="reply_me">回复我的</string>
     <string name="system_message">系统消息</string>
+    <string name="reply_other_show_tips">正在回复对方...</string>
 
 </resources>

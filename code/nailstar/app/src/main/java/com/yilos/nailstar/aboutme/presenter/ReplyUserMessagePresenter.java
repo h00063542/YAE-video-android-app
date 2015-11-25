@@ -1,5 +1,6 @@
 package com.yilos.nailstar.aboutme.presenter;
 
+import com.yilos.nailstar.R;
 import com.yilos.nailstar.aboutme.entity.MessageComment;
 import com.yilos.nailstar.aboutme.entity.UserMessage;
 import com.yilos.nailstar.aboutme.model.UserMessageService;
@@ -26,6 +27,8 @@ public class ReplyUserMessagePresenter {
 
     //回复我的消息
     public void replyUserMessage(final MessageComment messageComment, final String topicId) {
+        String tips = userMessageReplyActivity.getResources().getString(R.string.reply_other_show_tips);
+        userMessageReplyActivity.showLoading(tips);
         TaskManager.Task setComment = new TaskManager.BackgroundTask() {
             @Override
             public Object doWork(Object data) {
@@ -44,6 +47,7 @@ public class ReplyUserMessagePresenter {
             @Override
             public UserMessage doWork(MessageComment data) {
                 userMessageReplyActivity.replyUserMessage(data);
+                userMessageReplyActivity.hideLoading();
                 return null;
             }
         };
