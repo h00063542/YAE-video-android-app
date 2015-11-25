@@ -1,12 +1,16 @@
 package com.yilos.nailstar.splash.view;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.shizhefei.view.indicator.FixedIndicatorView;
@@ -22,7 +26,7 @@ import java.util.ArrayList;
  * Created by sisilai on 15/11/24.
  */
 
-public class GuideActivity extends FragmentActivity {
+public class GuideActivity extends AppCompatActivity {
     private LinearLayout guideItemLayout;
     private IndicatorViewPager indicatorViewPager;
     private LayoutInflater inflate;
@@ -31,6 +35,12 @@ public class GuideActivity extends FragmentActivity {
 
     @Override
     protected void onCreate(Bundle arg0) {
+        // 设置不显示状态栏
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        // 设置不允许旋转屏幕
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
         super.onCreate(arg0);
         setContentView(R.layout.activity_guide);
         ViewPager viewPager = (ViewPager) findViewById(R.id.guide_viewPager);
@@ -69,19 +79,15 @@ public class GuideActivity extends FragmentActivity {
             if (convertView == null) {
                 convertView = inflate.inflate(R.layout.activity_guide_item, container, false);
                 guideItemLayout = (LinearLayout) convertView.findViewById(R.id.guide_item);
-                int color;
                 switch (position) {
                     case 0:
-                        color = getApplicationContext().getResources().getColor(R.color.guide_yellow);
-                        guideItemLayout.setBackgroundColor(color);
+                        guideItemLayout.setBackgroundResource(R.color.guide_yellow);
                         break;
                     case 1:
-                        color = getApplicationContext().getResources().getColor(R.color.guide_pink);
-                        guideItemLayout.setBackgroundColor(color);
+                        guideItemLayout.setBackgroundResource(R.color.guide_pink);
                         break;
                     case 2:
-                        color = getApplicationContext().getResources().getColor(R.color.guide_blue);
-                        guideItemLayout.setBackgroundColor(color);
+                        guideItemLayout.setBackgroundResource(R.color.guide_blue);
                         break;
                     default:
                         break;
@@ -94,10 +100,8 @@ public class GuideActivity extends FragmentActivity {
                         }
                     });
                     indicator.setVisibility(View.GONE);
-                    convertView.setBackgroundResource(images[position]);
-                } else {
-                    convertView.setBackgroundResource(images[position]);
                 }
+                ((ImageView)guideItemLayout.findViewById(R.id.guide_item_image)).setImageResource(images[position]);
             }
             return convertView;
         }
