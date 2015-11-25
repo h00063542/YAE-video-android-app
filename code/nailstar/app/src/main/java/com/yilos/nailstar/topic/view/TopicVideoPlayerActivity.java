@@ -506,8 +506,12 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
                     return;
                 }
                 // 保存单张图片
-                PhotoView photoView = ((PhotoView) ((FrameLayout) mZoomInImageTextViewPager.getChildAt(0)).getChildAt(0));
-                mTopicVideoPlayerPresenter.downLoadTopicImage(mTopicId, photoView.getImageSrc());
+                int index = mZoomInImageTextViewPager.getCurrentItem();
+                if (mTopicImageTextInfo.getPictures().size() > index) {
+                    mTopicVideoPlayerPresenter.downLoadTopicImage(mTopicId, mTopicInfo.getTitle(), index + 1, mTopicImageTextInfo.getPictures().get(index));
+                } else {
+                    showShortToast(getString(R.string.operation_fail));
+                }
             }
         });
 
@@ -530,7 +534,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
                 mRpbDownloadTopicImageText.setMax(mTopicImageTextInfo.getPictures().size());
                 mRpbDownloadTopicImageText.setVisibility(View.VISIBLE);
                 mDownloadTopicImageTextIndex = 0;
-                mTopicVideoPlayerPresenter.downloadTopicImageText(mTopicId, mTopicImageTextInfo.getPictures());
+                mTopicVideoPlayerPresenter.downloadTopicImageText(mTopicId, mTopicInfo.getTitle(), mTopicImageTextInfo.getPictures());
             }
         });
 
@@ -1157,7 +1161,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         if (!isSuccess) {
             autoSetTopicLikeStatus = true;
             mCbTopicTabLike.setChecked(!isLike);
-            showShortToast(getString(R.string.set_topic_status_fail));
+            showShortToast(getString(R.string.operation_fail));
         }
     }
 
@@ -1169,7 +1173,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         if (!isSuccess) {
             autoSetTopicCollectionStatus = true;
             mCbTopicTabCollection.setChecked(!isCollection);
-            showShortToast(getString(R.string.set_topic_status_fail));
+            showShortToast(getString(R.string.operation_fail));
         }
     }
 

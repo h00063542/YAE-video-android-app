@@ -238,10 +238,11 @@ public class TopicCommentAdapter extends BaseAdapter {
 
         // -----------------设置评论回复内容-----------------
         if (!CollectionUtil.isEmpty(topicCommentInfo.getReplies())) {
-            int index = 0;
+            boolean isFirst = true;
             for (TopicCommentReplyInfo topicCommentReplyInfo : topicCommentInfo.getReplies()) {
                 TextView topicCommentReplyTv = buildCommentReplyTextView(topicCommentInfo, topicCommentReplyInfo);
-                if (index == 0) {
+                if (isFirst) {
+                    isFirst = false;
                     // 设置padding
                     topicCommentReplyTv.setPadding(mCommentReplyPaddingLeft, mCommentReplyPaddingTop
                             , mCommentReplyPaddingRight, mCommentReplyPaddingBottom);
@@ -250,7 +251,6 @@ public class TopicCommentAdapter extends BaseAdapter {
                             , mCommentReplyPaddingRight, mCommentReplyPaddingBottom);
                 }
                 holder.commentReplayLayout.addView(topicCommentReplyTv);
-                index++;
             }
         }
 
