@@ -490,7 +490,7 @@ public class TopicServiceImpl implements ITopicService {
         if (!NailStarApplicationContext.getInstance().isNetworkConnected()) {
             throw new NetworkDisconnectException("网络没有连接");
         }
-        String url = URL_PREFIX + "topics/" + topicId + (isChecked ? "/actions" : "cancel");
+        String url = URL_PREFIX + "topics/" + topicId + (isChecked ? "/actions" : "/cancel");
         try {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put(Constants.UID, LoginAPI.getInstance().getLoginUserId());
