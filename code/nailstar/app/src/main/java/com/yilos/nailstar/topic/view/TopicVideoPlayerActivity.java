@@ -203,8 +203,10 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
     private boolean initTopicCommentsFinish = false;
     // topic状态信息（赞，收藏）是否初始化完成
     private boolean initUserTopicStatusFinish = false;
-    // 是否自动设置的topic状态信息（赞，收藏）
-    private boolean autoSetTopicStatus = false;
+    // 是否自动设置的topic赞状态信息
+    private boolean autoSetTopicLikeStatus = false;
+    // 是否自动设置的topic收藏状态信息
+    private boolean autoSetTopicCollectionStatus = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -538,14 +540,18 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (checkAndShowNetworkStatus()) {
-                    autoSetTopicStatus = true;
+                    autoSetTopicLikeStatus = true;
                     mCbTopicTabLike.setChecked(!isChecked);
                     return;
                 }
                 if (!LoginAPI.getInstance().isLogin()) {
-                    autoSetTopicStatus = true;
+                    autoSetTopicLikeStatus = true;
                     mCbTopicTabLike.setChecked(false);
                     LoginAPI.getInstance().gotoLoginPage(TopicVideoPlayerActivity.this);
+                    return;
+                }
+                if (autoSetTopicLikeStatus) {
+                    autoSetTopicLikeStatus = false;
                     return;
                 }
                 mTopicVideoPlayerPresenter.setTopicLikeStatus(mTopicId, isChecked);
@@ -557,18 +563,18 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (checkAndShowNetworkStatus()) {
-                    autoSetTopicStatus = true;
+                    autoSetTopicCollectionStatus = true;
                     mCbTopicTabCollection.setChecked(!isChecked);
                     return;
                 }
                 if (!LoginAPI.getInstance().isLogin()) {
-                    autoSetTopicStatus = true;
+                    autoSetTopicCollectionStatus = true;
                     mCbTopicTabCollection.setChecked(false);
                     LoginAPI.getInstance().gotoLoginPage(TopicVideoPlayerActivity.this);
                     return;
                 }
-                if (autoSetTopicStatus) {
-                    autoSetTopicStatus = false;
+                if (autoSetTopicCollectionStatus) {
+                    autoSetTopicCollectionStatus = false;
                     return;
                 }
                 mTopicVideoPlayerPresenter.setTopicCollectionStatus(mTopicId, isChecked);
@@ -584,10 +590,6 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
                 }
                 if (!LoginAPI.getInstance().isLogin()) {
                     LoginAPI.getInstance().gotoLoginPage(TopicVideoPlayerActivity.this);
-                    return;
-                }
-                if (autoSetTopicStatus) {
-                    autoSetTopicStatus = false;
                     return;
                 }
                 addTopicComment();
@@ -1037,9 +1039,14 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         initUserTopicStatusFinish = true;
         checkInitFinish();
         if (null != topicStatusInfo) {
-            autoSetTopicStatus = true;
-            mCbTopicTabLike.setChecked(topicStatusInfo.isLike());
-            mCbTopicTabCollection.setChecked(topicStatusInfo.isCollect());
+            if (topicStatusInfo.isLike()) {
+                autoSetTopicLikeStatus = true;
+                mCbTopicTabLike.setChecked(topicStatusInfo.isLike());
+            }
+            if (topicStatusInfo.isCollect()) {
+                autoSetTopicCollectionStatus = true;
+                mCbTopicTabCollection.setChecked(topicStatusInfo.isCollect());
+            }
         }
     }
 
@@ -1147,12 +1154,22 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
 
     @Override
     public void setTopicLikeStatus(boolean isLike, boolean isSuccess) {
+        if (!isSuccess) {
+            autoSetTopicLikeStatus = true;
+            mCbTopicTabLike.setChecked(!isLike);
+            showShortToast(getString(R.string.set_topic_status_fail));
+        }
     }
 
     @Override
     public void setTopicCollectionStatus(boolean isCollection, boolean isSuccess) {
         if (isCollection && isSuccess) {
             showShortToast(getString(R.string.add_topic_collection));
+        }
+        if (!isSuccess) {
+            autoSetTopicCollectionStatus = true;
+            mCbTopicTabCollection.setChecked(!isCollection);
+            showShortToast(getString(R.string.set_topic_status_fail));
         }
     }
 
