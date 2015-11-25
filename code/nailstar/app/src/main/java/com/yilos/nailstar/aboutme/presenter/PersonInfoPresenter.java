@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory;
 
 import com.alibaba.sdk.android.oss.callback.SaveCallback;
 import com.alibaba.sdk.android.oss.model.OSSException;
+import com.yilos.nailstar.R;
 import com.yilos.nailstar.aboutme.entity.PersonInfo;
 import com.yilos.nailstar.aboutme.model.AboutMeService;
 import com.yilos.nailstar.aboutme.model.AboutMeServiceImpl;
@@ -38,6 +39,8 @@ public class PersonInfoPresenter {
 
     //设置个人资料
     public void setPersonInfo(final PersonInfo personInfo) {
+        String tips = personInfoActivity.getResources().getString(R.string.setting_person_info_show_tips);
+        personInfoActivity.showLoading(tips);
         TaskManager.Task setPersonInfo = new TaskManager.BackgroundTask() {
             @Override
             public Object doWork(Object data) {
@@ -55,6 +58,7 @@ public class PersonInfoPresenter {
         TaskManager.UITask<PersonInfo> setPersonInfoUITask = new TaskManager.UITask<PersonInfo>() {
             @Override
             public ArrayList<PersonInfo> doWork(PersonInfo data) {
+                personInfoActivity.hideLoading();
                 personInfoActivity.setPersonInfo(data);
                 return null;
             }

@@ -26,6 +26,7 @@ public class SystemMessagePresenter {
 
     //获取系统消息列表
     public void getSystemMessageList(final long lt) {
+        messageActivity.showLoading(null);
         TaskManager.Task loadSystemMessageList = new TaskManager.BackgroundTask() {
             @Override
             public Object doWork(Object data) {
@@ -44,6 +45,7 @@ public class SystemMessagePresenter {
             @Override
             public List<Object> doWork(List<Object> data) {
                 messageActivity.getSystemMessageList(data);
+                messageActivity.hideLoading();
                 return null;
             }
         };
