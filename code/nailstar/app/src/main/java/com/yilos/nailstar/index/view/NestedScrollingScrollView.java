@@ -17,6 +17,7 @@ public class NestedScrollingScrollView extends NestedScrollView {
     private int mTouchSlop;
     private NestedScrollingParentHelper nestedScrollingParentHelper;
     private NestedScrollingChildHelper nestedScrollingChildHelper;
+    private float downY;
 
     private ScrollViewListener scrollViewListener = null;
 
@@ -125,8 +126,15 @@ public class NestedScrollingScrollView extends NestedScrollView {
         int action = ev.getAction();
 
         if(action == MotionEvent.ACTION_DOWN) {
+            downY = ev.getY();
             super.onInterceptTouchEvent(ev);
             return false;
+        } else if(action == MotionEvent.ACTION_MOVE) {
+            if(Math.abs(ev.getY() - downY) > 100) {
+                return super.onInterceptTouchEvent(ev);
+            } else {
+                return false;
+            }
         }
 
         return super.onInterceptTouchEvent(ev);
