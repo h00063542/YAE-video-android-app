@@ -42,13 +42,13 @@
                 android:textColor="@drawable/main_tab_text_color"
                 android:text="求教程" />
 
-            <RadioButton
-                android:id="@+id/main_tab_mall"
-                style="@style/MMTabButton"
-                android:layout_weight="1.0"
-                android:drawableTop="@drawable/main_tab_circle_menus"
-                android:textColor="@drawable/main_tab_text_color"
-                android:text="商城" />
+            <!--<RadioButton-->
+                <!--android:id="@+id/main_tab_mall"-->
+                <!--style="@style/MMTabButton"-->
+                <!--android:layout_weight="1.0"-->
+                <!--android:drawableTop="@drawable/main_tab_circle_menus"-->
+                <!--android:textColor="@drawable/main_tab_text_color"-->
+                <!--android:text="商城" />-->
 
             <RadioButton
                 android:id="@+id/main_tab_aboutme"

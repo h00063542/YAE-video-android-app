@@ -86,6 +86,7 @@ public class IndexFragment extends Fragment implements IIndexView {
         super.onResume();
         posterBanner.play();
         ((BaseActivity)getActivity()).hideLoading();
+        indexPresenter.refreshCategory();
         refreshData();
     }
 
