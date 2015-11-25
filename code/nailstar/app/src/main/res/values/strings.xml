@@ -197,7 +197,9 @@
     <string name="require_lesson_empty">你还没有求过教程</string>
     <string name="require_lesson_empty_tips">不用再苦苦想制作方法啦~"</string>
     <string name="message_empty">暂时没有消息</string>
-
+    <string name="favourite_empty">收藏空空的</string>
+    <string name="favourite_empty_tips">把自己想学的教程放进来吧</string>
     <string name="reply_me">回复我的</string>
     <string name="system_message">系统消息</string>
+
 </resources>
