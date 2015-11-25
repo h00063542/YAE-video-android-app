@@ -71,8 +71,8 @@ public class NailStarApplication extends MultiDexApplication {
         File cacheDir = StorageUtils.getCacheDirectory(getApplicationContext());
 
         DisplayImageOptions options = new DisplayImageOptions.Builder()
-                .showImageOnLoading(R.mipmap.icon_loading)
-                .showImageOnFail(R.mipmap.icon_refresh)
+                .showImageOnLoading(R.drawable.ic_image_loading)
+                .showImageOnFail(R.drawable.ic_image_loading)
                 .resetViewBeforeLoading(false)  // default
                 .cacheInMemory(true) // default
                 .cacheOnDisk(true) // default

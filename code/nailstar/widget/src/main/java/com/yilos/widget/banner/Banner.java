@@ -50,6 +50,10 @@ public class Banner<T> extends MViewPager {
         setClipChildren(false);
     }
 
+    public void refreshView() {
+        addData();
+    }
+
     public Banner<T> play() {
         if(playing) {
             return this;
@@ -95,6 +99,10 @@ public class Banner<T> extends MViewPager {
             views.addAll(viewCreator.createViews());
         }
 
+        addData();
+    }
+
+    private void addData() {
         setAdapter(new BannerAdapter() {
             @Override
             public Object createItem(ViewGroup container, final int position) {
