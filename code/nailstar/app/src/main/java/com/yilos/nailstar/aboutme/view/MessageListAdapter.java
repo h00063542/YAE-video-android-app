@@ -2,12 +2,11 @@ package com.yilos.nailstar.aboutme.view;
 
 import android.app.Activity;
 import android.support.v4.view.PagerAdapter;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.yilos.nailstar.R;
 import com.yilos.nailstar.index.view.CustomRecyclerView;
 
 /**
@@ -17,25 +16,35 @@ public class MessageListAdapter extends PagerAdapter {
     private Activity activity;
 
     // 回复我的、系统消息显示控件
-    private CustomRecyclerView userMessageListView;
-    private CustomRecyclerView SystemMessageListView;
+    private View userMessageListView;
+    private View systemMessageListView;
 
     public MessageListAdapter(Activity activity) {
         this.activity = activity;
         // 初始化回复我的、系统消息Tab页
         userMessageListView = initMessageRecycleView();
-        SystemMessageListView = initMessageRecycleView();
+        systemMessageListView = initMessageRecycleView();
+    }
+
+    public void showEmptySystemMessageView() {
+        systemMessageListView.findViewById(R.id.message_list_empty).setVisibility(View.VISIBLE);
+        systemMessageListView.findViewById(R.id.message_list).setVisibility(View.GONE);
+    }
+
+    public void showEmptyUserMessageView() {
+        userMessageListView.findViewById(R.id.message_list_empty).setVisibility(View.VISIBLE);
+        userMessageListView.findViewById(R.id.message_list).setVisibility(View.GONE);
     }
 
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
-        RecyclerView newView = null;
+        View newView;
         switch (position) {
             case 0:
                 newView = userMessageListView;
                 break;
             case 1:
-                newView = SystemMessageListView;
+                newView = systemMessageListView;
                 break;
             default:
                 newView = new RecyclerView(activity);
@@ -64,9 +73,9 @@ public class MessageListAdapter extends PagerAdapter {
     public CharSequence getPageTitle(int position) {
         switch (position) {
             case 0:
-                return "回复我的";
+                return activity.getResources().getString(R.string.reply_me);
             case 1:
-                return "系统消息";
+                return activity.getResources().getString(R.string.system_message);
             default:
                 return "";
         }
@@ -77,19 +86,15 @@ public class MessageListAdapter extends PagerAdapter {
     }
 
     public CustomRecyclerView getUserMessageListView() {
-        return userMessageListView;
+        return (CustomRecyclerView) userMessageListView.findViewById(R.id.message_list);
     }
 
     public CustomRecyclerView getSystemMessageListView() {
-        return SystemMessageListView;
+        return (CustomRecyclerView) systemMessageListView.findViewById(R.id.message_list);
     }
 
-    private CustomRecyclerView initMessageRecycleView() {
-        final CustomRecyclerView view = new CustomRecyclerView(activity);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(activity,LinearLayoutManager.VERTICAL,false);
-        linearLayoutManager.setSmoothScrollbarEnabled(true);
-        view.setLayoutManager(linearLayoutManager);
-        return view;
+    private View initMessageRecycleView() {
+        return activity.getLayoutInflater().inflate(R.layout.activity_message_list, null);
     }
 }
 

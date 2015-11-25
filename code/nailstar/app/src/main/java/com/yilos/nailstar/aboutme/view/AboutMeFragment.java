@@ -285,8 +285,7 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
                 break;
             case R.id.about_me_my_info:
                 if (!loginAPI.isLogin()) {
-                    Intent goToLoginIntent = new Intent(getActivity(),LoginActivity.class);
-                    startActivity(goToLoginIntent);
+                    loginAPI.gotoLoginPage(getActivity());
                 } else {
 
                 }

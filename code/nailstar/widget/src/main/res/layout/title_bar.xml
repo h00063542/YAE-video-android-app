@@ -60,7 +60,7 @@
         android:layout_centerVertical="true"
         android:textColor="@color/white"
         android:textSize="@dimen/title_bar_size"
-        android:layout_marginRight="@dimen/title_bar_icon_padding"
+        android:padding="@dimen/title_bar_icon_padding"
         android:clickable="true"/>
     <ImageView
         android:visibility="gone"

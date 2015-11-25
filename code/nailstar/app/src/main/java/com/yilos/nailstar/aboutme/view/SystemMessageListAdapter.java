@@ -1,9 +1,7 @@
 package com.yilos.nailstar.aboutme.view;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +11,6 @@ import android.widget.TextView;
 
 import com.yilos.nailstar.R;
 import com.yilos.nailstar.aboutme.entity.SystemMessage;
-import com.yilos.nailstar.aboutme.entity.UserMessage;
 import com.yilos.nailstar.topic.view.TopicVideoPlayerActivity;
 import com.yilos.nailstar.util.Constants;
 import com.yilos.nailstar.util.DateUtil;

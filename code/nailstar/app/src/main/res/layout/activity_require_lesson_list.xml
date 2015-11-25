@@ -10,6 +10,32 @@
         android:id="@+id/require_lesson_list_title_bar"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"/>
+    <LinearLayout
+        android:visibility="gone"
+        android:id="@+id/require_lesson_empty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/require_lesson_empty"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/require_lesson_empty"
+            android:textSize="@dimen/large_text_size"
+            android:textColor="@color/z2"
+            android:layout_marginTop="@dimen/common_10_dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/require_lesson_empty_tips"
+            android:textColor="@color/z3"
+            android:layout_marginTop="@dimen/common_10_dp"
+            android:textSize="@dimen/middle_text_size"/>
+    </LinearLayout>
     <android.support.v7.widget.RecyclerView
         android:paddingLeft="@dimen/common_10_dp"
         android:paddingTop="@dimen/common_10_dp"
