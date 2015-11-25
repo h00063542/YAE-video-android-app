@@ -2,6 +2,7 @@ package com.yilos.nailstar.index.view;
 
 import android.content.Intent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.yilos.nailstar.framework.application.NailStarApplication;
@@ -31,16 +32,14 @@ public class PosterViewCreator implements Banner.ViewCreator<Poster> {
 
     @Override
     public List<View> createViews() {
-        final int height = NailStarApplication.getApplication().getHeightByScreenWidth(baseActivity, 7f/3f);
+        final int height = NailStarApplication.getApplication().getHeightByScreenWidth(baseActivity, 3f/7f);
 
         final List<View> views = new ArrayList<>(8);
         if (!CollectionUtil.isEmpty(posters)) {
             for (final Poster poster : posters) {
                 ImageCacheView imageCacheView = new ImageCacheView(baseActivity);
 
-                Banner.LayoutParams layoutParams = new Banner.LayoutParams();
-                layoutParams.width = Banner.LayoutParams.MATCH_PARENT;
-                layoutParams.height = height;
+                ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, height);
                 imageCacheView.setLayoutParams(layoutParams);
                 imageCacheView.setAdjustViewBounds(true);
                 imageCacheView.setScaleType(ImageView.ScaleType.FIT_CENTER);
