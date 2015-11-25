@@ -200,9 +200,15 @@ public class Constants {
     public static final String USER_MESSAGE_ARRAY_LIST = "userMessageArrayList";
     public static final String SYSTEM_MESSAGE_LIST = "systemMessageList";
     public static final String HAS_BEEN_READ = "hasBeenRead";
-    public static final String COVER = "cover";
-    public static final String APPEND = "append";
     public static final int ZERO = 0;
     public static final String CANDIDATES = "candidates";
     public static final String NO = "no";
+
+
+    public static final String APPLICATION_SETTING = "application_setting";
+    public static final String ALLOW_NO_WIFI = "allow_no_wifi";
+    public static final String IS_FIRST_INTO_VERSION = "isFirstIntoVersion";
+    public static final String SDCARD_NAME = "sdcard_name";
+    public static final String SDCARD_PATH = "sdcard_path";
+    public static final String VERSION_NAME = "version_name";
 }
