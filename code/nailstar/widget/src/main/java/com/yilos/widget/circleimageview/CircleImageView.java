@@ -33,17 +33,16 @@ import android.net.Uri;
 import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
-import android.widget.ImageView;
 
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingProgressListener;
 import com.yilos.widget.R;
+import com.yilos.widget.view.ImageCacheView;
 
-public class CircleImageView extends ImageView implements ImageLoadingListener, ImageLoadingProgressListener, View.OnClickListener {
+public class CircleImageView extends ImageCacheView implements ImageLoadingListener, ImageLoadingProgressListener, View.OnClickListener {
 
     private static final ScaleType SCALE_TYPE = ScaleType.CENTER_CROP;
 
@@ -81,12 +80,6 @@ public class CircleImageView extends ImageView implements ImageLoadingListener, 
     private boolean mSetupPending;
     private boolean mBorderOverlay;
 
-    private String imageSrc = null;
-
-    private boolean loadSuccess = false;
-
-    private boolean loading = false;
-
     public CircleImageView(Context context) {
         super(context);
 
@@ -95,21 +88,12 @@ public class CircleImageView extends ImageView implements ImageLoadingListener, 
 
     public CircleImageView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
-//        int bg = Color.rgb((int) Math.floor(Math.random() * 128) + 64,
-//                (int) Math.floor(Math.random() * 128) + 64,
-//                (int) Math.floor(Math.random() * 128) + 64);
-//        setBackgroundColor(bg);
 
         setOnClickListener(this);
     }
 
     public CircleImageView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-
-//        int bg = Color.rgb((int) Math.floor(Math.random() * 128) + 64,
-//                (int) Math.floor(Math.random() * 128) + 64,
-//                (int) Math.floor(Math.random() * 128) + 64);
-//        setBackgroundColor(bg);
 
         setOnClickListener(this);
 
@@ -190,7 +174,7 @@ public class CircleImageView extends ImageView implements ImageLoadingListener, 
     }
 
     public void setBorderColorResource(@ColorRes int borderColorRes) {
-        setBorderColor(getContext().getResources().getColor(borderColorRes));
+        setBorderColor(ContextCompat.getColor(getContext(), borderColorRes));
     }
 
     public int getFillColor() {
@@ -369,66 +353,4 @@ public class CircleImageView extends ImageView implements ImageLoadingListener, 
 
         mBitmapShader.setLocalMatrix(mShaderMatrix);
     }
-
-    public void setImageSrc(String src){
-        imageSrc = src;
-        loading = false;
-        loadSuccess = false;
-
-        loadImage();
-    }
-
-    public void reloadImage(){
-        if(loading) {
-            return;
-        }
-
-        loadImage();
-    }
-
-    @Override
-    public void onLoadingStarted(String imageUri, View view) {
-        loading = true;
-    }
-
-    @Override
-    public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
-        loadSuccess = false;
-        loading = false;
-    }
-
-    @Override
-    public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-        loadSuccess = true;
-        loading = false;
-    }
-
-    @Override
-    public void onLoadingCancelled(String imageUri, View view) {
-        loadSuccess = false;
-        loading = false;
-    }
-
-    @Override
-    public void onClick(View v) {
-        //如果当前没有加载，并且之前的加载失败了，点击可以重新加载图片
-        if(!loading && !loadSuccess) {
-            reloadImage();
-        }
-    }
-
-    @Override
-    public void onProgressUpdate(String imageUri, View view, int current, int total) {
-
-    }
-
-    private void loadImage(){
-        if(null == imageSrc){
-            return;
-        }
-
-        ImageLoader imageLoader = ImageLoader.getInstance();
-        imageLoader.displayImage(imageSrc, this, null, this, this);
-    }
-
 }

@@ -5,6 +5,6 @@
     android:id="@+id/guide_item">
         <ImageView
             android:id="@+id/guide_item_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_width="375dp"
+            android:layout_height="667dp" />
 </LinearLayout>
