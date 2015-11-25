@@ -172,7 +172,6 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
     private TakeImage mTakeImage;
 
     private String mTopicId;
-    //    private String mVideoLocalFilePath;
     private String mVideoRemoteUrl;
     private int mPage = 1;
     // 是否最后一页评论
@@ -215,9 +214,6 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
     }
 
     private void init() {
-        if (NailStarApplicationContext.getInstance().isNetworkConnected()) {
-            showLoading("");
-        }
         // 获取topic id
         mTopicId = getIntent().getStringExtra(Constants.TOPIC_ID);
         mPage = 1;
@@ -227,13 +223,15 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         heightPixels = displayMetrics.heightPixels;
         density = displayMetrics.density;
 
+        mTopicVideoPlayerPresenter = new TopicVideoPlayerPresenter(this);
+
         // 初始化控件
         initControl();
         // 初始化控件事件
         initControlEvent();
         // 初始化控件布局参数
         initControlLayoutParams();
-
+        // 初始化数据
         initData();
     }
 
@@ -250,7 +248,6 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         mIvTopicShare.setImageResource(R.mipmap.icon_share_white);
 
         mTopicPullToRefreshView = (PullToRefreshView) findViewById(R.id.topic_pull_refresh_view);
-//        mTopicPullToRefreshView.setOnHeaderRefreshListener(this);
         mTopicPullToRefreshView.setOnFooterRefreshListener(this);
 
         mLvTopicDetail = (ListView) findViewById(R.id.lv_topic_detail);
@@ -324,8 +321,9 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         mZoomInImageTextLayout.setBackgroundColor(getResources().getColor(R.color.black));
         mZoomInImageTextLayout.setTag(R.layout.zoomin_topic_image_text_layout, true);
 
-
         mTvTopicCommentCount = (TextView) topicDetailHeadLayout.findViewById(R.id.tv_topic_comment_count);
+        // 设置默认显示的评论数
+        mTvTopicCommentCount.setText(R.string.topic_comment_count_0);
 
         mTopicEmptyCommentLayout = (LinearLayout) topicDetailHeadLayout.findViewById(R.id.topic_empty_comment_layout);
 
@@ -374,6 +372,9 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         mIvVideoDownload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (checkAndShowNetworkStatus()) {
+                    return;
+                }
                 // 视频已经下载或正在下载
                 if (mTopicVideoPlayerPresenter.isDownloadVideo(mTopicInfo)) {
                     showShortToast(String.format(getString(R.string.video_has_been_cached), mTopicInfo.getTitle()));
@@ -406,6 +407,9 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         mIvTopicShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (checkAndShowNetworkStatus()) {
+                    return;
+                }
                 SocialAPI.getInstance().share(TopicVideoPlayerActivity.this,
                         getString(R.string.topic_share_title),
                         String.format(getString(R.string.topic_share_content), mTopicInfo.getTitle()),
@@ -440,6 +444,9 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         mIvVideoPlayIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (checkAndShowNetworkStatus()) {
+                    return;
+                }
                 mPlayIconParent.setVisibility(View.GONE);
                 mIvVideoPlayIcon.setVisibility(View.GONE);
                 mLayoutVideoPlayNotWifi.setVisibility(View.GONE);
@@ -451,6 +458,9 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         mTvVideoPlayNotWifi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (checkAndShowNetworkStatus()) {
+                    return;
+                }
                 mPlayIconParent.setVisibility(View.GONE);
                 mLayoutVideoPlayNotWifi.setVisibility(View.GONE);
                 mVDVideoView.play(0);
@@ -490,6 +500,9 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         mTvZoomInImageSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (checkAndShowNetworkStatus()) {
+                    return;
+                }
                 // 保存单张图片
                 PhotoView photoView = ((PhotoView) ((FrameLayout) mZoomInImageTextViewPager.getChildAt(0)).getChildAt(0));
                 mTopicVideoPlayerPresenter.downLoadTopicImage(mTopicId, photoView.getImageSrc());
@@ -501,6 +514,9 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         mTvDownloadTopicImageTextContent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (checkAndShowNetworkStatus()) {
+                    return;
+                }
                 // 下载图文信息到本地
                 if (null == mTopicImageTextInfo || CollectionUtil.isEmpty(mTopicImageTextInfo.getPictures())) {
                     showShortToast(R.string.no_topic_image_text_info);
@@ -521,6 +537,11 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
 
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (checkAndShowNetworkStatus()) {
+                    autoSetTopicStatus = true;
+                    mCbTopicTabLike.setChecked(!isChecked);
+                    return;
+                }
                 if (!LoginAPI.getInstance().isLogin()) {
                     autoSetTopicStatus = true;
                     mCbTopicTabLike.setChecked(false);
@@ -535,6 +556,11 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
 
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (checkAndShowNetworkStatus()) {
+                    autoSetTopicStatus = true;
+                    mCbTopicTabCollection.setChecked(!isChecked);
+                    return;
+                }
                 if (!LoginAPI.getInstance().isLogin()) {
                     autoSetTopicStatus = true;
                     mCbTopicTabCollection.setChecked(false);
@@ -553,6 +579,9 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         mTvTopicTabComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (checkAndShowNetworkStatus()) {
+                    return;
+                }
                 if (!LoginAPI.getInstance().isLogin()) {
                     LoginAPI.getInstance().gotoLoginPage(TopicVideoPlayerActivity.this);
                     return;
@@ -569,6 +598,9 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         mTvTopicSubmittedHomework.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (checkAndShowNetworkStatus()) {
+                    return;
+                }
                 if (!LoginAPI.getInstance().isLogin()) {
                     LoginAPI.getInstance().gotoLoginPage(TopicVideoPlayerActivity.this);
                     return;
@@ -591,7 +623,9 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
     }
 
     private void initData() {
-        mTopicVideoPlayerPresenter = new TopicVideoPlayerPresenter(this);
+        if (NailStarApplicationContext.getInstance().isNetworkConnected()) {
+            showLoading("");
+        }
         // 调用后台接口初始化界面数据
         mTopicVideoPlayerPresenter.initTopicInfo(mTopicId);
         mTopicVideoPlayerPresenter.initTopicRelatedInfo(mTopicId);
@@ -1353,7 +1387,12 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
     }
 
     private void checkInitFinish() {
-        if (initTopicInfoFinish && initTopicRelatedInfoFinish && initTopicRelatedUsedProductsFinish && initTopicImageTextInfoFinish && initTopicCommentsFinish && initUserTopicStatusFinish) {
+        if (initTopicInfoFinish//初始化topic信息
+                && initTopicRelatedInfoFinish//初始化topic关联信息
+                && initTopicRelatedUsedProductsFinish//初始化topic产品信息
+                && initTopicImageTextInfoFinish//初始化topic图文信息
+                && initTopicCommentsFinish//初始化topic评论信息
+                && initUserTopicStatusFinish) {//初始化登录用户topic状态信息
             hideLoading();
         }
     }
