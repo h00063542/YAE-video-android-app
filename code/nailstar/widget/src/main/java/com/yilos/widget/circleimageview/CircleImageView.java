@@ -33,6 +33,7 @@ import android.net.Uri;
 import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -173,7 +174,7 @@ public class CircleImageView extends ImageCacheView implements ImageLoadingListe
     }
 
     public void setBorderColorResource(@ColorRes int borderColorRes) {
-        setBorderColor(getContext().getResources().getColor(borderColorRes));
+        setBorderColor(ContextCompat.getColor(getContext(), borderColorRes));
     }
 
     public int getFillColor() {
