@@ -211,4 +211,5 @@ public class Constants {
     public static final String SDCARD_NAME = "sdcard_name";
     public static final String SDCARD_PATH = "sdcard_path";
     public static final String VERSION_NAME = "version_name";
+    public static final String PERSON_INFO = "personInfo";
 }
