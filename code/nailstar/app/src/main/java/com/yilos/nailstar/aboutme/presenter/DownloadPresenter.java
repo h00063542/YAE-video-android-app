@@ -66,4 +66,11 @@ public class DownloadPresenter {
         return downLoadInfoList;
     }
 
+    public void deleteVideoConfirm(DownLoadInfo downLoadInfo) {
+        downloadVideo.deleteVideoConfirm(downLoadInfo);
+    }
+
+    public void deleteVideo(DownLoadInfo downLoadInfo) {
+        downLoadTaskManager.deleteDownLoadVideo(downLoadInfo);
+    }
 }

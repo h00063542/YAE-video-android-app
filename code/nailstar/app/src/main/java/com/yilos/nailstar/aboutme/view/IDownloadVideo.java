@@ -9,5 +9,7 @@ import java.util.List;
  */
 public interface IDownloadVideo {
 
-    public void refreshDownLoadInfoList(List<DownLoadInfo> downLoadInfoList);
+    void refreshDownLoadInfoList(List<DownLoadInfo> downLoadInfoList);
+
+    void deleteVideoConfirm(DownLoadInfo downLoadInfo);
 }

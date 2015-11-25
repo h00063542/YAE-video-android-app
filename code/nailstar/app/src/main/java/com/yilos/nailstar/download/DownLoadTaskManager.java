@@ -190,6 +190,12 @@ public class DownLoadTaskManager {
         if (file.exists()) {
             file.delete();
         }
+
+        // 删除视频缩略图
+        File image = new File(downLoadInfo.getIamge());
+        if (image.exists()) {
+            image.delete();
+        }
     }
 
     /**

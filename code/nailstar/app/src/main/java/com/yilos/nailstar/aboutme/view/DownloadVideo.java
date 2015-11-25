@@ -1,5 +1,6 @@
 package com.yilos.nailstar.aboutme.view;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
@@ -59,5 +60,18 @@ public class DownloadVideo extends BaseActivity implements IDownloadVideo{
             downLoadVideoAdapter.setDownLoadInfoList(downLoadInfoList);
             downLoadVideoAdapter.notifyDataSetChanged();
         }
+    }
+
+    @Override
+    public void deleteVideoConfirm(final DownLoadInfo downLoadInfo) {
+        showMessageDialogWithEvent(null,
+                getString(R.string.delete_video_confirm),
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        downloadPresenter.deleteVideo(downLoadInfo);
+                    }
+                },
+                null);
     }
 }
