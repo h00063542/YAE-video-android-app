@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.umeng.analytics.MobclickAgent;
 import com.yilos.nailstar.R;
+import com.yilos.nailstar.framework.entity.NailStarApplicationContext;
 import com.yilos.widget.dialog.LoadingDialog;
 
 import java.util.HashMap;
@@ -173,6 +174,14 @@ public class BaseActivity extends AppCompatActivity implements IView {
         int color = getResources().getColor(resColorId);
         StringBuilder stringBuilder = new StringBuilder().append(String.format("<font color=\"#%s\">", String.format("%X", color).substring(2))).append(text).append("</font>");
         return stringBuilder.toString();
+    }
+
+    public boolean checkAndShowNetworkStatus() {
+        if (!NailStarApplicationContext.getInstance().isNetworkConnected()) {
+            showShortToast(R.string.network_connect_fail);
+            return true;
+        }
+        return false;
     }
 
 }

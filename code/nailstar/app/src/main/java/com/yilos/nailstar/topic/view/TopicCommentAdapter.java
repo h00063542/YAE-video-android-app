@@ -184,6 +184,7 @@ public class TopicCommentAdapter extends BaseAdapter {
             } else {
                 holder.commentContentPic.setImageSrc(topicCommentInfo.getContentPic());
             }
+            commentContentPicLp.height = holder.commentContentPic.getMeasuredWidth();
             commentContentPicLp.setMargins(0, 0, 0, !CollectionUtil.isEmpty(topicCommentInfo.getReplies()) ? mCommentContentPicMarginBottom : 0);
 //            holder.commentContentPic.setVisibility(View.VISIBLE);
             holder.commentContentPic.setOnClickListener(new View.OnClickListener() {
@@ -230,6 +231,7 @@ public class TopicCommentAdapter extends BaseAdapter {
         } else {
             commentContentPicLp.setMargins(0, 0, 0, 0);
             holder.commentContentPic.setImageSrc(Constants.EMPTY_STRING);
+            commentContentPicLp.height = 0;
         }
 
         holder.commentReplayLayout.removeAllViews();
