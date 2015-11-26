@@ -28,6 +28,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -71,7 +73,18 @@ public class MessageActivity extends BaseActivity implements IMessageView {
 
     }
 
-    public void initUserMessageList(final ArrayList<UserMessage> userMessageList) {
+    public class MessageListSortByCreateDate implements Comparator {
+        public int compare(Object o1, Object o2) {
+            UserMessage userMessage1 = (UserMessage) o1;
+            UserMessage userMessage2 = (UserMessage) o2;
+            if (userMessage1.getReply().getCreateDate() > userMessage2.getReply().getCreateDate())
+                return 1;
+            return 0;
+        }
+    }
+
+    public void initUserMessageList(ArrayList<UserMessage> userMessageList) {
+        Collections.sort(userMessageList, new MessageListSortByCreateDate());
         UserMessageListAdapter userMessageListAdapter = new UserMessageListAdapter(this, userMessageList);
         messageListAdapter.getUserMessageListView().setAdapter(userMessageListAdapter);
     }
