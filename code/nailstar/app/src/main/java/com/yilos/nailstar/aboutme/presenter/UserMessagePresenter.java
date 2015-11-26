@@ -27,7 +27,6 @@ public class UserMessagePresenter {
 
     //获取回复我的消息列表
     public void getUserMessageList(final String uid) {
-        messageActivity.showLoading(null);
         TaskManager.Task loadUserMessageList = new TaskManager.BackgroundTask() {
             @Override
             public Object doWork(Object data) {
@@ -46,7 +45,6 @@ public class UserMessagePresenter {
             @Override
             public ArrayList<UserMessage> doWork(ArrayList<UserMessage> data) {
                 messageActivity.getUserMessageList(data);
-                messageActivity.hideLoading();
                 return null;
             }
         };

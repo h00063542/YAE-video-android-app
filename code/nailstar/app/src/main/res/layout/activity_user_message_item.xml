@@ -173,4 +173,23 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/common_1_dp"
         android:background="@color/xk2" />
+    <LinearLayout
+        android:visibility="gone"
+        android:id="@+id/message_list_empty"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/message_empty"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/message_empty"
+            android:textSize="@dimen/large_text_size"
+            android:textColor="@color/z2"
+            android:layout_marginTop="@dimen/common_10_dp"/>
+    </LinearLayout>
 </LinearLayout>

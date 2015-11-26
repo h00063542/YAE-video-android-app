@@ -125,6 +125,7 @@ public class NailStarApplication extends MultiDexApplication {
 
     /**
      * 根据长宽比获取高度
+     *
      * @param activity
      * @param ratio
      * @return
@@ -133,7 +134,7 @@ public class NailStarApplication extends MultiDexApplication {
         DisplayMetrics metric = new DisplayMetrics();
         activity.getWindowManager().getDefaultDisplay().getMetrics(metric);
 
-        return (int)(metric.widthPixels * ratio);
+        return (int) (metric.widthPixels * ratio);
     }
 
     public void preloadIndexContent() {
@@ -153,11 +154,7 @@ public class NailStarApplication extends MultiDexApplication {
     }
 
     private void initDir() {
-        File sdPath = new File(Constants.YILOS_NAILSTAR_LOGS_PATH);
-        if (!sdPath.exists()) {
-            sdPath.mkdirs();
-        }
-        sdPath = new File(Constants.YILOS_NAILSTAR_VIDEOS_PATH);
+        File sdPath = new File(Constants.YILOS_NAILSTAR_VIDEOS_PATH);
         if (!sdPath.exists()) {
             sdPath.mkdirs();
         }
@@ -167,7 +164,7 @@ public class NailStarApplication extends MultiDexApplication {
         }
     }
 
-    private void initTaobaoSDK(){
+    private void initTaobaoSDK() {
         UTAnalytics.getInstance().turnOnDebug();
         AlibabaSDK.turnOnDebug();
 

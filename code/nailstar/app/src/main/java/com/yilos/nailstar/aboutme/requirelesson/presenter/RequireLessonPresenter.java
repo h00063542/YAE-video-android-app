@@ -1,13 +1,9 @@
 package com.yilos.nailstar.aboutme.requirelesson.presenter;
 
-import com.yilos.nailstar.aboutme.entity.UserMessage;
-import com.yilos.nailstar.aboutme.model.UserMessageService;
-import com.yilos.nailstar.aboutme.model.UserMessageServiceImpl;
 import com.yilos.nailstar.aboutme.requirelesson.entity.RequireLesson;
 import com.yilos.nailstar.aboutme.requirelesson.model.RequireLessonListService;
 import com.yilos.nailstar.aboutme.requirelesson.model.RequireLessonListServiceImpl;
 import com.yilos.nailstar.aboutme.requirelesson.view.RequireLessonListActivity;
-import com.yilos.nailstar.aboutme.view.MessageActivity;
 import com.yilos.nailstar.framework.exception.NetworkDisconnectException;
 import com.yilos.nailstar.util.TaskManager;
 
@@ -31,7 +27,6 @@ public class RequireLessonPresenter {
 
     //获取求教程列表
     public void getRequireLessonList(final String uid) {
-        requireLessonListActivity.showLoading(null);
         TaskManager.Task loadRequireLessonList = new TaskManager.BackgroundTask() {
             @Override
             public Object doWork(Object data) {
@@ -50,7 +45,6 @@ public class RequireLessonPresenter {
             @Override
             public ArrayList<RequireLesson> doWork(ArrayList<RequireLesson> data) {
                 requireLessonListActivity.getRequireLessonList(data);
-                requireLessonListActivity.hideLoading();
                 return null;
             }
         };
