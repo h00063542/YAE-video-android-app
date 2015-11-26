@@ -52,6 +52,6 @@ dependencies {
 }
 
 bugly {
-    appId = '900012903'    //注册时分配的App ID
-    appKey = 'Jr7H1EwjB9aukrNR'  //注册时分配的App Key
+    appId = '900012903'
+    appKey = 'Jr7H1EwjB9aukrNR'
 }

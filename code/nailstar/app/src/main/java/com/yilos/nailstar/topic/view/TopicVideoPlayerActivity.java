@@ -46,7 +46,6 @@ import com.alibaba.sdk.android.webview.UiSettings;
 import com.sina.sinavideo.sdk.VDVideoExtListeners;
 import com.sina.sinavideo.sdk.VDVideoView;
 import com.sina.sinavideo.sdk.data.VDVideoInfo;
-import com.sina.sinavideo.sdk.data.VDVideoListInfo;
 import com.yilos.nailstar.R;
 import com.yilos.nailstar.aboutme.model.LoginAPI;
 import com.yilos.nailstar.framework.entity.NailStarApplicationContext;
@@ -68,7 +67,6 @@ import com.yilos.nailstar.topic.entity.TopicVideoInfo;
 import com.yilos.nailstar.topic.presenter.TopicVideoPlayerPresenter;
 import com.yilos.nailstar.util.CollectionUtil;
 import com.yilos.nailstar.util.Constants;
-//import com.yilos.nailstar.util.LoggerFactory;
 import com.yilos.nailstar.util.StringUtil;
 import com.yilos.widget.circleimageview.CircleImageView;
 import com.yilos.widget.photoview.PhotoView;
@@ -76,8 +74,6 @@ import com.yilos.widget.pullrefresh.PullToRefreshView;
 import com.yilos.widget.titlebar.TitleBar;
 import com.yilos.widget.view.ImageCacheView;
 import com.yilos.widget.view.RoundProgressBar;
-
-//import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.HashMap;
