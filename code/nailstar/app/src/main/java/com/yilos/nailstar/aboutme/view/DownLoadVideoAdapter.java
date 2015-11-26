@@ -103,12 +103,12 @@ public class DownLoadVideoAdapter extends BaseAdapter {
         if (downLoadInfo.getPhoto() != null) {
             holder.downloadAuthorPhoto.setImageSrc("file://" + downLoadInfo.getPhoto());
         } else {
-            holder.downloadAuthorPhoto.setImageResource(R.mipmap.ic_default_photo);
+            holder.downloadAuthorPhoto.setImageSrc(R.mipmap.ic_default_photo);
         }
         if (downLoadInfo.getIamge() != null) {
             holder.downloadImage.setImageSrc("file://" + downLoadInfo.getIamge());
         } else {
-            holder.downloadImage.setImageURI(null);
+            holder.downloadImage.setImageSrc(R.mipmap.ic_default_image);
         }
 
         if (downLoadInfo.getStatus() == DownloadConstants.DOWNLOADING) {

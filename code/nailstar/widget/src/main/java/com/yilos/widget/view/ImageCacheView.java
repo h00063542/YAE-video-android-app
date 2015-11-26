@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.support.annotation.DrawableRes;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
@@ -55,6 +56,14 @@ public class ImageCacheView extends ImageView implements ImageLoadingListener, I
         loadSuccess = false;
 
         loadImage();
+    }
+
+    public void setImageSrc(@DrawableRes int src) {
+
+        loading = false;
+        loadSuccess = true;
+
+        this.setImageResource(src);
     }
 
     public String getImageSrc() {
