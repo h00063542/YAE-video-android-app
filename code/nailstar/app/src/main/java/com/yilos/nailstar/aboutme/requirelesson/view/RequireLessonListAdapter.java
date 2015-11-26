@@ -51,12 +51,11 @@ public class RequireLessonListAdapter extends RecyclerView.Adapter<RequireLesson
         return vh;
     }
 
-    @TargetApi(Build.VERSION_CODES.M)
     @Override
     public void onBindViewHolder(final RequireLessonListAdapter.ViewHolder holder, int position) {
         final RequireLesson requireLesson = requireLessonArrayList.get(position);
         holder.imageCacheView.setImageSrc(requireLesson.getThumbUrl());
-        int backColor = context.getResources().getColor(R.color.white,null);
+        int backColor = context.getResources().getColor(R.color.white);
         holder.imageCacheView.setBackgroundColor(backColor);
         holder.imageCacheView.getLayoutParams().height = (int) (imageWidth * 0.75);
         String di = context.getResources().getString(R.string.di);
