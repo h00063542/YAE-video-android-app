@@ -519,7 +519,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
                     return;
                 }
                 // 下载图文信息到本地
-                if (null == mTopicImageTextInfo || CollectionUtil.isEmpty(mTopicImageTextInfo.getPictures())) {
+                if (isEmptyTopicImageTextInfo()) {
                     showShortToast(R.string.no_topic_image_text_info);
                     return;
                 }
@@ -664,8 +664,11 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         if (View.GONE == visibility) {
             // 如果没有图文信息则返回
             if (mLayoutTopicImageTextContent.getChildCount() == 0) {
-                showShortToast(R.string.no_topic_image_text_info);
-                return;
+                if (isEmptyTopicImageTextInfo()) {
+                    showShortToast(R.string.no_topic_image_text_info);
+                    return;
+                }
+                addTopicImageTextInfo2Page();
             }
 
             mLayoutTopicImageTextContentParent.setVisibility(View.VISIBLE);
@@ -799,8 +802,14 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
             return;
         }
         mTopicImageTextInfo = topicImageTextInfo;
-        ArrayList<String> pictures = topicImageTextInfo.getPictures();
-        ArrayList<String> articles = topicImageTextInfo.getArticles();
+    }
+
+    private void addTopicImageTextInfo2Page() {
+        if (null == mTopicImageTextInfo) {
+            return;
+        }
+        ArrayList<String> pictures = mTopicImageTextInfo.getPictures();
+        ArrayList<String> articles = mTopicImageTextInfo.getArticles();
 
         LinearLayout.LayoutParams lpMarginTop = new LinearLayout.LayoutParams
                 (LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -816,7 +825,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
                 @Override
                 public void onClick(View v) {
                     // 显示大图
-                    zoomInTopicImageText((ImageCacheView) v, topicImageTextInfo);
+                    zoomInTopicImageText((ImageCacheView) v, mTopicImageTextInfo);
                 }
             });
             mLayoutTopicImageTextContent.addView(imageView);
@@ -1403,12 +1412,16 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
 
     private void checkInitFinish() {
         if (initTopicInfoFinish//初始化topic信息
-                && initTopicRelatedInfoFinish//初始化topic关联信息
-                && initTopicRelatedUsedProductsFinish//初始化topic产品信息
-                && initTopicImageTextInfoFinish//初始化topic图文信息
-                && initTopicCommentsFinish//初始化topic评论信息
+//                && initTopicRelatedInfoFinish//初始化topic关联信息
+//                && initTopicRelatedUsedProductsFinish//初始化topic产品信息
+//                && initTopicImageTextInfoFinish//初始化topic图文信息
+//                && initTopicCommentsFinish//初始化topic评论信息
                 && initUserTopicStatusFinish) {//初始化登录用户topic状态信息
             hideLoading();
         }
+    }
+
+    private boolean isEmptyTopicImageTextInfo() {
+        return null == mTopicImageTextInfo || CollectionUtil.isEmpty(mTopicImageTextInfo.getPictures());
     }
 }
