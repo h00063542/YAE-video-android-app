@@ -73,17 +73,12 @@ public class MessageActivity extends BaseActivity implements IMessageView {
 
     public void initUserMessageList(final ArrayList<UserMessage> userMessageList) {
         UserMessageListAdapter userMessageListAdapter = new UserMessageListAdapter(this, userMessageList);
-        if (userMessageList.size() == 0) {
-            messageListAdapter.showEmptyUserMessageView();
-        }
         messageListAdapter.getUserMessageListView().setAdapter(userMessageListAdapter);
-//            UserMessageListAdapter userMessageListAdapter = new UserMessageListAdapter(this, userMessageList);
-//            messageListAdapter.getUserMessageListView().setAdapter(userMessageListAdapter);
     }
 
     public void initSystemMessageList(final ArrayList<SystemMessage> systemMessageList) {
-            SystemMessageListAdapter systemMessageListAdapter = new SystemMessageListAdapter(this, systemMessageList);
-            messageListAdapter.getSystemMessageListView().setAdapter(systemMessageListAdapter);
+        SystemMessageListAdapter systemMessageListAdapter = new SystemMessageListAdapter(this, systemMessageList);
+        messageListAdapter.getSystemMessageListView().setAdapter(systemMessageListAdapter);
     }
 
     @Override
@@ -92,9 +87,8 @@ public class MessageActivity extends BaseActivity implements IMessageView {
             initSystemMessageList(getLocalSystemMessage());
         } else {
             ArrayList<SystemMessage> systemMessageArrayList = (ArrayList<SystemMessage>) objectList.get(0);
-            long lt = (long) objectList.get(1);
+            setLatestMessageTime((long) objectList.get(1));
             setLocalSystemMessage(systemMessageArrayList);
-            setLatestMessageTime(lt);
             initSystemMessageList(getLocalSystemMessage());
         }
     }
@@ -106,7 +100,7 @@ public class MessageActivity extends BaseActivity implements IMessageView {
             initUserMessageList(userMessageList);
         } else {
             setLocalReplyMessage(userMessageArrayList);
-            initUserMessageList(userMessageArrayList);
+            initUserMessageList(getLocalReplyMessage());
         }
     }
 

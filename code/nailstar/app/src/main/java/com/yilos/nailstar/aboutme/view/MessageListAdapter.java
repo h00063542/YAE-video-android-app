@@ -17,15 +17,15 @@ public class MessageListAdapter extends PagerAdapter {
     private Activity activity;
 
     // 回复我的、系统消息显示控件
-    private View userMessageListView;
-    private CustomRecyclerView SystemMessageListView;
+    private CustomRecyclerView userMessageListView;
+    private CustomRecyclerView systemMessageListView;
 
     public MessageListAdapter(Activity activity) {
         this.activity = activity;
 
         // 初始化回复我的、系统消息Tab页
-        userMessageListView = activity.getLayoutInflater().inflate(R.layout.activity_user_message_list, null);//initMessageRecycleView();
-        SystemMessageListView = initMessageRecycleView();
+        userMessageListView = initMessageRecycleView();
+        systemMessageListView = initMessageRecycleView();//activity.getLayoutInflater().inflate(R.layout.activity_system_message_list, null);;
     }
 
     @Override
@@ -36,7 +36,7 @@ public class MessageListAdapter extends PagerAdapter {
                 newView = userMessageListView;
                 break;
             case 1:
-                newView = SystemMessageListView;
+                newView = systemMessageListView;
                 break;
             default:
                 newView = new RecyclerView(activity);
@@ -65,9 +65,9 @@ public class MessageListAdapter extends PagerAdapter {
     public CharSequence getPageTitle(int position) {
         switch (position) {
             case 0:
-                return "回复我的";
+                return activity.getResources().getString(R.string.reply_me);
             case 1:
-                return "系统消息";
+                return activity.getResources().getString(R.string.system_message);
             default:
                 return "";
         }
@@ -78,19 +78,11 @@ public class MessageListAdapter extends PagerAdapter {
     }
 
     public CustomRecyclerView getUserMessageListView() {
-        return (CustomRecyclerView) userMessageListView.findViewById(R.id.user_message_list);
+        return userMessageListView;
     }
 
     public CustomRecyclerView getSystemMessageListView() {
-        return SystemMessageListView;
-    }
-
-    public void showEmptyUserMessageView() {
-        userMessageListView.findViewById(R.id.user_message_list_empty).setVisibility(View.VISIBLE);
-    }
-
-    public View initEmptyMessageView() {
-        return activity.getLayoutInflater().inflate(R.layout.activity_message_list, null);
+        return systemMessageListView;
     }
 
     private CustomRecyclerView initMessageRecycleView() {

@@ -34,6 +34,8 @@ public class UserMessageServiceImpl implements UserMessageService {
         String url = "/vapi/nailstar/replyMessages?uid=" + uid;
         try {
             jsonObject = HttpClient.getJson(url);
+//                    "{\"code\":0,\"result\":{\"messages\":[{\"id\":\"06a79050-83a7-11e5-8027-61091fab3b57\",\"topicId\":\"c8a5cfa0-312c-11e5-b553-d7e515311f8d\",\"title\":\"第222期：牛仔贴纸\",\"teacher\":\"董亚坡老师\",\"thumbUrl\":\"http://pic.yilos.com/283be79417e0a310eb9ed95a13a71d43\",\"comment\":{\"content\":\"这尽职尽责尽职尽责\",\"atName\":\"在\",\"createDate\":1446709317872,\"isHomework\":1},\"reply\":{\"accountId\":\"d77348c0-60d7-11e5-ade9-e3d220e2c964\",\"accountName\":\"勿忘我\",\"accountPhoto\":\"http://pic.yilos.com/ec9a2bbc1abb13166af6da31495bea0b\",\"content\":\"嗯嗯\",\"createDate\":1446718910072,\"replyTo\":\"9f59f430-8390-11e5-a74c-839a83b22973\",\"lastReplyTo\":\"b1438670-8390-11e5-a74c-839a83b22973\"}}\n" +
+//                            "]}}";
             userMessageJSONObject = new JSONObject(jsonObject);
             if (userMessageJSONObject.getInt(Constants.CODE) != 0) {
                 return userMessageList;
@@ -81,7 +83,7 @@ public class UserMessageServiceImpl implements UserMessageService {
     public MessageComment setComment(MessageComment messageComment, String topicId) throws NetworkDisconnectException, JSONException {
         String result;
         JSONObject messageCommentObject;
-        String url = "/vapi2/nailstar/topics/" + topicId + "/comments";
+        String url = "/vapi/nailstar/topics/" + topicId + "/comments";
         JSONObject jsonObject = new JSONObject();
         jsonObject.put(Constants.AUTHOR, messageComment.getAuthor());
         jsonObject.put(Constants.AT_USER, messageComment.getAtUser());
