@@ -83,7 +83,7 @@ public class IndexServiceImpl implements IndexService{
                 poster.setTopicId(posterObj.getString("topicId"));
                 poster.setType(posterObj.getString("type"));
 
-                if(poster.getType() == "video") {
+                if("video".equals(poster.getType())) {
                     result.add(poster);
                 }
             }
