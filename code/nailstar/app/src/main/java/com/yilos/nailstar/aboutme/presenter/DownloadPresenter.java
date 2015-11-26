@@ -46,7 +46,7 @@ public class DownloadPresenter {
             }
         };
 
-        scheduledExecutorService.scheduleAtFixedRate(refreshProgress, 0, 1000, TimeUnit.MILLISECONDS);
+        scheduledExecutorService.scheduleAtFixedRate(refreshProgress, 1000, 1000, TimeUnit.MILLISECONDS);
 
     }
 
