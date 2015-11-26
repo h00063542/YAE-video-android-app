@@ -3,7 +3,6 @@ package com.yilos.nailstar.requirelession.view;
 import android.app.Activity;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
@@ -347,7 +346,7 @@ public class VoteListViewAdapter extends BaseAdapter {
         if (candidateLession.getPicUrl() != null && !"".equals(candidateLession.getPicUrl())) {
             holder.lessionRankingImg.setImageSrc(candidateLession.getPicUrl());
         } else {
-            holder.lessionRankingImg.setImageResource(R.mipmap.ic_default_image);
+            holder.lessionRankingImg.setImageSrc(R.mipmap.ic_default_image);
         }
 
         if (candidateLession.getAuthorPhoto() != null && !"".equals(candidateLession.getAuthorPhoto())) {
@@ -487,7 +486,7 @@ public class VoteListViewAdapter extends BaseAdapter {
                 if (candidateLession.getPicUrl() != null && !"".equals(candidateLession.getPicUrl())) {
                     voteItem.lessionVoteImg.setImageSrc(candidateLession.getPicUrl());
                 } else {
-                    voteItem.lessionVoteImg.setImageResource(R.mipmap.ic_default_image);
+                    voteItem.lessionVoteImg.setImageSrc(R.mipmap.ic_default_image);
                 }
 
                 View.OnClickListener onClickListener = new View.OnClickListener() {
