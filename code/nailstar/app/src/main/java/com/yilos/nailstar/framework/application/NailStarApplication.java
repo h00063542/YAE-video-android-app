@@ -9,7 +9,6 @@ import android.widget.Toast;
 import com.alibaba.sdk.android.AlibabaSDK;
 import com.alibaba.sdk.android.Environment;
 import com.alibaba.sdk.android.callback.InitResultCallback;
-import com.facebook.drawee.backends.pipeline.Fresco;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiskCache;
 import com.nostra13.universalimageloader.cache.disc.naming.HashCodeFileNameGenerator;
 import com.nostra13.universalimageloader.cache.memory.impl.LruMemoryCache;
@@ -55,21 +54,30 @@ public class NailStarApplication extends MultiDexApplication {
 
     public void onCreate() {
         super.onCreate();
-        MobclickAgent.openActivityDurationTrack(false);
-        MobclickAgent.setDebugMode(true);
-        com.umeng.socialize.utils.Log.LOG = true;
+
+        CrashHandler.getInstance().init(this);
+
+        initUmengSdk();
 
         initDir();
         initTaobaoSDK();
 
-        CrashHandler.getInstance().init(this);
-
         application = this;
 
-        Fresco.initialize(getApplicationContext());
+        initImageLoader();
 
+        // 播放器初始化，要在app启动前进行初始化，才能解压出相应的解码器
+        initVideoPlayer();
+    }
+
+    private void initUmengSdk() {
+        MobclickAgent.openActivityDurationTrack(false);
+        MobclickAgent.setDebugMode(true);
+        com.umeng.socialize.utils.Log.LOG = true;
+    }
+
+    private void initImageLoader() {
         File cacheDir = StorageUtils.getCacheDirectory(getApplicationContext());
-
         DisplayImageOptions options = new DisplayImageOptions.Builder()
                 .showImageOnLoading(R.drawable.ic_image_loading)
                 .showImageOnFail(R.drawable.ic_image_loading)
@@ -79,7 +87,6 @@ public class NailStarApplication extends MultiDexApplication {
                 .imageScaleType(ImageScaleType.IN_SAMPLE_POWER_OF_2) // default
                 .bitmapConfig(Bitmap.Config.ARGB_8888) // default
                 .build();
-
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getApplicationContext())
                 .memoryCacheExtraOptions(480, 800) // default = device screen dimensions
                 .diskCacheExtraOptions(480, 800, null)
@@ -100,9 +107,6 @@ public class NailStarApplication extends MultiDexApplication {
 
         ImageLoader imageLoader = ImageLoader.getInstance();
         imageLoader.init(config);
-
-        // 播放器初始化，要在app启动前进行初始化，才能解压出相应的解码器
-        initVideoPlayer();
     }
 
     public int getScreenWidth(Activity activity) {
