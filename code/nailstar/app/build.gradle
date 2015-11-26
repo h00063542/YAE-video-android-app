@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'bugly'
 
 android {
     signingConfigs {
@@ -46,7 +47,13 @@ dependencies {
     compile 'com.jude:easyrecyclerview:3.2.3'
     compile 'com.umeng.analytics:analytics:latest.integration'
     compile 'com.etsy.android.grid:library:1.0.5'
+    compile 'com.tencent.bugly:crashreport:latest.release'
     compile project(':widget')
     compile project(':umengsocialsdk')
     compile project(':taobaoSDKSimple')
+}
+
+bugly {
+    appId = '900012903'    //注册时分配的App ID
+    appKey = 'Jr7H1EwjB9aukrNR'  //注册时分配的App Key
 }
