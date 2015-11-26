@@ -17,6 +17,7 @@ import com.shizhefei.view.indicator.FixedIndicatorView;
 import com.shizhefei.view.indicator.IndicatorViewPager;
 import com.yilos.nailstar.R;
 import com.yilos.nailstar.aboutme.entity.Sdcard;
+import com.yilos.nailstar.framework.application.NailStarApplication;
 import com.yilos.nailstar.main.MainActivity;
 import com.yilos.nailstar.util.SettingUtil;
 
@@ -33,6 +34,9 @@ public class GuideActivity extends AppCompatActivity {
     private int[] images = {R.mipmap.guide_p1, R.mipmap.guide_p2, R.mipmap.guide_p3};
     private FixedIndicatorView indicator;
 
+    private int width;
+    private int height;
+
     @Override
     protected void onCreate(Bundle arg0) {
         // 设置不显示状态栏
@@ -40,6 +44,14 @@ public class GuideActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         // 设置不允许旋转屏幕
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+        width = NailStarApplication.getApplication().getScreenWidth(this);
+        height = NailStarApplication.getApplication().getScreenHeight(this);
+        if(width * 1.78 > height) {
+            width = (int)(height / 1.78);
+        } else {
+            height = (int)(width * 1.78);
+        }
 
         super.onCreate(arg0);
         setContentView(R.layout.activity_guide);
@@ -101,7 +113,16 @@ public class GuideActivity extends AppCompatActivity {
                     });
                     indicator.setVisibility(View.GONE);
                 }
-                ((ImageView)guideItemLayout.findViewById(R.id.guide_item_image)).setImageResource(images[position]);
+                ImageView imageView = ((ImageView)guideItemLayout.findViewById(R.id.guide_item_image));
+                imageView.setImageResource(images[position]);
+                ViewGroup.LayoutParams layoutParams = imageView.getLayoutParams();
+                if(null == layoutParams) {
+                    layoutParams = new ViewGroup.LayoutParams(width, height);
+                } else {
+                    layoutParams.width = width;
+                    layoutParams.height = height;
+                }
+                imageView.setLayoutParams(layoutParams);
             }
             return convertView;
         }
