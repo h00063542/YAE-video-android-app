@@ -15,10 +15,8 @@ import com.yilos.nailstar.framework.exception.NetworkDisconnectException;
 import com.yilos.nailstar.util.HttpClient;
 import com.yilos.nailstar.util.ImageUtil;
 import com.yilos.nailstar.util.JsonUtil;
-import com.yilos.nailstar.util.LoggerFactory;
 import com.yilos.nailstar.util.OSSUtil;
 
-import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,7 +29,6 @@ import java.util.ArrayList;
  * Created by sisilai on 15/10/24.
  */
 public class AboutMeServiceImpl implements AboutMeService {
-    private static final Logger LOGGER = LoggerFactory.getLogger(AboutMeServiceImpl.class);
 
     @Override
     public void uploadFile2Oss(String localFilePath, String ossFileName, SaveCallback callback) throws NetworkDisconnectException {
@@ -149,8 +146,8 @@ public class AboutMeServiceImpl implements AboutMeService {
                         data = ImageUtil.getBytes(new URL(photoUrl).openStream());
                         imageBitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
                     } catch (IOException e) {
-                        e.printStackTrace();
-                        LOGGER.error("获取imageBitmap失败，imageBitmap:" + imageBitmap + "index:" + index + "photoUrl:" + photoUrl, e);
+//                        e.printStackTrace();
+//                        LOGGER.error("获取imageBitmap失败，imageBitmap:" + imageBitmap + "index:" + index + "photoUrl:" + photoUrl, e);
                     }
                 }
 
@@ -201,8 +198,8 @@ public class AboutMeServiceImpl implements AboutMeService {
                         data = ImageUtil.getBytes(new URL(photoUrl).openStream());
                         imageBitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
                     } catch (IOException e) {
-                        e.printStackTrace();
-                        LOGGER.error("获取imageBitmap失败，imageBitmap:" + imageBitmap + "index:" + index + "photoUrl:" + photoUrl, e);
+//                        e.printStackTrace();
+//                        LOGGER.error("获取imageBitmap失败，imageBitmap:" + imageBitmap + "index:" + index + "photoUrl:" + photoUrl, e);
                     }
                 }
 

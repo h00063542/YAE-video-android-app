@@ -23,11 +23,9 @@ import com.yilos.nailstar.util.CollectionUtil;
 import com.yilos.nailstar.util.Constants;
 import com.yilos.nailstar.util.HttpClient;
 import com.yilos.nailstar.util.JsonUtil;
-import com.yilos.nailstar.util.LoggerFactory;
 import com.yilos.nailstar.util.OSSUtil;
 import com.yilos.nailstar.util.StringUtil;
 
-import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -39,14 +37,12 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 
 /**
  * Created by yilos on 2015-10-24.
  */
 public class TopicServiceImpl implements ITopicService {
-    private final Logger LOGGER = LoggerFactory.getLogger(TopicServiceImpl.class);
     private final String URL_PREFIX = "/vapi/nailstar/";
 
 
@@ -119,8 +115,8 @@ public class TopicServiceImpl implements ITopicService {
             topicInfo.setAuthor(JsonUtil.optString(jsonResult, Constants.AUTHOR));
             topicInfo.setCommentCount(jsonResult.optInt(Constants.COMMENT_COUNT, 0));
         } catch (JSONException e) {
-            e.printStackTrace();
-            LOGGER.error(MessageFormat.format("获取topic信息失败，topicId:{0}，strResult:{1}", topicId, strResult), e);
+//            e.printStackTrace();
+//            LOGGER.error(MessageFormat.format("获取topic信息失败，topicId:{0}，strResult:{1}", topicId, strResult), e);
         }
         return topicInfo;
     }
@@ -181,8 +177,8 @@ public class TopicServiceImpl implements ITopicService {
             topicImageTextInfo.setArticles(articles);
             topicImageTextInfo.setPictures(pictures);
         } catch (JSONException e) {
-            e.printStackTrace();
-            LOGGER.error(MessageFormat.format("获取topic图文信息失败，topicId:{0}，strResult:{1}", topicId, strResult), e);
+//            e.printStackTrace();
+//            LOGGER.error(MessageFormat.format("获取topic图文信息失败，topicId:{0}，strResult:{1}", topicId, strResult), e);
         }
         return topicImageTextInfo;
     }
@@ -230,8 +226,8 @@ public class TopicServiceImpl implements ITopicService {
                         , JsonUtil.optString(jsonRelated.optJSONObject(i), Constants.THUMB_URL)));
             }
         } catch (JSONException e) {
-            e.printStackTrace();
-            LOGGER.error(MessageFormat.format("获取topic关联信息失败，topicId:{0}，strResult:{1}", topicId, strResult), e);
+//            e.printStackTrace();
+//            LOGGER.error(MessageFormat.format("获取topic关联信息失败，topicId:{0}，strResult:{1}", topicId, strResult), e);
         }
 
         return result;
@@ -279,8 +275,8 @@ public class TopicServiceImpl implements ITopicService {
                         , JsonUtil.optString(jsonRelated.optJSONObject(i), "real_id")));
             }
         } catch (JSONException e) {
-            e.printStackTrace();
-            LOGGER.error(MessageFormat.format("获取topic关联信息失败，topicId:{0}，strResult:{1}", topicId, strResult), e);
+//            e.printStackTrace();
+//            LOGGER.error(MessageFormat.format("获取topic关联信息失败，topicId:{0}，strResult:{1}", topicId, strResult), e);
         }
 
         return result;
@@ -356,8 +352,8 @@ public class TopicServiceImpl implements ITopicService {
                 result.add(topicCommentInfo);
             }
         } catch (JSONException e) {
-            e.printStackTrace();
-            LOGGER.error(MessageFormat.format("获取topic评论信息失败，topicId:{0}，strResult:{1}", topicId, strResult), e);
+//            e.printStackTrace();
+//            LOGGER.error(MessageFormat.format("获取topic评论信息失败，topicId:{0}，strResult:{1}", topicId, strResult), e);
         }
         return result;
     }
@@ -429,11 +425,11 @@ public class TopicServiceImpl implements ITopicService {
             topicStatusInfo.setIsLike(like != 0);
             topicStatusInfo.setIsCollect(collect != 0);
         } catch (IOException e) {
-            e.printStackTrace();
-            LOGGER.error(MessageFormat.format("获取用户topic状态失败，topicId：{1}，url：{2}", topicId, url), e);
+//            e.printStackTrace();
+//            LOGGER.error(MessageFormat.format("获取用户topic状态失败，topicId：{1}，url：{2}", topicId, url), e);
         } catch (JSONException e) {
-            e.printStackTrace();
-            LOGGER.error(MessageFormat.format("获取用户topic状态失败，topicId：{1}，url：{2}", topicId, url), e);
+//            e.printStackTrace();
+//            LOGGER.error(MessageFormat.format("获取用户topic状态失败，topicId：{1}，url：{2}", topicId, url), e);
         }
         return topicStatusInfo;
     }
@@ -499,11 +495,11 @@ public class TopicServiceImpl implements ITopicService {
             String strResult = HttpClient.post(url, jsonObject.toString());
             return null != buildJSONObject(strResult);
         } catch (JSONException e) {
-            e.printStackTrace();
-            LOGGER.error(MessageFormat.format("topic操作失败，topicId:{0}，url:{1}", topicId, url), e);
+//            e.printStackTrace();
+//            LOGGER.error(MessageFormat.format("topic操作失败，topicId:{0}，url:{1}", topicId, url), e);
         } catch (IOException e) {
-            e.printStackTrace();
-            LOGGER.error(MessageFormat.format("topic操作失败，topicId:{0}，url:{1}", topicId, url), e);
+//            e.printStackTrace();
+//            LOGGER.error(MessageFormat.format("topic操作失败，topicId:{0}，url:{1}", topicId, url), e);
         }
         return false;
     }
@@ -549,11 +545,11 @@ public class TopicServiceImpl implements ITopicService {
             JSONObject jsonObj = buildJSONObject(strResult);
             return JsonUtil.optString(jsonObj.optJSONObject(Constants.RESULT), Constants.COMMENT_ID);
         } catch (JSONException e) {
-            e.printStackTrace();
-            LOGGER.error(MessageFormat.format("评论topic失败，topicId:{0}，url:{1}", info.getTopicId(), url), e);
+//            e.printStackTrace();
+//            LOGGER.error(MessageFormat.format("评论topic失败，topicId:{0}，url:{1}", info.getTopicId(), url), e);
         } catch (IOException e) {
-            e.printStackTrace();
-            LOGGER.error(MessageFormat.format("评论topic失败，topicId:{0}，url:{1}", info.getTopicId(), url), e);
+//            e.printStackTrace();
+//            LOGGER.error(MessageFormat.format("评论topic失败，topicId:{0}，url:{1}", info.getTopicId(), url), e);
         }
         return Constants.EMPTY_STRING;
     }
@@ -568,11 +564,11 @@ public class TopicServiceImpl implements ITopicService {
             String strResult = HttpClient.post(url, Constants.EMPTY_JSON_STRING);
             return null != buildJSONObject(strResult);
         } catch (JSONException e) {
-            e.printStackTrace();
-            LOGGER.error(MessageFormat.format("视频播放次数+1失败，topicId:{0}，url:{1}", topicId, url), e);
+//            e.printStackTrace();
+//            LOGGER.error(MessageFormat.format("视频播放次数+1失败，topicId:{0}，url:{1}", topicId, url), e);
         } catch (IOException e) {
-            e.printStackTrace();
-            LOGGER.error(MessageFormat.format("视频播放次数+1失败，topicId:{0}，url:{1}", topicId, url), e);
+//            e.printStackTrace();
+//            LOGGER.error(MessageFormat.format("视频播放次数+1失败，topicId:{0}，url:{1}", topicId, url), e);
         }
         return false;
     }
@@ -593,11 +589,11 @@ public class TopicServiceImpl implements ITopicService {
 
             return jsonResult.optInt(Constants.COUNT, 0);
         } catch (JSONException e) {
-            e.printStackTrace();
-            LOGGER.error(MessageFormat.format("视频播放次数+1失败，topicId:{0}，url:{1}", topicId, url), e);
+//            e.printStackTrace();
+//            LOGGER.error(MessageFormat.format("视频播放次数+1失败，topicId:{0}，url:{1}", topicId, url), e);
         } catch (IOException e) {
-            e.printStackTrace();
-            LOGGER.error(MessageFormat.format("视频播放次数+1失败，topicId:{0}，url:{1}", topicId, url), e);
+//            e.printStackTrace();
+//            LOGGER.error(MessageFormat.format("视频播放次数+1失败，topicId:{0}，url:{1}", topicId, url), e);
         }
         return 0;
     }
@@ -646,11 +642,11 @@ public class TopicServiceImpl implements ITopicService {
             String strResult = HttpClient.post(url, jsonObject.toString());
             return null != buildJSONObject(strResult);
         } catch (JSONException e) {
-            e.printStackTrace();
-            LOGGER.error(MessageFormat.format("修改ready状态失败，id:{0}，url:{1}", info.getId(), url), e);
+//            e.printStackTrace();
+//            LOGGER.error(MessageFormat.format("修改ready状态失败，id:{0}，url:{1}", info.getId(), url), e);
         } catch (IOException e) {
-            e.printStackTrace();
-            LOGGER.error(MessageFormat.format("修改ready状态失败，id:{0}，url:{1}", info.getId(), url), e);
+//            e.printStackTrace();
+//            LOGGER.error(MessageFormat.format("修改ready状态失败，id:{0}，url:{1}", info.getId(), url), e);
         }
         return false;
     }
@@ -684,18 +680,18 @@ public class TopicServiceImpl implements ITopicService {
             writer.write(result);
             return true;
         } catch (FileNotFoundException e) {
-            LOGGER.error(MessageFormat.format("写缓存文件失败，topicId：{0}，result：{1}，fileType：{2}", topicId, result, fileType), e);
-            e.printStackTrace();
+//            LOGGER.error(MessageFormat.format("写缓存文件失败，topicId：{0}，result：{1}，fileType：{2}", topicId, result, fileType), e);
+//            e.printStackTrace();
         } catch (IOException e) {
-            LOGGER.error(MessageFormat.format("写缓存文件失败，topicId：{0}，result：{1}，fileType：{2}", topicId, result, fileType), e);
-            e.printStackTrace();
+//            LOGGER.error(MessageFormat.format("写缓存文件失败，topicId：{0}，result：{1}，fileType：{2}", topicId, result, fileType), e);
+//            e.printStackTrace();
         } finally {
             if (null != writer) {
                 try {
                     writer.close();
                 } catch (IOException e) {
-                    LOGGER.error(MessageFormat.format("写缓存文件关闭流失败，topicId：{0}，result：{1}，fileType：{2}", topicId, result, fileType), e);
-                    e.printStackTrace();
+//                    LOGGER.error(MessageFormat.format("写缓存文件关闭流失败，topicId：{0}，result：{1}，fileType：{2}", topicId, result, fileType), e);
+//                    e.printStackTrace();
                 }
             }
         }
@@ -723,34 +719,34 @@ public class TopicServiceImpl implements ITopicService {
             }
             return StringUtil.isEmpty(result.toString()) ? Constants.EMPTY_JSON_STRING : result.toString();
         } catch (FileNotFoundException e) {
-            LOGGER.error(MessageFormat.format("读缓存文件失败，topicId：{0}，fileType：{1}", topicId, fileType), e);
-            e.printStackTrace();
+//            LOGGER.error(MessageFormat.format("读缓存文件失败，topicId：{0}，fileType：{1}", topicId, fileType), e);
+//            e.printStackTrace();
         } catch (IOException e) {
-            LOGGER.error(MessageFormat.format("读缓存文件失败，topicId：{0}，fileType：{1}", topicId, fileType), e);
-            e.printStackTrace();
+//            LOGGER.error(MessageFormat.format("读缓存文件失败，topicId：{0}，fileType：{1}", topicId, fileType), e);
+//            e.printStackTrace();
         } finally {
             if (null != reader) {
                 try {
                     reader.close();
                 } catch (IOException e) {
-                    LOGGER.error(MessageFormat.format("写缓存文件关闭流失败，topicId：{0}，fileType：{1}", topicId, fileType), e);
-                    e.printStackTrace();
+//                    LOGGER.error(MessageFormat.format("写缓存文件关闭流失败，topicId：{0}，fileType：{1}", topicId, fileType), e);
+//                    e.printStackTrace();
                 }
             }
             if (null != inputStreamReader) {
                 try {
                     inputStreamReader.close();
                 } catch (IOException e) {
-                    LOGGER.error(MessageFormat.format("写缓存文件关闭流失败，topicId：{0}，fileType：{1}", topicId, fileType), e);
-                    e.printStackTrace();
+//                    LOGGER.error(MessageFormat.format("写缓存文件关闭流失败，topicId：{0}，fileType：{1}", topicId, fileType), e);
+//                    e.printStackTrace();
                 }
             }
             if (null != fileInputStream) {
                 try {
                     fileInputStream.close();
                 } catch (IOException e) {
-                    LOGGER.error(MessageFormat.format("写缓存文件关闭流失败，topicId：{0}，fileType：{1}", topicId, fileType), e);
-                    e.printStackTrace();
+//                    LOGGER.error(MessageFormat.format("写缓存文件关闭流失败，topicId：{0}，fileType：{1}", topicId, fileType), e);
+//                    e.printStackTrace();
                 }
             }
         }

@@ -68,7 +68,7 @@ import com.yilos.nailstar.topic.entity.TopicVideoInfo;
 import com.yilos.nailstar.topic.presenter.TopicVideoPlayerPresenter;
 import com.yilos.nailstar.util.CollectionUtil;
 import com.yilos.nailstar.util.Constants;
-import com.yilos.nailstar.util.LoggerFactory;
+//import com.yilos.nailstar.util.LoggerFactory;
 import com.yilos.nailstar.util.StringUtil;
 import com.yilos.widget.circleimageview.CircleImageView;
 import com.yilos.widget.photoview.PhotoView;
@@ -77,7 +77,7 @@ import com.yilos.widget.titlebar.TitleBar;
 import com.yilos.widget.view.ImageCacheView;
 import com.yilos.widget.view.RoundProgressBar;
 
-import org.apache.log4j.Logger;
+//import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -89,7 +89,6 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         ITopicVideoPlayerView,
         VDVideoExtListeners.OnVDVideoPlaylistListener,
         PullToRefreshView.OnFooterRefreshListener {
-    private final Logger LOGGER = LoggerFactory.getLogger(TopicVideoPlayerActivity.class);
 
     private final String TAG = "TopicVideoPlayerActivity";
 
@@ -728,7 +727,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         checkInitFinish();
         //TODO 提示获取视频信息失败
         if (null == topicInfo) {
-            LOGGER.error(TAG + " 获取topic信息为null，topicId:" + mTopicId);
+//            LOGGER.error(TAG + " 获取topic信息为null，topicId:" + mTopicId);
             return;
         }
         mTopicInfo = topicInfo;
@@ -800,7 +799,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         checkInitFinish();
         //TODO 提示获取视频图文信息失败
         if (null == topicImageTextInfo) {
-            LOGGER.warn(TAG + " 获取topic图文信息为null，topicId:" + mTopicId);
+//            LOGGER.warn(TAG + " 获取topic图文信息为null，topicId:" + mTopicId);
             return;
         }
         mTopicImageTextInfo = topicImageTextInfo;
@@ -934,7 +933,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         initTopicRelatedInfoFinish = true;
         checkInitFinish();
         if (CollectionUtil.isEmpty(topicRelatedList)) {
-            LOGGER.warn(TAG + " topic没有关联其他的的topics，topicId:" + mTopicId);
+//            LOGGER.warn(TAG + " topic没有关联其他的的topics，topicId:" + mTopicId);
             return;
         }
         LinearLayout.LayoutParams layoutLp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1.0f);
@@ -983,7 +982,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         initTopicRelatedUsedProductsFinish = true;
         checkInitFinish();
         if (CollectionUtil.isEmpty(topicRelatedProductList)) {
-            LOGGER.warn(TAG + " topic没有关联商品信息，topicId:" + mTopicId);
+//            LOGGER.warn(TAG + " topic没有关联商品信息，topicId:" + mTopicId);
             //使用产品区隐藏
             ((LinearLayout) findViewById(R.id.layout_used_products)).setVisibility(View.GONE);
             ((LinearLayout) findViewById(R.id.layout_used_product_line)).setVisibility(View.GONE);
@@ -1360,7 +1359,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
     @Override
     public void onPlaylistClick(VDVideoInfo info, int p) {
         if (info == null) {
-            LOGGER.error("视频信息为null");
+//            LOGGER.error("视频信息为null");
         }
         mVDVideoView.play(p);
     }

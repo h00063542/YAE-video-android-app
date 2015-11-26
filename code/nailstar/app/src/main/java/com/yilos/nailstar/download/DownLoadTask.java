@@ -4,9 +4,6 @@ import com.squareup.okhttp.Call;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Response;
 import com.squareup.okhttp.Request;
-import com.yilos.nailstar.util.LoggerFactory;
-
-import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -19,9 +16,6 @@ import java.io.RandomAccessFile;
  * Created by yilos on 15/11/11.
  */
 public class DownLoadTask {
-
-    private static Logger logger = LoggerFactory.getLogger(DownLoadTask.class);
-
     private OkHttpClient client;
     private String url;
     private String path;
@@ -117,14 +111,14 @@ public class DownLoadTask {
                     is.close();
                 }
             } catch (IOException e) {
-                logger.error("saveFile close InputStream failed", e);
+//                logger.error("saveFile close InputStream failed", e);
             }
             try {
                 if (fos != null) {
                     fos.close();
                 }
             } catch (IOException e) {
-                logger.error("saveFile close FileOutputStream failed", e);
+//                logger.error("saveFile close FileOutputStream failed", e);
             }
 
         }
@@ -191,14 +185,14 @@ public class DownLoadTask {
                     is.close();
                 }
             } catch (IOException e) {
-                logger.error("resumeFile close InputStream failed", e);
+//                logger.error("resumeFile close InputStream failed", e);
             }
             try {
                 if (randomAccessFile != null) {
                     randomAccessFile.close();
                 }
             } catch (IOException e) {
-                logger.error("resumeFile close RandomAccessFile failed", e);
+//                logger.error("resumeFile close RandomAccessFile failed", e);
             }
 
         }

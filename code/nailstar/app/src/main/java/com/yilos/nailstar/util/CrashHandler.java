@@ -6,12 +6,10 @@ import android.widget.Toast;
 
 import com.yilos.nailstar.R;
 
-import org.apache.log4j.Logger;
-
 import java.lang.Thread.UncaughtExceptionHandler;
 
 public class CrashHandler implements UncaughtExceptionHandler {
-    private static final Logger LOGGER = LoggerFactory.getLogger(CrashHandler.class);
+    //private static final Logger LOGGER = LoggerFactory.getLogger(CrashHandler.class);
 
     // 系统默认的UncaughtException处理类
     private UncaughtExceptionHandler mDefaultHandler;
@@ -58,7 +56,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
             try {
                 Thread.sleep(3000);
             } catch (InterruptedException e) {
-                LOGGER.error("", e);
+                //LOGGER.error("", e);
             }
             // 退出程序
             System.exit(0);
@@ -76,7 +74,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
             return false;
         }
         // 记录日志
-        LOGGER.error("程序出现异常，即将退出。", ex);
+        //LOGGER.error("程序出现异常，即将退出。", ex);
         ex.printStackTrace();
         // 使用Toast来显示异常信息
         new Thread() {

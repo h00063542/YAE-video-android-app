@@ -86,6 +86,7 @@ public class SearchPresenter {
         TaskManager.UITask<CommonResult<List<Topic>>> uiTask = new TaskManager.UITask<CommonResult<List<Topic>>>() {
             @Override
             public Object doWork(CommonResult<List<Topic>> data) {
+                try {
                 if(currentSearchTime != searchTime) {
                     return null;
                 }
@@ -105,14 +106,20 @@ public class SearchPresenter {
                 }
 
                 if(currentPage == 1) {
-                    view.hideNoResultView();
-                    view.showSearchResultView();
-                    adapter.clear();
-                    adapter.addAll(data.getResult());
+
+                        view.hideNoResultView();
+                        view.showSearchResultView();
+                        adapter.clear();
+                        adapter.addAll(data.getResult());
                 } else {
                     adapter.addAll(data.getResult());
                 }
                 searchedPage++;
+
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
                 return null;
             }
         };

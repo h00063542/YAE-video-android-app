@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.media.MediaScannerConnection;
 
-import org.apache.log4j.Logger;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -14,13 +12,12 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.logging.Logger;
 
 /**
  * Created by yilos on 15/11/9.
  */
 public class FileUtils {
-
-    private static Logger logger = LoggerFactory.getLogger(FileUtils.class);
 
     /**
      * 保存图片到本地
@@ -73,13 +70,11 @@ public class FileUtils {
             os.close();
         } catch (IOException e) {
             result = null;
-            logger.error("saveBitMap failed", e);
         } finally {
             if (os != null) {
                 try {
                     os.close();
                 } catch (IOException e) {
-                    logger.error("saveBitMap close OutputStream failed", e);
                 }
             }
         }
@@ -126,14 +121,12 @@ public class FileUtils {
                 sb.append(tempString);
             }
         } catch (IOException e) {
-            logger.error("readFromFile failed", e);
         } finally {
             try {
                 if (reader != null) {
                     reader.close();
                 }
             } catch (IOException e) {
-                logger.error("readFromFile close reader failed");
             }
         }
 
@@ -157,14 +150,12 @@ public class FileUtils {
             writer.flush();
 
         } catch (IOException e) {
-            logger.error("writeToFile failed", e);
         } finally {
             try {
                 if (writer != null) {
                     writer.close();
                 }
             } catch (IOException e) {
-                logger.error("writeToFile close reader failed");
             }
         }
 
