@@ -733,19 +733,18 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         }
         mTopicInfo = topicInfo;
         showTopicInfo2Page(topicInfo);
-        VDVideoListInfo mVDVideoListInfo = new VDVideoListInfo();
         VDVideoInfo info = new VDVideoInfo();
         if (!CollectionUtil.isEmpty(topicInfo.getVideos())) {
             TopicVideoInfo topicVideoInfo = topicInfo.getVideos().get(0);
             mVideoRemoteUrl = mTopicVideoPlayerPresenter.buildVideoRemoteUrl(topicVideoInfo);
             info.mTitle = topicInfo.getTitle();
             info.mPlayUrl = mVideoRemoteUrl;
+            info.setNetUrl(mVideoRemoteUrl);
             // 获取视频缩略图
             Bitmap bitmap = createVideoThumbnail(mVideoRemoteUrl, 700, (int) (700 / Constants.VIDEO_ASPECT_RATIO));
             mPlayIconParent.setBackgroundDrawable(new BitmapDrawable(bitmap));
         }
-        mVDVideoListInfo.addVideoInfo(info);
-        mVDVideoView.open(this, mVDVideoListInfo);
+        mVDVideoView.open(this, info);
     }
 
     /**
@@ -1387,7 +1386,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
     @Override
     protected void onStop() {
         super.onStop();
-        mVDVideoView.stop();
+//        mVDVideoView.stop();
     }
 
     @Override

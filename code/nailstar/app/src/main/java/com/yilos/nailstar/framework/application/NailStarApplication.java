@@ -21,6 +21,7 @@ import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
 import com.nostra13.universalimageloader.utils.StorageUtils;
 import com.sina.sinavideo.sdk.utils.VDApplication;
 import com.sina.sinavideo.sdk.utils.VDResolutionManager;
+import com.tencent.bugly.crashreport.CrashReport;
 import com.umeng.analytics.MobclickAgent;
 import com.ut.mini.UTAnalytics;
 import com.yilos.nailstar.R;
@@ -29,7 +30,6 @@ import com.yilos.nailstar.framework.exception.JSONParseException;
 import com.yilos.nailstar.framework.exception.NetworkDisconnectException;
 import com.yilos.nailstar.index.model.IndexServiceImpl;
 import com.yilos.nailstar.util.Constants;
-import com.yilos.nailstar.util.CrashHandler;
 
 import java.io.File;
 
@@ -55,7 +55,7 @@ public class NailStarApplication extends MultiDexApplication {
     public void onCreate() {
         super.onCreate();
 
-        CrashHandler.getInstance().init(this);
+        CrashReport.initCrashReport(this, "900012903", false);
 
         initUmengSdk();
 
