@@ -9,12 +9,8 @@ import com.yilos.nailstar.topic.model.ITopicService;
 import com.yilos.nailstar.topic.model.TopicServiceImpl;
 import com.yilos.nailstar.topic.view.ITopicHomeworkView;
 import com.yilos.nailstar.util.Constants;
-import com.yilos.nailstar.util.LoggerFactory;
 import com.yilos.nailstar.util.TaskManager;
 
-import org.apache.log4j.Logger;
-
-import java.text.MessageFormat;
 import java.util.ArrayList;
 
 
@@ -22,7 +18,6 @@ import java.util.ArrayList;
  * Created by yilos on 2015-10-22.
  */
 public class TopicHomeworkPresenter {
-    private final Logger LOGGER = LoggerFactory.getLogger(TopicHomeworkPresenter.class);
 
     private ITopicHomeworkView topicHomeworkView;
     private ITopicService topicsService;
@@ -39,8 +34,8 @@ public class TopicHomeworkPresenter {
                 try {
                     return topicsService.getSubmittedHomeworkCount(topicId);
                 } catch (NetworkDisconnectException e) {
-                    e.printStackTrace();
-                    LOGGER.error("获取交作业人数失败，topicId：" + topicId, e);
+//                    e.printStackTrace();
+//                    LOGGER.error("获取交作业人数失败，topicId：" + topicId, e);
                 }
                 return null;
             }
@@ -69,8 +64,8 @@ public class TopicHomeworkPresenter {
 //                return "003";
                     return topicsService.addComment(info);
                 } catch (NetworkDisconnectException e) {
-                    e.printStackTrace();
-                    LOGGER.error("添加评论信息失败，topicId：" + info.getTopicId(), e);
+//                    e.printStackTrace();
+//                    LOGGER.error("添加评论信息失败，topicId：" + info.getTopicId(), e);
                 }
                 return null;
             }
@@ -99,8 +94,8 @@ public class TopicHomeworkPresenter {
                     topicsService.uploadFile2Oss(info.getPicLocalPath(), info.getPicName(), new SaveCallback() {
                         @Override
                         public void onSuccess(String objectKey) {
-                            LOGGER.debug(MessageFormat.format("正在上传交作业图片到Oss成功，topicId:{0}，localPath:{1}，picName:{2}，objectKey:{3}"
-                                    , info.getTopicId(), info.getPicLocalPath(), info.getPicName(), objectKey));
+//                            LOGGER.debug(MessageFormat.format("正在上传交作业图片到Oss成功，topicId:{0}，localPath:{1}，picName:{2}，objectKey:{3}"
+//                                    , info.getTopicId(), info.getPicLocalPath(), info.getPicName(), objectKey));
                             UpdateReadyInfo updateReadyInfo = new UpdateReadyInfo();
                             updateReadyInfo.setId(commentId);
                             ArrayList<String> picUrls = new ArrayList<String>();
@@ -118,30 +113,30 @@ public class TopicHomeworkPresenter {
 //                                }
 //                            }
                             } catch (NetworkDisconnectException e) {
-                                LOGGER.error(MessageFormat.format("修改ready状态失败，id:{0}", info.getTopicId()), e);
-                                e.printStackTrace();
+//                                LOGGER.error(MessageFormat.format("修改ready状态失败，id:{0}", info.getTopicId()), e);
+//                                e.printStackTrace();
                             }
                         }
 
                         @Override
                         public void onProgress(String objectKey, int byteCount, int totalSize) {
-                            LOGGER.debug(MessageFormat.format("正在上传交作业图片到Oss，topicId:{0}，objectKey:{1}，byteCount:{2}，totalSize:{3}"
-                                    , info.getTopicId(), objectKey, byteCount, totalSize));
+//                            LOGGER.debug(MessageFormat.format("正在上传交作业图片到Oss，topicId:{0}，objectKey:{1}，byteCount:{2}，totalSize:{3}"
+//                                    , info.getTopicId(), objectKey, byteCount, totalSize));
                         }
 
                         @Override
                         public void onFailure(String objectKey, OSSException e) {
-                            LOGGER.error(MessageFormat.format("上传交作业图片到Oss失败，topicId:{0}，localPath:{1}，picName:{2}，objectKey:{3}"
-                                    , info.getTopicId(), info.getPicLocalPath(), info.getPicName(), objectKey), e);
-                            e.printStackTrace();
-                            e.getException().printStackTrace();
+//                            LOGGER.error(MessageFormat.format("上传交作业图片到Oss失败，topicId:{0}，localPath:{1}，picName:{2}，objectKey:{3}"
+//                                    , info.getTopicId(), info.getPicLocalPath(), info.getPicName(), objectKey), e);
+//                            e.printStackTrace();
+//                            e.getException().printStackTrace();
                         }
                     });
                 } catch (NetworkDisconnectException e) {
-                    e.printStackTrace();
-                    LOGGER.error(
-                            MessageFormat.format("上传交作业图片到Oss失败，topicId:{0}，localPath:{1}，picName:{2}，objectKey:{3}"
-                                    , info.getTopicId(), info.getPicLocalPath(), info.getPicName()), e);
+//                    e.printStackTrace();
+//                    LOGGER.error(
+//                            MessageFormat.format("上传交作业图片到Oss失败，topicId:{0}，localPath:{1}，picName:{2}，objectKey:{3}"
+//                                    , info.getTopicId(), info.getPicLocalPath(), info.getPicName()), e);
                 }
                 return null;
             }

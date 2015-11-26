@@ -12,10 +12,7 @@ import com.yilos.nailstar.topic.entity.TopicInfo;
 import com.yilos.nailstar.util.Constants;
 import com.yilos.nailstar.util.FileUtils;
 import com.yilos.nailstar.util.HttpClient;
-import com.yilos.nailstar.util.LoggerFactory;
 import com.yilos.nailstar.util.SettingUtil;
-
-import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,8 +31,6 @@ public class DownLoadTaskManager {
     private static final String videoPath = "/yilos/nailstar/videos";
 
     private static final String DOWNLOAD_INFO_FILE = "download_info";
-
-    private static Logger logger = LoggerFactory.getLogger(DownLoadTaskManager.class);
 
     private ObjectMapper objectMapper = new ObjectMapper();
 
@@ -179,7 +174,7 @@ public class DownLoadTaskManager {
         try {
             FileUtils.writeToFile(new File(getDownloadInfoPath(), DOWNLOAD_INFO_FILE), objectMapper.writeValueAsString(downLoadInfoList));
         } catch (JsonProcessingException e) {
-            logger.error("deleteDownLoadVideo writeToFile failed", e);
+            //logger.error("deleteDownLoadVideo writeToFile failed", e);
         }
 
         // 删除下载任务
@@ -252,7 +247,7 @@ public class DownLoadTaskManager {
                     resumeAllDownLoadTask();
 
                 } catch (Exception e) {
-                    logger.error("initDownloadInfo failed", e);
+//                    logger.error("initDownloadInfo failed", e);
                 }
 
             }
@@ -294,14 +289,14 @@ public class DownLoadTaskManager {
                     long length = HttpClient.getFileLength(downLoadInfo.getUrl());
                     downLoadInfo.setFileSize(length);
                 } catch (IOException e) {
-                    logger.error("saveDownloadInfo get file length failed", e);
+//                    logger.error("saveDownloadInfo get file length failed", e);
                 }
 
                 // 下载信息保存
                 try {
                     FileUtils.writeToFile(new File(getDownloadInfoPath(), DOWNLOAD_INFO_FILE), objectMapper.writeValueAsString(downLoadInfoList));
                 } catch (JsonProcessingException e) {
-                    logger.error("saveDownloadInfo writeToFile failed", e);
+//                    logger.error("saveDownloadInfo writeToFile failed", e);
                 }
             }
         }).start();
@@ -338,7 +333,7 @@ public class DownLoadTaskManager {
                     try {
                         FileUtils.writeToFile(new File(getDownloadInfoPath(), DOWNLOAD_INFO_FILE), objectMapper.writeValueAsString(downLoadInfoList));
                     } catch (JsonProcessingException e) {
-                        logger.error("startDownloadTask writeToFile failed", e);
+//                        logger.error("startDownloadTask writeToFile failed", e);
                     }
                 }
 
@@ -353,7 +348,7 @@ public class DownLoadTaskManager {
                     downLoadTask.run();
                 } catch (Exception e) {
                     downLoadInfo.setStatus(DownloadConstants.DOWNLOAD_STOP);
-                    logger.error("download failed, url: " + downLoadTask.getUrl(), e);
+//                    logger.error("download failed, url: " + downLoadTask.getUrl(), e);
                 }
             }
         }).start();

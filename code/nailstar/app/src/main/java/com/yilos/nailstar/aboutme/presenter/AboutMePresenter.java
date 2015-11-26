@@ -2,14 +2,12 @@ package com.yilos.nailstar.aboutme.presenter;
 
 import com.yilos.nailstar.aboutme.entity.AboutMeNumber;
 import com.yilos.nailstar.aboutme.entity.MessageCount;
-import com.yilos.nailstar.aboutme.model.AboutMeServiceImpl;
 import com.yilos.nailstar.aboutme.model.AboutMeService;
+import com.yilos.nailstar.aboutme.model.AboutMeServiceImpl;
 import com.yilos.nailstar.aboutme.view.IAboutMeView;
 import com.yilos.nailstar.framework.exception.NetworkDisconnectException;
-import com.yilos.nailstar.util.LoggerFactory;
 import com.yilos.nailstar.util.TaskManager;
 
-import org.apache.log4j.Logger;
 import org.json.JSONException;
 
 
@@ -17,7 +15,6 @@ import org.json.JSONException;
  * Created by sisilai on 15/10/24.
  */
 public class AboutMePresenter {
-    private static final Logger LOGGER = LoggerFactory.getLogger(AboutMePresenter.class);
     private static AboutMePresenter aboutMePresenter =new AboutMePresenter();
     private IAboutMeView aboutMeFragment;
     private AboutMeService aboutMeService = new AboutMeServiceImpl();
