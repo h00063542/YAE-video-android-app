@@ -66,28 +66,25 @@ public class MessageActivity extends BaseActivity implements IMessageView {
         UserMessagePresenter userMessagePresenter = UserMessagePresenter.getInstance(this);
         userMessagePresenter.getUserMessageList(loginAPI.getLoginUserId());
 
-        long lt = getLatestMessageTime();
         SystemMessagePresenter systemMessagePresenter = SystemMessagePresenter.getInstance(this);
-        systemMessagePresenter.getSystemMessageList(lt);
+        systemMessagePresenter.getSystemMessageList(getLatestMessageTime());
 
     }
 
     public void initUserMessageList(final ArrayList<UserMessage> userMessageList) {
+        UserMessageListAdapter userMessageListAdapter = new UserMessageListAdapter(this, userMessageList);
         if (userMessageList.size() != 0) {
-            UserMessageListAdapter userMessageListAdapter = new UserMessageListAdapter(this, userMessageList);
             messageListAdapter.getUserMessageListView().setAdapter(userMessageListAdapter);
         } else {
             messageListAdapter.showEmptyUserMessageView();
         }
+//            UserMessageListAdapter userMessageListAdapter = new UserMessageListAdapter(this, userMessageList);
+//            messageListAdapter.getUserMessageListView().setAdapter(userMessageListAdapter);
     }
 
     public void initSystemMessageList(final ArrayList<SystemMessage> systemMessageList) {
-        if (systemMessageList.size() != 0) {
             SystemMessageListAdapter systemMessageListAdapter = new SystemMessageListAdapter(this, systemMessageList);
             messageListAdapter.getSystemMessageListView().setAdapter(systemMessageListAdapter);
-        } else {
-            messageListAdapter.showEmptySystemMessageView();
-        }
     }
 
     @Override

@@ -1,13 +1,9 @@
 package com.yilos.nailstar.aboutme.requirelesson.presenter;
 
-import com.yilos.nailstar.aboutme.entity.UserMessage;
-import com.yilos.nailstar.aboutme.model.UserMessageService;
-import com.yilos.nailstar.aboutme.model.UserMessageServiceImpl;
 import com.yilos.nailstar.aboutme.requirelesson.entity.RequireLesson;
 import com.yilos.nailstar.aboutme.requirelesson.model.RequireLessonListService;
 import com.yilos.nailstar.aboutme.requirelesson.model.RequireLessonListServiceImpl;
 import com.yilos.nailstar.aboutme.requirelesson.view.RequireLessonListActivity;
-import com.yilos.nailstar.aboutme.view.MessageActivity;
 import com.yilos.nailstar.framework.exception.NetworkDisconnectException;
 import com.yilos.nailstar.util.TaskManager;
 
