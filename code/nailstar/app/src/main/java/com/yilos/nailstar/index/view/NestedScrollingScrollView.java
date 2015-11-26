@@ -63,9 +63,6 @@ public class NestedScrollingScrollView extends NestedScrollView {
         if(dy > 0) {
             if(getScrollY() + getHeight() < computeVerticalScrollRange()) {
                 int y = dy;
-//                if(getScrollY() + dy > maxScrollY) {
-//                    y = maxScrollY - getScrollY();
-//                }
                 if(getScrollY() + getHeight() + dy > computeVerticalScrollRange()) {
                     y = computeVerticalScrollRange() - getHeight() - getScrollY();
                 }
@@ -100,7 +97,7 @@ public class NestedScrollingScrollView extends NestedScrollView {
             // 滚动条尚未到底
             if(getScrollY() + getHeight() < computeVerticalScrollRange()) {
                 fling((int)velocityY);
-                if(getScrollY() + getHeight() < computeVerticalScrollRange()) {
+                if(velocityY < 5000) {
                     return true;
                 }
             }
