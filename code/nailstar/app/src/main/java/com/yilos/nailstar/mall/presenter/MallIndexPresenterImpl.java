@@ -12,6 +12,13 @@ import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.alibaba.sdk.android.AlibabaSDK;
+import com.alibaba.sdk.android.trade.ItemService;
+import com.alibaba.sdk.android.trade.TradeConstants;
+import com.alibaba.sdk.android.trade.callback.TradeProcessCallback;
+import com.alibaba.sdk.android.trade.item.ItemType;
+import com.alibaba.sdk.android.trade.model.TradeResult;
+import com.alibaba.sdk.android.webview.UiSettings;
 import com.yilos.nailstar.R;
 import com.yilos.nailstar.framework.exception.NetworkDisconnectException;
 import com.yilos.nailstar.mall.entity.Commodity;
@@ -22,11 +29,16 @@ import com.yilos.nailstar.mall.model.CommodityServiceImpl;
 import com.yilos.nailstar.mall.view.MallIndexCategoryActivity;
 import com.yilos.nailstar.mall.view.MallIndexCommodityListAdapter;
 import com.yilos.nailstar.mall.view.MallIndexView;
+import com.yilos.nailstar.topic.view.OrderFinishDialog;
 import com.yilos.nailstar.topic.view.TopicHomeworkActivity;
 import com.yilos.nailstar.util.Constants;
 import com.yilos.nailstar.util.TaskManager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Created by ganyue on 15/11/20.
@@ -109,7 +121,7 @@ public class MallIndexPresenterImpl implements MallIndexPresenter{
 
                     @Override
                     public void onClick(View v) {
-                        String cateforyId = (String)v.getTag(R.id.mall_index_commodity_cate_id);
+                        String cateforyId = (String)v.getTag(R.id.mall_index_catetory_id);
                         Intent intent = new Intent(view.getRootView().getContext(), MallIndexCategoryActivity.class);
                         intent.putExtra(Constants.MALL_COMMODITY_CATE_ID, cateforyId);
                         ((Fragment)view).startActivity(intent);
@@ -124,7 +136,7 @@ public class MallIndexPresenterImpl implements MallIndexPresenter{
                     oneCate.setLayoutParams(lyparams);
                     TextView oneCateTextView = (TextView)oneCate.findViewById(R.id.index_commodity_catetory_name);
                     oneCateTextView.setText(one.getName());
-                    oneCateTextView.setTag(R.id.mall_index_catetory_id, one.getId());
+                    oneCate.setTag(R.id.mall_index_catetory_id, one.getId());
 
                     //类别点击事件
                     oneCate.setOnClickListener(listener);
@@ -145,6 +157,9 @@ public class MallIndexPresenterImpl implements MallIndexPresenter{
 
     @Override
     public void loadHotViewData() {
+
+
+
         TaskManager.Task loadTopicRelatedInfo = new TaskManager.BackgroundTask() {
             @Override
             public Object doWork(Object data) {
@@ -179,7 +194,7 @@ public class MallIndexPresenterImpl implements MallIndexPresenter{
                     ((TextView)view.getIndexCommodityHot3().findViewById(R.id.index_commodity_hot_3_desc)).setText(commodityList.get(2).getAdvdesc());
                     ((TextView)view.getIndexCommodityHot3().findViewById(R.id.index_commodity_hot_3_price)).setText(String.valueOf(commodityList.get(2).getPrice()));
                     ((com.yilos.widget.view.ImageCacheView)view.getIndexCommodityHot3().findViewById(R.id.index_commodity_hot_3_image)).setImageSrc(commodityList.get(2).getImageUrl());
-                    ((LinearLayout)view.getIndexCommodityHot2()).setTag(R.id.mall_index_product_real_id, commodityList.get(2).getGoodsRealId());
+                    ((LinearLayout)view.getIndexCommodityHot3()).setTag(R.id.mall_index_product_real_id, commodityList.get(2).getGoodsRealId());
 
 
                 }

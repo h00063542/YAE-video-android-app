@@ -18,7 +18,6 @@ import com.yilos.nailstar.R;
 import com.yilos.nailstar.framework.view.BaseActivity;
 import com.yilos.nailstar.mall.presenter.MallIndexCategoryPresenter;
 import com.yilos.nailstar.mall.presenter.MallIndexCategoryPresenterImpl;
-import com.yilos.nailstar.mall.presenter.MallIndexPresenterImpl;
 import com.yilos.nailstar.topic.view.OrderFinishDialog;
 import com.yilos.nailstar.util.Constants;
 
@@ -32,7 +31,6 @@ import java.util.TimerTask;
  */
 public class MallIndexCategoryActivity extends BaseActivity implements IMallIndexCategoryView{
     private StaggeredGridView categotyCommodityListView;
-    private View view;
     private LinearLayout footerView;
     MallIndexCategoryListAdapter adapter;
 
@@ -47,23 +45,22 @@ public class MallIndexCategoryActivity extends BaseActivity implements IMallInde
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.mall_category_list);
-
         initData();
         initView();
+        bindControl();
     }
     private void initView() {
-        this.adapter = new MallIndexCategoryListAdapter(view.getContext());
+        this.adapter = new MallIndexCategoryListAdapter(this);
         this.footerView = (LinearLayout)getLayoutInflater().inflate(R.layout.mall_index_footer, null);
-        this.mallCategoryPresenter = new MallIndexCategoryPresenterImpl(this);
 
-        categotyCommodityListView= (StaggeredGridView) view.findViewById(R.id.index_commodity_recommend_list);
+        categotyCommodityListView= (StaggeredGridView) findViewById(R.id.index_commodity_category_list);
         categotyCommodityListView.addFooterView(footerView);
         categotyCommodityListView.setAdapter(adapter);
     }
     private void initData() {
         Bundle data = getIntent().getExtras();
         category_id = data.getString(Constants.MALL_COMMODITY_CATE_ID, Constants.EMPTY_STRING);
-
+        this.mallCategoryPresenter = new MallIndexCategoryPresenterImpl(this);
         mallCategoryPresenter.loadCategoryPageData(category_id,prePageNo, page);
 
     }

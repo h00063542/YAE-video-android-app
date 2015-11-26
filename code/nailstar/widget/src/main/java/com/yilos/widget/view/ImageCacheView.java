@@ -29,6 +29,8 @@ public class ImageCacheView extends ImageView implements ImageLoadingListener, I
 
     private OnClickListener clickListener;
 
+
+
     public ImageCacheView(Context context) {
         this(context, null);
     }
@@ -41,8 +43,14 @@ public class ImageCacheView extends ImageView implements ImageLoadingListener, I
         super(context, attrs, defStyle);
 
         setBackgroundColor(ContextCompat.getColor(getContext(), R.color.xk2));
+        boolean isClickable = true;
+        if(attrs != null){
+            isClickable = attrs.getAttributeValue("http://schemas.android.com/apk/res/android","clickable")!=null?Boolean.getBoolean(attrs.getAttributeValue("http://schemas.android.com/apk/res/android","clickable")):true;
+        }
 
-        super.setOnClickListener(this);
+        if (isClickable){
+            super.setOnClickListener(this);
+        }
     }
 
     public void setImageSrc(String src) {
