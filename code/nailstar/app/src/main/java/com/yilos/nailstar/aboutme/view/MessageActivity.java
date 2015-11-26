@@ -28,6 +28,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -71,19 +73,25 @@ public class MessageActivity extends BaseActivity implements IMessageView {
 
     }
 
-    public void initUserMessageList(final ArrayList<UserMessage> userMessageList) {
-        UserMessageListAdapter userMessageListAdapter = new UserMessageListAdapter(this, userMessageList);
-        if (userMessageList.size() == 0) {
-            messageListAdapter.showEmptyUserMessageView();
+    public class MessageListSortByCreateDate implements Comparator {
+        public int compare(Object o1, Object o2) {
+            UserMessage userMessage1 = (UserMessage) o1;
+            UserMessage userMessage2 = (UserMessage) o2;
+            if (userMessage1.getReply().getCreateDate() > userMessage2.getReply().getCreateDate())
+                return 1;
+            return 0;
         }
+    }
+
+    public void initUserMessageList(ArrayList<UserMessage> userMessageList) {
+        Collections.sort(userMessageList, new MessageListSortByCreateDate());
+        UserMessageListAdapter userMessageListAdapter = new UserMessageListAdapter(this, userMessageList);
         messageListAdapter.getUserMessageListView().setAdapter(userMessageListAdapter);
-//            UserMessageListAdapter userMessageListAdapter = new UserMessageListAdapter(this, userMessageList);
-//            messageListAdapter.getUserMessageListView().setAdapter(userMessageListAdapter);
     }
 
     public void initSystemMessageList(final ArrayList<SystemMessage> systemMessageList) {
-            SystemMessageListAdapter systemMessageListAdapter = new SystemMessageListAdapter(this, systemMessageList);
-            messageListAdapter.getSystemMessageListView().setAdapter(systemMessageListAdapter);
+        SystemMessageListAdapter systemMessageListAdapter = new SystemMessageListAdapter(this, systemMessageList);
+        messageListAdapter.getSystemMessageListView().setAdapter(systemMessageListAdapter);
     }
 
     @Override
@@ -92,9 +100,8 @@ public class MessageActivity extends BaseActivity implements IMessageView {
             initSystemMessageList(getLocalSystemMessage());
         } else {
             ArrayList<SystemMessage> systemMessageArrayList = (ArrayList<SystemMessage>) objectList.get(0);
-            long lt = (long) objectList.get(1);
+            setLatestMessageTime((long) objectList.get(1));
             setLocalSystemMessage(systemMessageArrayList);
-            setLatestMessageTime(lt);
             initSystemMessageList(getLocalSystemMessage());
         }
     }
@@ -106,7 +113,7 @@ public class MessageActivity extends BaseActivity implements IMessageView {
             initUserMessageList(userMessageList);
         } else {
             setLocalReplyMessage(userMessageArrayList);
-            initUserMessageList(userMessageArrayList);
+            initUserMessageList(getLocalReplyMessage());
         }
     }
 
@@ -155,6 +162,57 @@ public class MessageActivity extends BaseActivity implements IMessageView {
         }
         SharedPreferences.Editor editor = mySharedPreferences.edit();
         editor.putString(Constants.SYSTEM_MESSAGE_LIST, jsonObject.toString());
+        editor.commit();
+    }
+
+    public void updateLocalReplyMessage(ArrayList<UserMessage> userMessageArrayList) {
+        SharedPreferences mySharedPreferences = getSharedPreferences(Constants.MESSAGES + Constants.UNDERLINE + loginAPI.getLoginUserId(),
+                Activity.MODE_PRIVATE);
+        String list = "{\"userMessageArrayList\":[]}";
+        JSONObject jsonObject = null;
+        JSONArray jsonArray = null;
+        try {
+            jsonObject = new JSONObject(list);
+            jsonArray = jsonObject.getJSONArray(Constants.USER_MESSAGE_ARRAY_LIST);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        for (UserMessage userMessage : userMessageArrayList) {
+            JSONObject userMessageJSONObject = new JSONObject();
+            try {
+                userMessageJSONObject.put(Constants.ID, userMessage.getId());
+                userMessageJSONObject.put(Constants.TOPIC_ID, userMessage.getTopicId());
+                userMessageJSONObject.put(Constants.TITLE, userMessage.getTitle());
+                userMessageJSONObject.put(Constants.TEACHER, userMessage.getTeacher());
+                userMessageJSONObject.put(Constants.THUMB_URL, userMessage.getThumbUrl());
+
+                JSONObject commentJSONObject = new JSONObject();
+                UserMessage.CommentEntity commentEntity = userMessage.getComment();
+                commentJSONObject.put(Constants.CONTENT, commentEntity.getContent());
+                commentJSONObject.put(Constants.ATNAME, commentEntity.getAtName());
+                commentJSONObject.put(Constants.CREATE_DATE, commentEntity.getCreateDate());
+                commentJSONObject.put(Constants.IS_HOME_WORK, commentEntity.getIsHomework());
+                userMessageJSONObject.put(Constants.COMMENT, commentJSONObject);
+
+                JSONObject replyJSONObject = new JSONObject();
+                UserMessage.ReplyEntity replyEntity = userMessage.getReply();
+                replyJSONObject.put(Constants.ACCOUNTID, replyEntity.getAccountId());
+                replyJSONObject.put(Constants.ACCOUNTNAME, replyEntity.getAccountName());
+                replyJSONObject.put(Constants.ACCOUNTPHOTO, replyEntity.getAccountPhoto());
+                replyJSONObject.put(Constants.CONTENT, replyEntity.getContent());
+                replyJSONObject.put(Constants.CREATE_DATE, replyEntity.getCreateDate());
+                replyJSONObject.put(Constants.REPLY_TO, replyEntity.getReplyTo());
+                replyJSONObject.put(Constants.LAST_REPLY_TO, replyEntity.getLastReplyTo());
+                userMessageJSONObject.put(Constants.REPLY, replyJSONObject);
+
+                userMessageJSONObject.put(Constants.HASBEENREPLY, userMessage.getHasBeenReply());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            jsonArray.put(userMessageJSONObject);
+        }
+        SharedPreferences.Editor editor = mySharedPreferences.edit();
+        editor.putString(Constants.USER_MESSAGE_ARRAY_LIST, jsonObject.toString());
         editor.commit();
     }
 
@@ -340,7 +398,7 @@ public class MessageActivity extends BaseActivity implements IMessageView {
                         break;
                     }
                 }
-                setLocalReplyMessage(userMessageArrayList);
+                updateLocalReplyMessage(userMessageArrayList);
                 initUserMessageList(userMessageArrayList);
                 break;
             default:

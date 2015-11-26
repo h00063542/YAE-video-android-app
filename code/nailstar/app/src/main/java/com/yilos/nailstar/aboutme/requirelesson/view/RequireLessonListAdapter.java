@@ -1,8 +1,6 @@
 package com.yilos.nailstar.aboutme.requirelesson.view;
 
-import android.annotation.TargetApi;
 import android.content.Context;
-import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +10,6 @@ import android.widget.TextView;
 import com.yilos.nailstar.R;
 import com.yilos.nailstar.aboutme.requirelesson.entity.RequireLesson;
 import com.yilos.nailstar.framework.application.NailStarApplication;
-import com.yilos.nailstar.util.Constants;
 import com.yilos.widget.view.ImageCacheView;
 
 import java.util.ArrayList;

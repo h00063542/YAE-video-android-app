@@ -7,15 +7,15 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
+        android:padding="@dimen/common_10_dp"
         android:background="@color/white"
         android:orientation="horizontal">
 
         <com.yilos.widget.circleimageview.CircleImageView
             android:id="@+id/accountPhoto"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_marginRight="10dp"
+            android:layout_width="@dimen/common_24_dp"
+            android:layout_height="@dimen/common_24_dp"
+            android:layout_marginRight="@dimen/common_10_dp"
             android:src="@mipmap/ic_default_photo" />
 
         <LinearLayout
@@ -25,7 +25,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="68dp"
+                android:layout_height="@dimen/common_68_dp"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -173,23 +173,4 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/common_1_dp"
         android:background="@color/xk2" />
-    <LinearLayout
-        android:visibility="gone"
-        android:id="@+id/message_list_empty"
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center">
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@mipmap/message_empty"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/message_empty"
-            android:textSize="@dimen/large_text_size"
-            android:textColor="@color/z2"
-            android:layout_marginTop="@dimen/common_10_dp"/>
-    </LinearLayout>
 </LinearLayout>
