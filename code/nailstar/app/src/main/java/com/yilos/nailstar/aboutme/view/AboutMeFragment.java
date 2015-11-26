@@ -275,8 +275,8 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
 //                break;
 //            case R.id.about_me_level:
 //                Intent myLevelIntent = new Intent(getActivity(),LevelActivity.class);
-//                myLevelIntent.putExtra("experience",experience);
-//                myLevelIntent.putExtra("myImageUrl", myImageUrl);
+//                myLevelIntent.putExtra(Constants.EXPERIENCE,experience);
+//                myLevelIntent.putExtra(Constants.MY_IMAGE_URL, myImageUrl);
 //                startActivity(myLevelIntent);
 //                break;
             case R.id.about_me_setting_group:

@@ -214,4 +214,8 @@ public class Constants {
     public static final String PERSON_INFO = "personInfo";
 
     public static final int PERSON_INFO_NAME_MAX_LENGTH = 8;
+
+    public static final String EXPERIENCE = "experience";
+
+    public static final String MY_IMAGE_URL = "myImageUrl";
 }

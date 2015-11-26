@@ -90,7 +90,7 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
     /**
      * 决定是否显示清空图标
      */
-    private void showError() {
+    private void showClearNickNameIcon() {
         if (TextUtils.isEmpty(nickNameText.getText())) {
             errorClear.setVisibility(View.GONE);
         } else {
@@ -103,10 +103,12 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
         identityText.setText(IdentityUtil.getIdentity(personInfo.getType()));
         nickNameText.setText(personInfo.getNickname());
         profileText.setText(personInfo.getProfile());
-        if (personInfo.getPhotoUrl() != "" || !personInfo.getPhotoUrl().isEmpty()) {
+        if(personInfo.getPhotoUrl() == null || personInfo.getPhotoUrl().trim().equals("")) {
+            circleImageView.setImageResource(R.mipmap.ic_default_photo);
+        } else {
             circleImageView.setImageSrc(personInfo.getPhotoUrl());
         }
-        showError();
+        showClearNickNameIcon();
         final PersonInfoPresenter personInfoPresenter = PersonInfoPresenter.getInstance(this);
         titleBar.getBackButton(PersonInfoActivity.this);
         titleBarTitle = titleBar.getTitleView();
@@ -128,18 +130,18 @@ public class PersonInfoActivity extends BaseActivity implements View.OnClickList
             private int selectionEnd ;
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                showError();
+                showClearNickNameIcon();
                 temp  = s;
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                showError();
+                showClearNickNameIcon();
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                showError();
+                showClearNickNameIcon();
                 selectionStart = nickNameText.getSelectionStart();
                 selectionEnd = nickNameText.getSelectionEnd();
                 if (temp.length() > Constants.PERSON_INFO_NAME_MAX_LENGTH) {

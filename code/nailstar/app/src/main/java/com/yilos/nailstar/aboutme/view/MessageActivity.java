@@ -73,11 +73,10 @@ public class MessageActivity extends BaseActivity implements IMessageView {
 
     public void initUserMessageList(final ArrayList<UserMessage> userMessageList) {
         UserMessageListAdapter userMessageListAdapter = new UserMessageListAdapter(this, userMessageList);
-        if (userMessageList.size() != 0) {
-            messageListAdapter.getUserMessageListView().setAdapter(userMessageListAdapter);
-        } else {
+        if (userMessageList.size() == 0) {
             messageListAdapter.showEmptyUserMessageView();
         }
+        messageListAdapter.getUserMessageListView().setAdapter(userMessageListAdapter);
 //            UserMessageListAdapter userMessageListAdapter = new UserMessageListAdapter(this, userMessageList);
 //            messageListAdapter.getUserMessageListView().setAdapter(userMessageListAdapter);
     }
@@ -97,6 +96,17 @@ public class MessageActivity extends BaseActivity implements IMessageView {
             setLocalSystemMessage(systemMessageArrayList);
             setLatestMessageTime(lt);
             initSystemMessageList(getLocalSystemMessage());
+        }
+    }
+
+    @Override
+    public void getUserMessageList(ArrayList<UserMessage> userMessageArrayList) {
+        if (userMessageArrayList.size() == 0) {
+            ArrayList<UserMessage> userMessageList = getLocalReplyMessage();
+            initUserMessageList(userMessageList);
+        } else {
+            setLocalReplyMessage(userMessageArrayList);
+            initUserMessageList(userMessageArrayList);
         }
     }
 
@@ -197,17 +207,6 @@ public class MessageActivity extends BaseActivity implements IMessageView {
                 Activity.MODE_PRIVATE);
         long time = mySharedPreferences.getLong(Constants.LATEST_MESSAGE_TIME, DateUtil.getTimestamp());
         return time;
-    }
-
-    @Override
-    public void getUserMessageList(ArrayList<UserMessage> userMessageArrayList) {
-        if (userMessageArrayList.size() == 0) {
-            ArrayList<UserMessage> userMessageList = getLocalReplyMessage();
-            initUserMessageList(userMessageList);
-        } else {
-            setLocalReplyMessage(userMessageArrayList);
-            initUserMessageList(userMessageArrayList);
-        }
     }
 
     @Override
