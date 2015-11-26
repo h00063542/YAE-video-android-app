@@ -152,6 +152,57 @@ public class MessageActivity extends BaseActivity implements IMessageView {
         editor.commit();
     }
 
+    public void updateLocalReplyMessage(ArrayList<UserMessage> userMessageArrayList) {
+        SharedPreferences mySharedPreferences = getSharedPreferences(Constants.MESSAGES + Constants.UNDERLINE + loginAPI.getLoginUserId(),
+                Activity.MODE_PRIVATE);
+        String list = "{\"userMessageArrayList\":[]}";
+        JSONObject jsonObject = null;
+        JSONArray jsonArray = null;
+        try {
+            jsonObject = new JSONObject(list);
+            jsonArray = jsonObject.getJSONArray(Constants.USER_MESSAGE_ARRAY_LIST);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        for (UserMessage userMessage : userMessageArrayList) {
+            JSONObject userMessageJSONObject = new JSONObject();
+            try {
+                userMessageJSONObject.put(Constants.ID, userMessage.getId());
+                userMessageJSONObject.put(Constants.TOPIC_ID, userMessage.getTopicId());
+                userMessageJSONObject.put(Constants.TITLE, userMessage.getTitle());
+                userMessageJSONObject.put(Constants.TEACHER, userMessage.getTeacher());
+                userMessageJSONObject.put(Constants.THUMB_URL, userMessage.getThumbUrl());
+
+                JSONObject commentJSONObject = new JSONObject();
+                UserMessage.CommentEntity commentEntity = userMessage.getComment();
+                commentJSONObject.put(Constants.CONTENT, commentEntity.getContent());
+                commentJSONObject.put(Constants.ATNAME, commentEntity.getAtName());
+                commentJSONObject.put(Constants.CREATE_DATE, commentEntity.getCreateDate());
+                commentJSONObject.put(Constants.IS_HOME_WORK, commentEntity.getIsHomework());
+                userMessageJSONObject.put(Constants.COMMENT, commentJSONObject);
+
+                JSONObject replyJSONObject = new JSONObject();
+                UserMessage.ReplyEntity replyEntity = userMessage.getReply();
+                replyJSONObject.put(Constants.ACCOUNTID, replyEntity.getAccountId());
+                replyJSONObject.put(Constants.ACCOUNTNAME, replyEntity.getAccountName());
+                replyJSONObject.put(Constants.ACCOUNTPHOTO, replyEntity.getAccountPhoto());
+                replyJSONObject.put(Constants.CONTENT, replyEntity.getContent());
+                replyJSONObject.put(Constants.CREATE_DATE, replyEntity.getCreateDate());
+                replyJSONObject.put(Constants.REPLY_TO, replyEntity.getReplyTo());
+                replyJSONObject.put(Constants.LAST_REPLY_TO, replyEntity.getLastReplyTo());
+                userMessageJSONObject.put(Constants.REPLY, replyJSONObject);
+
+                userMessageJSONObject.put(Constants.HASBEENREPLY, userMessage.getHasBeenReply());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            jsonArray.put(userMessageJSONObject);
+        }
+        SharedPreferences.Editor editor = mySharedPreferences.edit();
+        editor.putString(Constants.USER_MESSAGE_ARRAY_LIST, jsonObject.toString());
+        editor.commit();
+    }
+
     @Override
     public void setLocalSystemMessage(ArrayList<SystemMessage> systemMessageArrayList) {
         if (systemMessageArrayList.size() == 0) {
@@ -334,7 +385,7 @@ public class MessageActivity extends BaseActivity implements IMessageView {
                         break;
                     }
                 }
-                setLocalReplyMessage(userMessageArrayList);
+                updateLocalReplyMessage(userMessageArrayList);
                 initUserMessageList(userMessageArrayList);
                 break;
             default:

@@ -25,7 +25,7 @@ public class MessageListAdapter extends PagerAdapter {
 
         // 初始化回复我的、系统消息Tab页
         userMessageListView = initMessageRecycleView();
-        systemMessageListView = initMessageRecycleView();//activity.getLayoutInflater().inflate(R.layout.activity_system_message_list, null);;
+        systemMessageListView = initMessageRecycleView();
     }
 
     @Override
