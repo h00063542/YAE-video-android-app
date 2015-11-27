@@ -66,6 +66,13 @@ public class ImageCacheView extends ImageView implements ImageLoadingListener, I
         this.setImageResource(src);
     }
 
+    @Override
+    public void setImageResource(int resId) {
+        loading = false;
+        loadSuccess = true;
+        super.setImageResource(resId);
+    }
+
     public String getImageSrc() {
         return imageSrc;
     }
