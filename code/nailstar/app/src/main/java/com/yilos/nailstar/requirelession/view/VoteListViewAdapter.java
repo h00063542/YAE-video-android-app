@@ -346,12 +346,14 @@ public class VoteListViewAdapter extends BaseAdapter {
         if (candidateLession.getPicUrl() != null && !"".equals(candidateLession.getPicUrl())) {
             holder.lessionRankingImg.setImageSrc(candidateLession.getPicUrl());
         } else {
-            holder.lessionRankingImg.setImageSrc(R.mipmap.ic_default_image);
+            holder.lessionRankingImg.setImageSrc("");
+            holder.lessionRankingImg.setImageResource(R.mipmap.ic_default_image);
         }
 
         if (candidateLession.getAuthorPhoto() != null && !"".equals(candidateLession.getAuthorPhoto())) {
             holder.lessionAuthorPhoto.setImageSrc(candidateLession.getAuthorPhoto());
         } else {
+            holder.lessionAuthorPhoto.setImageSrc("");
             holder.lessionAuthorPhoto.setImageResource(R.mipmap.ic_default_photo);
         }
 
@@ -486,7 +488,8 @@ public class VoteListViewAdapter extends BaseAdapter {
                 if (candidateLession.getPicUrl() != null && !"".equals(candidateLession.getPicUrl())) {
                     voteItem.lessionVoteImg.setImageSrc(candidateLession.getPicUrl());
                 } else {
-                    voteItem.lessionVoteImg.setImageSrc(R.mipmap.ic_default_image);
+                    voteItem.lessionVoteImg.setImageSrc("");
+                    voteItem.lessionVoteImg.setImageResource(R.mipmap.ic_default_image);
                 }
 
                 View.OnClickListener onClickListener = new View.OnClickListener() {
