@@ -121,7 +121,7 @@ public class TopicCommentAdapter extends BaseAdapter {
         return position;
     }
 
-    class ViewHolder {
+    static class ViewHolder {
         public CircleImageView authorPhoto;
         public LinearLayout commentLayout;
         public LinearLayout commentReplayLayout;
@@ -151,6 +151,7 @@ public class TopicCommentAdapter extends BaseAdapter {
         if (!StringUtil.isEmpty(topicCommentInfo.getAuthorPhoto())) {//使用用户自定义头像
             holder.authorPhoto.setImageSrc(topicCommentInfo.getAuthorPhoto());
         } else {// 使用默认头像
+            holder.authorPhoto.setImageSrc("");
             holder.authorPhoto.setImageResource(R.drawable.man);
         }
 
