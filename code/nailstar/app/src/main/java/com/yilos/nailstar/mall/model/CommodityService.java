@@ -12,6 +12,7 @@ import java.util.List;
  */
 public interface CommodityService {
     public List<Commodity> getRecommendCommodityList(int pageNo, int prePageNo) throws NetworkDisconnectException;
+    public List<Commodity> getCategoryCommodityList(String categoryId,int pageNo, int prePageNo) throws NetworkDisconnectException;
     public List<Commodity> getHotCommodityList() throws NetworkDisconnectException;
     public List<CommodityCategory> getCommodityCategory() throws NetworkDisconnectException;
     public List<MallIndexBanner> getMallIndexBanner() throws NetworkDisconnectException;

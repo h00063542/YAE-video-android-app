@@ -119,4 +119,13 @@
     <color name="qrscan_mask_color">#66222425</color>
     <color name="qrscan_result_points_color">#c0ffbd21</color>
     <color name="qrscan_tips_text_color">#f9f9f9</color>
+    <color name="biz_audio_progress_bg">#00b2ff</color>
+    <color name="biz_audio_progress_first">#ffffff</color>
+    <color name="biz_audio_progress_second">#6b6666</color>
+
+    <color name="default_bg">#aa000000</color>
+    <color name="select_color">#00b2ff</color>
+    <color name="normal_color">#ffffffff</color>
+    <!--special color-->
+    <color name="black_a10_color">#1a000000</color>
 </resources>

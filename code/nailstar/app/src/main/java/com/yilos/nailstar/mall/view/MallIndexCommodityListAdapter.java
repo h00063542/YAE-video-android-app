@@ -6,12 +6,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.yilos.nailstar.R;
 import com.yilos.nailstar.mall.entity.Commodity;
-import com.yilos.widget.banner.Banner;
 import com.yilos.widget.view.ImageCacheView;
 
 import java.util.ArrayList;
@@ -29,16 +27,9 @@ public class MallIndexCommodityListAdapter extends ArrayAdapter<Commodity> {
     }
 
     private final LayoutInflater mLayoutInflater;
-    private final Random mRandom;
-    private final ArrayList<Integer> mBackgroundColors;
     public MallIndexCommodityListAdapter(Context context) {
         super(context, 0);
         mLayoutInflater = LayoutInflater.from(context);
-        mRandom = new Random();
-        mBackgroundColors = new ArrayList<Integer>();
-        mBackgroundColors.add(R.color.orange);
-        mBackgroundColors.add(R.color.green);
-        mBackgroundColors.add(R.color.grey);
     }
 
     @Override
@@ -61,6 +52,8 @@ public class MallIndexCommodityListAdapter extends ArrayAdapter<Commodity> {
         vh.imageView.setImageSrc(item.getImageUrl());
         vh.imageView.setAdjustViewBounds(true);
         vh.imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+
+        convertView.setTag(R.id.mall_index_product_real_id,item.getGoodsRealId());
         return convertView;
     }
 

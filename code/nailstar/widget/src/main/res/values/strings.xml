@@ -54,4 +54,6 @@
     <string name="pull_to_refresh_footer_pull_label">上拉可以加载更多</string>
     <string name="pull_to_refresh_footer_refreshing_label">正在努力加载</string>
     <string name="pull_to_refresh_footer_finish_label">已经全部加载完毕</string>
+
+    <string name="dlna_device_title">"%s"正在播放中</string>
 </resources>

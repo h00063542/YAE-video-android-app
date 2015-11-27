@@ -1,6 +1,7 @@
 package com.yilos.nailstar.mall.model;
 
 import com.yilos.nailstar.framework.entity.NailStarApplicationContext;
+import com.yilos.nailstar.framework.exception.NetworkDisconnectException;
 import com.yilos.nailstar.mall.entity.Commodity;
 import com.yilos.nailstar.mall.entity.CommodityCategory;
 import com.yilos.nailstar.mall.entity.MallIndexBanner;
@@ -43,20 +44,61 @@ public class CommodityServiceImpl implements CommodityService {
 //                one.setName(JsonUtil.optString(jsonOne, "name"));
 //                one.setImageUrl(JsonUtil.optString(jsonOne, "pic_url"));
 //                one.setDesc(JsonUtil.optString(jsonOne, "description"));
-//                one.setGoodsId(JsonUtil.optString(jsonOne, "real_id"));
+//                one.setGoodsRealId(JsonUtil.optString(jsonOne, "real_id"));
 //            }
 
 
-            result.add(new Commodity("马卡龙甲油胶", 10, "正品保障", "https://gd2.alicdn.com/bao/uploaded/i2/TB1E8k7KpXXXXaCXFXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg"));
-            result.add(new Commodity("Laparry功能胶", 10, "正品保障", "https://gd2.alicdn.com/bao/uploaded/i2/TB1J6NhKFXXXXcgXXXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg"));
-            result.add(new Commodity("马卡龙甲油胶", 10, "正品保障", "https://gd2.alicdn.com/bao/uploaded/i2/TB1E8k7KpXXXXaCXFXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg"));
-            result.add(new Commodity("Laparry功能胶", 10, "正品保障", "https://gd2.alicdn.com/bao/uploaded/i2/TB1J6NhKFXXXXcgXXXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg"));
-            result.add(new Commodity("马卡龙甲油胶", 10, "正品保障", "https://gd2.alicdn.com/bao/uploaded/i2/TB1E8k7KpXXXXaCXFXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg"));
-            result.add(new Commodity("Laparry功能胶", 10, "正品保障", "https://gd2.alicdn.com/bao/uploaded/i2/TB1J6NhKFXXXXcgXXXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg"));
-            result.add(new Commodity("马卡龙甲油胶", 10, "正品保障", "https://gd2.alicdn.com/bao/uploaded/i2/TB1E8k7KpXXXXaCXFXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg"));
-            result.add(new Commodity("Laparry功能胶", 10, "正品保障", "https://gd2.alicdn.com/bao/uploaded/i2/TB1J6NhKFXXXXcgXXXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg"));
-            result.add(new Commodity("马卡龙甲油胶", 10, "正品保障", "https://gd2.alicdn.com/bao/uploaded/i2/TB1E8k7KpXXXXaCXFXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg"));
-            result.add(new Commodity("Laparry功能胶", 10, "正品保障", "https://gd2.alicdn.com/bao/uploaded/i2/TB1J6NhKFXXXXcgXXXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg"));
+            result.add(new Commodity("马卡龙甲油胶", 10, "正品保障", "https://gd2.alicdn.com/bao/uploaded/i2/TB1E8k7KpXXXXaCXFXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg","524360322738"));
+            result.add(new Commodity("Laparry功能胶", 10, "正品保障", "https://gd2.alicdn.com/bao/uploaded/i2/TB1J6NhKFXXXXcgXXXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg","524360322738"));
+            result.add(new Commodity("马卡龙甲油胶", 10, "正品保障", "https://gd2.alicdn.com/bao/uploaded/i2/TB1E8k7KpXXXXaCXFXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg","524360322738"));
+            result.add(new Commodity("Laparry功能胶", 10, "正品保障", "https://gd2.alicdn.com/bao/uploaded/i2/TB1J6NhKFXXXXcgXXXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg","524360322738"));
+            result.add(new Commodity("马卡龙甲油胶", 10, "正品保障", "https://gd2.alicdn.com/bao/uploaded/i2/TB1E8k7KpXXXXaCXFXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg","524360322738"));
+            result.add(new Commodity("Laparry功能胶", 10, "正品保障", "https://gd2.alicdn.com/bao/uploaded/i2/TB1J6NhKFXXXXcgXXXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg","524360322738"));
+            result.add(new Commodity("马卡龙甲油胶", 10, "正品保障", "https://gd2.alicdn.com/bao/uploaded/i2/TB1E8k7KpXXXXaCXFXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg","524360322738"));
+            result.add(new Commodity("Laparry功能胶", 10, "正品保障", "https://gd2.alicdn.com/bao/uploaded/i2/TB1J6NhKFXXXXcgXXXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg","524360322738"));
+            result.add(new Commodity("马卡龙甲油胶", 10, "正品保障", "https://gd2.alicdn.com/bao/uploaded/i2/TB1E8k7KpXXXXaCXFXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg","524360322738"));
+            result.add(new Commodity("Laparry功能胶", 10, "正品保障", "https://gd2.alicdn.com/bao/uploaded/i2/TB1J6NhKFXXXXcgXXXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg","524360322738"));
+
+            return result;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public List<Commodity> getCategoryCommodityList(String categoryId,int pageNo, int prePageNo) throws NetworkDisconnectException{
+        List<Commodity> result = new ArrayList<>();
+
+        if (!NailStarApplicationContext.getInstance().isNetworkConnected()) {
+            return new ArrayList<>();
+        }
+        String url = URL_PREFIX + "mall/getAllCommodities?page=" + pageNo;
+        try {
+//            String strResult = HttpClient.getJson(url);
+//            JSONObject jsonObject = buildJSONObject(strResult);
+//            JSONObject jsonResult = jsonObject.optJSONObject(Constants.RESULT);
+//            JSONArray jsonVCommoditys = jsonResult.optJSONArray("commodities");
+//            for (int i = 0; i < jsonVCommoditys.length(); i++) {
+//                JSONObject jsonOne = jsonVCommoditys.optJSONObject(i);
+//                Commodity one = new Commodity();
+//                one.setName(JsonUtil.optString(jsonOne, "name"));
+//                one.setImageUrl(JsonUtil.optString(jsonOne, "pic_url"));
+//                one.setDesc(JsonUtil.optString(jsonOne, "description"));
+//                one.setGoodsRealId(JsonUtil.optString(jsonOne, "real_id"));
+//            }
+
+
+            result.add(new Commodity("马卡龙甲油胶", 10, "正品保障", "https://gd2.alicdn.com/bao/uploaded/i2/TB1E8k7KpXXXXaCXFXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg","524360322738"));
+            result.add(new Commodity("Laparry功能胶", 10, "正品保障", "https://gd2.alicdn.com/bao/uploaded/i2/TB1J6NhKFXXXXcgXXXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg","524360322738"));
+            result.add(new Commodity("马卡龙甲油胶", 10, "正品保障", "https://gd2.alicdn.com/bao/uploaded/i2/TB1E8k7KpXXXXaCXFXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg","524360322738"));
+            result.add(new Commodity("Laparry功能胶", 10, "正品保障", "https://gd2.alicdn.com/bao/uploaded/i2/TB1J6NhKFXXXXcgXXXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg","524360322738"));
+            result.add(new Commodity("马卡龙甲油胶", 10, "正品保障", "https://gd2.alicdn.com/bao/uploaded/i2/TB1E8k7KpXXXXaCXFXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg","524360322738"));
+            result.add(new Commodity("Laparry功能胶", 10, "正品保障", "https://gd2.alicdn.com/bao/uploaded/i2/TB1J6NhKFXXXXcgXXXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg","524360322738"));
+            result.add(new Commodity("马卡龙甲油胶", 10, "正品保障", "https://gd2.alicdn.com/bao/uploaded/i2/TB1E8k7KpXXXXaCXFXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg","524360322738"));
+            result.add(new Commodity("Laparry功能胶", 10, "正品保障", "https://gd2.alicdn.com/bao/uploaded/i2/TB1J6NhKFXXXXcgXXXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg","524360322738"));
+            result.add(new Commodity("马卡龙甲油胶", 10, "正品保障", "https://gd2.alicdn.com/bao/uploaded/i2/TB1E8k7KpXXXXaCXFXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg","524360322738"));
+            result.add(new Commodity("Laparry功能胶", 10, "正品保障", "https://gd2.alicdn.com/bao/uploaded/i2/TB1J6NhKFXXXXcgXXXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg","524360322738"));
 
             return result;
         }
@@ -85,12 +127,12 @@ public class CommodityServiceImpl implements CommodityService {
 //                one.setName(JsonUtil.optString(jsonOne, "name"));
 //                one.setImageUrl(JsonUtil.optString(jsonOne, "pic_url"));
 //                one.setDesc(JsonUtil.optString(jsonOne, "description"));
-//                one.setGoodsId(JsonUtil.optString(jsonOne, "real_id"));
+//                one.setGoodsRealId(JsonUtil.optString(jsonOne, "real_id"));
 //            }
 
-            result.add(new Commodity("马卡龙甲油胶", 10, "正品保障", "https://gd2.alicdn.com/bao/uploaded/i2/TB1E8k7KpXXXXaCXFXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg"));
-            result.add(new Commodity("Laparry功能胶", 10, "正品保障", "https://gd2.alicdn.com/bao/uploaded/i2/TB1J6NhKFXXXXcgXXXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg"));
-            result.add(new Commodity("马卡龙甲油胶", 10, "正品保障", "https://gd2.alicdn.com/bao/uploaded/i2/TB1E8k7KpXXXXaCXFXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg"));
+            result.add(new Commodity("马卡龙甲油胶", 10, "正品保障", "https://gd2.alicdn.com/bao/uploaded/i2/TB1E8k7KpXXXXaCXFXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg","524360322738"));
+            result.add(new Commodity("Laparry功能胶", 10, "正品保障", "https://gd2.alicdn.com/bao/uploaded/i2/TB1J6NhKFXXXXcgXXXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg","524360322738"));
+            result.add(new Commodity("马卡龙甲油胶", 10, "正品保障", "https://gd2.alicdn.com/bao/uploaded/i2/TB1E8k7KpXXXXaCXFXXXXXXXXXX_!!0-item_pic.jpg_400x400.jpg","524360322738"));
             return result;
         }
         catch (Exception e) {
@@ -118,7 +160,7 @@ public class CommodityServiceImpl implements CommodityService {
 //                one.setName(JsonUtil.optString(jsonOne, "name"));
 //                one.setImageUrl(JsonUtil.optString(jsonOne, "pic_url"));
 //                one.setDesc(JsonUtil.optString(jsonOne, "description"));
-//                one.setGoodsId(JsonUtil.optString(jsonOne, "real_id"));
+//                one.setGoodsRealId(JsonUtil.optString(jsonOne, "real_id"));
 //            }
 
             result.add(new CommodityCategory("甲油胶", "1"));
@@ -153,7 +195,7 @@ public class CommodityServiceImpl implements CommodityService {
 //                one.setName(JsonUtil.optString(jsonOne, "name"));
 //                one.setImageUrl(JsonUtil.optString(jsonOne, "pic_url"));
 //                one.setDesc(JsonUtil.optString(jsonOne, "description"));
-//                one.setGoodsId(JsonUtil.optString(jsonOne, "real_id"));
+//                one.setGoodsRealId(JsonUtil.optString(jsonOne, "real_id"));
 //            }
 
             result.add(new MallIndexBanner("http://www.baidu.com", 200, 10));
