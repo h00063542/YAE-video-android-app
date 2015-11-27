@@ -36,6 +36,7 @@ public class TopicCommentActivity extends BaseActivity implements ITopicCommentV
     private String mCommentReplyId;
     private String mCommentReplyUserId;
     private String mCommentReplyAuthor;
+    private String mCommentLastReplyId;
 
     private String mContent;
 
@@ -60,11 +61,12 @@ public class TopicCommentActivity extends BaseActivity implements ITopicCommentV
         mCommentId = data.getString(Constants.TOPIC_COMMENT_ID, Constants.EMPTY_STRING);
         mCommentUserId = data.getString(Constants.TOPIC_COMMENT_USER_ID, Constants.EMPTY_STRING);
         mCommentAuthor = data.getString(Constants.TOPIC_COMMENT_AUTHOR, Constants.EMPTY_STRING);
-        if (mCommentType == Constants.TOPIC_COMMENT_TYPE_REPLY_AGAIN) {
-            mCommentReplyId = data.getString(Constants.TOPIC_COMMENT_REPLY_ID, Constants.EMPTY_STRING);
-            mCommentReplyUserId = data.getString(Constants.TOPIC_COMMENT_REPLY_USER_ID, Constants.EMPTY_STRING);
-            mCommentReplyAuthor = data.getString(Constants.TOPIC_COMMENT_REPLY_AUTHOR, Constants.EMPTY_STRING);
-        }
+//        if (mCommentType == Constants.TOPIC_COMMENT_TYPE_REPLY_AGAIN) {
+        mCommentReplyId = data.getString(Constants.TOPIC_COMMENT_REPLY_ID, Constants.EMPTY_STRING);
+        mCommentReplyUserId = data.getString(Constants.TOPIC_COMMENT_REPLY_USER_ID, Constants.EMPTY_STRING);
+        mCommentReplyAuthor = data.getString(Constants.TOPIC_COMMENT_REPLY_AUTHOR, Constants.EMPTY_STRING);
+        mCommentLastReplyId = data.getString(Constants.LAST_REPLY_TO, Constants.EMPTY_STRING);
+//        }
         // 初始化控件
         initControl();
         // 初始化控件事件
@@ -124,16 +126,35 @@ public class TopicCommentActivity extends BaseActivity implements ITopicCommentV
                 info.setUserId(userId);
                 info.setContent(mContent);
                 info.setContentPic(Constants.EMPTY_STRING);
-                info.setReplayTo(mCommentId);
+
+                // 评论不需要设置
+//                info.setReplayTo(mCommentId);
                 info.setReady(Constants.READY_COMMENT);
-                if (mCommentType == Constants.TOPIC_COMMENT_TYPE_REPLY_AGAIN) {
-                    info.setAtUserId(mCommentReplyAuthor);
-                    info.setLastReplayTO(mCommentReplyId);
-                    mTopicCommentPresenter.addTopicCommentReply(null);
-                } else {
+
+                if (mCommentType == Constants.TOPIC_COMMENT_TYPE_REPLY) {
                     info.setAtUserId(mCommentUserId);
-                    mTopicCommentPresenter.addTopicComment(null);
+                    info.setReplayTo(mCommentId);
+                    info.setLastReplayTO(mCommentLastReplyId);
+                    mTopicCommentPresenter.addTopicCommentReply(info);
+                } else if (mCommentType == Constants.TOPIC_COMMENT_TYPE_REPLY_AGAIN) {
+                    info.setReplayTo(mCommentId);
+                    info.setAtUserId(mCommentReplyAuthor);
+                    info.setLastReplayTO(mCommentLastReplyId);
+                    mTopicCommentPresenter.addTopicCommentReply(info);
+                } else {//Constants.TOPIC_COMMENT_TYPE_COMMENT
+                    info.setAtUserId(mCommentUserId);
+                    mTopicCommentPresenter.addTopicComment(info);
                 }
+
+
+//                if (mCommentType == Constants.TOPIC_COMMENT_TYPE_REPLY_AGAIN) {
+//                    info.setAtUserId(mCommentReplyAuthor);
+//                    info.setLastReplayTO(mCommentReplyId);
+//                    mTopicCommentPresenter.addTopicCommentReply(info);
+//                } else {
+//                    info.setAtUserId(mCommentUserId);
+//                    mTopicCommentPresenter.addTopicComment(info);
+//                }
             }
         });
 

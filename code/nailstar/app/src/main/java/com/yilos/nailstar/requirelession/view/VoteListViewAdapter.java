@@ -3,7 +3,6 @@ package com.yilos.nailstar.requirelession.view;
 import android.app.Activity;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
@@ -62,7 +61,7 @@ public class VoteListViewAdapter extends BaseAdapter {
     // 显示大图时的ViewPager
     private ViewPager lessionImageViewPager;
 
-    private PagerAdapter pagerAdapter;
+    private LargeImagePagerAdapter pagerAdapter;
 
     // 显示大图时候的投票按钮
     private TextView lessionVoteBtn;
@@ -127,64 +126,7 @@ public class VoteListViewAdapter extends BaseAdapter {
         // ViewPager实现图片左右滑动
         lessionImageViewPager = (ViewPager) lessionImageView.findViewById(R.id.lessionImageViewPager);
 
-        pagerAdapter = new PagerAdapter() {
-
-            @Override
-            public int getItemPosition(Object object) {
-                // 每次点击进来都刷新数据，防止下拉刷新后显示大图用的是缓存中的旧图片
-                return POSITION_NONE;
-            }
-
-            @Override
-            public int getCount() {
-                int count = 0;
-                if (viewType.equals(ViewType.VOTE_LIST) && voteLessionList != null) {
-                    count = voteLessionList.size();
-                } else if (viewType.equals(ViewType.RANKING_LIST) && rankingLessionList != null) {
-                    count = rankingLessionList.size();
-                }
-                return count;
-            }
-
-            @Override
-            public boolean isViewFromObject(View view, Object object) {
-                return view == object;
-            }
-
-            @Override
-            public void destroyItem(ViewGroup container, int position, Object object) {
-                container.removeView((View) object);
-            }
-
-            @Override
-            public Object instantiateItem(ViewGroup container, int position) {
-
-                if (position >= getCount()) {
-                    return null;
-                }
-
-                CandidateLession candidateLession;
-                if (viewType.equals(ViewType.VOTE_LIST)) {
-                    candidateLession = voteLessionList.get(position);
-                } else if (viewType.equals(ViewType.RANKING_LIST)) {
-                    candidateLession = rankingLessionList.get(position);
-                } else {
-                    return null;
-                }
-
-                View lessionImageItem = layoutInflater.inflate(R.layout.lession_image_item, null);
-                ImageCacheView lessionLargeImage = (ImageCacheView) lessionImageItem.findViewById(R.id.lessionLargeImage);
-                if (candidateLession.getPicUrl() != null && !"".equals(candidateLession.getPicUrl())) {
-                    lessionLargeImage.setImageSrc(candidateLession.getPicUrl());
-                } else {
-                    lessionLargeImage.setImageURI(null);
-                }
-                lessionLargeImage.setBackgroundColor(0x00000000);
-                container.addView(lessionImageItem);
-
-                return lessionImageItem;
-            }
-        };
+        pagerAdapter = new LargeImagePagerAdapter(layoutInflater);
 
         lessionImageViewPager.setAdapter(pagerAdapter);
 
@@ -404,7 +346,7 @@ public class VoteListViewAdapter extends BaseAdapter {
         if (candidateLession.getPicUrl() != null && !"".equals(candidateLession.getPicUrl())) {
             holder.lessionRankingImg.setImageSrc(candidateLession.getPicUrl());
         } else {
-            holder.lessionRankingImg.setImageResource(R.mipmap.ic_default_image);
+            holder.lessionRankingImg.setImageSrc(R.mipmap.ic_default_image);
         }
 
         if (candidateLession.getAuthorPhoto() != null && !"".equals(candidateLession.getAuthorPhoto())) {
@@ -420,6 +362,7 @@ public class VoteListViewAdapter extends BaseAdapter {
                 // 点击的时候记录当前打开的图，以便保存或者举报的时候用
                 currentImage = candidateLession;
                 // 显示大图
+                pagerAdapter.setCandidateList(rankingLessionList);
                 showImageActionDialog(position);
             }
         });
@@ -543,7 +486,7 @@ public class VoteListViewAdapter extends BaseAdapter {
                 if (candidateLession.getPicUrl() != null && !"".equals(candidateLession.getPicUrl())) {
                     voteItem.lessionVoteImg.setImageSrc(candidateLession.getPicUrl());
                 } else {
-                    voteItem.lessionVoteImg.setImageResource(R.mipmap.ic_default_image);
+                    voteItem.lessionVoteImg.setImageSrc(R.mipmap.ic_default_image);
                 }
 
                 View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -552,6 +495,7 @@ public class VoteListViewAdapter extends BaseAdapter {
                         // 点击的时候记录当前打开的图，以便保存或者举报的时候用
                         currentImage = voteLessionList.get(realPosition);
                         // 显示大图
+                        pagerAdapter.setCandidateList(voteLessionList);
                         showImageActionDialog(realPosition);
                     }
                 };

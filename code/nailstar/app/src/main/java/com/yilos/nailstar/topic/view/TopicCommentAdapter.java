@@ -31,6 +31,7 @@ import com.yilos.widget.circleimageview.CircleImageView;
 import com.yilos.widget.view.ImageCacheView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by yilos on 2015-11-21.
@@ -120,7 +121,7 @@ public class TopicCommentAdapter extends BaseAdapter {
         return position;
     }
 
-    class ViewHolder {
+    static class ViewHolder {
         public CircleImageView authorPhoto;
         public LinearLayout commentLayout;
         public LinearLayout commentReplayLayout;
@@ -150,6 +151,7 @@ public class TopicCommentAdapter extends BaseAdapter {
         if (!StringUtil.isEmpty(topicCommentInfo.getAuthorPhoto())) {//使用用户自定义头像
             holder.authorPhoto.setImageSrc(topicCommentInfo.getAuthorPhoto());
         } else {// 使用默认头像
+            holder.authorPhoto.setImageSrc("");
             holder.authorPhoto.setImageResource(R.drawable.man);
         }
 
@@ -183,6 +185,7 @@ public class TopicCommentAdapter extends BaseAdapter {
             } else {
                 holder.commentContentPic.setImageSrc(topicCommentInfo.getContentPic());
             }
+            commentContentPicLp.height = holder.commentContentPic.getMeasuredWidth();
             commentContentPicLp.setMargins(0, 0, 0, !CollectionUtil.isEmpty(topicCommentInfo.getReplies()) ? mCommentContentPicMarginBottom : 0);
 //            holder.commentContentPic.setVisibility(View.VISIBLE);
             holder.commentContentPic.setOnClickListener(new View.OnClickListener() {
@@ -229,16 +232,18 @@ public class TopicCommentAdapter extends BaseAdapter {
         } else {
             commentContentPicLp.setMargins(0, 0, 0, 0);
             holder.commentContentPic.setImageSrc(Constants.EMPTY_STRING);
+            commentContentPicLp.height = 0;
         }
 
         holder.commentReplayLayout.removeAllViews();
 
         // -----------------设置评论回复内容-----------------
         if (!CollectionUtil.isEmpty(topicCommentInfo.getReplies())) {
-            int index = 0;
+            boolean isFirst = true;
             for (TopicCommentReplyInfo topicCommentReplyInfo : topicCommentInfo.getReplies()) {
                 TextView topicCommentReplyTv = buildCommentReplyTextView(topicCommentInfo, topicCommentReplyInfo);
-                if (index == 0) {
+                if (isFirst) {
+                    isFirst = false;
                     // 设置padding
                     topicCommentReplyTv.setPadding(mCommentReplyPaddingLeft, mCommentReplyPaddingTop
                             , mCommentReplyPaddingRight, mCommentReplyPaddingBottom);
@@ -247,7 +252,6 @@ public class TopicCommentAdapter extends BaseAdapter {
                             , mCommentReplyPaddingRight, mCommentReplyPaddingBottom);
                 }
                 holder.commentReplayLayout.addView(topicCommentReplyTv);
-                index++;
             }
         }
 
@@ -338,15 +342,38 @@ public class TopicCommentAdapter extends BaseAdapter {
             showTopicCommentReplayAgainDialog(commentInfo, replyInfo, type);
             return;
         }
+
         Intent intent = new Intent(mBaseActivity, TopicCommentActivity.class);
         intent.putExtra(Constants.TOPIC_ID, mTopicId);
         if (null != commentInfo) {
             intent.putExtra(Constants.TOPIC_COMMENT_ID, commentInfo.getId());
             intent.putExtra(Constants.TOPIC_COMMENT_USER_ID, commentInfo.getUserId());
             intent.putExtra(Constants.TOPIC_COMMENT_AUTHOR, commentInfo.getAuthor());
+            intent.putExtra(Constants.LAST_REPLY_TO, getLastTopicCommentReplayId(commentInfo.getId()));
         }
         intent.putExtra(Constants.TYPE, type);
         mBaseActivity.startActivityForResult(intent, Constants.TOPIC_COMMENT_REQUEST_CODE);
+    }
+
+    public String getLastTopicCommentReplayId(String topicId) {
+        if (StringUtil.isEmpty(topicId)) {
+            return Constants.EMPTY_STRING;
+        }
+        TopicCommentInfo topicCommentInfo = null;
+        for (TopicCommentInfo item : topicCommentInfoList) {
+            if (topicId.equals(item.getId())) {
+                topicCommentInfo = item;
+                break;
+            }
+        }
+        if (null == topicCommentInfo) {
+            return Constants.EMPTY_STRING;
+        }
+        List<TopicCommentReplyInfo> replies = topicCommentInfo.getReplies();
+        if (CollectionUtil.isEmpty(replies)) {
+            return topicId;
+        }
+        return replies.get(replies.size() - 1).getId();
     }
 
     private void showTopicCommentReplayAgainDialog(final TopicCommentInfo commentInfo
@@ -364,6 +391,7 @@ public class TopicCommentAdapter extends BaseAdapter {
                         intent.putExtra(Constants.TOPIC_COMMENT_ID, commentInfo.getId());
                         intent.putExtra(Constants.TOPIC_COMMENT_USER_ID, commentInfo.getUserId());
                         intent.putExtra(Constants.TOPIC_COMMENT_AUTHOR, commentInfo.getAuthor());
+                        intent.putExtra(Constants.LAST_REPLY_TO, getLastTopicCommentReplayId(commentInfo.getId()));
                     }
                     if (null != replyInfo && type == Constants.TOPIC_COMMENT_TYPE_REPLY_AGAIN) {
                         intent.putExtra(Constants.TOPIC_COMMENT_REPLY_ID, replyInfo.getId());

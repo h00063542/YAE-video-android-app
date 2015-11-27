@@ -9,7 +9,6 @@ import android.widget.Toast;
 import com.alibaba.sdk.android.AlibabaSDK;
 import com.alibaba.sdk.android.Environment;
 import com.alibaba.sdk.android.callback.InitResultCallback;
-import com.facebook.drawee.backends.pipeline.Fresco;
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiskCache;
 import com.nostra13.universalimageloader.cache.disc.naming.HashCodeFileNameGenerator;
 import com.nostra13.universalimageloader.cache.memory.impl.LruMemoryCache;
@@ -22,6 +21,7 @@ import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
 import com.nostra13.universalimageloader.utils.StorageUtils;
 import com.sina.sinavideo.sdk.utils.VDApplication;
 import com.sina.sinavideo.sdk.utils.VDResolutionManager;
+import com.tencent.bugly.crashreport.CrashReport;
 import com.umeng.analytics.MobclickAgent;
 import com.ut.mini.UTAnalytics;
 import com.yilos.nailstar.R;
@@ -30,7 +30,6 @@ import com.yilos.nailstar.framework.exception.JSONParseException;
 import com.yilos.nailstar.framework.exception.NetworkDisconnectException;
 import com.yilos.nailstar.index.model.IndexServiceImpl;
 import com.yilos.nailstar.util.Constants;
-import com.yilos.nailstar.util.CrashHandler;
 
 import java.io.File;
 
@@ -55,31 +54,39 @@ public class NailStarApplication extends MultiDexApplication {
 
     public void onCreate() {
         super.onCreate();
-        MobclickAgent.openActivityDurationTrack(false);
-        MobclickAgent.setDebugMode(true);
-        com.umeng.socialize.utils.Log.LOG = true;
+
+        CrashReport.initCrashReport(this, "900012903", false);
+
+        initUmengSdk();
 
         initDir();
         initTaobaoSDK();
 
-        CrashHandler.getInstance().init(this);
-
         application = this;
 
-        Fresco.initialize(getApplicationContext());
+        initImageLoader();
 
+        // 播放器初始化，要在app启动前进行初始化，才能解压出相应的解码器
+        initVideoPlayer();
+    }
+
+    private void initUmengSdk() {
+        MobclickAgent.openActivityDurationTrack(false);
+        MobclickAgent.setDebugMode(true);
+        com.umeng.socialize.utils.Log.LOG = true;
+    }
+
+    private void initImageLoader() {
         File cacheDir = StorageUtils.getCacheDirectory(getApplicationContext());
-
         DisplayImageOptions options = new DisplayImageOptions.Builder()
-                .showImageOnLoading(R.mipmap.icon_loading)
-                .showImageOnFail(R.mipmap.icon_refresh)
+                .showImageOnLoading(R.drawable.ic_image_loading)
+                .showImageOnFail(R.drawable.ic_image_loading)
                 .resetViewBeforeLoading(false)  // default
                 .cacheInMemory(true) // default
                 .cacheOnDisk(true) // default
                 .imageScaleType(ImageScaleType.IN_SAMPLE_POWER_OF_2) // default
                 .bitmapConfig(Bitmap.Config.ARGB_8888) // default
                 .build();
-
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getApplicationContext())
                 .memoryCacheExtraOptions(480, 800) // default = device screen dimensions
                 .diskCacheExtraOptions(480, 800, null)
@@ -100,9 +107,6 @@ public class NailStarApplication extends MultiDexApplication {
 
         ImageLoader imageLoader = ImageLoader.getInstance();
         imageLoader.init(config);
-
-        // 播放器初始化，要在app启动前进行初始化，才能解压出相应的解码器
-        initVideoPlayer();
     }
 
     public int getScreenWidth(Activity activity) {
@@ -121,6 +125,7 @@ public class NailStarApplication extends MultiDexApplication {
 
     /**
      * 根据长宽比获取高度
+     *
      * @param activity
      * @param ratio
      * @return
@@ -129,7 +134,7 @@ public class NailStarApplication extends MultiDexApplication {
         DisplayMetrics metric = new DisplayMetrics();
         activity.getWindowManager().getDefaultDisplay().getMetrics(metric);
 
-        return (int)(metric.widthPixels * ratio);
+        return (int) (metric.widthPixels * ratio);
     }
 
     public void preloadIndexContent() {
@@ -149,11 +154,7 @@ public class NailStarApplication extends MultiDexApplication {
     }
 
     private void initDir() {
-        File sdPath = new File(Constants.YILOS_NAILSTAR_LOGS_PATH);
-        if (!sdPath.exists()) {
-            sdPath.mkdirs();
-        }
-        sdPath = new File(Constants.YILOS_NAILSTAR_VIDEOS_PATH);
+        File sdPath = new File(Constants.YILOS_NAILSTAR_VIDEOS_PATH);
         if (!sdPath.exists()) {
             sdPath.mkdirs();
         }
@@ -163,7 +164,7 @@ public class NailStarApplication extends MultiDexApplication {
         }
     }
 
-    private void initTaobaoSDK(){
+    private void initTaobaoSDK() {
         UTAnalytics.getInstance().turnOnDebug();
         AlibabaSDK.turnOnDebug();
 

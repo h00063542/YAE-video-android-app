@@ -1,8 +1,6 @@
 package com.yilos.nailstar.aboutme.requirelesson.view;
 
-import android.annotation.TargetApi;
 import android.content.Context;
-import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +10,6 @@ import android.widget.TextView;
 import com.yilos.nailstar.R;
 import com.yilos.nailstar.aboutme.requirelesson.entity.RequireLesson;
 import com.yilos.nailstar.framework.application.NailStarApplication;
-import com.yilos.nailstar.util.Constants;
 import com.yilos.widget.view.ImageCacheView;
 
 import java.util.ArrayList;
@@ -51,12 +48,11 @@ public class RequireLessonListAdapter extends RecyclerView.Adapter<RequireLesson
         return vh;
     }
 
-    @TargetApi(Build.VERSION_CODES.M)
     @Override
     public void onBindViewHolder(final RequireLessonListAdapter.ViewHolder holder, int position) {
         final RequireLesson requireLesson = requireLessonArrayList.get(position);
         holder.imageCacheView.setImageSrc(requireLesson.getThumbUrl());
-        int backColor = context.getResources().getColor(R.color.white,null);
+        int backColor = context.getResources().getColor(R.color.white);
         holder.imageCacheView.setBackgroundColor(backColor);
         holder.imageCacheView.getLayoutParams().height = (int) (imageWidth * 0.75);
         String di = context.getResources().getString(R.string.di);

@@ -2,10 +2,7 @@ package com.yilos.nailstar.aboutme.view;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.StatFs;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -17,15 +14,14 @@ import com.orhanobut.dialogplus.DialogPlus;
 import com.orhanobut.dialogplus.OnItemClickListener;
 import com.yilos.nailstar.R;
 import com.yilos.nailstar.aboutme.entity.Sdcard;
-import com.yilos.nailstar.aboutme.entity.StorageList;
 import com.yilos.nailstar.aboutme.model.LoginAPI;
 import com.yilos.nailstar.framework.view.BaseActivity;
+import com.yilos.nailstar.util.Constants;
 import com.yilos.nailstar.util.DataCleanManager;
 import com.yilos.nailstar.util.SettingUtil;
 import com.yilos.widget.titlebar.TitleBar;
 
 import java.io.File;
-import java.util.ArrayList;
 
 /**
  * Created by sisilai on 15/11/10.
@@ -42,8 +38,6 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     private TextView loginOut;
     private TextView downloadSdcard;
     private RelativeLayout settingFolder;
-
-    ArrayList<Sdcard> sdcardArrayList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,24 +62,6 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         downloadSdcard = (TextView) findViewById(R.id.download_sdcard);
     }
 
-    /**
-     * 获取版本号
-     *
-     * @return 当前应用的版本号
-     */
-    public String getVersion() {
-        try {
-            PackageManager manager = this.getPackageManager();
-            PackageInfo info = manager.getPackageInfo(this.getPackageName(), 0);
-            String version = info.versionName;
-            return version;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return this.getString(R.string.can_not_find_version_name);
-        }
-    }
-
-
     private void initEvents() {
         if (LoginAPI.getInstance().isLogin()) {
             loginOut.setVisibility(View.VISIBLE);
@@ -93,7 +69,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         }
         goToAboutUs.setOnClickListener(this);
         settingFolder.setOnClickListener(this);
-        versionName = getVersion();
+        versionName = SettingUtil.getVersion();
         versionInfoNumber.setText(versionName);
         boolean allow = SettingUtil.getAllowNoWifi();
         slideSwitch.setState(allow);
@@ -101,11 +77,6 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         titleTextView.setText(R.string.about_me_setting);
         clearCache.setOnClickListener(this);
         cacheNumber.setText(setCacheNumber());
-        sdcardArrayList = getSdcard();
-        Sdcard sdcard = sdcardArrayList.get(sdcardArrayList.size() - 1);
-        if (SettingUtil.getSdcardName().isEmpty()) {
-            SettingUtil.setSdcardPathSharedPreferences(sdcard.getSdcardName(),sdcard.getSdcardPath());
-        }
         downloadSdcard.setText(SettingUtil.getSdcardName());
     }
 
@@ -135,7 +106,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 break;
             case R.id.go_to_about_us:
                 Intent aboutUsIntent = new Intent(SettingActivity.this, AboutUsActivity.class);
-                aboutUsIntent.putExtra("versionName", versionName);
+                aboutUsIntent.putExtra(Constants.VERSION_NAME, versionName);
                 startActivity(aboutUsIntent);
                 break;
             case R.id.login_out:
@@ -146,7 +117,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 finish();
                 break;
             case R.id.setting_folder:
-                final SettingFolderAdapter settingFolderAdapter = new SettingFolderAdapter(this,sdcardArrayList,SettingUtil.getSdcardName());
+                final SettingFolderAdapter settingFolderAdapter = new SettingFolderAdapter(this,SettingUtil.getSdcardList(),SettingUtil.getSdcardName());
                 DialogPlus dialog = DialogPlus.newDialog(this)
                         .setAdapter(settingFolderAdapter)
                                 .setOnItemClickListener(new OnItemClickListener() {
@@ -155,15 +126,14 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                                         if (item == null) {
                                             return;
                                         }
-                                        Sdcard sdcard = new Sdcard();
-                                        sdcard = (Sdcard) item;
-                                        SettingUtil.setSdcardPathSharedPreferences(sdcard.getSdcardName(), sdcard.getSdcardPath());
+                                        Sdcard sdcard  = (Sdcard) item;
+                                        SettingUtil.setSdcard(sdcard.getSdcardName(), sdcard.getSdcardPath());
                                         downloadSdcard.setText(SettingUtil.getSdcardName());
                                         dialog.dismiss();
                                     }
                                 })
                                 .setGravity(Gravity.CENTER)
-                                .setHeader(R.layout.setting_folder_dialog_header) // This will enable the expand feature, (similar to android L share dialog)
+                                .setHeader(R.layout.setting_folder_dialog_header)
                                 .create();
                 dialog.show();
                 break;
@@ -188,45 +158,13 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
 
     @Override
     public void open() {
-        SettingUtil.setAllowNoWifiSharedPreferences(true);
+        SettingUtil.setAllowNoWifi(true);
         showShortToast(R.string.allow_no_wifi_watch);
     }
 
     @Override
     public void close() {
-        SettingUtil.setAllowNoWifiSharedPreferences(false);
+        SettingUtil.setAllowNoWifi(false);
         showShortToast(R.string.not_allow_no_wifi_watch);
-    }
-
-    private ArrayList<Sdcard> getSdcard() {
-
-        StorageList storageList = new StorageList(SettingActivity.this);
-        String[] paths;
-        paths = storageList.getVolumePaths();
-
-        ArrayList<Sdcard> sdcardArrayList = new ArrayList<>();
-
-        for (int index = 0; index < paths.length; index++) {
-            Sdcard sdcard = new Sdcard();
-            sdcard.setSdcardName("存储卡" + String.valueOf(index + 1));
-            sdcard.setSdcardPath(paths[index]);
-            StatFs sf = new StatFs(sdcard.getSdcardPath());
-            long blockSize = sf.getBlockSize(); //每个block大小
-            long blockCount = sf.getBlockCount(); //总大小
-            long availCount = sf.getAvailableBlocks(); //有效大小
-            sdcard.setBlockCount(blockSize * blockCount);
-            sdcard.setAvailCount(blockSize * availCount);
-            try {
-                sdcard.setBlockCountFormat(DataCleanManager.getFormatSize(sdcard.getBlockCount()));
-                sdcard.setAvailCountFormat(DataCleanManager.getFormatSize(sdcard.getAvailCount()));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            if (sdcard.getAvailCount() > 0) {
-                sdcardArrayList.add(sdcard);
-            }
-        }
-
-        return sdcardArrayList;
     }
 }

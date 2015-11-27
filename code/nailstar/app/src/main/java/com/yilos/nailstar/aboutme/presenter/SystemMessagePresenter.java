@@ -50,5 +50,4 @@ public class SystemMessagePresenter {
 
         new TaskManager().next(loadSystemMessageList).next(systemMessageListUITask).start();
     }
-
 }

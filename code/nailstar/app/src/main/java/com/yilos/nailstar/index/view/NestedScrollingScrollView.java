@@ -17,6 +17,7 @@ public class NestedScrollingScrollView extends NestedScrollView {
     private int mTouchSlop;
     private NestedScrollingParentHelper nestedScrollingParentHelper;
     private NestedScrollingChildHelper nestedScrollingChildHelper;
+    private float downY;
 
     private ScrollViewListener scrollViewListener = null;
 
@@ -62,9 +63,6 @@ public class NestedScrollingScrollView extends NestedScrollView {
         if(dy > 0) {
             if(getScrollY() + getHeight() < computeVerticalScrollRange()) {
                 int y = dy;
-//                if(getScrollY() + dy > maxScrollY) {
-//                    y = maxScrollY - getScrollY();
-//                }
                 if(getScrollY() + getHeight() + dy > computeVerticalScrollRange()) {
                     y = computeVerticalScrollRange() - getHeight() - getScrollY();
                 }
@@ -99,7 +97,7 @@ public class NestedScrollingScrollView extends NestedScrollView {
             // 滚动条尚未到底
             if(getScrollY() + getHeight() < computeVerticalScrollRange()) {
                 fling((int)velocityY);
-                if(getScrollY() + getHeight() < computeVerticalScrollRange()) {
+                if(velocityY < 5000) {
                     return true;
                 }
             }
@@ -125,8 +123,15 @@ public class NestedScrollingScrollView extends NestedScrollView {
         int action = ev.getAction();
 
         if(action == MotionEvent.ACTION_DOWN) {
+            downY = ev.getY();
             super.onInterceptTouchEvent(ev);
             return false;
+        } else if(action == MotionEvent.ACTION_MOVE) {
+            if(Math.abs(ev.getY() - downY) > 100) {
+                return super.onInterceptTouchEvent(ev);
+            } else {
+                return false;
+            }
         }
 
         return super.onInterceptTouchEvent(ev);

@@ -6,7 +6,9 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.GridView;
+import android.widget.LinearLayout;
 
 import com.yilos.nailstar.R;
 import com.yilos.nailstar.aboutme.model.LoginAPI;
@@ -23,14 +25,18 @@ import java.util.ArrayList;
 public class RequireLessonListActivity extends BaseActivity implements IRequireLessonView {
     private RecyclerView recyclerView;
     private TitleBar titleBar;
+    private LinearLayout requireLessonEmpty;
     private RequireLessonListAdapter requireLessonListAdapter;
-    private ArrayList<RequireLesson> requireLessonArrayList = new ArrayList<>();
+    private ArrayList<RequireLesson> requireLessonArrayList;
 
     @Override
     public void getRequireLessonList(ArrayList<RequireLesson> requireLessonArrayList) {
         this.requireLessonArrayList = requireLessonArrayList;
         requireLessonListAdapter = new RequireLessonListAdapter(this,requireLessonArrayList);
         recyclerView.setAdapter(requireLessonListAdapter);
+        if (this.requireLessonArrayList.size() == 0) {
+            requireLessonEmpty.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -40,6 +46,7 @@ public class RequireLessonListActivity extends BaseActivity implements IRequireL
         titleBar = (TitleBar) findViewById(R.id.require_lesson_list_title_bar);
         titleBar.getTitleView(R.string.about_me_my_require_lesson);
         titleBar.getBackButton(this);
+        requireLessonEmpty = (LinearLayout) findViewById(R.id.require_lesson_empty);
         recyclerView = (RecyclerView) findViewById(R.id.require_lesson_list);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2, GridLayoutManager.VERTICAL,false);
         recyclerView.setLayoutManager(gridLayoutManager);

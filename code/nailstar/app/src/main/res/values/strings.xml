@@ -44,14 +44,18 @@
     <string name="video_play_not_wifi_tips2">继续播放可能产生流量费用</string>
     <string name="video_play_not_wifi_tips1">您正在使用非Wi-Fi网络</string>
     <string name="continue_to_play">继续播放</string>
+    <string name="continue_to_download">是否继续下载</string>
     <string name="video_has_been_cached">%1$s视频已缓存</string>
     <string name="add_video_download">成功添加至 我的 -> 已下载</string>
     <string name="add_topic_collection">成功添加至 我的 -> 已收藏</string>
-    <string name="submitted_comment_fail">提交评论失败，请稍后再试...</string>
-    <string name="submitted_homework_fail">交作业失败，请稍后再试...</string>
+    <string name="operation_fail">操作失败，请稍后重试</string>
+    <string name="submitted_comment_fail">提交评论失败，请稍后重试</string>
+    <string name="submitted_homework_fail">交作业失败，请稍后重试</string>
     <string name="topic_share_title">月薪10000+的美甲师都在看</string>
     <string name="topic_share_content">美甲大咖App热播教学视频%1$s</string>
     <string name="topic_empty_comment_tips">暂无评论，来抢沙发吧~</string>
+    <string name="network_connect_fail">网络不给力哦，请稍后重试</string>
+    <string name="topic_comment_count_0">评论数 0</string>
 
     <string name="topic_shopping_helper">购物帮助</string>
     <string name="order_finish_headertext">完成订单！</string>
@@ -85,6 +89,8 @@
     <string name="about_me_setting">设置</string>
     <string name="teacher">老师</string>
     <string name="ka_you">咖友</string>
+    <string name="delete">删除</string>
+    <string name="delete_video_confirm">是否删除下载任务及下载的文件?</string>
 
     <!-- 修改资料界面-->
     <string name="edit_person_info">修改资料</string>
@@ -94,6 +100,8 @@
     <string name="person_info_introduction">个人介绍</string>
     <string name="person_info_update_fail">个人资料更新失败，请重试</string>
     <string name="person_info_update_succeed">个人资料更新成功</string>
+    <string name="person_info_name_tips">昵称不能超过八个字哦~</string>
+    <string name="setting_person_info_show_tips">正在重置个人资料...</string>
 
     <!-- 求教程-->
     <string name="di">第</string>
@@ -186,7 +194,17 @@
     <string name="index_commodity_recommend_header_text">商品推荐</string>
     <string name="index_commodity_hot_1_price_unit">¥</string>
 
-
     <string name="has_been_reply">已回复</string>
     <string name="title_activity_my_favourite">收藏</string>
+
+    <!-- 内容为空时候显示的提示语句 -->
+    <string name="require_lesson_empty">你还没有求过教程</string>
+    <string name="require_lesson_empty_tips">不用再苦苦想制作方法啦~"</string>
+    <string name="message_empty">暂时没有消息</string>
+    <string name="favourite_empty">收藏空空的</string>
+    <string name="favourite_empty_tips">把自己想学的教程放进来吧</string>
+    <string name="reply_me">回复我的</string>
+    <string name="system_message">系统消息</string>
+    <string name="reply_other_show_tips">正在回复对方...</string>
+
 </resources>

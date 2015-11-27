@@ -1,22 +1,17 @@
 package com.yilos.nailstar.topic.presenter;
 
+import com.yilos.nailstar.framework.exception.NetworkDisconnectException;
 import com.yilos.nailstar.topic.entity.AddCommentInfo;
 import com.yilos.nailstar.topic.model.ITopicService;
 import com.yilos.nailstar.topic.model.TopicServiceImpl;
 import com.yilos.nailstar.topic.view.ITopicCommentView;
-import com.yilos.nailstar.util.LoggerFactory;
 import com.yilos.nailstar.util.TaskManager;
-
-import org.apache.log4j.Logger;
 
 
 /**
  * Created by yilos on 2015-10-22.
  */
 public class TopicCommentPresenter {
-    private final Logger LOGGER = LoggerFactory.getLogger(TopicCommentPresenter.class);
-
-
     private ITopicCommentView topicCommentView;
     private ITopicService topicsService;
 
@@ -31,15 +26,14 @@ public class TopicCommentPresenter {
         TaskManager.Task addTopicCommentTask = new TaskManager.BackgroundTask() {
             @Override
             public Object doWork(Object data) {
-//                try {
-                // TODO 测试阶段，先不要调用服务端接口
-                //return topicsService.addComment(info);
-                return "001";
-//                } catch (NetworkDisconnectException e) {
+                try {
+                    return topicsService.addComment(info);
+//                return "001";
+                } catch (NetworkDisconnectException e) {
 //                    e.printStackTrace();
 //                    LOGGER.error("添加评论信息失败，topicId：" + info.getTopicId(), e);
-//                }
-//                return null;
+                }
+                return null;
             }
         };
 
@@ -63,15 +57,14 @@ public class TopicCommentPresenter {
         TaskManager.Task addTopicCommentReplyTask = new TaskManager.BackgroundTask() {
             @Override
             public Object doWork(Object data) {
-//                try {
-                // TODO 测试阶段，先不要调用服务端接口
-                //return topicsService.addComment(info);
-                return "002";
-//                } catch (NetworkDisconnectException e) {
+                try {
+                    return topicsService.addComment(info);
+//                return "002";
+                } catch (NetworkDisconnectException e) {
 //                    e.printStackTrace();
 //                    LOGGER.error("添加评论信息失败，topicId：" + info.getTopicId(), e);
-//                }
-//                return null;
+                }
+                return null;
             }
         };
 

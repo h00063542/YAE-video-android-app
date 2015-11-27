@@ -11,9 +11,6 @@ import com.sina.sinavideo.sdk.data.VDVideoInfo;
 import com.sina.sinavideo.sdk.data.VDVideoListInfo;
 import com.yilos.nailstar.R;
 import com.yilos.nailstar.framework.view.BaseActivity;
-import com.yilos.nailstar.util.LoggerFactory;
-
-import org.apache.log4j.Logger;
 
 /**
  * Created by yilos on 15/11/21.
@@ -24,8 +21,6 @@ public class DownloadVideoPlayer extends BaseActivity implements
     public static final String TITLE = "title";
 
     public static final String URL = "url";
-
-    private static Logger logger = LoggerFactory.getLogger(DownloadVideoPlayer.class);
 
     private VDVideoView mVDVideoView = null;
 
@@ -104,7 +99,7 @@ public class DownloadVideoPlayer extends BaseActivity implements
     @Override
     public void onPlaylistClick(VDVideoInfo info, int p) {
         if (info == null) {
-            logger.error("onPlaylistClick info is null");
+//            logger.error("onPlaylistClick info is null");
         }
         mVDVideoView.play(p);
     }

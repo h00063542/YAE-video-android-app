@@ -3,17 +3,12 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
     android:fitsSystemWindows="true"
     android:clipToPadding="true">
     <com.yilos.widget.titlebar.TitleBar
         android:id="@+id/message_title_bar"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"/>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/common_1_dp"
-        android:background="@color/xk1"/>
 
     <com.yilos.widget.pageindicator.TabPageIndicator
         android:id="@+id/messageListPagerIndicator"
@@ -24,6 +19,7 @@
         android:layout_width="fill_parent"
         android:layout_height="2dp" />
     <android.support.v4.view.ViewPager
+        android:background="@color/xk2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/messageListPager">

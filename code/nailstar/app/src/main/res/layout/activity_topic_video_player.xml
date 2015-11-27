@@ -429,6 +429,7 @@
                     android:background="@drawable/bottom_border"
                     android:gravity="center_vertical"
                     android:paddingLeft="@dimen/topic_common_margin_left"
+                    android:text="@string/topic_comment_count_0"
                     android:textColor="@color/z3"
                     android:textSize="@dimen/small_text_size" />
 

@@ -17,24 +17,16 @@ import com.yilos.nailstar.topic.model.TopicServiceImpl;
 import com.yilos.nailstar.topic.view.ITopicVideoPlayerView;
 import com.yilos.nailstar.util.Constants;
 import com.yilos.nailstar.util.FileUtils;
-import com.yilos.nailstar.util.LoggerFactory;
 import com.yilos.nailstar.util.StringUtil;
 import com.yilos.nailstar.util.TaskManager;
 
-import org.apache.log4j.Logger;
-
-import java.io.File;
-import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 
 /**
  * Created by yilos on 2015-10-22.
  */
 public class TopicVideoPlayerPresenter {
-    private final Logger LOGGER = LoggerFactory.getLogger(TopicVideoPlayerPresenter.class);
-
     private ITopicVideoPlayerView topicVideoPlayerView;
     private ITopicService topicsService;
     private ImageLoader imageLoader;
@@ -54,8 +46,8 @@ public class TopicVideoPlayerPresenter {
                 try {
                     return topicsService.getTopicInfo(topicId);
                 } catch (NetworkDisconnectException e) {
-                    e.printStackTrace();
-                    LOGGER.error(MessageFormat.format("获取topic信息失败，topicId:{0}", topicId), e);
+//                    e.printStackTrace();
+//                    LOGGER.error(MessageFormat.format("获取topic信息失败，topicId:{0}", topicId), e);
                 }
                 return null;
             }
@@ -83,8 +75,8 @@ public class TopicVideoPlayerPresenter {
                 try {
                     return topicsService.getTopicRelatedInfoList(topicId);
                 } catch (NetworkDisconnectException e) {
-                    e.printStackTrace();
-                    LOGGER.error(MessageFormat.format("获取topic图文信息失败，topicId:{0}", topicId), e);
+//                    e.printStackTrace();
+//                    LOGGER.error(MessageFormat.format("获取topic图文信息失败，topicId:{0}", topicId), e);
                 }
                 return null;
             }
@@ -112,8 +104,8 @@ public class TopicVideoPlayerPresenter {
                 try {
                     return topicsService.getTopicRelatedUsedProductList(topicId);
                 } catch (NetworkDisconnectException e) {
-                    e.printStackTrace();
-                    LOGGER.error(MessageFormat.format("获取topic图文信息失败，topicId:{0}", topicId), e);
+//                    e.printStackTrace();
+//                    LOGGER.error(MessageFormat.format("获取topic图文信息失败，topicId:{0}", topicId), e);
                 }
                 return null;
             }
@@ -140,8 +132,8 @@ public class TopicVideoPlayerPresenter {
                 try {
                     return topicsService.getTopicImageTextInfo(topicId);
                 } catch (NetworkDisconnectException e) {
-                    e.printStackTrace();
-                    LOGGER.error(MessageFormat.format("获取topic图文信息失败，topicId:{0}", topicId), e);
+//                    e.printStackTrace();
+//                    LOGGER.error(MessageFormat.format("获取topic图文信息失败，topicId:{0}", topicId), e);
                 }
                 return null;
             }
@@ -169,8 +161,8 @@ public class TopicVideoPlayerPresenter {
                 try {
                     return topicsService.getTopicComments(topicId, page);
                 } catch (NetworkDisconnectException e) {
-                    e.printStackTrace();
-                    LOGGER.error(MessageFormat.format("获取topic评论信息失败，topicId:{0}", topicId), e);
+//                    e.printStackTrace();
+//                    LOGGER.error(MessageFormat.format("获取topic评论信息失败，topicId:{0}", topicId), e);
                 }
                 return null;
             }
@@ -197,8 +189,8 @@ public class TopicVideoPlayerPresenter {
                 try {
                     return topicsService.addVideoPlayCount(topicId);
                 } catch (NetworkDisconnectException e) {
-                    e.printStackTrace();
-                    LOGGER.error(MessageFormat.format("视频播放次数+1失败，topicId:{0}", topicId), e);
+//                    e.printStackTrace();
+//                    LOGGER.error(MessageFormat.format("视频播放次数+1失败，topicId:{0}", topicId), e);
                 }
                 return null;
             }
@@ -218,18 +210,19 @@ public class TopicVideoPlayerPresenter {
     }
 
 
-    public void downLoadTopicImage(final String topicId, final String url) {
-        String filePath = saveBitmap2File(topicId, url);
+    public void downLoadTopicImage(final String topicId, final String topicName, int index, final String url) {
+        String filePath = saveBitmap2File(topicId, topicName, index, url);
         topicVideoPlayerView.setDownloadTopicImageStatus(!StringUtil.isEmpty(filePath), filePath);
     }
 
-    public void downloadTopicImageText(final String topicId, final ArrayList<String> urls) {
+    public void downloadTopicImageText(final String topicId, final String topicName, final ArrayList<String> urls) {
         new Thread() {
             @Override
             public void run() {
                 super.run();
+                int index = 1;
                 for (final String url : urls) {
-                    String filePath = saveBitmap2File(topicId, url);
+                    String filePath = saveBitmap2File(topicId, topicName, index++, url);
                     topicVideoPlayerView.setDownloadTopicImageTextStatus(!StringUtil.isEmpty(filePath), filePath);
                 }
             }
@@ -243,8 +236,8 @@ public class TopicVideoPlayerPresenter {
                 try {
                     return topicsService.initUserTopicStatus(topicId);
                 } catch (NetworkDisconnectException e) {
-                    e.printStackTrace();
-                    LOGGER.error(MessageFormat.format("获取用户topic状态失败，topicId:{0}", topicId), e);
+//                    e.printStackTrace();
+//                    LOGGER.error(MessageFormat.format("获取用户topic状态失败，topicId:{0}", topicId), e);
                 }
                 return null;
             }
@@ -271,8 +264,8 @@ public class TopicVideoPlayerPresenter {
                 try {
                     return topicsService.setTopicLikeStatus(topicId, isLike);
                 } catch (NetworkDisconnectException e) {
-                    e.printStackTrace();
-                    LOGGER.error(MessageFormat.format("设置topic喜欢状态失败，topicId:{0}，isLike:{1}", topicId, isLike), e);
+//                    e.printStackTrace();
+//                    LOGGER.error(MessageFormat.format("设置topic喜欢状态失败，topicId:{0}，isLike:{1}", topicId, isLike), e);
                 }
                 return null;
             }
@@ -299,8 +292,8 @@ public class TopicVideoPlayerPresenter {
                 try {
                     return topicsService.setTopicCollectionStatus(topicId, isCollection);
                 } catch (NetworkDisconnectException e) {
-                    e.printStackTrace();
-                    LOGGER.error(MessageFormat.format("设置topic收藏状态失败，topicId:{0}，isCollection:{1}", topicId, isCollection), e);
+//                    e.printStackTrace();
+//                    LOGGER.error(MessageFormat.format("设置topic收藏状态失败，topicId:{0}，isCollection:{1}", topicId, isCollection), e);
                 }
                 return null;
             }
@@ -327,15 +320,8 @@ public class TopicVideoPlayerPresenter {
         return !StringUtil.isEmpty(topicVideoInfo.getOssUrl()) ? topicVideoInfo.getOssUrl() : topicVideoInfo.getCcUrl();
     }
 
-    public String buildPictureLocalFileName(final String topicId, final String imageSrc) {
-        if (StringUtil.isEmpty(topicId) || StringUtil.isEmpty(imageSrc)) {
-            return Constants.EMPTY_STRING;
-        }
-        return new StringBuffer().append(imageSrc.substring(imageSrc.lastIndexOf("/"), imageSrc.length())).append(Constants.PNG_SUFFIX).toString();
-    }
-
-    private String saveBitmap2File(String topicId, String url) {
+    private String saveBitmap2File(String topicId, final String topicName, int index, String url) {
         Bitmap bitmap = imageLoader.loadImageSync(url);
-        return FileUtils.saveBitMap(bitmap, Constants.YILOS_NAILSTAR_PICTURE_PATH, buildPictureLocalFileName(topicId, url));
+        return FileUtils.saveBitMap(bitmap, Constants.YILOS_NAILSTAR_PICTURE_PATH, new StringBuffer().append(topicName).append(Constants.UNDERLINE).append(index).append(Constants.PNG_SUFFIX).toString());
     }
 }

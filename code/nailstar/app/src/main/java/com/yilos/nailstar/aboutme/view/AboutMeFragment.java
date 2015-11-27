@@ -179,9 +179,8 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
             nameText.setText(personInfo.getNickname());
             identityText.setText(IdentityUtil.getIdentity(personInfo.getType()));
 
-            long lt = DateUtil.getTimestamp();
             aboutMePresenter.getMessageCount(getLatestMessageCountTime(), uid, type);
-            setLatestMessageCountTime(lt);
+            setLatestMessageCountTime(DateUtil.getTimestamp());
         } else {
             identityText.setText(R.string.about_me_identity);
             nameText.setText(R.string.about_me_name);
@@ -192,7 +191,7 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
 
     @Override
     public int getLatestMessageCount() {
-        SharedPreferences mySharedPreferences= getActivity().getSharedPreferences(Constants.MESSAGES,
+        SharedPreferences mySharedPreferences= getActivity().getSharedPreferences(Constants.MESSAGES + Constants.UNDERLINE + loginAPI.getLoginUserId(),
                 Activity.MODE_PRIVATE);
         int count = mySharedPreferences.getInt(Constants.LATEST_MESSAGE_COUNT, 0);
         return count;
@@ -200,7 +199,7 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
 
     @Override
     public void setLatestMessageCount(int count) {
-        SharedPreferences mySharedPreferences= getActivity().getSharedPreferences(Constants.MESSAGES,
+        SharedPreferences mySharedPreferences= getActivity().getSharedPreferences(Constants.MESSAGES + Constants.UNDERLINE + loginAPI.getLoginUserId(),
                 Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = mySharedPreferences.edit();
         editor.putInt(Constants.LATEST_MESSAGE_COUNT, count);
@@ -209,15 +208,15 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
 
     @Override
     public long getLatestMessageCountTime() {
-        SharedPreferences mySharedPreferences= getActivity().getSharedPreferences(Constants.MESSAGES,
+        SharedPreferences mySharedPreferences= getActivity().getSharedPreferences(Constants.MESSAGES + Constants.UNDERLINE + loginAPI.getLoginUserId(),
                 Activity.MODE_PRIVATE);
-        long time = mySharedPreferences.getLong(Constants.LATEST_MESSAGE_COUNT_TIME, 0);
+        long time = mySharedPreferences.getLong(Constants.LATEST_MESSAGE_COUNT_TIME, DateUtil.getTimestamp());
         return time;
     }
 
     @Override
     public void setLatestMessageCountTime(long lt) {
-        SharedPreferences mySharedPreferences= getActivity().getSharedPreferences(Constants.MESSAGES,
+        SharedPreferences mySharedPreferences= getActivity().getSharedPreferences(Constants.MESSAGES + Constants.UNDERLINE + loginAPI.getLoginUserId(),
                 Activity.MODE_PRIVATE);
         SharedPreferences.Editor editor = mySharedPreferences.edit();
         editor.putLong(Constants.LATEST_MESSAGE_COUNT_TIME, lt);
@@ -276,8 +275,8 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
 //                break;
 //            case R.id.about_me_level:
 //                Intent myLevelIntent = new Intent(getActivity(),LevelActivity.class);
-//                myLevelIntent.putExtra("experience",experience);
-//                myLevelIntent.putExtra("myImageUrl", myImageUrl);
+//                myLevelIntent.putExtra(Constants.EXPERIENCE,experience);
+//                myLevelIntent.putExtra(Constants.MY_IMAGE_URL, myImageUrl);
 //                startActivity(myLevelIntent);
 //                break;
             case R.id.about_me_setting_group:
@@ -286,8 +285,7 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
                 break;
             case R.id.about_me_my_info:
                 if (!loginAPI.isLogin()) {
-                    Intent goToLoginIntent = new Intent(getActivity(),LoginActivity.class);
-                    startActivity(goToLoginIntent);
+                    loginAPI.gotoLoginPage(getActivity());
                 } else {
 
                 }
@@ -310,7 +308,7 @@ public class AboutMeFragment extends Fragment implements IAboutMeView, View.OnCl
                 } else {
                     Intent intent = new Intent(getActivity(),PersonInfoActivity.class);
                     Bundle bundle = new Bundle();
-                    bundle.putSerializable("personInfo",personInfo);
+                    bundle.putSerializable(Constants.PERSON_INFO,personInfo);
                     intent.putExtras(bundle);
                     startActivity(intent);
                 }

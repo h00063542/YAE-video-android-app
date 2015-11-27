@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/system_message_item"
+    android:background="@color/white"
     android:clickable="true">
     <LinearLayout
         android:layout_width="match_parent"
@@ -29,8 +30,7 @@
                     android:id="@+id/title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="@dimen/small_text_size"
-                    android:text="美甲大咖团队"/>
+                    android:textSize="@dimen/small_text_size"/>
             </LinearLayout>
             <TextView
                 android:id="@+id/content"
@@ -39,16 +39,14 @@
                 android:layout_marginTop="9dp"
                 android:textSize="@dimen/middle_text_size"
                 android:textColor="@color/z2"
-                android:lineSpacingExtra="9dp"
-                android:text="与胡波老师的彩绘获奖作品来个亲密接触吧与胡波老师的彩绘获奖作品来个亲密接触吧与胡波老师的彩绘获奖作品来个亲密接触吧与胡波老师的彩绘获奖作品来个亲密接触吧与胡波老师的彩绘获奖作品来个亲密接触吧"/>
+                android:lineSpacingExtra="9dp"/>
             <TextView
                 android:textColor="@color/z3"
                 android:id="@+id/time"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/middle_text_size"
-                android:lineSpacingExtra="9dp"
-                android:text="昨天"/>
+                android:lineSpacingExtra="9dp"/>
         </LinearLayout>
         <ImageView
             android:layout_gravity="center"

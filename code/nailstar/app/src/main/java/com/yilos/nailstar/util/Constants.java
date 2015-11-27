@@ -15,7 +15,6 @@ public class Constants {
     public static final String YILOS_NAILSTAR_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/yilos/nailstar/";
     public static final String YILOS_NAILSTAR_VIDEOS_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/yilos/nailstar/videos/";
     public static final String YILOS_NAILSTAR_PICTURE_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/yilos/nailstar/picture/";
-    public static final String YILOS_NAILSTAR_LOGS_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/yilos/nailstar/logs/";
 
     public static final String TOPIC_ID = "topicId";
     public static final String CODE = "code";
@@ -210,4 +209,19 @@ public class Constants {
     public static final int ZERO = 0;
     public static final String CANDIDATES = "candidates";
     public static final String NO = "no";
+
+
+    public static final String APPLICATION_SETTING = "application_setting";
+    public static final String ALLOW_NO_WIFI = "allow_no_wifi";
+    public static final String IS_FIRST_INTO_VERSION = "isFirstIntoVersion";
+    public static final String SDCARD_NAME = "sdcard_name";
+    public static final String SDCARD_PATH = "sdcard_path";
+    public static final String VERSION_NAME = "version_name";
+    public static final String PERSON_INFO = "personInfo";
+
+    public static final int PERSON_INFO_NAME_MAX_LENGTH = 8;
+
+    public static final String EXPERIENCE = "experience";
+
+    public static final String MY_IMAGE_URL = "myImageUrl";
 }

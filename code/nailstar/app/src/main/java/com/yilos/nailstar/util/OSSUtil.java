@@ -15,16 +15,13 @@ import com.alibaba.sdk.android.oss.util.OSSLog;
 import com.alibaba.sdk.android.oss.util.OSSToolKit;
 import com.yilos.nailstar.framework.application.NailStarApplication;
 
-import org.apache.log4j.Logger;
-
 import java.io.FileNotFoundException;
+import java.util.logging.Logger;
 
 /**
  * Created by yilos on 2015-11-12.
  */
 public class OSSUtil {
-    private static final Logger LOGGER = LoggerFactory.getLogger(OSSUtil.class);
-
     public static final String BUCKET_YPICTURE = "ypicture";
 
     private static OSSService defaultOssService;

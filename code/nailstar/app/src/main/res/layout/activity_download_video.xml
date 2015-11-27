@@ -8,54 +8,44 @@
     android:orientation="vertical"
     tools:context="com.yilos.nailstar.aboutme.view.DownloadVideo">
 
-    <LinearLayout
+    <com.yilos.widget.titlebar.TitleBar
+        android:id="@+id/downloadVideoTitleBar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="wrap_content" />
 
-        <com.yilos.widget.titlebar.TitleBar
-            android:id="@+id/downloadVideoTitleBar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+    <LinearLayout
+        android:id="@+id/noDownloadVideo"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/xk2"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
 
-        <LinearLayout
-            android:visibility="gone"
-            android:layout_margin="20dp"
-            android:id="@+id/noDownloadVideo"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:orientation="vertical">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/download_video_empty" />
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@mipmap/download_video"
-                android:adjustViewBounds="true"
-                android:scaleType="fitCenter"
-                android:layout_gravity="center_horizontal" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/common_10_dp"
+            android:text="@string/downloaded_no_video"
+            android:textColor="@color/z2"
+            android:textSize="@dimen/large_text_size" />
 
-            <TextView
-                android:padding="10dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="@string/downloaded_no_video"
-                android:layout_gravity="center_horizontal" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/downloaded_no_video_description"
-                android:layout_gravity="center_horizontal" />
-
-        </LinearLayout>
-
-        <ListView
-            android:id="@+id/downloadVideoList"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/common_10_dp"
+            android:text="@string/downloaded_no_video_description"
+            android:textColor="@color/z3"
+            android:textSize="@dimen/middle_text_size" />
     </LinearLayout>
+
+    <ListView
+        android:id="@+id/downloadVideoList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </LinearLayout>

@@ -17,11 +17,8 @@ import com.yilos.nailstar.requirelession.model.LessionServiceImpl;
 import com.yilos.nailstar.requirelession.view.LessionView;
 import com.yilos.nailstar.util.Constants;
 import com.yilos.nailstar.util.FileUtils;
-import com.yilos.nailstar.util.LoggerFactory;
 import com.yilos.nailstar.util.OSSUtil;
 import com.yilos.nailstar.util.UUIDUtil;
-
-import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,9 +30,6 @@ import java.util.TimerTask;
  * Created by yilos on 15/10/24.
  */
 public class LessionPresenter {
-
-    private static Logger logger = LoggerFactory.getLogger(LessionPresenter.class);
-
     private static final String VOTED_RECORD_FILE = "voted_record";
 
     private LessionView view;
@@ -92,7 +86,7 @@ public class LessionPresenter {
                     // 倒计时
                     startCountDown(lessionActivity.getEndTime());
                 } catch (Exception e) {
-                    logger.error("queryAndRefreshActivityTopic failed", e);
+//                    logger.error("queryAndRefreshActivityTopic failed", e);
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
@@ -139,13 +133,13 @@ public class LessionPresenter {
                     leftTime.append("0");
                 }
                 leftTime.append(hours);
-                leftTime.append(":");
+                leftTime.append(" : ");
 
                 if (minutes < 10) {
                     leftTime.append("0");
                 }
                 leftTime.append(minutes);
-                leftTime.append(":");
+                leftTime.append(" : ");
 
                 if (seconds < 10) {
                     leftTime.append("0");
@@ -193,7 +187,7 @@ public class LessionPresenter {
                         }
                     });
                 } catch (Exception e) {
-                    logger.error("queryAndRefreshVoteLession failed", e);
+//                    logger.error("queryAndRefreshVoteLession failed", e);
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
@@ -233,7 +227,7 @@ public class LessionPresenter {
                         }
                     });
                 } catch (Exception e) {
-                    logger.error("queryAndRefreshRankingLession failed", e);
+//                    logger.error("queryAndRefreshRankingLession failed", e);
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
@@ -315,7 +309,7 @@ public class LessionPresenter {
                         }
                     });
                 } catch (Exception e) {
-                    logger.error("vote failed", e);
+//                    logger.error("vote failed", e);
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
@@ -419,7 +413,7 @@ public class LessionPresenter {
                         }
                     });
                 } catch (Exception e) {
-                    logger.error("reportIllegal failed", e);
+//                    logger.error("reportIllegal failed", e);
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
@@ -441,7 +435,7 @@ public class LessionPresenter {
                 try {
                     votedRecord = service.queryVotedRecord(new File(cacheDir, VOTED_RECORD_FILE));
                 } catch (Exception e) {
-                    logger.error("queryVoteRecord failed", e);
+//                    logger.error("queryVoteRecord failed", e);
                 }
                 queryAndRefreshVoteLession();
             }
@@ -465,7 +459,7 @@ public class LessionPresenter {
         try {
             service.saveVotedRecord(new File(cacheDir, VOTED_RECORD_FILE), votedRecord);
         } catch (IOException e) {
-            logger.error("saveVotedRecord failed", e);
+//            logger.error("saveVotedRecord failed", e);
         }
     }
 
@@ -481,10 +475,22 @@ public class LessionPresenter {
             public void onSuccess(String s) {
                 try {
                     service.postCandidate(Constants.YILOS_PIC_URL + s);
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            view.showMessage(R.string.upload_image_success);
+                        }
+                    });
                 } catch (NotLoginException notLoginException) {
                     view.gotoLoginPage();
                 } catch (Exception e) {
-                    logger.error("postCandidate failed", e);
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            view.showMessage(R.string.upload_image_failed);
+                        }
+                    });
+//                    logger.error("postCandidate failed", e);
                 }
             }
 

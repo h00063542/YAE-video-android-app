@@ -47,4 +47,9 @@
     <color name="user_at_color">#693012</color>
     <color name="submitted_homework_label_color">#555657</color>
     <color name="topic_comment_create_date_label_color">#adafb0</color>
+
+    <!-- 向导页三张图片背景颜色 -->
+    <color name="guide_yellow">#fff1c0</color>
+    <color name="guide_pink">#fde0e2</color>
+    <color name="guide_blue">#cbdeec</color>
 </resources>

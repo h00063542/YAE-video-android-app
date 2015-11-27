@@ -16,10 +16,9 @@ import android.widget.TextView;
 import com.yilos.nailstar.R;
 import com.yilos.nailstar.aboutme.entity.UserMessage;
 import com.yilos.nailstar.util.Constants;
+import com.yilos.nailstar.util.DateUtil;
 import com.yilos.widget.circleimageview.CircleImageView;
 import com.yilos.widget.view.ImageCacheView;
-
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 /**
@@ -66,7 +65,6 @@ public class UserMessageListAdapter extends RecyclerView.Adapter<UserMessageList
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.activity_user_message_item, parent, false);
-
         ViewHolder vh = new ViewHolder(view);
         return vh;
     }
@@ -78,8 +76,7 @@ public class UserMessageListAdapter extends RecyclerView.Adapter<UserMessageList
         String commentContent = commentEntity.getContent();
         String atName = commentEntity.getAtName();
 
-        String commentTime = new SimpleDateFormat("MM月dd日").format(commentEntity.getCreateDate());
-        String commentCreateDate = String.valueOf(commentTime);
+        String commentCreateDate = DateUtil.getYearAndMonth(commentEntity.getCreateDate());
         String isHomework = String.valueOf(commentEntity.getIsHomework());
 
         String wo = "我 ";
@@ -124,8 +121,7 @@ public class UserMessageListAdapter extends RecyclerView.Adapter<UserMessageList
         String accountName = replyEntity.getAccountName();
         String accountPhoto = replyEntity.getAccountPhoto();
         String replyContent = replyEntity.getContent();
-        String replyTime = new SimpleDateFormat("MM月dd日").format(replyEntity.getCreateDate());
-        String replyCreateDate = String.valueOf(replyTime);
+        String replyCreateDate = DateUtil.getYearAndMonth(commentEntity.getCreateDate());
         String replyTo = replyEntity.getReplyTo();
         boolean hasBeenReply = userMessage.getHasBeenReply();
 
@@ -148,8 +144,8 @@ public class UserMessageListAdapter extends RecyclerView.Adapter<UserMessageList
         holder.replyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context,UserMessageReplyActivity.class);
-                Bundle bundle =new Bundle();
+                Intent intent = new Intent(context, UserMessageReplyActivity.class);
+                Bundle bundle = new Bundle();
                 bundle.putSerializable(Constants.USERMESSAGE, userMessage);
                 intent.putExtras(bundle);
                 ((MessageActivity) context).startActivityForResult(intent, 1);

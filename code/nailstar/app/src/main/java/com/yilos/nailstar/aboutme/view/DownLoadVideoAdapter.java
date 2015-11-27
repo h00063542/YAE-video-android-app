@@ -1,12 +1,14 @@
 package com.yilos.nailstar.aboutme.view;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -83,6 +85,7 @@ public class DownLoadVideoAdapter extends BaseAdapter {
             holder.downloadProgressBar = (ProgressBar) convertView.findViewById(R.id.downloadProgressBar);
             holder.downloadMessage = convertView.findViewById(R.id.downloadMessage);
             holder.downloadBytes = (TextView) convertView.findViewById(R.id.downloadBytes);
+            holder.deleteVideo = (Button) convertView.findViewById(R.id.deleteVideo);
 
             holder.downloadImage.getLayoutParams().width = screenWidth * 25 / 100;
             holder.downloadImage.getLayoutParams().height = screenWidth * 25 / 100;
@@ -100,17 +103,17 @@ public class DownLoadVideoAdapter extends BaseAdapter {
         if (downLoadInfo.getPhoto() != null) {
             holder.downloadAuthorPhoto.setImageSrc("file://" + downLoadInfo.getPhoto());
         } else {
-            holder.downloadAuthorPhoto.setImageResource(R.mipmap.ic_default_photo);
+            holder.downloadAuthorPhoto.setImageSrc(R.mipmap.ic_default_photo);
         }
         if (downLoadInfo.getIamge() != null) {
             holder.downloadImage.setImageSrc("file://" + downLoadInfo.getIamge());
         } else {
-            holder.downloadImage.setImageURI(null);
+            holder.downloadImage.setImageSrc(R.mipmap.ic_default_image);
         }
 
         if (downLoadInfo.getStatus() == DownloadConstants.DOWNLOADING) {
             holder.downloadOperation.setImageResource(R.mipmap.suspend_video);
-            holder.downloadOperation.setOnClickListener(new View.OnClickListener() {
+            holder.downloadImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     downloadPresenter.pauseDownLoadTask(downLoadInfo);
@@ -118,7 +121,7 @@ public class DownLoadVideoAdapter extends BaseAdapter {
             });
         } else if (downLoadInfo.getStatus() == DownloadConstants.DOWNLOAD_FINISH) {
             holder.downloadOperation.setImageResource(R.mipmap.play_video);
-            holder.downloadOperation.setOnClickListener(new View.OnClickListener() {
+            holder.downloadImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent downloadVideoPlayer = new Intent(context, DownloadVideoPlayer.class);
@@ -129,7 +132,7 @@ public class DownLoadVideoAdapter extends BaseAdapter {
             });
         } else if (downLoadInfo.getStatus() == DownloadConstants.DOWNLOAD_STOP) {
             holder.downloadOperation.setImageResource(R.mipmap.icon_download_white);
-            holder.downloadOperation.setOnClickListener(new View.OnClickListener() {
+            holder.downloadImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     downloadPresenter.resumeDownLoadTask(downLoadInfo);
@@ -140,6 +143,13 @@ public class DownLoadVideoAdapter extends BaseAdapter {
         }
 
         holder.downloadTopic.setText(downLoadInfo.getTitle());
+
+        holder.deleteVideo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                downloadPresenter.deleteVideoConfirm(downLoadInfo);
+            }
+        });
 
         handleDownloadProcess(downLoadInfo, holder);
 
@@ -173,5 +183,6 @@ public class DownLoadVideoAdapter extends BaseAdapter {
         public ProgressBar downloadProgressBar;
         public View downloadMessage;
         public TextView downloadBytes;
+        public Button deleteVideo;
     }
 }

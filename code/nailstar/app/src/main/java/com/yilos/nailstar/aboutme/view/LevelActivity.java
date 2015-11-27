@@ -18,6 +18,7 @@ import com.yilos.nailstar.aboutme.presenter.FansListPresenter;
 import com.yilos.nailstar.aboutme.presenter.LevelPresenter;
 import com.yilos.nailstar.framework.exception.NetworkDisconnectException;
 import com.yilos.nailstar.framework.view.BaseActivity;
+import com.yilos.nailstar.util.Constants;
 import com.yilos.nailstar.util.ImageUtil;
 import com.yilos.nailstar.util.LevelUtil;
 import com.yilos.widget.circleimageview.CircleImageView;
@@ -54,8 +55,8 @@ public class LevelActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_level);
         Intent intent = getIntent();
-        experience = intent.getIntExtra("experience", 0);
-        myImageUrl = intent.getStringExtra("myImageUrl");
+        experience = intent.getIntExtra(Constants.EXPERIENCE, 0);
+        myImageUrl = intent.getStringExtra(Constants.MY_IMAGE_URL);
         level = LevelUtil.calcLevel(experience);
         LevelPresenter levelPresenter = LevelPresenter.getInstance(this);
         levelPresenter.getImage(myImageUrl);

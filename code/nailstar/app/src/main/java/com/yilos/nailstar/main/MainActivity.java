@@ -7,9 +7,9 @@ import android.view.KeyEvent;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.umeng.update.UmengUpdateAgent;
 import com.yilos.nailstar.R;
 import com.yilos.nailstar.aboutme.view.AboutMeFragment;
-import com.yilos.nailstar.circle.CircleFragment;
 import com.yilos.nailstar.framework.view.BaseActivity;
 import com.yilos.nailstar.index.view.IndexFragment;
 import com.yilos.nailstar.mall.view.MallIndexFragment;
@@ -32,6 +32,8 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        UmengUpdateAgent.update(this);
+
         initViews();
         setTabSelection(0);
 
@@ -46,9 +48,9 @@ public class MainActivity extends BaseActivity {
                     case R.id.main_tab_requirelession:
                         setTabSelection(1);
                         break;
-                    case R.id.main_tab_mall:
-                        setTabSelection(2);
-                        break;
+//                    case R.id.main_tab_mall:
+//                        setTabSelection(2);
+//                        break;
                     case R.id.main_tab_aboutme:
                         setTabSelection(3);
                         break;
@@ -154,12 +156,12 @@ public class MainActivity extends BaseActivity {
 
         if (handled) {
             // 如果Fragment已经处理按钮事件，则不需要继续处理
-            return false;
+            return true;
         } else {
             // 如果在其他Fragment页面点击返回按钮，则先返回首页
             if (keyCode == KeyEvent.KEYCODE_BACK && radioGroup.getCheckedRadioButtonId() != R.id.main_tab_index) {
                 radioGroup.check(R.id.main_tab_index);
-                return false;
+                return true;
             }
             // 没有处理的按钮事件，交给系统处理
             return super.onKeyDown(keyCode, event);

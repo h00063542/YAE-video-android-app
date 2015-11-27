@@ -87,6 +87,7 @@ public class IndexFragment extends Fragment implements IIndexView {
         posterBanner.play();
         ((BaseActivity)getActivity()).hideLoading();
         refreshData();
+        categoryBanner.refreshView();
     }
 
     @Override
