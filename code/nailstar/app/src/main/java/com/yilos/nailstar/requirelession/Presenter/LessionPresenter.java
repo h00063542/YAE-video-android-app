@@ -161,6 +161,37 @@ public class LessionPresenter {
     }
 
     /**
+     * 初始化投票列表和排行榜
+     */
+    public void initCandidateList() {
+        new Thread() {
+            @Override
+            public void run() {
+                // 查询本地已投票记录
+                try {
+                    votedRecord = service.queryVotedRecord(new File(cacheDir, VOTED_RECORD_FILE));
+                } catch (Exception e) {
+//                    logger.error("initCandidateList failed", e);
+                }
+
+                // 初始化投票列表和排行榜
+                refreshCandidateList();
+            }
+        }.start();
+    }
+
+    /**
+     * 刷新投票列表和排行榜
+     */
+    public void refreshCandidateList() {
+
+        queryAndRefreshVoteLession();
+
+        queryAndRefreshRankingLession();
+
+    }
+
+    /**
      * 查询投票页面数据并刷新
      */
     public void queryAndRefreshVoteLession() {
@@ -171,11 +202,12 @@ public class LessionPresenter {
                 try {
                     voteLessionList = service.queryVoteLessionList();
                     // 设置已投票状态
-                    if (votedRecord != null) {
+                    if (votedRecord != null && voteLessionList != null) {
                         for (String candidateId : votedRecord.getCandidateIdList()) {
                             for (CandidateLession item : voteLessionList) {
                                 if (item.getCandidateId().equals(candidateId)) {
                                     item.setVoted(1);
+                                    break;
                                 }
                             }
                         }
@@ -183,7 +215,8 @@ public class LessionPresenter {
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
-                            view.refreshVoteLession(voteLessionList);
+                            view.setVoteLession(voteLessionList);
+                            view.notifyRefreshListView();
                         }
                     });
                 } catch (Exception e) {
@@ -211,11 +244,12 @@ public class LessionPresenter {
                 try {
                     rankingLessionList = service.queryRankingLessionList(1);
                     // 设置已投票状态
-                    if (votedRecord != null) {
+                    if (votedRecord != null && rankingLessionList != null) {
                         for (String candidateId : votedRecord.getCandidateIdList()) {
                             for (CandidateLession item : rankingLessionList) {
                                 if (item.getCandidateId().equals(candidateId)) {
                                     item.setVoted(1);
+                                    break;
                                 }
                             }
                         }
@@ -223,7 +257,8 @@ public class LessionPresenter {
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
-                            view.refreshRankingLession(rankingLessionList);
+                            view.setRankingLession(rankingLessionList);
+                            view.notifyRefreshListView();
                         }
                     });
                 } catch (Exception e) {
@@ -245,12 +280,9 @@ public class LessionPresenter {
      */
     public void goVoteLessionList() {
 
-        if (voteLessionList != null) {
-            view.refreshVoteLession(voteLessionList);
-        } else {
+        if (voteLessionList == null) {
             queryAndRefreshVoteLession();
         }
-
     }
 
     /**
@@ -258,9 +290,7 @@ public class LessionPresenter {
      */
     public void goRankingLessionList() {
 
-        if (rankingLessionList != null) {
-            view.refreshRankingLession(rankingLessionList);
-        } else {
+        if (rankingLessionList == null) {
             queryAndRefreshRankingLession();
         }
     }
@@ -304,6 +334,8 @@ public class LessionPresenter {
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
+                            view.setRankingLession(rankingLessionList);
+                            view.setVoteLession(voteLessionList);
                             view.notifyRefreshListView();
                             view.showMessage(R.string.vote_success);
                         }
@@ -421,23 +453,6 @@ public class LessionPresenter {
                         }
                     });
                 }
-            }
-        }.start();
-    }
-
-    /**
-     * 查询已投票列表
-     */
-    public void queryVotedRecord() {
-        new Thread() {
-            @Override
-            public void run() {
-                try {
-                    votedRecord = service.queryVotedRecord(new File(cacheDir, VOTED_RECORD_FILE));
-                } catch (Exception e) {
-//                    logger.error("queryVoteRecord failed", e);
-                }
-                queryAndRefreshVoteLession();
             }
         }.start();
     }
