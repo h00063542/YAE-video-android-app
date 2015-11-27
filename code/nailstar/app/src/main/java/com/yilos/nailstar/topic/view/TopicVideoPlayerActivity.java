@@ -4,7 +4,6 @@ package com.yilos.nailstar.topic.view;
  * Created by yilos on 2015-11-21.
  */
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -12,7 +11,6 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.media.AudioManager;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
@@ -49,11 +47,8 @@ import com.alibaba.sdk.android.trade.model.TradeResult;
 import com.alibaba.sdk.android.webview.UiSettings;
 import com.android.tedcoder.wkvideoplayer.model.Video;
 import com.android.tedcoder.wkvideoplayer.model.VideoUrl;
-import com.android.tedcoder.wkvideoplayer.util.DensityUtil;
 import com.android.tedcoder.wkvideoplayer.view.MediaController;
 import com.android.tedcoder.wkvideoplayer.view.SuperVideoPlayer;
-import com.sina.sinavideo.sdk.VDVideoExtListeners;
-import com.sina.sinavideo.sdk.data.VDVideoInfo;
 import com.yilos.nailstar.R;
 import com.yilos.nailstar.aboutme.model.LoginAPI;
 import com.yilos.nailstar.framework.entity.NailStarApplicationContext;
@@ -91,7 +86,6 @@ import java.util.TimerTask;
 
 public class TopicVideoPlayerActivity extends BaseActivity implements
         ITopicVideoPlayerView,
-        VDVideoExtListeners.OnVDVideoPlaylistListener,
         PullToRefreshView.OnFooterRefreshListener {
 
     private final String TAG = "TopicVideoPlayerActivity";
@@ -240,13 +234,6 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         initData();
     }
 
-    private void resetPageToPortrait() {
-        if (getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-            mSuperVideoPlayer.setPageType(MediaController.PageType.SHRINK);
-        }
-    }
-
     private void initControl() {
         mDecorView = (ViewGroup) getWindow().getDecorView().findViewById(android.R.id.content);
         // 顶部返回、topic名称、分享
@@ -272,8 +259,6 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
 
         // 视频播放控件
         mSuperVideoPlayer = (SuperVideoPlayer) topicDetailHeadLayout.findViewById(R.id.video_player);
-        // 手动这是播放窗口父类，横屏的时候，会用这个做为容器使用，如果不设置，那么默认直接跳转到DecorView
-//        mSuperVideoPlayer.setVDVideoViewContainer((ViewGroup) mSuperVideoPlayer.getParent());
         mIvVideoPlayIcon = (ImageView) topicDetailHeadLayout.findViewById(R.id.iv_video_play_icon);
         mLayoutVideoPlayNotWifi = (RelativeLayout) topicDetailHeadLayout.findViewById(R.id.layout_video_play_not_wifi);
         mTvVideoPlayNotWifi = (TextView) topicDetailHeadLayout.findViewById(R.id.tv_video_play_not_wifi);
@@ -295,8 +280,10 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
                 mPlayIconParent.setVisibility(View.GONE);
                 mIvVideoPlayIcon.setVisibility(View.VISIBLE);
                 mLayoutVideoPlayNotWifi.setVisibility(View.GONE);
-//                mSuperVideoPlayer.setVisibility(View.GONE);
-                resetPageToPortrait();
+                if (getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                    mSuperVideoPlayer.setPageType(MediaController.PageType.SHRINK);
+                }
             }
 
             @Override
@@ -458,7 +445,6 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         });
 
 
-
         mPlayIconParent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -469,57 +455,14 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         mIvVideoPlayIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (checkAndShowNetworkStatus()) {
-                    return;
-                }
-                mPlayIconParent.setVisibility(View.GONE);
-                mIvVideoPlayIcon.setVisibility(View.GONE);
-                mLayoutVideoPlayNotWifi.setVisibility(View.GONE);
-//                mSuperVideoPlayer.play(0);
-                if (!CollectionUtil.isEmpty(mTopicInfo.getVideos())) {
-                    TopicVideoInfo topicVideoInfo = mTopicInfo.getVideos().get(0);
-                    Video video = new Video();
-                    VideoUrl videoUrl1 = new VideoUrl();
-                    videoUrl1.setFormatName("720P");
-                    mVideoRemoteUrl = mTopicVideoPlayerPresenter.buildVideoRemoteUrl(topicVideoInfo);
-                    videoUrl1.setFormatUrl(mVideoRemoteUrl);
-                    video.setVideoName("测试视频一");
-                    video.setPlayUrl(videoUrl1);
-
-                    ArrayList<VideoUrl> arrayList1 = new ArrayList<>();
-                    arrayList1.add(videoUrl1);
-                    video.setVideoUrl(arrayList1);
-                    ArrayList<Video> videoArrayList = new ArrayList<>();
-                    videoArrayList.add(video);
-                    mSuperVideoPlayer.loadMultipleVideo(videoArrayList,0,0,0);
-                }
-
-                mTopicVideoPlayerPresenter.addVideoPlayCount(mTopicId);
+                playVideo();
             }
         });
 
         mTvVideoPlayNotWifi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (checkAndShowNetworkStatus()) {
-                    return;
-                }
-                mPlayIconParent.setVisibility(View.GONE);
-                mLayoutVideoPlayNotWifi.setVisibility(View.GONE);
-                if (!CollectionUtil.isEmpty(mTopicInfo.getVideos())) {
-                    TopicVideoInfo topicVideoInfo = mTopicInfo.getVideos().get(0);
-                    Video video = new Video();
-                    VideoUrl videoUrl1 = new VideoUrl();
-                    videoUrl1.setFormatName("720P");
-                    mVideoRemoteUrl = mTopicVideoPlayerPresenter.buildVideoRemoteUrl(topicVideoInfo);
-                    videoUrl1.setFormatUrl(mVideoRemoteUrl);
-                    video.setVideoName("测试视频一");
-                    video.setPlayUrl(videoUrl1);
-                    ArrayList<Video> videoArrayList = new ArrayList<>();
-                    videoArrayList.add(video);
-                    mSuperVideoPlayer.loadMultipleVideo(videoArrayList,0,0,0);
-                }
-                mTopicVideoPlayerPresenter.addVideoPlayCount(mTopicId);
+                playVideo();
             }
         });
 
@@ -712,6 +655,57 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         }
     }
 
+    private void playVideo() {
+//        if (checkAndShowNetworkStatus()) {
+//            return;
+//        }
+//        mPlayIconParent.setVisibility(View.GONE);
+//        mIvVideoPlayIcon.setVisibility(View.GONE);
+//        mLayoutVideoPlayNotWifi.setVisibility(View.GONE);
+//        if (!CollectionUtil.isEmpty(mTopicInfo.getVideos())) {
+//            TopicVideoInfo topicVideoInfo = mTopicInfo.getVideos().get(0);
+//            Video video = new Video();
+//            VideoUrl videoUrl = new VideoUrl();
+//            videoUrl.setFormatName("720P");
+//            mVideoRemoteUrl = mTopicVideoPlayerPresenter.buildVideoRemoteUrl(topicVideoInfo);
+//            videoUrl.setFormatUrl(mVideoRemoteUrl);
+//            video.setVideoName(mTopicInfo.getTitle());
+//            video.setPlayUrl(videoUrl);
+//            video.setVideoUrl();
+//            ArrayList<Video> videoArrayList = new ArrayList<>();
+//            videoArrayList.add(video);
+//            mSuperVideoPlayer.loadMultipleVideo(videoArrayList, 0, 0, 0);
+//        }
+//        mTopicVideoPlayerPresenter.addVideoPlayCount(mTopicId);
+
+
+        if (checkAndShowNetworkStatus()) {
+            return;
+        }
+        mPlayIconParent.setVisibility(View.GONE);
+        mIvVideoPlayIcon.setVisibility(View.GONE);
+        mLayoutVideoPlayNotWifi.setVisibility(View.GONE);
+//                mSuperVideoPlayer.play(0);
+        if (!CollectionUtil.isEmpty(mTopicInfo.getVideos())) {
+            TopicVideoInfo topicVideoInfo = mTopicInfo.getVideos().get(0);
+            Video video = new Video();
+            VideoUrl videoUrl1 = new VideoUrl();
+            videoUrl1.setFormatName("720P");
+            mVideoRemoteUrl = mTopicVideoPlayerPresenter.buildVideoRemoteUrl(topicVideoInfo);
+            videoUrl1.setFormatUrl(mVideoRemoteUrl);
+            video.setVideoName(mTopicInfo.getTitle());
+            video.setPlayUrl(videoUrl1);
+
+            ArrayList<VideoUrl> arrayList1 = new ArrayList<>();
+            arrayList1.add(videoUrl1);
+            video.setVideoUrl(arrayList1);
+            ArrayList<Video> videoArrayList = new ArrayList<>();
+            videoArrayList.add(video);
+            mSuperVideoPlayer.loadMultipleVideo(videoArrayList, 0, 0, 0);
+        }
+
+        mTopicVideoPlayerPresenter.addVideoPlayCount(mTopicId);
+    }
 
     /**
      * 显示或隐藏图文分解详情
@@ -793,12 +787,10 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         if (!CollectionUtil.isEmpty(topicInfo.getVideos())) {
             TopicVideoInfo topicVideoInfo = topicInfo.getVideos().get(0);
             mVideoRemoteUrl = mTopicVideoPlayerPresenter.buildVideoRemoteUrl(topicVideoInfo);
-            Bitmap bitmap = createVideoThumbnail(mVideoRemoteUrl, 700, (int) (700 / Constants.VIDEO_ASPECT_RATIO));
-            mPlayIconParent.setBackgroundDrawable(new BitmapDrawable(bitmap));
-
+//            Bitmap bitmap = createVideoThumbnail(mVideoRemoteUrl, 700, (int) (700 / Constants.VIDEO_ASPECT_RATIO));
+            mTopicVideoPlayerPresenter.createVideoThumbnail(mVideoRemoteUrl, 700, (int) (700 / Constants.VIDEO_ASPECT_RATIO));
+//            mPlayIconParent.setBackgroundDrawable(new BitmapDrawable(bitmap));
         }
-
-
     }
 
     /**
@@ -1278,6 +1270,14 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
     }
 
     @Override
+    public void setVideoThumbnail(Bitmap bitmap) {
+        if (null == bitmap) {
+            return;
+        }
+        mPlayIconParent.setBackgroundDrawable(new BitmapDrawable(bitmap));
+    }
+
+    @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             boolean hasZoomInLayout = false;
@@ -1285,18 +1285,27 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
             for (int i = 0, count = mDecorView.getChildCount(); i < count; i++) {
                 view = mDecorView.getChildAt(i);
                 if (null != view.getTag(R.layout.zoomin_topic_image_text_layout)
-                        || null != view.getTag(R.layout.zoomin_topic_comment_image_layout)) {
+                        || null != view.getTag(R.layout.zoomin_topic_comment_image_layout)
+                        || view == mSuperVideoPlayer) {
                     hasZoomInLayout = true;
                     break;
                 }
             }
-            mDecorView.removeView(view);
+            if (view == mSuperVideoPlayer) {
+                // 如果是横屏状态，则切换为竖屏状态
+                if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                    mSuperVideoPlayer.setPageType(MediaController.PageType.EXPAND);
+                }
+            } else {
+                mDecorView.removeView(view);
+            }
             if (hasZoomInLayout) {
                 return true;
-            }else{
-                return super.onKeyDown(keyCode, event);;
+            } else {
+                return super.onKeyDown(keyCode, event);
             }
-        }else{
+        } else {
             return super.onKeyDown(keyCode, event);
         }
     }
@@ -1411,44 +1420,25 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        if (null == mSuperVideoPlayer) return;
-        /***
-         * 根据屏幕方向重新设置播放器的大小
-         */
-        if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+        if (null == mSuperVideoPlayer) {
+            return;
+        }
+        int playTime = mSuperVideoPlayer.getSuperVideoView().getCurrentPosition();
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                     WindowManager.LayoutParams.FLAG_FULLSCREEN);
-            getWindow().getDecorView().invalidate();
-            float height = DensityUtil.getWidthInPx(this);
-            float width = DensityUtil.getHeightInPx(this);
-            mSuperVideoPlayer.getLayoutParams().height = (int) width;
-            mSuperVideoPlayer.getLayoutParams().width = (int) height;
-        } else if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            ((FrameLayout) findViewById(R.id.layout_video_player)).removeView(mSuperVideoPlayer);
+            mDecorView.addView(mSuperVideoPlayer, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            mSuperVideoPlayer.playLastVideoAtPos(playTime);
+        } else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             final WindowManager.LayoutParams attrs = getWindow().getAttributes();
             attrs.flags &= (~WindowManager.LayoutParams.FLAG_FULLSCREEN);
             getWindow().setAttributes(attrs);
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
-            float width = DensityUtil.getWidthInPx(this);
-            float height = DensityUtil.dip2px(this, 200.f);
-            mSuperVideoPlayer.getLayoutParams().height = (int) height;
-            mSuperVideoPlayer.getLayoutParams().width = (int) width;
+            mDecorView.removeView(mSuperVideoPlayer);
+            ((FrameLayout) findViewById(R.id.layout_video_player)).addView(mSuperVideoPlayer);
+            mSuperVideoPlayer.playLastVideoAtPos(playTime);
         }
-//        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-//            mSuperVideoPlayer.setIsFullScreen(true);
-//        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-//            mSuperVideoPlayer.setIsFullScreen(false);
-//        }
-    }
-
-    /**
-     * 播放列表里面点击了某个视频，触发外部事件
-     */
-    @Override
-    public void onPlaylistClick(VDVideoInfo info, int p) {
-        if (info == null) {
-//            LOGGER.error("视频信息为null");
-        }
-//        mSuperVideoPlayer.play(p);
     }
 
     @Override
@@ -1479,6 +1469,8 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
     protected void onDestroy() {
         super.onDestroy();
         setContentView(R.layout.layout_null);
+        mSuperVideoPlayer.close();
+        mSuperVideoPlayer = null;
 //        mSuperVideoPlayer.onStop();
 //        mSuperVideoPlayer.destroyDrawingCache();
 //        mSuperVideoPlayer.unRegisterSensorManager();

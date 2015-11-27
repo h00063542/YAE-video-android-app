@@ -1,5 +1,7 @@
 package com.yilos.nailstar.topic.view;
 
+import android.graphics.Bitmap;
+
 import com.yilos.nailstar.topic.entity.TopicCommentInfo;
 import com.yilos.nailstar.topic.entity.TopicImageTextInfo;
 import com.yilos.nailstar.topic.entity.TopicInfo;
@@ -45,6 +47,7 @@ public interface ITopicVideoPlayerView {
 
     /**
      * 初始化topic关联的产品信息
+     *
      * @param topicRelatedProductList
      */
     void initTopicRelatedUsedProductList(ArrayList<TopicRelatedProduct> topicRelatedProductList);
@@ -58,4 +61,6 @@ public interface ITopicVideoPlayerView {
     void setDownloadTopicImageStatus(boolean isSuccess, String filePath);
 
     void setDownloadTopicImageTextStatus(boolean isSuccess, String filePath);
+
+    void setVideoThumbnail(Bitmap bitmap);
 }

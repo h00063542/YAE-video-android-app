@@ -381,6 +381,12 @@ public class SuperVideoPlayer extends RelativeLayout {
         loadAndPlay(mNowPlayVideo.getPlayUrl(), playTime);
     }
 
+    public void playLastVideoAtPos(int playTime){
+        mSuperVideoView.stopPlayback();
+        loadAndPlay(mNowPlayVideo.getPlayUrl(), playTime);
+    }
+
+
     /**
      * 加载并开始播放视频
      *

@@ -1,6 +1,11 @@
 package com.yilos.nailstar.topic.presenter;
 
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.media.MediaMetadataRetriever;
+import android.media.ThumbnailUtils;
+import android.os.Build;
+import android.provider.MediaStore;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.yilos.nailstar.download.DownLoadTaskManager;
@@ -21,6 +26,7 @@ import com.yilos.nailstar.util.StringUtil;
 import com.yilos.nailstar.util.TaskManager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 
 /**
@@ -323,5 +329,52 @@ public class TopicVideoPlayerPresenter {
     private String saveBitmap2File(String topicId, final String topicName, int index, String url) {
         Bitmap bitmap = imageLoader.loadImageSync(url);
         return FileUtils.saveBitMap(bitmap, Constants.YILOS_NAILSTAR_PICTURE_PATH, new StringBuffer().append(topicName).append(Constants.UNDERLINE).append(index).append(Constants.PNG_SUFFIX).toString());
+    }
+
+    public void createVideoThumbnail(final String url, final int width, final int height) {
+        TaskManager.Task loadVideoThumbnail = new TaskManager.BackgroundTask() {
+            @Override
+            public Object doWork(Object data) {
+                Bitmap bitmap = null;
+                MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+                int kind = MediaStore.Video.Thumbnails.MINI_KIND;
+                try {
+                    if (Build.VERSION.SDK_INT >= 14) {
+                        retriever.setDataSource(url, new HashMap<String, String>());
+                    } else {
+                        retriever.setDataSource(url);
+                    }
+                    bitmap = retriever.getFrameAtTime();
+                } catch (IllegalArgumentException ex) {
+                    ex.printStackTrace();
+                } catch (RuntimeException ex) {
+                    ex.printStackTrace();
+                } finally {
+                    try {
+                        retriever.release();
+                    } catch (RuntimeException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+                if (kind == MediaStore.Images.Thumbnails.MICRO_KIND && bitmap != null) {
+                    bitmap = ThumbnailUtils.extractThumbnail(bitmap, width, height,
+                            ThumbnailUtils.OPTIONS_RECYCLE_INPUT);
+                }
+                return bitmap;
+            }
+        };
+
+        TaskManager.UITask<Bitmap> updateUi = new TaskManager.UITask<Bitmap>() {
+            @Override
+            public Object doWork(Bitmap bitmap) {
+                topicVideoPlayerView.setVideoThumbnail(bitmap);
+                return null;
+            }
+        };
+
+        new TaskManager()
+                .next(loadVideoThumbnail)
+                .next(updateUi)
+                .start();
     }
 }
