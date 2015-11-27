@@ -19,8 +19,6 @@ import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
 import com.nostra13.universalimageloader.utils.StorageUtils;
-import com.sina.sinavideo.sdk.utils.VDApplication;
-import com.sina.sinavideo.sdk.utils.VDResolutionManager;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.umeng.analytics.MobclickAgent;
 import com.ut.mini.UTAnalytics;
@@ -66,8 +64,6 @@ public class NailStarApplication extends MultiDexApplication {
 
         initImageLoader();
 
-        // 播放器初始化，要在app启动前进行初始化，才能解压出相应的解码器
-        initVideoPlayer();
     }
 
     private void initUmengSdk() {
@@ -147,11 +143,7 @@ public class NailStarApplication extends MultiDexApplication {
         }
     }
 
-    private void initVideoPlayer() {
-        VDApplication.getInstance().initPlayer(this);
-        VDResolutionManager.getInstance(this).init(
-                VDResolutionManager.RESOLUTION_SOLUTION_NONE);
-    }
+
 
     private void initDir() {
         File sdPath = new File(Constants.YILOS_NAILSTAR_VIDEOS_PATH);

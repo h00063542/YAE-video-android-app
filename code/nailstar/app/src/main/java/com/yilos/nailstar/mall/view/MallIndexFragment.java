@@ -10,11 +10,25 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 
+import com.alibaba.sdk.android.AlibabaSDK;
+import com.alibaba.sdk.android.trade.ItemService;
+import com.alibaba.sdk.android.trade.TradeConstants;
+import com.alibaba.sdk.android.trade.callback.TradeProcessCallback;
+import com.alibaba.sdk.android.trade.item.ItemType;
+import com.alibaba.sdk.android.trade.model.TradeResult;
+import com.alibaba.sdk.android.webview.UiSettings;
 import com.etsy.android.grid.StaggeredGridView;
 import com.yilos.nailstar.R;
 import com.yilos.nailstar.mall.presenter.MallIndexPresenter;
 import com.yilos.nailstar.mall.presenter.MallIndexPresenterImpl;
+import com.yilos.nailstar.topic.view.OrderFinishDialog;
+import com.yilos.nailstar.util.Constants;
 import com.yilos.widget.titlebar.TitleBar;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Created by ganyue on 15/11/20.
@@ -99,10 +113,52 @@ public class MallIndexFragment  extends Fragment implements MallIndexView{
     }
     private void bindControl() {
 
+        //类别点击事件
 
+        //热卖点击事件
+        //类别点击事件
 
-        //推荐商品点击事件
+        final Fragment thisInstance = this;
+        View.OnClickListener listener = new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                String product_relaId = (String)v.getTag(R.id.mall_index_product_real_id);
+                Map<String, String> exParams = new HashMap<String, String>();
+                exParams.put(TradeConstants.ITEM_DETAIL_VIEW_TYPE, TradeConstants.BAICHUAN_H5_VIEW);
+                exParams.put(TradeConstants.ISV_CODE, Constants.ISV_CODE);
+                ItemService itemService = AlibabaSDK.getService(ItemService.class);
+                UiSettings uiSetting = new UiSettings();
+                itemService.showItemDetailByItemId(thisInstance.getActivity(), new TradeProcessCallback() {
+                    @Override
+                    public void onPaySuccess(TradeResult tradeResult) {
+                        //弹出框，提示购买成功，去淘宝查看订单信息
+                        final OrderFinishDialog successDialog = new OrderFinishDialog(MallIndexFragment.this.getContext());
+                        successDialog.show();
+                        final Timer timer = new Timer();
+                        TimerTask task = new TimerTask() {
+                            @Override
+                            public void run() {
+                                successDialog.dismiss();
+                                timer.cancel();
+                            }
+                        };
+                        //3秒后消失
+                        timer.schedule(task, 3000);
+                    }
 
+                    @Override
+                    public void onFailure(int code, String msg) {
+
+                    }
+                }, uiSetting, Long.valueOf(product_relaId), ItemType.TAOBAO, exParams);
+            }
+        };
+
+        indexCommodityHot1.setOnClickListener(listener);
+        indexCommodityHot2.setOnClickListener(listener);
+        indexCommodityHot3.setOnClickListener(listener);
+
+        //滚动加载更多事件
         recommendListView.setOnScrollListener(new AbsListView.OnScrollListener() {
 
             @Override
@@ -123,10 +179,40 @@ public class MallIndexFragment  extends Fragment implements MallIndexView{
 
             }
         });
+
+        //推荐商品点击事件
         recommendListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String product_relaId = (String)view.getTag(R.id.mall_index_product_real_id);
+                Map<String, String> exParams = new HashMap<String, String>();
+                exParams.put(TradeConstants.ITEM_DETAIL_VIEW_TYPE, TradeConstants.BAICHUAN_H5_VIEW);
+                exParams.put(TradeConstants.ISV_CODE, Constants.ISV_CODE);
+                ItemService itemService = AlibabaSDK.getService(ItemService.class);
+                UiSettings uiSetting = new UiSettings();
+                itemService.showItemDetailByItemId(thisInstance.getActivity(), new TradeProcessCallback() {
+                    @Override
+                    public void onPaySuccess(TradeResult tradeResult) {
+                        //弹出框，提示购买成功，去淘宝查看订单信息
+                        final OrderFinishDialog successDialog = new OrderFinishDialog(thisInstance.getContext());
+                        successDialog.show();
+                        final Timer timer = new Timer();
+                        TimerTask task = new TimerTask() {
+                            @Override
+                            public void run() {
+                                successDialog.dismiss();
+                                timer.cancel();
+                            }
+                        };
+                        //3秒后消失
+                        timer.schedule(task, 3000);
+                    }
 
+                    @Override
+                    public void onFailure(int code, String msg) {
+
+                    }
+                }, uiSetting, Long.valueOf(product_relaId), ItemType.TAOBAO, exParams);
             }
         });
 
@@ -142,6 +228,7 @@ public class MallIndexFragment  extends Fragment implements MallIndexView{
     public MallIndexCommodityListAdapter getMallIndexCommodityListAdapter(){
         return adapter;
     }
+
     public LinearLayout getIndexCommodityHot1() {
         return indexCommodityHot1;
     }
@@ -162,6 +249,7 @@ public class MallIndexFragment  extends Fragment implements MallIndexView{
     public LayoutInflater getInflater() {
         return inflater;
     }
+
     public int getScreenWidth() {
         return screenWidth;
     }

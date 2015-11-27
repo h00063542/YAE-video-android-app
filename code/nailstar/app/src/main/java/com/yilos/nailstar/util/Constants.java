@@ -199,6 +199,13 @@ public class Constants {
     public static final String USER_MESSAGE_ARRAY_LIST = "userMessageArrayList";
     public static final String SYSTEM_MESSAGE_LIST = "systemMessageList";
     public static final String HAS_BEEN_READ = "hasBeenRead";
+
+
+    //商城相关常量
+    public static final String MALL_COMMODITY_CATE_ID = "commodityCateId";
+
+    public static final String COVER = "cover";
+    public static final String APPEND = "append";
     public static final int ZERO = 0;
     public static final String CANDIDATES = "candidates";
     public static final String NO = "no";

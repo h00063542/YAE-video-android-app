@@ -145,6 +145,12 @@
             android:name=".aboutme.favourite.view.MyFavouriteActivity"
             android:label="@string/title_activity_my_favourite" >
         </activity>
+        <!-- 商城相关设置 -->
+        <activity
+            android:name=".mall.view.MallIndexCategoryActivity"
+            android:label="@string/index_commodity_catetory" >
+        </activity>
+
     </application>
 
 </manifest>

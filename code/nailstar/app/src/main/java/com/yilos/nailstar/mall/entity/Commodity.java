@@ -6,19 +6,22 @@ package com.yilos.nailstar.mall.entity;
 public class Commodity {
     private String name;
     private long price;
-    private String goodsId;
+    private String goodsRealId;
     private String desc;
     private String advdesc;
     private String imageUrl;
 
     public Commodity() {
     }
-    public Commodity(String name, long price, String advdesc,String imageUrl) {
+    public Commodity(String name, long price, String advdesc,String imageUrl,String goodsRealId) {
         this.name = name;
         this.price = price;
         this.advdesc = advdesc;
         this.imageUrl = imageUrl;
+        this.goodsRealId = goodsRealId;
+
     }
+
 
     public void setName(String name) {
         this.name = name;
@@ -28,8 +31,8 @@ public class Commodity {
         this.price = price;
     }
 
-    public void setGoodsId(String goodsId) {
-        this.goodsId = goodsId;
+    public void setGoodsRealId(String goodsRealId) {
+        this.goodsRealId = goodsRealId;
     }
 
     public void setDesc(String desc) {
@@ -53,8 +56,8 @@ public class Commodity {
         return price;
     }
 
-    public String getGoodsId() {
-        return goodsId;
+    public String getGoodsRealId() {
+        return goodsRealId;
     }
 
     public String getDesc() {

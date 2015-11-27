@@ -91,6 +91,7 @@
     <string name="ka_you">咖友</string>
     <string name="delete">删除</string>
     <string name="delete_video_confirm">是否删除下载任务及下载的文件?</string>
+    <string name="no_video_found">没有找到视频文件，可能文件已经被删除</string>
 
     <!-- 修改资料界面-->
     <string name="edit_person_info">修改资料</string>
@@ -190,6 +191,7 @@
 
     <!-- 商城 -->
     <string name="index_commodity_hot_title_text">热卖</string>
+    <string name="index_commodity_catetory">商品类别</string>
     <string name="index_commodity_recommend_header_text">商品推荐</string>
     <string name="index_commodity_hot_1_price_unit">¥</string>
 
