@@ -19,6 +19,8 @@ import com.yilos.nailstar.util.Constants;
 import com.yilos.nailstar.util.DateUtil;
 import com.yilos.widget.circleimageview.CircleImageView;
 import com.yilos.widget.view.ImageCacheView;
+
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -75,8 +77,8 @@ public class UserMessageListAdapter extends RecyclerView.Adapter<UserMessageList
         UserMessage.CommentEntity commentEntity = userMessage.getComment();
         String commentContent = commentEntity.getContent();
         String atName = commentEntity.getAtName();
-
-        String commentCreateDate = DateUtil.getYearAndMonth(commentEntity.getCreateDate());
+        //DateUtil.getUpdateDateString(new Date(commentEntity.getCreateDate()), new Date(DateUtil.getTimestamp()));
+        String commentCreateDate = DateUtil.getUpdateDateString(new Date(commentEntity.getCreateDate()),new Date(DateUtil.getTimestamp()));//DateUtil.getYearAndMonth(commentEntity.getCreateDate());
         String isHomework = String.valueOf(commentEntity.getIsHomework());
 
         String wo = "我 ";
@@ -121,7 +123,7 @@ public class UserMessageListAdapter extends RecyclerView.Adapter<UserMessageList
         String accountName = replyEntity.getAccountName();
         String accountPhoto = replyEntity.getAccountPhoto();
         String replyContent = replyEntity.getContent();
-        String replyCreateDate = DateUtil.getYearAndMonth(replyEntity.getCreateDate());
+        String replyCreateDate = DateUtil.getUpdateDateString(new Date(replyEntity.getCreateDate()), new Date(DateUtil.getTimestamp()));//DateUtil.getYearAndMonth(replyEntity.getCreateDate());
         String replyTo = replyEntity.getReplyTo();
         boolean hasBeenReply = userMessage.getHasBeenReply();
 
