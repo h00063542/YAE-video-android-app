@@ -57,7 +57,6 @@ public class ImageCacheView extends ImageView implements ImageLoadingListener, I
         if (!isCannotClickable){
             super.setOnClickListener(this);
         }
-
     }
 
     public void setImageSrc(String src) {
@@ -66,6 +65,14 @@ public class ImageCacheView extends ImageView implements ImageLoadingListener, I
         loadSuccess = false;
 
         loadImage();
+    }
+
+    @Override
+    public void setClickable(boolean clickable) {
+        super.setClickable(clickable);
+        if(clickable) {
+            super.setOnClickListener(this);
+        }
     }
 
     @Override
