@@ -989,8 +989,14 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
         if (CollectionUtil.isEmpty(topicRelatedProductList)) {
 //            LOGGER.warn(TAG + " topic没有关联商品信息，topicId:" + mTopicId);
             //使用产品区隐藏
-            ((LinearLayout) findViewById(R.id.layout_used_products)).setVisibility(View.GONE);
-            ((LinearLayout) findViewById(R.id.layout_used_product_line)).setVisibility(View.GONE);
+            View layoutUsedProducts = findViewById(R.id.layout_used_products);
+            if (null != layoutUsedProducts) {
+                layoutUsedProducts.setVisibility(View.GONE);
+            }
+            View layoutUsedProductLine = findViewById(R.id.layout_used_product_line);
+            if (null != layoutUsedProductLine) {
+                layoutUsedProductLine.setVisibility(View.GONE);
+            }
             return;
         }
         LinearLayout.LayoutParams topicRelateIvLp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, mTopicRelateProductLineHeight);

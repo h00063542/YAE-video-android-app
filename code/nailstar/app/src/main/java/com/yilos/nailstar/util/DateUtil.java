@@ -123,10 +123,5 @@ public class DateUtil {
         GregorianCalendar gc = new GregorianCalendar();
         gc.add(field, amount);
         return gc.getTimeInMillis();
-//        String DATE_FORMAT = "yyyy-MM-dd";
-//        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat(DATE_FORMAT);
-//        sdf.setTimeZone(TimeZone.getDefault());
-//
-//        return sdf.format(gc.getTime());
     }
 }
