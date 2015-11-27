@@ -38,6 +38,7 @@ import com.yilos.widget.titlebar.TitleBar;
 import com.yilos.widget.view.ImageCacheView;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import in.srain.cube.views.ptr.PtrClassicFrameLayout;
@@ -194,7 +195,7 @@ public class RequireLessionFragment extends Fragment implements LessionView {
         lessionPresenter.setCacheDir(NailStarApplicationContext.getInstance().getFileDir());
         // 查询数据
         lessionPresenter.queryAndRefreshActivityTopic();
-        lessionPresenter.queryVotedRecord();
+        lessionPresenter.initCandidateList();
 
     }
 
@@ -312,15 +313,7 @@ public class RequireLessionFragment extends Fragment implements LessionView {
                 lessionPresenter.queryAndRefreshActivityTopic();
 
                 // 刷新列表
-                if (goVotingBtn.isSelected()) {
-
-                    lessionPresenter.queryAndRefreshVoteLession();
-
-                } else if (goRankingBtn.isSelected()) {
-
-                    lessionPresenter.queryAndRefreshRankingLession();
-
-                }
+                lessionPresenter.refreshCandidateList();
 
             }
 
@@ -518,18 +511,20 @@ public class RequireLessionFragment extends Fragment implements LessionView {
     }
 
     @Override
-    public void refreshVoteLession(List<CandidateLession> voteLessionList) {
+    public void setVoteLession(List<CandidateLession> voteLessionList) {
 
-        voteListViewAdapter.setVoteLessionList(voteLessionList);
-        voteListViewAdapter.notifyDataSetChanged();
+        if (voteLessionList != null) {
+            voteListViewAdapter.setVoteLessionList(new ArrayList<CandidateLession>(voteLessionList));
+        }
 
     }
 
     @Override
-    public void refreshRankingLession(List<CandidateLession> rankingLessionList) {
+    public void setRankingLession(List<CandidateLession> rankingLessionList) {
 
-        voteListViewAdapter.setRankingLessionList(rankingLessionList);
-        voteListViewAdapter.notifyDataSetChanged();
+        if (rankingLessionList != null) {
+            voteListViewAdapter.setRankingLessionList(new ArrayList<CandidateLession>(rankingLessionList));
+        }
 
     }
 

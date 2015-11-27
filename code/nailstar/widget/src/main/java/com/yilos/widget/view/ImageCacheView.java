@@ -67,14 +67,6 @@ public class ImageCacheView extends ImageView implements ImageLoadingListener, I
         loadImage();
     }
 
-    public void setImageSrc(@DrawableRes int src) {
-
-        loading = false;
-        loadSuccess = true;
-
-        this.setImageResource(src);
-    }
-
     @Override
     public void setImageResource(int resId) {
         loading = false;

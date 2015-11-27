@@ -30,18 +30,18 @@ public interface LessionView {
     void notifyRefreshListView();
 
     /**
-     * 刷新投票页面
+     * 设置投票页面数据
      *
      * @param voteLessionList
      */
-    void refreshVoteLession(List<CandidateLession> voteLessionList);
+    void setVoteLession(List<CandidateLession> voteLessionList);
 
     /**
-     * 刷新投票页面
+     * 设置投票页面数据
      *
      * @param rankingLessionList
      */
-    void refreshRankingLession(List<CandidateLession> rankingLessionList);
+    void setRankingLession(List<CandidateLession> rankingLessionList);
 
     /**
      * 刷新倒计时
