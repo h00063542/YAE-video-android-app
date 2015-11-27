@@ -28,10 +28,6 @@ public class MediaController extends FrameLayout implements SeekBar.OnSeekBarCha
     private TextView mTimeTxt;//播放时间
     private ImageView mExpandImg;//最大化播放按钮
     private ImageView mShrinkImg;//缩放播放按钮
-    private EasySwitcher mVideoSrcSwitcher;//视频源切换器
-    private EasySwitcher mVideoFormatSwitcher;//视频清晰度切换器
-    private View mMenuView;
-    private View mMenuViewPlaceHolder;
 
     private MediaControlImpl mMediaControl;
 
@@ -60,7 +56,6 @@ public class MediaController extends FrameLayout implements SeekBar.OnSeekBarCha
         @Override
         public void onShowList() {
             mMediaControl.alwaysShowController();
-            mVideoFormatSwitcher.closeSwitchList();
         }
     };
 
@@ -73,7 +68,6 @@ public class MediaController extends FrameLayout implements SeekBar.OnSeekBarCha
         @Override
         public void onShowList() {
             mMediaControl.alwaysShowController();
-            mVideoSrcSwitcher.closeSwitchList();
         }
     };
 
@@ -93,7 +87,6 @@ public class MediaController extends FrameLayout implements SeekBar.OnSeekBarCha
         for (Video video : videoList) {
             name.add(video.getVideoName());
         }
-        mVideoSrcSwitcher.initData(name);
     }
 
     public void initPlayVideo(Video video) {
@@ -101,20 +94,12 @@ public class MediaController extends FrameLayout implements SeekBar.OnSeekBarCha
         for (VideoUrl url : video.getVideoUrl()) {
             format.add(url.getFormatName());
         }
-        mVideoFormatSwitcher.initData(format);
-    }
-
-    public void closeAllSwitchList() {
-        mVideoFormatSwitcher.closeSwitchList();
-        mVideoSrcSwitcher.closeSwitchList();
     }
 
     /**
      * 初始化精简模式
      */
     public void initTrimmedMode() {
-        mMenuView.setVisibility(GONE);
-        mMenuViewPlaceHolder.setVisibility(GONE);
         mExpandImg.setVisibility(INVISIBLE);
         mShrinkImg.setVisibility(INVISIBLE);
     }
@@ -179,13 +164,9 @@ public class MediaController extends FrameLayout implements SeekBar.OnSeekBarCha
         View.inflate(context, R.layout.biz_video_media_controller, this);
         mPlayImg = (ImageView) findViewById(R.id.pause);
         mProgressSeekBar = (SeekBar) findViewById(R.id.media_controller_progress);
-        mVideoSrcSwitcher = (EasySwitcher) findViewById(R.id.video_src_switcher);
-        mVideoFormatSwitcher = (EasySwitcher) findViewById(R.id.video_format_switcher);
         mTimeTxt = (TextView) findViewById(R.id.time);
         mExpandImg = (ImageView) findViewById(R.id.expand);
         mShrinkImg = (ImageView) findViewById(R.id.shrink);
-        mMenuView = findViewById(R.id.view_menu);
-        mMenuViewPlaceHolder = findViewById(R.id.view_menu_placeholder);
         initData();
     }
 
@@ -196,8 +177,6 @@ public class MediaController extends FrameLayout implements SeekBar.OnSeekBarCha
         mExpandImg.setOnClickListener(this);
         setPageType(PageType.SHRINK);
         setPlayState(PlayState.PAUSE);
-        mVideoFormatSwitcher.setEasySwitcherCallback(mFormatSwitcherCallback);
-        mVideoSrcSwitcher.setEasySwitcherCallback(mSrcSwitcherCallback);
     }
 
     @SuppressLint("SimpleDateFormat")

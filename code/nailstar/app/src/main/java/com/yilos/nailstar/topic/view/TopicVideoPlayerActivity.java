@@ -4,6 +4,7 @@ package com.yilos.nailstar.topic.view;
  * Created by yilos on 2015-11-21.
  */
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,6 +12,7 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.media.AudioManager;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
@@ -1277,7 +1279,6 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        super.onKeyDown(keyCode, event);
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             boolean hasZoomInLayout = false;
             View view = null;
@@ -1291,13 +1292,13 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
             }
             mDecorView.removeView(view);
             if (hasZoomInLayout) {
+                return true;
+            }else{
                 return false;
             }
+        }else{
+            return super.onKeyDown(keyCode, event);
         }
-//        if (!mSuperVideoPlayer.onVDKeyDown(keyCode, event)) {
-//            return super.onKeyDown(keyCode, event);
-//        }
-        return true;
     }
 
 

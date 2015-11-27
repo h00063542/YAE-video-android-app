@@ -48,12 +48,15 @@ public class ImageCacheView extends ImageView implements ImageLoadingListener, I
         super(context, attrs, defStyle);
 
         setBackgroundColor(ContextCompat.getColor(getContext(), R.color.xk2));
-        boolean isClickable = true;
+        boolean isCannotClickable = false;
         if(attrs != null){
-            isClickable = attrs.getAttributeValue("http://schemas.android.com/apk/res/android","clickable")!=null?Boolean.getBoolean(attrs.getAttributeValue("http://schemas.android.com/apk/res/android","clickable")):true;
+            if(attrs.getAttributeValue("http://schemas.android.com/apk/res/android","clickable") == null){
+                isCannotClickable = true;
+            }else{
+                isCannotClickable = Boolean.getBoolean(attrs.getAttributeValue("http://schemas.android.com/apk/res/android", "clickable"));
+            }
         }
-
-        if (isClickable){
+        if (!isCannotClickable){
             super.setOnClickListener(this);
         }
 
