@@ -16,12 +16,9 @@ import android.widget.LinearLayout;
 import com.shizhefei.view.indicator.FixedIndicatorView;
 import com.shizhefei.view.indicator.IndicatorViewPager;
 import com.yilos.nailstar.R;
-import com.yilos.nailstar.aboutme.entity.Sdcard;
 import com.yilos.nailstar.framework.application.NailStarApplication;
 import com.yilos.nailstar.main.MainActivity;
 import com.yilos.nailstar.util.SettingUtil;
-
-import java.util.ArrayList;
 
 /**
  * Created by sisilai on 15/11/24.
@@ -65,10 +62,6 @@ public class GuideActivity extends AppCompatActivity {
 
     private void initApplicationSetting() {
         SettingUtil.setFirstFlag(false);
-        SettingUtil.setAllowNoWifi(true);
-        ArrayList<Sdcard> sdcardArrayList = SettingUtil.getSdcardList();
-        Sdcard sdcard = sdcardArrayList.get(sdcardArrayList.size() - 1);
-        SettingUtil.setSdcard(sdcard.getSdcardName(), sdcard.getSdcardPath());
     }
 
     public void setStartActivity() {
