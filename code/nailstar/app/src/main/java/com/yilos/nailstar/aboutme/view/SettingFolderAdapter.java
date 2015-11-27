@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.yilos.nailstar.R;
 import com.yilos.nailstar.aboutme.entity.Sdcard;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author alessandro.balocco
@@ -19,10 +19,10 @@ import java.util.ArrayList;
 public class SettingFolderAdapter extends BaseAdapter {
 
     private LayoutInflater layoutInflater;
-    private ArrayList<Sdcard> sdcardArrayList;
+    private List<Sdcard> sdcardArrayList;
     private String sdcardName;
 
-    public SettingFolderAdapter(Context context, ArrayList<Sdcard> sdcardArrayList, String sdcardName) {
+    public SettingFolderAdapter(Context context, List<Sdcard> sdcardArrayList, String sdcardName) {
         this.sdcardArrayList = sdcardArrayList;
         this.sdcardName = sdcardName;
         this.layoutInflater = LayoutInflater.from(context);

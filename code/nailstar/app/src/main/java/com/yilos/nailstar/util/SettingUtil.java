@@ -5,14 +5,21 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.os.Build;
+import android.os.Environment;
 import android.os.StatFs;
+import android.os.storage.StorageManager;
 
+import com.tencent.bugly.crashreport.BuglyLog;
 import com.yilos.nailstar.R;
 import com.yilos.nailstar.aboutme.entity.Sdcard;
-import com.yilos.nailstar.aboutme.entity.StorageList;
 import com.yilos.nailstar.framework.application.NailStarApplication;
 
+import java.io.File;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by sisilai on 15/11/12.
@@ -89,36 +96,124 @@ public class SettingUtil {
         editor.commit();
     }
 
-    public static ArrayList<Sdcard> getSdcardList() {
+    public static List<Sdcard> getSdcardList() {
+        List<Sdcard> sdcardArrayList = getCardListByHideMethod();
+        if(null != sdcardArrayList && sdcardArrayList.size() > 0) {
+            return sdcardArrayList;
+        }
 
-        StorageList storageList = new StorageList(context);
-        String[] paths;
-        paths = storageList.getVolumePaths();
-
-        ArrayList<Sdcard> sdcardArrayList = new ArrayList<>();
-
-        for (int index = 0; index < paths.length; index++) {
+        sdcardArrayList = new ArrayList<>();
+        if(Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
             Sdcard sdcard = new Sdcard();
-            sdcard.setSdcardName("存储卡" + String.valueOf(index + 1));
-            sdcard.setSdcardPath(paths[index]);
-            StatFs sf = new StatFs(sdcard.getSdcardPath());
-            long blockSize = sf.getBlockSize(); //每个block大小
-            long blockCount = sf.getBlockCount(); //总大小
-            long availCount = sf.getAvailableBlocks(); //有效大小
-            sdcard.setBlockCount(blockSize * blockCount);
-            sdcard.setAvailCount(blockSize * availCount);
-            try {
-                sdcard.setBlockCountFormat(DataCleanManager.getFormatSize(sdcard.getBlockCount()));
-                sdcard.setAvailCountFormat(DataCleanManager.getFormatSize(sdcard.getAvailCount()));
-            } catch (Exception e) {
-                e.printStackTrace();
+            sdcard.setSdcardPath(Environment.getExternalStorageDirectory().getAbsolutePath());
+            if(Environment.isExternalStorageEmulated()) {
+                sdcard.setSdcardName("手机存储");
+            } else {
+                sdcard.setSdcardName("SD存储卡");
             }
-            if (sdcard.getAvailCount() > 0) {
-                sdcardArrayList.add(sdcard);
-            }
+            initSdcardSize(sdcard);
+
+            sdcardArrayList.add(sdcard);
+        }
+
+        if(!Environment.isExternalStorageEmulated()) {
+            Sdcard sdcard = new Sdcard();
+            sdcard.setSdcardName("手机存储");
+            sdcard.setSdcardPath(context.getFilesDir().getAbsolutePath());
+            initSdcardSize(sdcard);
+            sdcardArrayList.add(sdcard);
         }
 
         return sdcardArrayList;
+    }
+
+    private static List<Sdcard> getCardListByHideMethod() {
+        StorageManager storageManager = (StorageManager)context.getSystemService(Context.STORAGE_SERVICE);
+
+        try {
+            Method getVolumePathsMethod = StorageManager.class.getMethod("getVolumePaths");
+            getVolumePathsMethod.setAccessible(true);
+
+            String[] paths = (String[])getVolumePathsMethod.invoke(storageManager);
+            if(null == paths || paths.length <= 0) {
+                return null;
+            }
+
+            ArrayList<Sdcard> sdcardArrayList = new ArrayList<>();
+            int cardCount = 1;
+            for(String path : paths) {
+                File filePath = new File(path);
+                boolean validate = false;
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    validate = filePath.exists()
+                            && Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState(filePath));
+                } else {
+                    validate = filePath.exists();
+                }
+                if(validate) {
+                    Sdcard sdcard = new Sdcard();
+                    sdcard.setSdcardPath(path);
+                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        if(Environment.isExternalStorageEmulated(filePath)) {
+                            sdcard.setSdcardName("手机存储");
+                        } else {
+                            sdcard.setSdcardName("SD存储卡" + cardCount++);
+                        }
+                    } else {
+                        if(Environment.isExternalStorageEmulated()
+                                && Environment.getExternalStorageDirectory() != null
+                                && Environment.getExternalStorageDirectory().getAbsolutePath().equals(path)) {
+                            sdcard.setSdcardName("手机存储");
+                        } else {
+                            sdcard.setSdcardName("SD存储卡" + cardCount++);
+                        }
+                    }
+
+                    initSdcardSize(sdcard);
+                    if(sdcard.getAvailCount() > 0) {
+                        sdcardArrayList.add(sdcard);
+                    }
+                }
+            }
+
+            return sdcardArrayList;
+        } catch (NoSuchMethodException e) {
+            BuglyLog.e("SettingUtil getCardListByHideMethod", "没有该方法getVolumePaths异常", e);
+        } catch (InvocationTargetException e) {
+            BuglyLog.e("SettingUtil getCardListByHideMethod", "调用方法getVolumePaths异常", e);
+        } catch (IllegalAccessException e) {
+            BuglyLog.e("SettingUtil getCardListByHideMethod", "没有权限调用该方法getVolumePaths异常", e);
+        } catch (Exception e) {
+            BuglyLog.e("SettingUtil getCardListByHideMethod", "未知异常异常", e);
+        }
+
+        return null;
+    }
+
+    private static void initSdcardSize(Sdcard sdcard) {
+        try {
+            StatFs statFs = new StatFs(sdcard.getSdcardPath());
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                sdcard.setAvailCount(statFs.getAvailableBytes());
+                sdcard.setBlockCount(statFs.getTotalBytes());
+
+                sdcard.setBlockCountFormat(DataCleanManager.getFormatSize(sdcard.getBlockCount()));
+                sdcard.setAvailCountFormat(DataCleanManager.getFormatSize(sdcard.getAvailCount()));
+            } else {
+                long blockSize = statFs.getBlockSize(); //每个block大小
+                long blockCount = statFs.getBlockCount(); //总大小
+                long availCount = statFs.getAvailableBlocks(); //有效大小
+                sdcard.setBlockCount(blockSize * blockCount);
+                sdcard.setAvailCount(blockSize * availCount);
+
+                sdcard.setBlockCountFormat(DataCleanManager.getFormatSize(sdcard.getBlockCount()));
+                sdcard.setAvailCountFormat(DataCleanManager.getFormatSize(sdcard.getAvailCount()));
+            }
+
+        } catch (Exception e) {
+            //获取空间信息异常
+            BuglyLog.e("SettingUtil.class initSdcardSize", "获取路径的空间使用出错！", e);
+        }
     }
 
 
@@ -126,13 +221,31 @@ public class SettingUtil {
      * @return 获取SD卡存储路径
      */
     public static String getSdcardPath() {
-        return getSettingSharedPreferences().getString(Constants.SDCARD_PATH, "");
+        String path = getSettingSharedPreferences().getString(Constants.SDCARD_PATH, null);
+        if(null == path) {
+            initSdCardSetting();
+        }
+
+        return getSettingSharedPreferences().getString(Constants.SDCARD_PATH, context.getFilesDir().getAbsolutePath());
     }
 
     /**
      * @return 获取SD卡中文名字（如:存储卡1）
      */
     public static String getSdcardName() {
-        return getSettingSharedPreferences().getString(Constants.SDCARD_NAME, "");
+        String name = getSettingSharedPreferences().getString(Constants.SDCARD_NAME, null);
+        if(null == name) {
+            initSdCardSetting();
+        }
+        return getSettingSharedPreferences().getString(Constants.SDCARD_NAME, "内部存储");
+    }
+
+    private static void initSdCardSetting() {
+        List<Sdcard> sdCardList = getSdcardList();
+        if(null == sdCardList || sdCardList.size() <= 0) {
+            return;
+        }
+
+        setSdcard(sdCardList.get(0).getSdcardName(), sdCardList.get(0).getSdcardPath());
     }
 }
