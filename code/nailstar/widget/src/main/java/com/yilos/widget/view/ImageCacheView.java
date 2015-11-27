@@ -7,7 +7,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
-import android.support.annotation.DrawableRes;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
@@ -47,7 +46,6 @@ public class ImageCacheView extends ImageView implements ImageLoadingListener, I
     public ImageCacheView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
 
-        setBackgroundColor(ContextCompat.getColor(getContext(), R.color.xk2));
         boolean isCannotClickable = false;
         if(attrs != null){
             if(attrs.getAttributeValue("http://schemas.android.com/apk/res/android","clickable") == null){

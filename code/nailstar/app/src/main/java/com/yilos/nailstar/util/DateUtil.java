@@ -4,7 +4,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.TimeZone;
 
 /**
  * Created by sisilai on 15/11/21.
@@ -89,7 +88,7 @@ public class DateUtil {
             return dateSpace;
         }
 
-        dateSpace.space = to.get(Calendar.HOUR) - from.get(Calendar.HOUR);
+        dateSpace.space = to.get(Calendar.HOUR_OF_DAY) - from.get(Calendar.HOUR_OF_DAY);
         if(dateSpace.space > 0) {
             dateSpace.type = Calendar.HOUR;
             return dateSpace;
