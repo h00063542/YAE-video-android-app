@@ -9,15 +9,23 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <!--视频播放组件-->
-        <com.sina.sinavideo.sdk.VDVideoView
+        <!--<com.sina.sinavideo.sdk.VDVideoView-->
+            <!--android:id="@+id/video_player"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="@dimen/topic_video_player_height"-->
+            <!--android:layout_alignParentTop="true"-->
+            <!--android:background="@color/black"-->
+            <!--app:layerAttrs="@array/video_layers">-->
+
+        <!--</com.sina.sinavideo.sdk.VDVideoView>-->
+
+
+        <com.android.tedcoder.wkvideoplayer.view.SuperVideoPlayer
             android:id="@+id/video_player"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/topic_video_player_height"
-            android:layout_alignParentTop="true"
-            android:background="@color/black"
-            app:layerAttrs="@array/video_layers">
-
-        </com.sina.sinavideo.sdk.VDVideoView>
+            android:layout_height="200dp"
+            android:visibility="visible">
+        </com.android.tedcoder.wkvideoplayer.view.SuperVideoPlayer>
 
         <LinearLayout
             android:id="@+id/video_player_icon_tips_layout"
