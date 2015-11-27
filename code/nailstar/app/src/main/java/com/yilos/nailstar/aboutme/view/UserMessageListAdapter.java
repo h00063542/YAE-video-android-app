@@ -121,7 +121,7 @@ public class UserMessageListAdapter extends RecyclerView.Adapter<UserMessageList
         String accountName = replyEntity.getAccountName();
         String accountPhoto = replyEntity.getAccountPhoto();
         String replyContent = replyEntity.getContent();
-        String replyCreateDate = DateUtil.getYearAndMonth(commentEntity.getCreateDate());
+        String replyCreateDate = DateUtil.getYearAndMonth(replyEntity.getCreateDate());
         String replyTo = replyEntity.getReplyTo();
         boolean hasBeenReply = userMessage.getHasBeenReply();
 

@@ -77,9 +77,12 @@ public class MessageActivity extends BaseActivity implements IMessageView {
         public int compare(Object o1, Object o2) {
             UserMessage userMessage1 = (UserMessage) o1;
             UserMessage userMessage2 = (UserMessage) o2;
-            if (userMessage1.getReply().getCreateDate() > userMessage2.getReply().getCreateDate())
+            if (userMessage1.getReply().getCreateDate() < userMessage2.getReply().getCreateDate()) {
                 return 1;
-            return 0;
+            }
+            else {
+                return -1;
+            }
         }
     }
 
