@@ -17,9 +17,11 @@ import com.yilos.nailstar.R;
 import com.yilos.nailstar.aboutme.presenter.DownloadPresenter;
 import com.yilos.nailstar.download.DownLoadInfo;
 import com.yilos.nailstar.download.DownloadConstants;
+import com.yilos.nailstar.framework.view.BaseActivity;
 import com.yilos.widget.circleimageview.CircleImageView;
 import com.yilos.widget.view.ImageCacheView;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -31,10 +33,10 @@ public class DownLoadVideoAdapter extends BaseAdapter {
 
     private int screenWidth;
 
-    private Activity context;
+    private BaseActivity context;
     private DownloadPresenter downloadPresenter;
 
-    public DownLoadVideoAdapter(Activity context, DownloadPresenter downloadPresenter) {
+    public DownLoadVideoAdapter(BaseActivity context, DownloadPresenter downloadPresenter) {
 
         this.context = context;
         this.downloadPresenter = downloadPresenter;
@@ -100,13 +102,13 @@ public class DownLoadVideoAdapter extends BaseAdapter {
 
         final DownLoadInfo downLoadInfo = downLoadInfoList.get(position);
         holder.downloadAuthorName.setText(downLoadInfo.getName());
-        if (downLoadInfo.getPhoto() != null) {
+        if (downLoadInfo.getPhoto() != null && new File(downLoadInfo.getPhoto()).exists()) {
             holder.downloadAuthorPhoto.setImageSrc("file://" + downLoadInfo.getPhoto());
         } else {
             holder.downloadAuthorPhoto.setImageSrc("");
             holder.downloadAuthorPhoto.setImageResource(R.mipmap.ic_default_photo);
         }
-        if (downLoadInfo.getIamge() != null) {
+        if (downLoadInfo.getIamge() != null && new File(downLoadInfo.getIamge()).exists()) {
             holder.downloadImage.setImageSrc("file://" + downLoadInfo.getIamge());
         } else {
             holder.downloadImage.setImageSrc("");
@@ -126,10 +128,16 @@ public class DownLoadVideoAdapter extends BaseAdapter {
             holder.downloadImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent downloadVideoPlayer = new Intent(context, DownloadVideoPlayer.class);
-                    downloadVideoPlayer.putExtra(DownloadVideoPlayer.TITLE, downLoadInfo.getTitle());
-                    downloadVideoPlayer.putExtra(DownloadVideoPlayer.URL, downLoadInfo.getPath());
-                    context.startActivity(downloadVideoPlayer);
+                    if (new File(downLoadInfo.getPath()).exists()) {
+                        Intent downloadVideoPlayer = new Intent(context, DownloadVideoPlayer.class);
+                        downloadVideoPlayer.putExtra(DownloadVideoPlayer.TITLE, downLoadInfo.getTitle());
+                        downloadVideoPlayer.putExtra(DownloadVideoPlayer.URL, downLoadInfo.getPath());
+                        context.startActivity(downloadVideoPlayer);
+                    } else {
+                        // 如果视频找不到（可能被用户手工删除）
+                        context.showLongToast(R.string.no_video_found);
+                    }
+
                 }
             });
         } else if (downLoadInfo.getStatus() == DownloadConstants.DOWNLOAD_STOP) {
