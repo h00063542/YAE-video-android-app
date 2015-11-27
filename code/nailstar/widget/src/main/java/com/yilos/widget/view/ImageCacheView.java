@@ -96,6 +96,7 @@ public class ImageCacheView extends ImageView implements ImageLoadingListener, I
 
     @Override
     public void setOnClickListener(OnClickListener l) {
+        setClickable(true);
         clickListener = l;
     }
 
