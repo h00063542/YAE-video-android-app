@@ -263,7 +263,7 @@ public class MessageActivity extends BaseActivity implements IMessageView {
     public long getLatestMessageTime() {
         SharedPreferences mySharedPreferences = getSharedPreferences(Constants.MESSAGES + Constants.UNDERLINE + loginAPI.getLoginUserId(),
                 Activity.MODE_PRIVATE);
-        long time = mySharedPreferences.getLong(Constants.LATEST_MESSAGE_TIME, DateUtil.getTimestamp());
+        long time = mySharedPreferences.getLong(Constants.LATEST_MESSAGE_TIME, DateUtil.getCurrentDayAdd(2,-1));
         return time;
     }
 
