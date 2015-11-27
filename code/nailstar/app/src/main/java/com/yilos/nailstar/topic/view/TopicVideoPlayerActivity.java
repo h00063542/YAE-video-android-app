@@ -1294,7 +1294,7 @@ public class TopicVideoPlayerActivity extends BaseActivity implements
             if (hasZoomInLayout) {
                 return true;
             }else{
-                return false;
+                return super.onKeyDown(keyCode, event);;
             }
         }else{
             return super.onKeyDown(keyCode, event);
